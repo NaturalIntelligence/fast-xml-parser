@@ -1,0 +1,24 @@
+{
+  "name": "fast-xml-parser",
+  "version": "1.0.0",
+  "description": "Parse XML to JS/JSON very fast without C/C++ based libraries",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/NaturalIntelligence/fast-xml-parser"
+  },
+  "keywords": [
+    "fast",
+    "xml",
+    "json",
+    "parser",
+    "xml2js",
+    "xml2json",
+    "js"
+  ],
+  "author": "Amit Gupta",
+  "license": "MIT"
+}
