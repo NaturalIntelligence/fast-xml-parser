@@ -4,9 +4,8 @@ var getAllMatches = function(string, regex) {
   var match;
   while (match = regex.exec(string)) {
   	var allmatches = [];
-  	for(var i in match){
-  		var submatch = match[i];
-  		allmatches.push(submatch);
+    for (var index = 0; index < match.length; index++) {
+  		allmatches.push(match[index]);
   	}
     matches.push(allmatches);
   }
@@ -64,9 +63,9 @@ exports.parse = function (xmlData){
             currentNode = currentNode.parent;
             continue;
         }else{
-            var childNode = new Node(tag,currentNode);
-            currentNode.addChild(childNode);
-            currentNode = childNode;
+            var cNode = new Node(tag,currentNode);
+            currentNode.addChild(cNode);
+            currentNode = cNode;
         }
     }
     //include root node as well
