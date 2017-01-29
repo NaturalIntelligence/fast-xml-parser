@@ -1,5 +1,21 @@
-# fast-xml-parser
+# [fast-xml-parser](https://www.npmjs.com/package/fast-xml-parser)
 Parse XML to JS/JSON very fast without C/C++ based libraries and no callback
+
+[![Code Climate](https://codeclimate.com/github/NaturalIntelligence/fast-xml-parser/badges/gpa.svg)](https://codeclimate.com/github/NaturalIntelligence/fast-xml-parser) [<img src="https://www.paypalobjects.com/webstatic/en_US/btn/btn_donate_92x26.png" alt="Stubmatic donate button"/>](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=KQJAX48SPUKNC) [![Known Vulnerabilities](https://snyk.io/test/github/naturalintelligence/fast-xml-parser/badge.svg)](https://snyk.io/test/github/naturalintelligence/fast-xml-parser) [![Travis ci Build Status](https://travis-ci.org/NaturalIntelligence/fast-xml-parser.svg?branch=master)](https://travis-ci.org/NaturalIntelligence/fast-xml-parser) [![Coverage Status](https://coveralls.io/repos/github/NaturalIntelligence/fast-xml-parser/badge.svg?branch=master)](https://coveralls.io/github/NaturalIntelligence/fast-xml-parser?branch=master)
+
+### How to use
+**Installation**
+`$npm install fast-xml-parser`
+or using [yarn](https://yarnpkg.com/)
+`$yarn add fast-xml-parser`
+
+**Usage**
+```js
+var fastXmlParser = require('fast-xml-parser');
+var jsonObj = fastXmlParser.parse(xmlData);
+```
+
+**Give me a [star](https://github.com/NaturalIntelligence/fast-xml-parser)**, if you really like this project.
 
 I decided to created this library when I couldn't find any library which can convert XML data to json without any callback and which is not based on any C/C++ library.
 
@@ -13,8 +29,22 @@ Liraries that I compared
 Why not C/C++ based libraries?
 Instalation of such libraries fails on some OS. You may require to install missing dependency manually.
 
+**Benchmark report**
+![npm_xml2json_compare](https://cloud.githubusercontent.com/assets/7692328/22402086/7526a3a6-e5e2-11e6-8e6b-301691725c21.png)
+
 Don't forget to check the performance report on [comparejs](https://naturalintelligence.github.io/comparejs/?q=xml2json).
 
 ### Limitations
 * It ignores tag attributes.
 
+
+
+Report an issue or request for a feature [here](https://github.com/NaturalIntelligence/fast-xml-parser/issues)
+
+Your contribution in terms of donation, testing, bug fixes, code development etc. can help me to write fast algorithms.
+[<img src="https://www.paypalobjects.com/webstatic/en_US/btn/btn_donate_92x26.png" alt="Stubmatic donate button"/>](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=KQJAX48SPUKNC) 
+
+Some of my other NPM pojects
+ - [stubmatic](https://github.com/NaturalIntelligence/Stubmatic) : A stub server to mock behaviour of HTTP(s) / REST / SOAP services. Stubbing redis is on the way.
+ - [compare js](https://github.com/NaturalIntelligence/comparejs) : comparethe featues of JS code, libraries, and NPM repos.
+ - [fast-lorem-ipsum](https://github.com/amitguptagwl/fast-lorem-ipsum) : Generate lorem ipsum words, sentences, paragraph very quickly.
