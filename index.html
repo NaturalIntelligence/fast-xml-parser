@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title></title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+                <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css">
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css">
+
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+        <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.js"></script>
+        <script src="lib/fastxmlparser.js"></script>
+    </head>
+    <body>
+    <body role="document" style="background-color: #2c3e50; color: white;">
+        
+        <div class="container">
+            <a href="https://github.com/NaturalIntelligence/fast-xml-parser"><img class="bring-up" style="position: absolute; top: 0; left: 0; border: 0;" src="https://camo.githubusercontent.com/121cd7cbdc3e4855075ea8b558508b91ac463ac2/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f6c6566745f677265656e5f3030373230302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_left_green_007200.png"></a>
+            <h3>Fast XML Parser</h3>
+            <div style="margin-top: -12px; margin-bottom: 10px;">
+                <span id="version" style="font-size: xx-small"></span>&nbsp;-&nbsp;<span id="timestamp" style="font-size: xx-small"></span>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <textarea id="txtXml" name="xml" rows="15" class="form-control" placeholder="Paste XML to parse in JS/JSON">
+<?xml version="1.0"?>
+<any_name>
+    <person>
+        <phone>+122233344550</phone>
+        <name>Jack</name>
+        <phone>+122233344551</phone>
+        <age>33</age>
+        <married firstTime="No">Yes</married>
+        <birthday>Wed, 28 Mar 1979 12:13:14 +0300</birthday>
+        <address>
+            <city>New York</city>
+            <street>Park Ave</street>
+            <buildingNo>1</buildingNo>
+            <flatNo>1</flatNo>
+        </address>
+        <address>
+            <city>Boston</city>
+            <street>Centre St</street>
+            <buildingNo>33</buildingNo>
+            <flatNo>24</flatNo>
+        </address>
+    </person>
+    <person>
+        <phone>+122233344553</phone>
+        <name>Boris</name>
+        <phone>+122233344554</phone>
+        <age>34</age>
+        <married firstTime="Yes">Yes</married>
+        <birthday>Mon, 31 Aug 1970 02:03:04 +0300</birthday>
+        <address>
+            <city>Moscow</city>
+            <street>Kahovka</street>
+            <buildingNo>1</buildingNo>
+            <flatNo>2</flatNo>
+        </address>
+        <address>
+            <city>Tula</city>
+            <street>Lenina</street>
+            <buildingNo>3</buildingNo>
+            <flatNo>78</flatNo>
+        </address>
+    </person>
+</any_name>
+                        </textarea>
+                    </div>
+
+                    <div class="input-group">
+                        <span class="input-group-btn">
+                            <button id="submit" class="btn btn-primary" type="button">Parse to JSON</button>
+                        </span>
+                    </div>
+
+                    <br/>
+
+                </div>
+                <div class="col-md-6">
+                    <div class="row">
+                        <div class="col-md-12">
+                            JSON Output<br/>
+                            <pre id="jayway-res" class="prettyprint result" style="background-color: transparent; border: none; color: white"></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <script>
+        $( document ).ready(function() {
+            $('#submit').on('click', function() {
+                $('.result').empty();
+                var jsonData = xml2json($('#txtXml').val());
+                $('.result').text(JSON.stringify(jsonData,null,4));
+            });
+        });
+    </script>
+
+    </body>
+</html>
