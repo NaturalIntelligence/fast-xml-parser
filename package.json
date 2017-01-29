@@ -1,10 +1,12 @@
 {
   "name": "fast-xml-parser",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Parse XML to JS/JSON very fast without C/C++ based libraries",
-  "main": "index.js",
+  "main": "./lib/parser.js",
   "scripts": {
-     "test": "jasmine spec/*spec.js"
+    "test": "jasmine spec/*spec.js",
+    "coverage": "istanbul cover jasmine --captureExceptions spec/*spec.js",
+    "coverage:check": "node ./node_modules/istanbul/lib/cli.js check-coverage --branch 90 --statement 90"
   },
   "repository": {
     "type": "git",
@@ -19,9 +21,11 @@
     "xml2json",
     "js"
   ],
-  "author": "Amit Gupta",
+  "author": "Amit Gupta (https://github.com/amitguptagwl)",
   "license": "MIT",
   "devDependencies": {
+    "coveralls": "^2.11.15",
+    "istanbul": "^0.4.5",
     "jasmine": "^2.5.3",
     "jasmine-core": "^2.5.2"
   }

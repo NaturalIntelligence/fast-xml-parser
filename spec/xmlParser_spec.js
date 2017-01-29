@@ -1,9 +1,4 @@
-var parser = require("../index");
-
-// var fs = require("fs");
-// var path = require("path");
-// var fileNamePath = path.join(__dirname,"assets/sample.xml");
-// var xmlData = fs.readFileSync(fileNamePath).toString();
+var parser = require("../lib/parser");
 
 describe("Function ", function() {
 
