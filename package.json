@@ -4,7 +4,7 @@
   "description": "Parse XML to JS/JSON very fast without C/C++ based libraries",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+     "test": "jasmine spec/*spec.js"
   },
   "repository": {
     "type": "git",
@@ -20,5 +20,9 @@
     "js"
   ],
   "author": "Amit Gupta",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "jasmine": "^2.5.3",
+    "jasmine-core": "^2.5.2"
+  }
 }

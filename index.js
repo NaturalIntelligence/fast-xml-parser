@@ -48,6 +48,12 @@ exports.parse = function (xmlData){
                 val = values[j++][1];
                 if(isNaN(val)){
                     val = "" + val ;
+                }else{
+                    if(val.indexOf(".") !== -1){
+                        val = Number.parseFloat(val);
+                    }else{
+                        val = Number.parseInt(val);
+                    }
                 }
             }
             var childNode = new Node(tag,currentNode);
@@ -63,14 +69,16 @@ exports.parse = function (xmlData){
             currentNode = childNode;
         }
     }
-
-    return convertToJson(rootNode);
+    //include root node as well
+    var xmlObj = new Node('_xml');
+    rootNode.param = xmlObj;
+    xmlObj.addChild(rootNode);
+    return convertToJson(xmlObj);
 }
 
 function convertToJson(node){
     var jObj = {};
     if(node.val) {
-        //jObj[node.tagname] = node.val;
         return node.val;
     }else{
         for (var index = 0; index < node.child.length; index++) {
@@ -90,3 +98,8 @@ function convertToJson(node){
     }
     return jObj;
 }
+
+// (function debug(){
+//     var xmlData = "<rootNode><tag>value</tag><intTag>45</intTag><floatTag>65.34</floatTag></rootNode>";
+//     var result = exports.parse(xmlData);
+// })();
