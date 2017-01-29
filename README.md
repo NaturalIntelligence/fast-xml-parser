@@ -15,6 +15,13 @@ var fastXmlParser = require('fast-xml-parser');
 var jsonObj = fastXmlParser.parse(xmlData);
 ```
 
+To use it **on webpage**
+
+1. Download and include [parser.js](https://github.com/NaturalIntelligence/fast-xml-parser/blob/master/lib/parser.js)
+```js
+var jsonObj = xml2json(xmlData);
+```
+
 **Give me a [star](https://github.com/NaturalIntelligence/fast-xml-parser)**, if you really like this project.
 
 I decided to created this library when I couldn't find any library which can convert XML data to json without any callback and which is not based on any C/C++ library.
