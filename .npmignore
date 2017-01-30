@@ -4,6 +4,6 @@ coverage
 test
 spec
 .travis.yml
-.gitignore
 .codeclimate.yml
 TODO
+index.html

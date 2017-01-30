@@ -1,6 +1,6 @@
 var parser = require("../lib/parser");
 
-describe("Function ", function() {
+describe("XMLParser", function() {
 
   it("should parse all values as string,int, or float", function() {
   	var xmlData = "<rootNode><tag>value</tag><intTag>45</intTag><floatTag>65.34</floatTag></rootNode>";

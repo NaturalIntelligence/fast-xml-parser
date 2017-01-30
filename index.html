@@ -4,13 +4,13 @@
         <title></title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-                <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css">
-        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
-        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css">
+                <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css">
 
-        <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-        <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
-        <script src="//cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.js"></script>
         <script src="lib/parser.js"></script>
     </head>
     <body>
@@ -85,7 +85,7 @@
                     <div class="row">
                         <div class="col-md-12">
                             JSON Output<br/>
-                            <pre id="jayway-res" class="prettyprint result" style="background-color: transparent; border: none; color: white"></pre>
+                            <pre id="result" class="prettyprint" style="background-color: transparent; border: none; color: white"></pre>
                         </div>
                     </div>
                 </div>
@@ -94,9 +94,9 @@
     <script>
         $( document ).ready(function() {
             $('#submit').on('click', function() {
-                $('.result').empty();
+                $('#result').empty();
                 var jsonData = xml2json($('#txtXml').val());
-                $('.result').text(JSON.stringify(jsonData,null,4));
+                $('#result').text(JSON.stringify(jsonData,null,4));
             });
         });
     </script>
