@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
 <any_name>
-    <person>
+    <person id="101">
         <phone>+122233344550</phone>
         <name>Jack</name>
         <phone>+122233344551</phone>
         <age>33</age>
-        <married firstTime="No">Yes</married>
+        <married firstTime="No" attr="val 2">Yes</married>
         <birthday>Wed, 28 Mar 1979 12:13:14 +0300</birthday>
         <address>
             <city>New York</city>
@@ -20,7 +20,7 @@
             <flatNo>24</flatNo>
         </address>
     </person>
-    <person>
+    <person id="102">
         <phone>+122233344553</phone>
         <name>Boris</name>
         <phone>+122233344554</phone>
