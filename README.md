@@ -15,6 +15,16 @@ or using [yarn](https://yarnpkg.com/)
 ```js
 var fastXmlParser = require('fast-xml-parser');
 var jsonObj = fastXmlParser.parse(xmlData);
+
+// when a tag has attributes
+var defaultOptions = {
+		attrPrefix : "@_",
+        textNodeName : "#text",
+		ignoreNonTextNodeAttr : true,
+        ignoreTextNodeAttr : true,
+	};
+var jsonObj = fastXmlParser.parse(xmlData,options);
+
 ```
 
 To use it **on webpage**

@@ -128,13 +128,13 @@ describe("XMLParser", function() {
     var fileNamePath = path.join(__dirname,"assets/sample.xml");
     var xmlData = fs.readFileSync(fileNamePath).toString();
 
-    var expected = {"any_name": {"person": [{"@id": "101","phone": [122233344550,122233344551],"name": "Jack","age": 33,"emptyNode": "","booleanNode": ["false","true"],"selfclosing": {"@with": "value"},"married": {"@firstTime": "No","@attr": "val 2","#text": "Yes"},"birthday": "Wed, 28 Mar 1979 12:13:14 +0300","address": [{"city": "New York","street": "Park Ave","buildingNo": 1,"flatNo": 1},{"city": "Boston","street": "Centre St","buildingNo": 33,"flatNo": 24}]},{"@id": "102","phone": [122233344553,122233344554],"name": "Boris","age": 34,"married": {"@firstTime": "Yes","#text": "Yes"},"birthday": "Mon, 31 Aug 1970 02:03:04 +0300","address": [{"city": "Moscow","street": "Kahovka","buildingNo": 1,"flatNo": 2},{"city": "Tula","street": "Lenina","buildingNo": 3,"flatNo": 78}]}]}};
+    var expected = {"any_name": { "@attr": "https://example.com/somepath","person": [{"@id": "101","phone": [122233344550,122233344551],"name": "Jack","age": 33,"emptyNode": "","booleanNode": ["false","true"],"selfclosing": {"@with": "value"},"married": {"@firstTime": "No","@attr": "val 2","#_text": "Yes"},"birthday": "Wed, 28 Mar 1979 12:13:14 +0300","address": [{"city": "New York","street": "Park Ave","buildingNo": 1,"flatNo": 1},{"city": "Boston","street": "Centre St","buildingNo": 33,"flatNo": 24}]},{"@id": "102","phone": [122233344553,122233344554],"name": "Boris","age": 34,"married": {"@firstTime": "Yes","#_text": "Yes"},"birthday": "Mon, 31 Aug 1970 02:03:04 +0300","address": [{"city": "Moscow","street": "Kahovka","buildingNo": 1,"flatNo": 2},{"city": "Tula","street": "Lenina","buildingNo": 3,"flatNo": 78}]}]}};
 
     var result = parser.parse(xmlData,{ 
         ignoreTextNodeAttr : false ,
         ignoreNonTextNodeAttr : false,
         attrPrefix : "@",
-        valueNodeName : "#_text",
+        textNodeName : "#_text",
       });
     //console.log(JSON.stringify(result,null,4));
     expect(result).toEqual(expected);

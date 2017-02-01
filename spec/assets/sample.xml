@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<any_name>
+<any_name attr="https://example.com/somepath">
     <person id="101">
         <phone>+122233344550</phone>
         <name>Jack</name>
