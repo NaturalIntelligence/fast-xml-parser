@@ -53,10 +53,6 @@ Instalation of such libraries fails on some OS. You may require to install missi
 
 Don't forget to check the performance report on [comparejs](https://naturalintelligence.github.io/comparejs/?q=xml2json).
 
-### Limitations
-* It ignores tag attributes.
-
-
 
 Report an issue or request for a feature [here](https://github.com/NaturalIntelligence/fast-xml-parser/issues)
 
