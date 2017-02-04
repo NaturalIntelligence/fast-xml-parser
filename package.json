@@ -1,6 +1,6 @@
 {
   "name": "fast-xml-parser",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "description": "Parse XML to JS/JSON very fast without C/C++ based libraries",
   "main": "./lib/parser.js",
   "scripts": {
@@ -24,7 +24,8 @@
     "xml2json",
     "js",
     "traversal",
-    "cli"
+    "cli",
+    "command"
   ],
   "author": "Amit Gupta (https://github.com/amitguptagwl)",
   "license": "MIT",

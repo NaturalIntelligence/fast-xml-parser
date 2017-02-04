@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 var fs = require('fs');
+var path = require('path');
 var parser = require('./lib/parser');
 
 
@@ -9,7 +10,7 @@ if(process.argv[2] === "--help" || process.argv[2] === "-h"){
     console.log("----------------");
     console.log("xml2js [-ns|-a] <filename> [-o outputfile.json]");
 }else if(process.argv[2] === "--version"){
-	console.log(require(__dirname + "/package.json").version);
+    console.log(require(path.join(__dirname + "/package.json")).version);
 }else{
     var options = {};
     var fileName = "";
