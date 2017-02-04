@@ -26,6 +26,15 @@ var options = {
 	};
 var jsonObj = fastXmlParser.parse(xmlData,options);
 
+//Intermediate obj
+var tObj = fastXmlParser.getTraversalObj(xmlData,options);
+var jsonObj = fastXmlParser.convertToJson(tObj);
+
+```
+
+To use from command line
+```bash
+$xml2js [-ns|-a] <filename> [-o outputfile.json]
 ```
 
 To use it **on webpage**
@@ -54,6 +63,8 @@ Instalation of such libraries fails on some OS. You may require to install missi
 
 Don't forget to check the performance report on [comparejs](https://naturalintelligence.github.io/comparejs/?q=xml2json).
 
+### Limitation
+This tool doesn't check if the XML is valid or not. If the XML is not valid you may get invalid result.
 
 Report an issue or request for a feature [here](https://github.com/NaturalIntelligence/fast-xml-parser/issues)
 
