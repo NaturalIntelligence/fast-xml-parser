@@ -17,11 +17,12 @@ var fastXmlParser = require('fast-xml-parser');
 var jsonObj = fastXmlParser.parse(xmlData);
 
 // when a tag has attributes
-var defaultOptions = {
+var options = {
 		attrPrefix : "@_",
         textNodeName : "#text",
 		ignoreNonTextNodeAttr : true,
         ignoreTextNodeAttr : true,
+		ignoreNameSpace : true
 	};
 var jsonObj = fastXmlParser.parse(xmlData,options);
 

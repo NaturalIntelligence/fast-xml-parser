@@ -30,6 +30,27 @@ describe("XMLParser", function () {
         expect(result).toEqual(expected);
     });
 
+    it("should skip namespace", function () {
+        var xmlData = "<root:node><tag ns:arg='value'>value</tag><intTag ns:arg='value' ns:arg2='value2' >45</intTag><floatTag>65.34</floatTag></root:node>";
+        var expected = {
+            "node": {
+                "tag": {
+                    "@_arg":"value",
+                    "#text": "value"
+                },
+                "intTag": {
+                    "@_arg":"value",
+                    "@_arg2":"value2",
+                    "#text": 45
+                },
+                "floatTag": 65.34
+            }
+        };
+
+        var result = parser.parse(xmlData,{ ignoreNameSpace : false, ignoreTextNodeAttr : false});
+        expect(result).toEqual(expected);
+    });
+
     it("should parse empty text Node", function () {
         var xmlData = "<rootNode><tag></tag></rootNode>";
         var expected = {
