@@ -233,9 +233,12 @@ describe("XMLParser", function () {
                     "age": 33,
                     "emptyNode": "",
                     "booleanNode": ["false", "true"],
-                    "selfclosing": {
-                        "@with": "value"
-                    },
+                    "selfclosing": [
+                        "", 
+                        {
+                            "@with": "value"
+                        }
+                    ],
                     "married": {
                         "@firstTime": "No",
                         "@attr": "val 2",
@@ -288,4 +291,29 @@ describe("XMLParser", function () {
         expect(result).toEqual(expected);
     });
 
+    it("should intermediate traversable JS object which can later covert to JSON", function () {
+        var xmlData = "<rootNode><tag></tag><tag>1</tag><tag>val</tag></rootNode>";
+
+        var tobj = parser.getTraversalObj(xmlData);
+        expect(tobj.parent).toBe(undefined);
+        expect(tobj.tagname).toBe("!xml");
+        expect(tobj.child.length).toBe(1);
+        expect(tobj.child[0].parent.tagname).toBe("!xml");
+        expect(tobj.child[0].tagname).toBe("rootNode");
+        expect(tobj.child[0].val).toBe(undefined);
+        expect(tobj.child[0].child.length).toBe(3);
+        expect(tobj.child[0].child[0].parent).toBe(tobj.child[0].child[1].parent);
+        expect(tobj.child[0].child[1].parent).toBe(tobj.child[0].child[2].parent);
+        expect(tobj.child[0].child[0].val).toBe("");
+        expect(tobj.child[0].child[1].val).toBe(1);
+        expect(tobj.child[0].child[2].val).toBe("val");
+
+        var expected = {
+            "rootNode": {
+                "tag": ["",1,"val"]
+            }
+        };
+        var jsobj = parser.convertToJson(tobj);
+        expect(jsobj).toEqual(expected);
+    });
 });
