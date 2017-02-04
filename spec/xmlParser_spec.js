@@ -47,7 +47,7 @@ describe("XMLParser", function () {
             }
         };
 
-        var result = parser.parse(xmlData,{ ignoreNameSpace : false, ignoreTextNodeAttr : false});
+        var result = parser.parse(xmlData,{ ignoreNameSpace : true, ignoreTextNodeAttr : false});
         expect(result).toEqual(expected);
     });
 
