@@ -30,7 +30,7 @@ describe("XMLParser", function () {
         expect(result).toEqual(expected);
     });
 
-    it("should skip namespace", function () {
+    it("should ignore namespace and text node attributes", function () {
         var xmlData = "<root:node><tag ns:arg='value'>value</tag><intTag ns:arg='value' ns:arg2='value2' >45</intTag><floatTag>65.34</floatTag></root:node>";
         var expected = {
             "node": {
@@ -316,4 +316,40 @@ describe("XMLParser", function () {
         var jsobj = parser.convertToJson(tobj);
         expect(jsobj).toEqual(expected);
     });
+
+
+    it("should skip namespace", function () {
+        var xmlData = '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" >'
+            +'   <soapenv:Header>'
+            +'      <cor:applicationID>dashboardweb</cor:applicationID>'
+            +'      <cor:providerID>abc</cor:providerID>'
+            +'   </soapenv:Header>'
+            +'   <soapenv:Body>'
+            +'      <man:getOffers>'
+            +'         <man:customerId>'
+            +'            <cor:msisdn>123456789</cor:msisdn>'
+            +'         </man:customerId>'
+            +'      </man:getOffers>'
+            +'   </soapenv:Body>'
+            +'</soapenv:Envelope>';
+        var expected = {
+            "Envelope": {
+                "Header": {
+                    "applicationID": "dashboardweb",
+                    "providerID": "abc"
+                },
+                "Body": {
+                    "getOffers": {
+                        "customerId": {
+                            "msisdn": 123456789
+                        }
+                    }
+                }
+            }
+        };
+
+        var result = parser.parse(xmlData,{ ignoreNameSpace : true});
+        expect(result).toEqual(expected);
+    });
+    
 });
