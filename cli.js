@@ -12,7 +12,11 @@ if(process.argv[2] === "--help" || process.argv[2] === "-h"){
 }else if(process.argv[2] === "--version"){
     console.log(require(path.join(__dirname + "/package.json")).version);
 }else{
-    var options = {};
+    var options = {
+        ignoreNameSpace : true,
+        ignoreNonTextNodeAttr : false,
+        ignoreTextNodeAttr : false
+    };
     var fileName = "";
     var outputFileName;
 	for(var i=2; i<process.argv.length;i++){
