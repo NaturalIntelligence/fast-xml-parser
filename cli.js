@@ -23,8 +23,8 @@ if(process.argv[2] === "--help" || process.argv[2] === "-h"){
 		if(process.argv[i] === "-ns"){
             options.ignoreNameSpace = false;
         }else if(process.argv[i] === "-a"){
-            options.ignoreNonTextNodeAttr = false;
-            options.ignoreTextNodeAttr = false;
+            options.ignoreNonTextNodeAttr = true;
+            options.ignoreTextNodeAttr = true;
         }else if(process.argv[i] === "-o"){
             outputFileName = process.argv[++i];
         }else{//filename
