@@ -1,4 +1,4 @@
-var parser = require("../lib/parser");
+var parser = require("../bin/parser");
 
 describe("XMLParser", function () {
 

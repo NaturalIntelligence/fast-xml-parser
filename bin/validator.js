@@ -2,7 +2,7 @@ var getAllMatches = require("./util").getAllMatches;
 var InvalidXmlException = require("./InvalidXmlException");
 
 var validate = function (xmlData){
-    xmlData = xmlData.replace(/\s/g, " ");
+    xmlData = xmlData.replace(/[ \t]/g, " ");
     var eStack = [];
     var currentTag = "";
     var lineNum = 1;
@@ -28,7 +28,7 @@ var validate = function (xmlData){
                 currentTag = getTagName(xmlData,++i);
                 i+=currentTag.length;
                 var attrStr = getAttrStr(xmlData,i,lineNum);
-                if(attrStr && attrStr[attrStr.length-1] === "/"){
+                if(attrStr && (attrStr[attrStr.length-1] === "/"|| attrStr[attrStr.length-1] === "?")){
                     i+=attrStr.length;
                 }else{
                     eStack.push(currentTag);
@@ -44,6 +44,9 @@ var validate = function (xmlData){
         throw new InvalidXmlException("closing tag is missing for "+ eStack);
 }
 
+/**
+ * Validate and return comment tag 
+ */
 function getCommentTag(xmlData,startIndex,lineNum){
     for (var i = startIndex; i < xmlData.length; i++){
         if(xmlData[i] === "-" && xmlData[i+1] === "-" && xmlData[i+2] === ">") break;
@@ -54,6 +57,9 @@ function getCommentTag(xmlData,startIndex,lineNum){
         throw new InvalidXmlException("Invalid comment tag at " + lineNum +":"+ startIndex);
 }
 
+/**
+ * Validate and return end ending tag
+ */
 function getEndTagName(xmlData,startIndex,lineNum){
     xmlData = xmlData.replace(/\s/g, " ");for (var i = startIndex; i < xmlData.length && xmlData[i] !== " " && xmlData[i] !== ">"; i++);
     if(xmlData[i-1] !== ">"){

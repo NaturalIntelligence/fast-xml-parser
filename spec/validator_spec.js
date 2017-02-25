@@ -1,4 +1,4 @@
-var validator = require("../lib/validator");
+var validator = require("../bin/validator");
 
 describe("XMLParser", function () {
 
@@ -170,6 +170,24 @@ describe("XMLParser", function () {
         expect(function(){
             validator.validate(xmlData);
         }).toThrow(new Error("Invalid arguments at 1:9"));
+    });
+
+    it("should not validate xml with unclosed tag", function () {
+        var xmlData = "<rootNode  abc='123' bc='567'";
+
+        expect(function(){
+            validator.validate(xmlData);
+        }).toThrow(new Error("Not closing tag at 1:9"));
+    });
+
+    it("should validate xml data", function () {
+         var fs = require("fs");
+        var path = require("path");
+        var fileNamePath = path.join(__dirname, "assets/sample.xml");
+        var xmlData = fs.readFileSync(fileNamePath).toString();
+
+        var result = validator.validate(xmlData);
+        expect(result).toBe(true);
     });
 
 });

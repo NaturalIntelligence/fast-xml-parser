@@ -41,7 +41,7 @@ To use it **on webpage**
 
 1. Download and include [parser.js](https://github.com/NaturalIntelligence/fast-xml-parser/blob/master/lib/parser.js)
 ```js
-var jsonObj = xml2json(xmlData);
+var jsonObj = parser.parse(xmlData);
 ```
 
 **Give me a [star](https://github.com/NaturalIntelligence/fast-xml-parser)**, if you really like this project.

@@ -88,9 +88,11 @@
         </div>
     <script>
         $( document ).ready(function() {
+            //var parser = require("parser");
             $('#submit').on('click', function() {
                 $('#result').empty();
-                var jsonData = xml2json($('#txtXml').val());
+                
+                var jsonData = parser.parse($('#txtXml').val());
                 $('#result').text(JSON.stringify(jsonData,null,4));
             });
         });
