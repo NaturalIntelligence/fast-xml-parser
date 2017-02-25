@@ -80,7 +80,7 @@ var getTraversalObj =function (xmlData,options){
         }
     }
     return xmlObj;
-}
+};
 
 var xml2json = function (xmlData,options){
     return convertToJson(getTraversalObj(xmlData,options));
@@ -151,7 +151,7 @@ var convertToJson = function (node){
         }
     }
     return jObj;
-}
+};
 
 exports.parse = xml2json;
 exports.getTraversalObj = getTraversalObj;

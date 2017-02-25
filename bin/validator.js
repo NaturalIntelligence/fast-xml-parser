@@ -3,9 +3,7 @@ var InvalidXmlException = require("./InvalidXmlException");
 
 var validate = function (xmlData){
     xmlData = xmlData.replace(/[ \t]/g, " ");
-    var eStack = [];
-    var currentTag = "";
-    var lineNum = 1;
+    var eStack = [], currentTag = "", lineNum = 1;
     for (var i = 0; i < xmlData.length;i++) {
         if(xmlData[i] === "\n"){
             lineNum++;
@@ -38,11 +36,10 @@ var validate = function (xmlData){
             }
         }
     }
-    if(eStack.length === 0)
-        return true;
+    if(eStack.length === 0)     return true;
     else
         throw new InvalidXmlException("closing tag is missing for "+ eStack);
-}
+};
 
 /**
  * Validate and return comment tag 
@@ -92,7 +89,7 @@ function getAttrStr(xmlData,startIndex,lineNum){
             attrs = getListOfAttrsName(attrs,attrStr,attrsRegx2,startIndex,lineNum);
 
             var matches = getAllMatches(attrStr,attrNamesRegx);
-            for (var i = 0; i < matches.length; i++) {
+            for (i = 0; i < matches.length; i++) {
                 var attrName = matches[i][1].trim();
                 if(!attrs[attrName])
                     throw new InvalidXmlException("Invalid arguments at " + lineNum +":"+ startIndex);
