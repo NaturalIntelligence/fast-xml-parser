@@ -5,9 +5,6 @@ node_js:
 - 6
 - 7
 script: npm run coverage
-notifications:
-  slack:
-    secure: CKMfJp25usikImXihpJzpms32RnViKpL25vT/YrurdZ3aV3I28YFATAqt/iTk5UII+kqIu8zz0nZSCo1ca2Z1Ytzko+Ae7dpMyFqRsp2bq1f6TyV6d5sjO7TvG8GEWfZO7RJF8TCM/uVhA8Ju+aKt8ArqvuaYwPe1BqWc1N9JwaLhUsxb4IhEMQcNepITAgKXNMandA3aSAaC5f5g5jLSTI+XrzKXfYr3vHnIv3nRM15V3LI2OBNERe3yXSK94e+GrwJuRgxgS8Zxrn5e8TimCCX3rinnkzwjYUaN5+uExHsNl/jN/9Mqgs9pqaUJOD/4/Mb2VdaZe/gBd5G1ai+TR5plbLjruIXsP+r2EIpEPY9CQrgsVVyf7ohE5e8WYvVQAcrB5SKD3PjZvgC1tX/g1dL+QJLtOeMeyuszTBbrr0/h7XQPcxVzNWKqPBqVX3P7WjilvwViGd8r1+I9bvGbcjPpI5ryjEE0jREoYRX/K8/a6M9seD6aUsB4WWZA0FUevD3xs4O6NgA36rAPDp0LlkplcGdLe65z+FWgCV8J1jSygIO20VKmkromKgexseMlYm5lxvLfe57UFgGDRQEwCpzaDZLHkELfOP+ZuRa3Z6up6LQbOyFs9AI7D7lDLP7oYF+bFCXkArz2nd5K2JbW/VSzLJ4LszyFnmrYyWYHpY=
 addons:
     code_climate:
         repo_token: ca31e4b1924e441790988993f307af5359d99d164d8308c39f81c81b8121f30f
@@ -15,3 +12,5 @@ after_success:
   - npm install -g codeclimate-test-reporter
   - codeclimate-test-reporter < ./coverage/lcov.info
   - coveralls < ./coverage/lcov.info
+before_script:
+  - npm run bundle
