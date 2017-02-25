@@ -24,7 +24,9 @@ var options = {
         ignoreTextNodeAttr : true,
 		ignoreNameSpace : true
 	};
-var jsonObj = fastXmlParser.parse(xmlData,options);
+if(fastXmlParser.validate(xmlData)=== true){//optional
+	var jsonObj = fastXmlParser.parse(xmlData,options);
+}
 
 //Intermediate obj
 var tObj = fastXmlParser.getTraversalObj(xmlData,options);
