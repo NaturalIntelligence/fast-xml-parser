@@ -1,7 +1,7 @@
 {
   "name": "fast-xml-parser",
   "version": "2.3.0",
-  "description": "Parse XML to JS/JSON very fast without C/C++ based libraries",
+  "description": "Validate XML or Parse XML to JS/JSON very fast without C/C++ based libraries",
   "main": "./bin/parser.js",
   "scripts": {
     "test": "jasmine spec/*spec.js",
@@ -22,6 +22,7 @@
     "json",
     "parser",
     "xml2js",
+    "x2js",
     "xml2json",
     "js",
     "traversal",
