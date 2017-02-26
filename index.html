@@ -1,24 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title></title>
+        <title>Fast XMl Parser</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
                 <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css">
+        <link rel="stylesheet" href="static/css/jquery-confirm.min.css">
 
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+
         <script src="lib/parser.js"></script>
+        <script src="static/js/jquery-confirm.min.js"></script>
     </head>
     <body>
-    <body role="document" style="background-color: #2c3e50; color: white;">
+    <body role="document" style="background-color: #2c3e50;">
         
         <div class="container">
             <a href="https://github.com/NaturalIntelligence/fast-xml-parser"><img class="bring-up" style="position: absolute; top: 0; left: 0; border: 0;" src="https://camo.githubusercontent.com/121cd7cbdc3e4855075ea8b558508b91ac463ac2/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f6c6566745f677265656e5f3030373230302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_left_green_007200.png"></a>
-            <h3>Fast XML Parser</h3>
+            <h3 style="color:white;">Fast XML Parser</h3>
             <div style="margin-top: -12px; margin-bottom: 10px;">
                 <span id="version" style="font-size: xx-small"></span>&nbsp;-&nbsp;<span id="timestamp" style="font-size: xx-small"></span>
             </div>
@@ -76,6 +80,10 @@
                         <span class="input-group-btn">
                             <button id="submit" class="btn btn-primary" type="button">Parse to JSON</button>
                         </span>
+
+                        <span class="input-group-btn">
+                            <button id="validate" class="btn btn-primary" type="button">Validate XML</button>
+                        </span>
                     </div>
 
                     <br/>
@@ -89,11 +97,31 @@
     <script>
         $( document ).ready(function() {
             //var parser = require("parser");
+            setTimeout(function(){
+                $.dialog({
+                    title: '',
+                    content: '<p>If you like my work, plz give me a '
+                    + '<a href="https://github.com/NaturalIntelligence/fast-xml-parser/stargazers"><i class="fa fa2x fa-star animated infinite tada"></i></a>'
+                    + '.</p>'
+
+                });
+            }, 5000)
             $('#submit').on('click', function() {
                 $('#result').empty();
                 
                 var jsonData = parser.parse($('#txtXml').val());
                 $('#result').text(JSON.stringify(jsonData,null,4));
+            });
+
+            $('#validate').on('click', function() {
+                $('#result').empty();
+                
+                try{
+                    parser.validate($('#txtXml').val());
+                    $('#result').text("Valid XML");
+                }catch(e){
+                    $('#result').text(e);
+                }
             });
         });
     </script>

@@ -7,3 +7,4 @@ spec
 .codeclimate.yml
 todo
 index.html
+static/*
