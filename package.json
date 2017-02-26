@@ -25,11 +25,13 @@
     "x2js",
     "xml2json",
     "js",
-    "traversal",
+    "traversable",
     "cli",
     "command",
     "validator",
-    "validate"
+    "validate",
+    "transformer",
+    "checker"
   ],
   "author": "Amit Gupta (https://github.com/amitguptagwl)",
   "license": "MIT",
