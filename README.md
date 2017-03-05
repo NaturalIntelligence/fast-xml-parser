@@ -90,3 +90,8 @@ Some of my other NPM pojects
  - [stubmatic](https://github.com/NaturalIntelligence/Stubmatic) : A stub server to mock behaviour of HTTP(s) / REST / SOAP services. Stubbing redis is on the way.
  - [compare js](https://github.com/NaturalIntelligence/comparejs) : comparethe featues of JS code, libraries, and NPM repos.
  - [fast-lorem-ipsum](https://github.com/amitguptagwl/fast-lorem-ipsum) : Generate lorem ipsum words, sentences, paragraph very quickly.
+
+### TODO
+* P2: parser online demo with more options
+* P2: validator cli
+* P2: fast XML prettyfier
