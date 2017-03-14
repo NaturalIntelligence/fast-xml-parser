@@ -40,9 +40,9 @@ var getTraversalObj =function (xmlData,options){
     var xmlObj = new xmlNode('!xml');
     var currentNode = xmlObj;
 
-    for (var i = 0; i < tags.length -1 ; i++) {
+    for (var i = 0; i < tags.length ; i++) {
         var tag = resolveNameSpace(tags[i][1],options.ignoreNameSpace),
-            nexttag = resolveNameSpace(tags[i+1][1],options.ignoreNameSpace),
+            nexttag = i+1 < tags.length ? resolveNameSpace(tags[i+1][1],options.ignoreNameSpace) : undefined,
             attrsStr = tags[i][2], val = tags[i][3], attrs;
 
         if(tag.indexOf("/") === 0){//ending tag

@@ -79,6 +79,21 @@ describe("XMLParser", function () {
         expect(result).toEqual(expected);
     });
 
+    it("should parse single self closing tag", function () {
+        var xmlData = "<tag arg='value'/>";
+        var expected = {
+                "tag": {
+                    "@_arg": "value"
+                }
+        };
+
+        //console.log(parser.getTraversalObj(xmlData));
+        var result = parser.parse(xmlData, {
+            ignoreTextNodeAttr: false
+        });
+        expect(result).toEqual(expected);
+    });
+
     it("should parse repeated nodes in array", function () {
         var xmlData = "<rootNode>" +
             "<tag>value</tag>" +
