@@ -94,6 +94,33 @@ describe("XMLParser", function () {
         expect(result).toEqual(expected);
     });
 
+    it("should parse tag having CDATA", function () {
+        var xmlData = "<?xml version='1.0'?>"
+                       + "<any_name>"
+                       +    "<person>"
+                       +        "<phone>+122233344550</phone>"
+                       +        "<name><![CDATA[<some>Jack</some>]]><![CDATA[Jack]]></name>"
+                       +        "<phone>+122233344551</phone>"
+                       +    "</person>"
+                       + "</any_name>";
+        var expected = {
+                        "any_name": {
+                            "person": {
+                                "phone": [
+                                    122233344550,
+                                    122233344551
+                                ],
+                                "name": "<some>Jack</some>Jack"
+                            }
+                        }
+                    };
+
+        var result = parser.parse(xmlData, {
+            ignoreTextNodeAttr: false
+        });
+        expect(result).toEqual(expected);
+    });
+
     it("should parse repeated nodes in array", function () {
         var xmlData = "<rootNode>" +
             "<tag>value</tag>" +

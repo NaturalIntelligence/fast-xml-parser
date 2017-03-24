@@ -180,6 +180,20 @@ describe("XMLParser", function () {
         }).toThrow(new Error("Not closing tag at 1:9"));
     });
 
+    it("should validate xml with CDATA", function () {
+        var xmlData = "<name><![CDATA[Jack]]></name>";
+
+        var result = validator.validate(xmlData);
+        expect(result).toBe(true);
+    });
+
+    it("should validate xml with repeated CDATA", function () {
+        var xmlData = "<name><![CDATA[Jack]]><![CDATA[Jack]]></name>";
+
+        var result = validator.validate(xmlData);
+        expect(result).toBe(true);
+    });
+
     it("should validate xml data", function () {
          var fs = require("fs");
         var path = require("path");

@@ -10,9 +10,16 @@ var validate = function (xmlData){
         }else if(xmlData[i] === '<'){
             if(xmlData[i+1] === " "){//comment tag
                 throw new InvalidXmlException("Invalid tag at "+ lineNum + ":" + i);
-            }else if(xmlData[i+1] === "!"){//comment tag
-                var comment = getCommentTag(xmlData,i,lineNum);
-                i+=comment.length-1;
+            }else if(xmlData[i+1] === "!"){//comment tag or CDATA tag
+                var tg = "";
+                if(xmlData[i+2] === "-")
+                    tg = getCommentTag(xmlData,i,lineNum);
+                else if(xmlData[i+2] === "["){
+                    tg = getCDATA(xmlData,i,lineNum);
+                }else{
+                    throw new InvalidXmlException("Invalid tag at "+ lineNum + ":" + i);
+                }
+                i+=tg.length-1;
             }else if(xmlData[i+1] === "/"){//closing tag
                 i+=2;
                 currentTag = getEndTagName(xmlData,i,lineNum);
@@ -52,6 +59,22 @@ function getCommentTag(xmlData,startIndex,lineNum){
         return xmlData.substring(startIndex,i);
     else
         throw new InvalidXmlException("Invalid comment tag at " + lineNum +":"+ startIndex);
+}
+
+/**
+ * Validate and return comment tag 
+ */
+function getCDATA(xmlData,startIndex,lineNum){
+    for (var i = startIndex; i < xmlData.length; i++){
+        if(xmlData[i] === "<" && xmlData[i+1] === "/") {
+            i--;
+            break;
+        }
+    }
+    if(xmlData.substr(startIndex,9) === "<![CDATA[" && xmlData.substr(i-2,3) === "]]>")
+        return xmlData.substring(startIndex,i);
+    else
+        throw new InvalidXmlException("Invalid CDATA tag at " + lineNum +":"+ startIndex);
 }
 
 /**

@@ -11,7 +11,8 @@ var xmlNode = function(tagname,parent,val){
 };
 
 //var tagsRegx = new RegExp("<(\\/?[a-zA-Z0-9_:]+)([^>\\/]*)(\\/?)>([^<]+)?","g");
-var tagsRegx = new RegExp("<(\\/?[\\w:-]+)([^>]*)>([^<]+)?","g");
+//var tagsRegx = new RegExp("<(\\/?[\\w:-]+)([^>]*)>([^<]+)?","g");
+var tagsRegx = new RegExp("<(\\/?[\\w:-]+)([^>]*)>(<!\\[CDATA\\[(.*)\\]\\]>)?([^<]+)?","g");
 
 var defaultOptions = {
 		attrPrefix : "@_",
@@ -43,7 +44,8 @@ var getTraversalObj =function (xmlData,options){
     for (var i = 0; i < tags.length ; i++) {
         var tag = resolveNameSpace(tags[i][1],options.ignoreNameSpace),
             nexttag = i+1 < tags.length ? resolveNameSpace(tags[i+1][1],options.ignoreNameSpace) : undefined,
-            attrsStr = tags[i][2], val = tags[i][3], attrs;
+            attrsStr = tags[i][2], attrs,
+            val = tags[i][4] ===  undefined ? tags[i][5] :  simplifyCDATA(tags[i][4]);
 
         if(tag.indexOf("/") === 0){//ending tag
             currentNode = currentNode.parent;
@@ -86,7 +88,9 @@ var xml2json = function (xmlData,options){
     return convertToJson(getTraversalObj(xmlData,options));
 };
 
-
+function simplifyCDATA(cdata){
+    return cdata.replace(new RegExp("\\]\\]><\!\\[CDATA\\[", 'g'), "");
+}
 
 function resolveNameSpace(tagname,ignore){
     if(ignore){
