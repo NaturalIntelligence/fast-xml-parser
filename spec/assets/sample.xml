@@ -4,14 +4,15 @@
         <phone>+122233344550</phone>
         <name>Jack</name>
         <phone>+122233344551</phone>
-        <age>33</age>
+    <age>33</age>
         <emptyNode></emptyNode>
         <booleanNode>false</booleanNode>
         <booleanNode>true</booleanNode>
-        <selfclosing />
+ <selfclosing />
         <selfclosing with="value" />
         <married firstTime="No" attr="val 2">Yes</married>
-        <birthday>Wed, 28 Mar 1979 12:13:14 +0300</birthday>
+      <birthday>Wed, 28 Mar 1979 12:13:14 +0300
+      </birthday>
         <address>
             <city>New York</city>
             <street>Park Ave</street>

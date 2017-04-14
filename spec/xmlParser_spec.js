@@ -242,6 +242,22 @@ describe("XMLParser", function () {
         });
         expect(result).toEqual(expected);
     });
+    
+    it("should preserve node value", function () {
+        var xmlData = "<rootNode attr1=' some val ' attr2='another val'> some val </rootNode>";
+        var expected = {
+            "rootNode": {
+                "@_attr1": " some val ",
+                "@_attr2": "another val",
+                "#text": " some val "
+            }
+        };
+
+        var result = parser.parse(xmlData, {
+            ignoreTextNodeAttr: false
+        });
+        expect(result).toEqual(expected);
+    });
 
     it("should parse with attributes and value when there is single node", function () {
         var xmlData = "<rootNode attr1='some val' attr2='another val'>val</rootNode>";
@@ -286,7 +302,7 @@ describe("XMLParser", function () {
                         "@attr": "val 2",
                         "#_text": "Yes"
                     },
-                    "birthday": "Wed, 28 Mar 1979 12:13:14 +0300",
+                    "birthday": "Wed, 28 Mar 1979 12:13:14 +0300\r\n      ",
                     "address": [{
                         "city": "New York",
                         "street": "Park Ave",
