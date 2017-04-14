@@ -302,7 +302,7 @@ describe("XMLParser", function () {
                         "@attr": "val 2",
                         "#_text": "Yes"
                     },
-                    "birthday": "Wed, 28 Mar 1979 12:13:14 +0300\r\n      ",
+                    "birthday": "Wed, 28 Mar 1979 12:13:14 +0300",
                     "address": [{
                         "city": "New York",
                         "street": "Park Ave",
