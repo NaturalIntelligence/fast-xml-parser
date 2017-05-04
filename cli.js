@@ -27,9 +27,11 @@ if(process.argv[2] === "--help" || process.argv[2] === "-h"){
             options.ignoreTextNodeAttr = true;
         }else if(process.argv[i] === "-o"){
             outputFileName = process.argv[++i];
+        }else if(process.argv[i] === "-np"){ // no prefix for attribute
+            options.attrPrefix = "";
         }else{//filename
             fileName = process.argv[i];
-        }
+        }		
     }
     try{
         var xmlData = fs.readFileSync(fileName).toString();
