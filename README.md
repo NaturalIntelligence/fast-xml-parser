@@ -1,9 +1,9 @@
 # [fast-xml-parser](https://www.npmjs.com/package/fast-xml-parser)
-Validae XML or Parse XML to JS/JSON very fast without C/C++ based libraries and no callback
+Validate XML or Parse XML to JS/JSON very fast without C/C++ based libraries and no callback
 
 You can use this library online (press try me button above), or as command from CLI, or in your website, or in npm repo.
 
-* This library let you validate the XML data syntatically. 
+* This library let you validate the XML data syntactically. 
 * Or you can transform/covert/parse XML data to JS/JSON object.
 * Or you can transform the XML in traversable JS object which can later be converted to JS/JSON object.
 
@@ -27,12 +27,13 @@ var jsonObj = fastXmlParser.parse(xmlData);
 
 // when a tag has attributes
 var options = {
-		attrPrefix : "@_",
-        textNodeName : "#text",
-		ignoreNonTextNodeAttr : true,
-        ignoreTextNodeAttr : true,
-		ignoreNameSpace : true
-	};
+    attrPrefix : "@_",
+    textNodeName : "#text",
+    ignoreNonTextNodeAttr : true,
+    ignoreTextNodeAttr : true,
+    ignoreNameSpace : true,
+    textNodeConversion : true
+};
 if(fastXmlParser.validate(xmlData)=== true){//optional
 	var jsonObj = fastXmlParser.parse(xmlData,options);
 }
@@ -61,15 +62,15 @@ var jsonObj = parser.parse(xmlData);
 ## Comparision
 I decided to created this library when I couldn't find any library which can convert XML data to json without any callback and which is not based on any C/C++ library.
 
-Liraries that I compared
+Libraries that I compared
 * xml-mapping : fast, result is not satisfactory
 * xml2js : fast, result is not satisfactory
-* xml2js-expat : couldn't test performance as it gives error on high load. Instalation failed on traivs and on my local machine using 'yarn'.
-* xml2json : based on node-expat which is based on C/C++. Instalation failed on travis.
+* xml2js-expat : couldn't test performance as it gives error on high load. Installation failed on travis and on my local machine using 'yarn'.
+* xml2json : based on node-expat which is based on C/C++. Installation failed on travis.
 * fast-xml-parser : very very fast.
 
 Why not C/C++ based libraries?
-Instalation of such libraries fails on some OS. You may require to install missing dependency manually.
+Installation of such libraries fails on some OS. You may require to install missing dependency manually.
 
 **Benchmark report**
 ![npm_xml2json_compare](https://cloud.githubusercontent.com/assets/7692328/22402086/7526a3a6-e5e2-11e6-8e6b-301691725c21.png)
@@ -88,7 +89,7 @@ Your contribution in terms of donation, testing, bug fixes, code development etc
 
 Some of my other NPM pojects
  - [stubmatic](https://github.com/NaturalIntelligence/Stubmatic) : A stub server to mock behaviour of HTTP(s) / REST / SOAP services. Stubbing redis is on the way.
- - [compare js](https://github.com/NaturalIntelligence/comparejs) : comparethe featues of JS code, libraries, and NPM repos.
+ - [compare js](https://github.com/NaturalIntelligence/comparejs) : compare the features of JS code, libraries, and NPM repos.
  - [fast-lorem-ipsum](https://github.com/amitguptagwl/fast-lorem-ipsum) : Generate lorem ipsum words, sentences, paragraph very quickly.
 
 ### TODO

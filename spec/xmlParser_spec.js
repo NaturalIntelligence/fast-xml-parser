@@ -3,7 +3,7 @@ var parser = require("../bin/parser");
 describe("XMLParser", function () {
 
     it("should parse all values as string,int, or float", function () {
-        var xmlData = "<rootNode><tag>value</tag><intTag>45</intTag><floatTag>65.34</floatTag></rootNode>";
+        var xmlData = "<rootNode><tag>value</tag><intTag>045</intTag><floatTag>65.34</floatTag></rootNode>";
         var expected = {
             "rootNode": {
                 "tag": "value",
@@ -13,6 +13,22 @@ describe("XMLParser", function () {
         };
 
         var result = parser.parse(xmlData);
+        expect(result).toEqual(expected);
+    });
+
+    it("should parse all values as string", function () {
+        var xmlData = "<rootNode><tag>value</tag><intTag>045</intTag><floatTag>65.34</floatTag></rootNode>";
+        var expected = {
+            "rootNode": {
+                "tag": "value",
+                "intTag": "045",
+                "floatTag": "65.34"
+            }
+        };
+
+        var result = parser.parse(xmlData, {
+            textNodeConversion : false
+        });
         expect(result).toEqual(expected);
     });
 
@@ -242,7 +258,7 @@ describe("XMLParser", function () {
         });
         expect(result).toEqual(expected);
     });
-    
+
     it("should preserve node value", function () {
         var xmlData = "<rootNode attr1=' some val ' attr2='another val'> some val </rootNode>";
         var expected = {
@@ -292,7 +308,7 @@ describe("XMLParser", function () {
                     "emptyNode": "",
                     "booleanNode": ["false", "true"],
                     "selfclosing": [
-                        "", 
+                        "",
                         {
                             "@with": "value"
                         }
@@ -409,5 +425,5 @@ describe("XMLParser", function () {
         var result = parser.parse(xmlData,{ ignoreNameSpace : true});
         expect(result).toEqual(expected);
     });
-    
+
 });
