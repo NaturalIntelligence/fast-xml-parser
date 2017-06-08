@@ -129,15 +129,18 @@ function parseValue(val,conversion){
     return val;
 }
 
-var attrsRegx = new RegExp("(\\S+)=.([^'\"]+)","g");
+//var attrsRegx = new RegExp("(\\S+)=.([^'\"]+)","g");
+var attrsRegx = new RegExp("(\\S+)=(.)([^=>]*)\\2","g");
 function buildAttributesArr(attrStr,ignore,prefix,ignoreNS){
     attrStr = attrStr || attrStr.trim();
+    
     if(!ignore && attrStr.length > 3){
+
         var matches = getAllMatches(attrStr,attrsRegx);
         var attrs = {};
         for (var i = 0; i < matches.length; i++) {
             var attrName = prefix + resolveNameSpace( matches[i][1],ignoreNS);
-            attrs[attrName] = matches[i][2];
+            attrs[attrName] = matches[i][3];
         }
         return attrs;
     }

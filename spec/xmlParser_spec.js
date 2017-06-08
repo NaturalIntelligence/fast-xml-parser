@@ -110,32 +110,7 @@ describe("XMLParser", function () {
         expect(result).toEqual(expected);
     });
 
-    it("should parse tag having CDATA", function () {
-        var xmlData = "<?xml version='1.0'?>"
-                       + "<any_name>"
-                       +    "<person>"
-                       +        "<phone>+122233344550</phone>"
-                       +        "<name><![CDATA[<some>Jack</some>]]><![CDATA[Jack]]></name>"
-                       +        "<phone>+122233344551</phone>"
-                       +    "</person>"
-                       + "</any_name>";
-        var expected = {
-                        "any_name": {
-                            "person": {
-                                "phone": [
-                                    122233344550,
-                                    122233344551
-                                ],
-                                "name": "<some>Jack</some>Jack"
-                            }
-                        }
-                    };
-
-        var result = parser.parse(xmlData, {
-            ignoreTextNodeAttr: false
-        });
-        expect(result).toEqual(expected);
-    });
+    
 
     it("should parse repeated nodes in array", function () {
         var xmlData = "<rootNode>" +
@@ -260,11 +235,11 @@ describe("XMLParser", function () {
     });
 
     it("should preserve node value", function () {
-        var xmlData = "<rootNode attr1=' some val ' attr2='another val'> some val </rootNode>";
+        var xmlData = "<rootNode attr1=' some val ' name='another val'> some val </rootNode>";
         var expected = {
             "rootNode": {
                 "@_attr1": " some val ",
-                "@_attr2": "another val",
+                "@_name": "another val",
                 "#text": " some val "
             }
         };
@@ -288,6 +263,41 @@ describe("XMLParser", function () {
         var result = parser.parse(xmlData, {
             ignoreTextNodeAttr: false
         });
+        expect(result).toEqual(expected);
+    });
+
+    it("should parse nested elements with attributes", function () {
+        var xmlData = '<root>'
+                        +'<Meet date="2017-05-03" type="A" name="Meeting \'A\'">'
+                        +   '<Event time="00:05:00" ID="574" Name="Some Event Name">'
+                        +         '<User ID="1">Bob</User>'
+                        +    '</Event>'
+                        + '</Meet>'
+                     +'</root>';
+        var expected = {
+                        "root": {
+                            "Meet": {
+                                "@_date": "2017-05-03",
+                                "@_type": "A",
+                                "@_name": "Meeting 'A'",
+                                "Event": {
+                                    "@_time": "00:05:00",
+                                    "@_ID": "574",
+                                    "@_Name": "Some Event Name",
+                                    "User": {
+                                        "@_ID": "1",
+                                        "#text": "Bob"
+                                    }
+                                }
+                            }
+                        }
+                    };
+
+        var result = parser.parse(xmlData, {
+            ignoreTextNodeAttr: false,
+            ignoreNonTextNodeAttr: false
+        });
+
         expect(result).toEqual(expected);
     });
 
