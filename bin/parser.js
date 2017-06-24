@@ -130,7 +130,8 @@ function parseValue(val,conversion){
 }
 
 //var attrsRegx = new RegExp("(\\S+)=\\s*[\"']?((?:.(?![\"']?\\s+(?:\\S+)=|[>\"']))+.)[\"']?","g");
-var attrsRegx = new RegExp("(\\S+)=\\s*(['\"])((?:.(?!\\2))*.)","g");
+//var attrsRegx = new RegExp("(\\S+)=\\s*(['\"])((?:.(?!\\2))*.)","g");
+var attrsRegx = new RegExp("(\\S+)\\s*=\\s*(['\"])(.*?)\\2","g");
 function buildAttributesArr(attrStr,ignore,prefix,ignoreNS){
     attrStr = attrStr || attrStr.trim();
     
