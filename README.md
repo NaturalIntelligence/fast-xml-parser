@@ -57,10 +57,6 @@ var isValid = parser.validate(xmlData);
 var jsonObj = parser.parse(xmlData);
 ```
 
-**Give me a [star](https://github.com/NaturalIntelligence/fast-xml-parser)**, if you really like this project.
-
-**Fund collected (since the starting of the project)** : $0
-
 ## Comparision
 I decided to created this library when I couldn't find any library which can convert XML data to json without any callback and which is not based on any C/C++ library.
 
@@ -88,6 +84,10 @@ Report an issue or request for a feature [here](https://github.com/NaturalIntell
 
 Your contribution in terms of donation, testing, bug fixes, code development etc. can help me to write fast algorithms.
 [<img src="https://www.paypalobjects.com/webstatic/en_US/btn/btn_donate_92x26.png" alt="Stubmatic donate button"/>](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=KQJAX48SPUKNC) 
+
+**Give me a [star](https://github.com/NaturalIntelligence/fast-xml-parser)**, if you really like this project.
+
+**Fund collected (since the starting of the project)** : $0
 
 Some of my other NPM pojects
  - [stubmatic](https://github.com/NaturalIntelligence/Stubmatic) : A stub server to mock behaviour of HTTP(s) / REST / SOAP services. Stubbing redis is on the way.
