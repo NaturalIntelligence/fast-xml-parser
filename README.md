@@ -59,6 +59,8 @@ var jsonObj = parser.parse(xmlData);
 
 **Give me a [star](https://github.com/NaturalIntelligence/fast-xml-parser)**, if you really like this project.
 
+**Fund collected (since the starting of the project)** : $0
+
 ## Comparision
 I decided to created this library when I couldn't find any library which can convert XML data to json without any callback and which is not based on any C/C++ library.
 
@@ -72,15 +74,15 @@ Libraries that I compared
 Why not C/C++ based libraries?
 Installation of such libraries fails on some OS. You may require to install missing dependency manually.
 
-**Benchmark report**
+### Benchmark report
 ![npm_xml2json_compare](https://cloud.githubusercontent.com/assets/7692328/22402086/7526a3a6-e5e2-11e6-8e6b-301691725c21.png)
 
 Don't forget to check the performance report on [comparejs](https://naturalintelligence.github.io/comparejs/?q=xml2json).
 
-validator benchmark: 2000 tps
+**validator benchmark: 21000 tps**
 
 ### Limitation
-This tool doesn't check if the XML is valid or not. If the XML is not valid you may get invalid result.
+Parser doesn't check if the XML is valid or not. If the XML is not valid you may get invalid result. So you can call the validator function first to check the structure.
 
 Report an issue or request for a feature [here](https://github.com/NaturalIntelligence/fast-xml-parser/issues)
 
