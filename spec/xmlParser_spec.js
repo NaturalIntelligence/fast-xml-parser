@@ -266,6 +266,19 @@ describe("XMLParser", function () {
         expect(result).toEqual(expected);
     });
 
+    it("should parse different tags", function () {
+        var xmlData = "<tag.1>val1</tag.1><tag.2>val2</tag.2>";
+        var expected = {
+            "tag.1": "val1",
+            "tag.2": "val2"
+        };
+
+        var result = parser.parse(xmlData, {
+            ignoreTextNodeAttr: false
+        });
+        expect(result).toEqual(expected);
+    });
+
     it("should parse nested elements with attributes", function () {
         var xmlData = '<root>'
                         +'<Meet date="2017-05-03" type="A" name="Meeting \'A\'">'

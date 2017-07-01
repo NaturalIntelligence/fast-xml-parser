@@ -13,7 +13,7 @@ var xmlNode = function(tagname,parent,val){
 //var tagsRegx = new RegExp("<(\\/?[a-zA-Z0-9_:]+)([^>\\/]*)(\\/?)>([^<]+)?","g");
 //var tagsRegx = new RegExp("<(\\/?[\\w:-]+)([^>]*)>([^<]+)?","g");
 var cdataRegx = "<!\\[CDATA\\[([^\\]\\]]*)\\]\\]>"
-var tagsRegx = new RegExp("<(\\/?[\\w:-]+)([^>]*)>(<!\\[CDATA\\[([^\\]\\]]*)\\]\\]>)*([^<]+)?","g");
+var tagsRegx = new RegExp("<(\\/?[\\w:\\-\._]+)([^>]*)>(<!\\[CDATA\\[([^\\]\\]]*)\\]\\]>)*([^<]+)?","g");
 
 var defaultOptions = {
     attrPrefix : "@_",
