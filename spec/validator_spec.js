@@ -191,6 +191,44 @@ describe("XMLParser", function () {
         expect(result).toBe(true);
     });
 
+    it("should return false when tag starts with xml or XML etc", function () {
+        var xmlData = "<xmlNode  abc='123' bc='567'>val</xmlNode>";
+
+        result = validator.validate(xmlData);
+        expect(result).toBe(false);
+
+        xmlData = "<XmLNode  abc='123' bc='567'></XmLNode>";
+
+        result = validator.validate(xmlData);
+        expect(result).toBe(false);
+
+        xmlData = "<xMLNode/>";
+
+        result = validator.validate(xmlData);
+        expect(result).toBe(false);
+    });
+
+    it("should return true for valid tag", function () {
+        var xmlData = "<ns:start_tag-2.0></ns:start_tag-2.0>";
+
+        result = validator.validate(xmlData);
+        expect(result).toBe(true);
+    });
+
+    it("should return false for invalid tag", function () {
+        var xmlData = "<2start_tag  abc='123' bc='567'></2start_tag>";
+
+        result = validator.validate(xmlData);
+        expect(result).toBe(false);
+    });
+
+    it("should return false for invalid tag", function () {
+        var xmlData = "<2start_tag />";
+
+        result = validator.validate(xmlData);
+        expect(result).toBe(false);
+    });
+
     it("should validate xml data", function () {
          var fs = require("fs");
         var path = require("path");

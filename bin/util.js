@@ -1,5 +1,4 @@
 var getAllMatches = function(string, regex) {
-  //var regex = new RegExp(regex_str,"g");
   var matches = [];
   var match = regex.exec(string);
   while (match) {
@@ -13,4 +12,17 @@ var getAllMatches = function(string, regex) {
   return matches;
 };
 
+
+var doesMatch = function(string,regex){
+  var match = regex.exec(string);
+  if(match === null || match === undefined) return false;
+  else return true;
+}
+
+var doesNotMatch = function(string,regex){
+  return !doesMatch(string,regex);
+}
+
+exports.doesMatch = doesMatch
+exports.doesNotMatch = doesNotMatch
 exports.getAllMatches = getAllMatches;
