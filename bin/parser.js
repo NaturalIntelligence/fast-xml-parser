@@ -22,12 +22,13 @@ var defaultOptions = {
     ignoreTextNodeAttr : true,
     ignoreNameSpace : false,
     ignoreRootElement : false,
-    textNodeConversion : true
+    textNodeConversion : true,
+    textAttrConversion : false
 };
 
 var buildOptions = function (options){
     if(!options) options = {};
-    var props = ["attrPrefix","ignoreNonTextNodeAttr","ignoreTextNodeAttr","ignoreNameSpace","ignoreRootElement","textNodeName","textNodeConversion"];
+    var props = ["attrPrefix","ignoreNonTextNodeAttr","ignoreTextNodeAttr","ignoreNameSpace","ignoreRootElement","textNodeName","textNodeConversion","textAttrConversion"];
     for (var i = 0; i < props.length; i++) {
         if(options[props[i]] === undefined){
             options[props[i]] = defaultOptions[props[i]];
@@ -58,11 +59,11 @@ var getTraversalObj =function (xmlData,options){
         var childNode = new xmlNode(tag,currentNode);
 
         if(selfClosingTag){
-            attrs = buildAttributesArr(attrsStr,options.ignoreTextNodeAttr,options.attrPrefix,options.ignoreNameSpace);
+            attrs = buildAttributesArr(attrsStr,options.ignoreTextNodeAttr,options.attrPrefix,options.ignoreNameSpace,options.textAttrConversion);
             childNode.val = attrs || "";
             currentNode.addChild(childNode);
         }else if( ("/" + tag) === nexttag){ //Text node
-            attrs = buildAttributesArr(attrsStr,options.ignoreTextNodeAttr,options.attrPrefix,options.ignoreNameSpace);
+            attrs = buildAttributesArr(attrsStr,options.ignoreTextNodeAttr,options.attrPrefix,options.ignoreNameSpace,options.textAttrConversion);
             val = parseValue(val,options.textNodeConversion);
             if(attrs){
                 attrs[options.textNodeName] = val;
@@ -73,7 +74,7 @@ var getTraversalObj =function (xmlData,options){
             currentNode.addChild(childNode);
             i++;
         }else{//starting tag
-            attrs = buildAttributesArr(attrsStr,options.ignoreNonTextNodeAttr,options.attrPrefix,options.ignoreNameSpace);
+            attrs = buildAttributesArr(attrsStr,options.ignoreNonTextNodeAttr,options.attrPrefix,options.ignoreNameSpace,options.textAttrConversion);
             if(attrs){
                 for (var prop in attrs) {
                   attrs.hasOwnProperty(prop) && childNode.addChild(new xmlNode(prop,childNode,attrs[prop]));
@@ -132,7 +133,7 @@ function parseValue(val,conversion){
 //var attrsRegx = new RegExp("(\\S+)=\\s*[\"']?((?:.(?![\"']?\\s+(?:\\S+)=|[>\"']))+.)[\"']?","g");
 //var attrsRegx = new RegExp("(\\S+)=\\s*(['\"])((?:.(?!\\2))*.)","g");
 var attrsRegx = new RegExp("(\\S+)\\s*=\\s*(['\"])(.*?)\\2","g");
-function buildAttributesArr(attrStr,ignore,prefix,ignoreNS){
+function buildAttributesArr(attrStr,ignore,prefix,ignoreNS,conversion){
     attrStr = attrStr || attrStr.trim();
     
     if(!ignore && attrStr.length > 3){
@@ -141,7 +142,7 @@ function buildAttributesArr(attrStr,ignore,prefix,ignoreNS){
         var attrs = {};
         for (var i = 0; i < matches.length; i++) {
             var attrName = prefix + resolveNameSpace( matches[i][1],ignoreNS);
-            attrs[attrName] = matches[i][3];
+            attrs[attrName] = parseValue(matches[i][3],conversion);
         }
         return attrs;
     }
