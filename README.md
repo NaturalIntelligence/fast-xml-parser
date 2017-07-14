@@ -32,7 +32,9 @@ var options = {
     ignoreNonTextNodeAttr : true,
     ignoreTextNodeAttr : true,
     ignoreNameSpace : true,
-    textNodeConversion : true
+    ignoreRootElement : false,
+    textNodeConversion : true,
+    textAttrConversion : false
 };
 if(fastXmlParser.validate(xmlData)=== true){//optional
 	var jsonObj = fastXmlParser.parse(xmlData,options);

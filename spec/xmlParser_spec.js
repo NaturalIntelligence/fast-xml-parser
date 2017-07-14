@@ -32,6 +32,64 @@ describe("XMLParser", function () {
         expect(result).toEqual(expected);
     });
 
+    it("should parse all values of attributes as string", function () {
+        var xmlData = "<rootNode><tag int='045' float='65.34'>value</tag></rootNode>";
+        var expected = {
+            "rootNode": {
+                "tag": {
+                    "#text": "value",
+                    "@_int": "045",
+                    "@_float": "65.34"
+                }
+            }
+        };
+
+        var result = parser.parse(xmlData, {
+            ignoreTextNodeAttr : false,
+            textAttrConversion : false
+        });
+
+        expect(result).toEqual(expected);
+    });
+
+    it("should parse number values of attributes as number", function () {
+        var xmlData = "<rootNode><tag int='045' float='65.34'>value</tag></rootNode>";
+        var expected = {
+            "rootNode": {
+                "tag": {
+                    "#text": "value",
+                    "@_int": 45,
+                    "@_float": 65.34
+                }
+            }
+        };
+
+        var result = parser.parse(xmlData, {
+            ignoreTextNodeAttr : false,
+            ignoreNonTextNodeAttr : false,
+            textAttrConversion : true
+        });
+
+        expect(result).toEqual(expected);
+    });
+
+    it("should parse number values as number if flag is set", function () {
+        var xmlData = "<rootNode><tag>value</tag><intTag>045</intTag><floatTag>65.34</floatTag></rootNode>";
+        var expected = {
+            "rootNode": {
+                "tag": "value",
+                "intTag": 45,
+                "floatTag": 65.34
+            }
+        };
+
+        var result = parser.parse(xmlData, {
+            textNodeConversion : true
+        });
+        expect(result).toEqual(expected);
+    });
+
+
     it("should skip tag arguments", function () {
         var xmlData = "<rootNode><tag ns:arg='value'>value</tag><intTag ns:arg='value' ns:arg2='value2' >45</intTag><floatTag>65.34</floatTag></rootNode>";
         var expected = {
