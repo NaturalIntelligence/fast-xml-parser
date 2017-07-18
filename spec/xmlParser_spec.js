@@ -446,6 +446,60 @@ describe("XMLParser", function () {
         expect(result).toEqual(expected);
     });
 
+  it("should parse nodes as arrays", function () {
+    var fs = require("fs");
+    var path = require("path");
+    var fileNamePath = path.join(__dirname, "assets/simple.xml");
+    var xmlData = fs.readFileSync(fileNamePath).toString();
+
+    var expected = {
+      "any_name": [{
+        "@attr": ["https://example.com/somepath"],
+        "person": [{
+          "@id": ["101"],
+          "phone": [122233344550, 122233344551],
+          "name": ["Jack"],
+          "age": [33],
+          "emptyNode": [""],
+          "booleanNode": ["false", "true"],
+          "selfclosing": [
+            "",
+            {
+              "@with": "value"
+            }
+          ],
+          "married": [{
+            "@firstTime": "No",
+            "@attr": "val 2",
+            "#_text": "Yes"
+          }],
+          "birthday": ["Wed, 28 Mar 1979 12:13:14 +0300"],
+          "address": [{
+            "city": ["New York"],
+            "street": ["Park Ave"],
+            "buildingNo": [1],
+            "flatNo": [1]
+          }, {
+            "city": ["Boston"],
+            "street": ["Centre St"],
+            "buildingNo": [33],
+            "flatNo": [24]
+          }]
+        }]
+      }]
+    };
+
+    var result = parser.parse(xmlData, {
+      ignoreTextNodeAttr: false,
+      ignoreNonTextNodeAttr: false,
+      attrPrefix: "@",
+      textNodeName: "#_text",
+      arrayMode: true
+    });
+    //console.log(JSON.stringify(result,null,4));
+    expect(result).toEqual(expected);
+  });
+
     it("should intermediate traversable JS object which can later covert to JSON", function () {
         var xmlData = "<rootNode><tag></tag><tag>1</tag><tag>val</tag></rootNode>";
 
