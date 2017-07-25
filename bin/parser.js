@@ -23,12 +23,13 @@ var defaultOptions = {
     ignoreNameSpace : false,
     ignoreRootElement : false,
     textNodeConversion : true,
-    textAttrConversion : false
+    textAttrConversion : false,
+    arrayMode : false
 };
 
 var buildOptions = function (options){
     if(!options) options = {};
-    var props = ["attrPrefix","ignoreNonTextNodeAttr","ignoreTextNodeAttr","ignoreNameSpace","ignoreRootElement","textNodeName","textNodeConversion","textAttrConversion"];
+    var props = ["attrPrefix","ignoreNonTextNodeAttr","ignoreTextNodeAttr","ignoreNameSpace","ignoreRootElement","textNodeName","textNodeConversion","textAttrConversion","arrayMode"];
     for (var i = 0; i < props.length; i++) {
         if(options[props[i]] === undefined){
             options[props[i]] = defaultOptions[props[i]];
@@ -90,7 +91,7 @@ var getTraversalObj =function (xmlData,options){
 };
 
 var xml2json = function (xmlData,options){
-    return convertToJson(getTraversalObj(xmlData,options));
+    return convertToJson(getTraversalObj(xmlData,options), buildOptions(options).arrayMode);
 };
 
 var cdRegx = new RegExp("<!\\[CDATA\\[([^\\]\\]]*)\\]\\]>","g");
@@ -150,14 +151,14 @@ function buildAttributesArr(attrStr,ignore,prefix,ignoreNS,conversion){
     }
 }
 
-var convertToJson = function (node){
+var convertToJson = function (node, arrayMode){
     var jObj = {};
     if(node.val || node.val === "") {
         return node.val;
     }else{
         for (var index = 0; index < node.child.length; index++) {
             var prop = node.child[index].tagname;
-            var obj = convertToJson(node.child[index]);
+            var obj = convertToJson(node.child[index], arrayMode);
             if(jObj[prop] !== undefined){
                 if(!Array.isArray(jObj[prop])){
                     var swap = jObj[prop];
@@ -166,7 +167,7 @@ var convertToJson = function (node){
                 }
                 jObj[prop].push(obj);
             }else{
-                jObj[prop] = obj;
+                jObj[prop] = arrayMode ? [obj] : obj;
             }
         }
     }
