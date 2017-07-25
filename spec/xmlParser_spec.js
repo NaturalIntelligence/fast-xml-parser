@@ -449,7 +449,7 @@ describe("XMLParser", function () {
   it("should parse nodes as arrays", function () {
     var fs = require("fs");
     var path = require("path");
-    var fileNamePath = path.join(__dirname, "assets/simple.xml");
+    var fileNamePath = path.join(__dirname, "assets/sample.xml");
     var xmlData = fs.readFileSync(fileNamePath).toString();
 
     var expected = {
@@ -485,6 +485,27 @@ describe("XMLParser", function () {
             "buildingNo": [33],
             "flatNo": [24]
           }]
+        }, {
+          "@id": ["102"],
+          "phone": [122233344553, 122233344554],
+          "name": ["Boris"],
+          "age": [34],
+          "married": [{
+              "@firstTime": "Yes",
+              "#_text": "Yes"
+          }],
+          "birthday": ["Mon, 31 Aug 1970 02:03:04 +0300"],
+          "address": [{
+              "city": ["Moscow"],
+              "street": ["Kahovka"],
+              "buildingNo": [1],
+              "flatNo": [2]
+          }, {
+              "city": ["Tula"],
+              "street": ["Lenina"],
+              "buildingNo": [3],
+              "flatNo": [78]
+          }]
         }]
       }]
     };
@@ -496,7 +517,6 @@ describe("XMLParser", function () {
       textNodeName: "#_text",
       arrayMode: true
     });
-    //console.log(JSON.stringify(result,null,4));
     expect(result).toEqual(expected);
   });
 
