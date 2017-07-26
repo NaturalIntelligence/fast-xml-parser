@@ -70,7 +70,11 @@ var getTraversalObj =function (xmlData,options){
                 attrs[options.textNodeName] = val;
                 childNode.val = attrs;
             }else{
-                childNode.val = val || "";
+                if(val !== undefined && val != null){
+                    childNode.val = val;    
+                }else{
+                    childNode.val = "";
+                }
             }
             currentNode.addChild(childNode);
             i++;
@@ -153,7 +157,7 @@ function buildAttributesArr(attrStr,ignore,prefix,ignoreNS,conversion){
 
 var convertToJson = function (node, arrayMode){
     var jObj = {};
-    if(node.val || node.val === "") {
+    if(node.val !== undefined && node.val != null || node.val === "") {
         return node.val;
     }else{
         for (var index = 0; index < node.child.length; index++) {

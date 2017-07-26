@@ -74,11 +74,11 @@ describe("XMLParser", function () {
     });
 
     it("should parse number values as number if flag is set", function () {
-        var xmlData = "<rootNode><tag>value</tag><intTag>045</intTag><floatTag>65.34</floatTag></rootNode>";
+        var xmlData = "<rootNode><tag>value</tag><intTag>045</intTag><intTag>0</intTag><floatTag>65.34</floatTag></rootNode>";
         var expected = {
             "rootNode": {
                 "tag": "value",
-                "intTag": 45,
+                "intTag": [45,0],
                 "floatTag": 65.34
             }
         };
