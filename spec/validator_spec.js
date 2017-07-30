@@ -259,6 +259,16 @@ describe("XMLParser", function () {
         expect(result).toBe(false);
     });
 
+  it("should return true for valid svg", function () {
+    var fs = require("fs");
+    var path = require("path");
+    var fileNamePath = path.join(__dirname, "assets/by.svg");
+    var svgData = fs.readFileSync(fileNamePath).toString();
+
+    var result = validator.validate(svgData);
+    expect(result).toBe(true);
+  });
+
 });
 
 
