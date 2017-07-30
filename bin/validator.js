@@ -41,7 +41,7 @@ function validateAttributes(xmlData){
             var attrsList = util.getAllMatches(attrStrings[i][1],attrPattern);
             var attrNames=[];
             for (j=0;j<attrsList.length;j++){
-                if(attrNames[attrsList[j][1]]){//duplicate attributes
+                if(attrNames.hasOwnProperty(attrsList[j][1])){//duplicate attributes
                     return false;
                 }else{
                     attrNames[attrsList[j][1]]=1;
