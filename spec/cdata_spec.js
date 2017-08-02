@@ -9,6 +9,8 @@ describe("XMLParser", function () {
                        +        "<phone>+122233344550</phone>"
                        +        "<name><![CDATA[<some>Jack</some>]]><![CDATA[Jack]]></name>"
                        +        "<name><![CDATA[<some>Mohan</some>]]></name>"
+                       +        "<blank><![CDATA[]]></blank>"
+                       +        "<regx><![CDATA[^[ ].*$]]></regx>"
                        +        "<phone>+122233344551</phone>"
                        +    "</person>"
                        + "</any_name>";
@@ -22,7 +24,9 @@ describe("XMLParser", function () {
 						            "name": [
 						                "<some>Jack</some>Jack",
 						                "<some>Mohan</some>"
-						            ]
+						            ],
+                        "blank" : "",
+                        "regx" : "^[ ].*$"
 						        }
 						    }
 						};
@@ -30,6 +34,9 @@ describe("XMLParser", function () {
         var result = parser.parse(xmlData, {
             ignoreTextNodeAttr: false
         });
+
+        //console.log(JSON.stringify(result,null,4));
+
         expect(result).toEqual(expected);
     });
 

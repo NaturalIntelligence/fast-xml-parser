@@ -191,6 +191,13 @@ describe("XMLParser", function () {
         expect(result).toBe(true);
     });
 
+    it("should validate xml when CDATA consist regx or blank data", function () {
+        var xmlData = "<name><![CDATA[]]><![CDATA[^[ ].*$]]></name>";
+
+        var result = validator.validate(xmlData);
+        expect(result).toBe(true);
+    });
+
     it("should return false when tag starts with xml or XML etc", function () {
         var xmlData = "<xmlNode  abc='123' bc='567'>val</xmlNode>";
 
