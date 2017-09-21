@@ -372,6 +372,49 @@ describe("XMLParser", function () {
         expect(result).toEqual(expected);
     });
 
+    it("should parse nested elements with attributes wrapped in array", function () {
+        var xmlData = '<root>'
+            +'<Meet date="2017-05-03" type="A" name="Meeting \'A\'">'
+            +   '<Event time="00:05:00" ID="574" Name="Some Event Name">'
+            +         '<User ID="1">Bob</User>'
+            +    '</Event>'
+            + '</Meet>'
+            +'</root>';
+        var expected = {
+            "root": {
+                "Meet": {
+                    "$": {
+                        "date": "2017-05-03",
+                        "type": "A",
+                        "name": "Meeting 'A'"
+                    },
+                    "Event": {
+                        "$": {
+                            "time": "00:05:00",
+                            "ID": "574",
+                            "Name": "Some Event Name"
+                        },
+                        "User": {
+                            "$": {
+                                "ID": "1"
+                            },
+                            "#text": "Bob"
+                        }
+                    }
+                }
+            }
+        };
+
+        var result = parser.parse(xmlData, {
+            attrPrefix:"",
+            attrNodeName:"$",
+            ignoreTextNodeAttr: false,
+            ignoreNonTextNodeAttr: false
+        });
+
+        expect(result).toEqual(expected);
+    });
+
     it("should parse all type of nodes", function () {
         var fs = require("fs");
         var path = require("path");
