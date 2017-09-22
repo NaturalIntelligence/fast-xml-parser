@@ -1,6 +1,6 @@
 {
   "name": "fast-xml-parser",
-  "version": "2.7.3",
+  "version": "2.7.4",
   "description": "Validate XML or Parse XML to JS/JSON very fast without C/C++ based libraries",
   "main": "./bin/parser.js",
   "scripts": {
@@ -45,6 +45,10 @@
     { 
       "name" : "Steve Reichenbach",
       "url" : "https://github.com/EyesOnlyNet"
+    },
+    { 
+      "name" : "Vohmyanin Sergey Vasilevich",
+      "url" : "http://delagen.livejournal.com"
     }
   ],
   "license": "MIT",
