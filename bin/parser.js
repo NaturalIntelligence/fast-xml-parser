@@ -18,6 +18,7 @@ var tagsRegx = new RegExp("<(\\/?[\\w:\\-\._]+)([^>]*)>("+cdataRegx+")*([^<]+)?"
 
 var defaultOptions = {
     attrPrefix : "@_",
+    attrNodeName: false,
     textNodeName : "#text",
     ignoreNonTextNodeAttr : true,
     ignoreTextNodeAttr : true,
@@ -30,7 +31,7 @@ var defaultOptions = {
 
 var buildOptions = function (options){
     if(!options) options = {};
-    var props = ["attrPrefix","ignoreNonTextNodeAttr","ignoreTextNodeAttr","ignoreNameSpace","ignoreRootElement","textNodeName","textNodeConversion","textAttrConversion","arrayMode"];
+    var props = ["attrPrefix","attrNodeName","ignoreNonTextNodeAttr","ignoreTextNodeAttr","ignoreNameSpace","ignoreRootElement","textNodeName","textNodeConversion","textAttrConversion","arrayMode"];
     for (var i = 0; i < props.length; i++) {
         if(options[props[i]] === undefined){
             options[props[i]] = defaultOptions[props[i]];
@@ -60,11 +61,11 @@ var getTraversalObj =function (xmlData,options){
         var childNode = new xmlNode(tag,currentNode);
 
         if(selfClosingTag){
-            attrs = buildAttributesArr(attrsStr,options.ignoreTextNodeAttr,options.attrPrefix,options.ignoreNameSpace,options.textAttrConversion);
+            attrs = buildAttributesArr(attrsStr,options.ignoreTextNodeAttr,options.attrPrefix,options.attrNodeName,options.ignoreNameSpace,options.textAttrConversion);
             childNode.val = attrs || "";
             currentNode.addChild(childNode);
         }else if( ("/" + tag) === nexttag){ //Text node
-            attrs = buildAttributesArr(attrsStr,options.ignoreTextNodeAttr,options.attrPrefix,options.ignoreNameSpace,options.textAttrConversion);
+            attrs = buildAttributesArr(attrsStr,options.ignoreTextNodeAttr,options.attrPrefix,options.attrNodeName,options.ignoreNameSpace,options.textAttrConversion);
             val = parseValue(val,options.textNodeConversion);
             if(attrs){
                 attrs[options.textNodeName] = val;
@@ -79,7 +80,7 @@ var getTraversalObj =function (xmlData,options){
             currentNode.addChild(childNode);
             i++;
         }else{//starting tag
-            attrs = buildAttributesArr(attrsStr,options.ignoreNonTextNodeAttr,options.attrPrefix,options.ignoreNameSpace,options.textAttrConversion);
+            attrs = buildAttributesArr(attrsStr,options.ignoreNonTextNodeAttr,options.attrPrefix,options.attrNodeName,options.ignoreNameSpace,options.textAttrConversion);
             if(attrs){
                 for (var prop in attrs) {
                   if(attrs.hasOwnProperty(prop)){
@@ -140,16 +141,20 @@ function parseValue(val,conversion){
 //var attrsRegx = new RegExp("(\\S+)=\\s*[\"']?((?:.(?![\"']?\\s+(?:\\S+)=|[>\"']))+.)[\"']?","g");
 //var attrsRegx = new RegExp("(\\S+)=\\s*(['\"])((?:.(?!\\2))*.)","g");
 var attrsRegx = new RegExp("(\\S+)\\s*=\\s*(['\"])(.*?)\\2","g");
-function buildAttributesArr(attrStr,ignore,prefix,ignoreNS,conversion){
+function buildAttributesArr(attrStr,ignore,prefix,attrNodeName,ignoreNS,conversion){
     attrStr = attrStr || attrStr.trim();
     
     if(!ignore && attrStr.length > 3){
 
         var matches = getAllMatches(attrStr,attrsRegx);
         var attrs = {};
+        var attrsCollection = attrs;
+        if(attrNodeName && matches.length){
+            attrsCollection = attrs[attrNodeName] = {};
+        }
         for (var i = 0; i < matches.length; i++) {
             var attrName = prefix + resolveNameSpace( matches[i][1],ignoreNS);
-            attrs[attrName] = parseValue(matches[i][3],conversion);
+            attrsCollection[attrName] = parseValue(matches[i][3],conversion);
         }
         return attrs;
     }
