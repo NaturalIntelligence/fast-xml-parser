@@ -28,6 +28,7 @@ var jsonObj = fastXmlParser.parse(xmlData);
 // when a tag has attributes
 var options = {
     attrPrefix : "@_",
+    attrNodeName: false,
     textNodeName : "#text",
     ignoreNonTextNodeAttr : true,
     ignoreTextNodeAttr : true,
