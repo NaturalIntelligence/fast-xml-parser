@@ -50,8 +50,13 @@ var jsonObj = fastXmlParser.convertToJson(tObj);
 
 To use from command line
 ```bash
-$xml2js [-ns|-a] <filename> [-o outputfile.json]
+$xml2js [-ns|-a|-c] <filename> [-o outputfile.json]
+$cat xmlfile.xml | xml2js [-ns|-a|-c] [-o outputfile.json]
 ```
+
+-ns : To include namespaces (bedefault ignored)
+-a : To ignore attributes
+-c : To ignore value conversion (i.e. "-3" will not be converted to number -3)
 
 To use it **on webpage**
 
