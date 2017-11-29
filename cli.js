@@ -3,6 +3,7 @@
 var fs = require('fs');
 var path = require('path');
 var parser = require('./lib/parser');
+var readToEnd = require('./lib/read').readToEnd;
 
 
 if(process.argv[2] === "--help" || process.argv[2] === "-h"){
@@ -45,7 +46,7 @@ if(process.argv[2] === "--help" || process.argv[2] === "-h"){
 
     try{
         if (!fileName) {
-            require('readtoend').readToEnd(process.stdin, function (err, data) {
+            readToEnd(process.stdin, function (err, data) {
                 if (err) {
                     throw err;
                 }
