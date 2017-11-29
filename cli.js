@@ -9,15 +9,17 @@ var readToEnd = require('./lib/read').readToEnd;
 if(process.argv[2] === "--help" || process.argv[2] === "-h"){
     console.log("Fast XML Parser " + require(path.join(__dirname + "/package.json")).version);
     console.log("----------------");
-    console.log("xml2js [-ns|-a] <filename> [-o outputfile.json]");
-    console.log("cat xmlfile.xml | xml2js [-ns|-a] [-o outputfile.json]");
+    console.log("xml2js [-ns|-a|-c] <filename> [-o outputfile.json]");
+    console.log("cat xmlfile.xml | xml2js [-ns|-a|-c] [-o outputfile.json]");
 }else if(process.argv[2] === "--version"){
     console.log(require(path.join(__dirname + "/package.json")).version);
 }else{
     var options = {
         ignoreNameSpace : true,
         ignoreNonTextNodeAttr : false,
-        ignoreTextNodeAttr : false
+        ignoreTextNodeAttr : false,
+        textNodeConversion : true,
+        textAttrConversion : true
     };
     var fileName = "";
     var outputFileName;
@@ -27,6 +29,9 @@ if(process.argv[2] === "--help" || process.argv[2] === "-h"){
         }else if(process.argv[i] === "-a"){
             options.ignoreNonTextNodeAttr = true;
             options.ignoreTextNodeAttr = true;
+        }else if(process.argv[i] === "-c"){
+            options.textNodeConversion = false;
+            options.textAttrConversion = false;
         }else if(process.argv[i] === "-o"){
             outputFileName = process.argv[++i];
         }else{//filename
@@ -44,18 +49,13 @@ if(process.argv[2] === "--help" || process.argv[2] === "-h"){
 
     try{
         if (!fileName) {
-            console.log("when file name is not passed")
             readToEnd(process.stdin, function (err, data) {
-                if (err) {
-                    throw err;
-                }
+                if (err) throw err;
                 callback(data);
             });
         }else {
             fs.readFile(fileName, function (err, data) {
-                if (err) {
-                    throw err;
-                }
+                if (err) throw err;
                 callback(data);
             });
         }
