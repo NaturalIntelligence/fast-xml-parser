@@ -59,11 +59,11 @@
   "devDependencies": {
     "benchmark": "^2.1.4",
     "browserify": "^14.1.0",
-    "coveralls": "^2.11.15",
+    "coveralls": "^3.0.0",
     "http-server": "^0.10.0",
     "istanbul": "^0.4.5",
     "jasmine": "^2.6.0",
     "jasmine-core": "^2.5.2",
-    "zombie": "^5.0.5"
+    "zombie": "^5.0.7"
   }
 }
