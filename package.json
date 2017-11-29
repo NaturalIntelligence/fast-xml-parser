@@ -36,19 +36,23 @@
     "arrayMode"
   ],
   "author": "Amit Gupta (https://github.com/amitguptagwl)",
-  "contributors" : [
-    { 
-      "name" : "Alfonso Muñoz-Pomer Fuentes",
-      "email" : "amunoz@ebi.ac.uk",
-      "url" : "https://github.com/alfonsomunozpomer"
+  "contributors": [
+    {
+      "name": "Alfonso Muñoz-Pomer Fuentes",
+      "email": "amunoz@ebi.ac.uk",
+      "url": "https://github.com/alfonsomunozpomer"
     },
-    { 
-      "name" : "Steve Reichenbach",
-      "url" : "https://github.com/EyesOnlyNet"
+    {
+      "name": "Steve Reichenbach",
+      "url": "https://github.com/EyesOnlyNet"
     },
-    { 
-      "name" : "Vohmyanin Sergey Vasilevich",
-      "url" : "http://delagen.livejournal.com"
+    {
+      "name": "Vohmyanin Sergey Vasilevich",
+      "url": "http://delagen.livejournal.com"
+    },
+    {
+      "name": "Andrew Udvare",
+      "url": "https://github.com/Tatsh"
     }
   ],
   "license": "MIT",
