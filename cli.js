@@ -27,17 +27,37 @@ if(process.argv[2] === "--help" || process.argv[2] === "-h"){
             options.ignoreTextNodeAttr = true;
         }else if(process.argv[i] === "-o"){
             outputFileName = process.argv[++i];
+            if (outputFileName === '-') {
+                outputFileName = void 0;
+            }
         }else{//filename
             fileName = process.argv[i];
         }
     }
-    try{
-        var xmlData = fs.readFileSync(fileName).toString();
-        var output = JSON.stringify(parser.parse(xmlData,options),null,4);
-        if(outputFileName){
-            writeToFile(outputFileName,output);
-        }else{
+    var callback = function (xmlData) {
+        output = JSON.stringify(parser.parse(xmlData,options),null,4);
+        if (outputFileName) {
+            writeToFile(outputFileName, output);
+        } else {
             console.log(output);
+        }
+    };
+
+    try{
+        if (!fileName) {
+            require('readtoend').readToEnd(process.stdin, function (err, data) {
+                if (err) {
+                    throw err;
+                }
+                callback(data);
+            });
+        }else {
+            fs.readFile(fileName, function (err, data) {
+                if (err) {
+                    throw err;
+                }
+                callback(xmlData);
+            });
         }
     }catch(e){
         console.log("Seems an invalid file." + e);
