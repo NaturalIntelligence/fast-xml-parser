@@ -73,7 +73,7 @@ function checkForMatchingTag(tags,i){
             }
         }else
             var nextIndex = checkForMatchingTag(tags,i+1);
-            if(nextIndex !== -1 && tags[nextIndex][0].indexOf("</") === 0){
+            if(nextIndex !== -1 && tags[nextIndex] !== undefined && tags[nextIndex][0].indexOf("</") === 0){
                 if(validateTagName(tags[i][1]) === false) return -1;
                 if(tags[i][1] === tags[nextIndex][1]) {
                     return checkForMatchingTag(tags,nextIndex+1);
