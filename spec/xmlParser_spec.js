@@ -323,7 +323,7 @@ describe("XMLParser", function () {
         });
         expect(result).toEqual(expected);
     });
-
+    
     it("should parse different tags", function () {
         var xmlData = "<tag.1>val1</tag.1><tag.2>val2</tag.2>";
         var expected = {
@@ -334,6 +334,27 @@ describe("XMLParser", function () {
         var result = parser.parse(xmlData, {
             ignoreTextNodeAttr: false
         });
+        expect(result).toEqual(expected);
+    });
+    
+
+    it("should parse text value with tag", function () {
+        var xmlData = "<score><c1>71<message>23</message></c1></score>";
+        var expected = {
+            "score": {
+                "c1": {
+                    "message" : 23,
+                    "_text" : 71
+                }
+            }
+        };
+
+        var result = parser.parse(xmlData,{
+            textNodeName : "_text",
+            ignoreNonTextNodeAttr : false,
+            ignoreTextNodeAttr : false,
+        });
+
         expect(result).toEqual(expected);
     });
 

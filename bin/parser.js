@@ -79,6 +79,11 @@ var getTraversalObj =function (xmlData,options){
             }
             currentNode.addChild(childNode);
             i++;
+        }else if( (nexttag && nexttag.indexOf("/") === -1) && (val !== undefined && val != null && val.trim() !== "" )){ //Text node with sub nodes
+            val = parseValue(val,options.textNodeConversion);
+            childNode.addChild(new xmlNode(options.textNodeName,childNode,val));
+            currentNode.addChild(childNode);
+            currentNode = childNode;
         }else{//starting tag
             attrs = buildAttributesArr(attrsStr,options.ignoreNonTextNodeAttr,options.attrPrefix,options.attrNodeName,options.ignoreNameSpace,options.textAttrConversion);
             if(attrs){
