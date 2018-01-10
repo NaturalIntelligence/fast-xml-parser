@@ -4,23 +4,204 @@ var util = require("./util");
 var tagsPattern = new RegExp("<\\/?([\\w:\\-_\.]+)\\s*\/?>","g");
 exports.validate = function(xmlData){
     xmlData = xmlData.replace(/\n/g,"");//make it single line
-    xmlData = xmlData.replace(/(<!\[CDATA\[.*?\]\]>)/g,"");//Remove all CDATA
-    xmlData = xmlData.replace(/(<!--.*?(?:-->))/g,"");//Remove all comments
-    if(validateAttributes(xmlData) !== true) return false;
-    xmlData = xmlData.replace(/(\s+(?:[\w:\-]+)\s*=\s*(['\"]).*?\2)/g,"");//Remove all attributes
-    xmlData = xmlData.replace(/(^\s*<\?xml\s*\?>)/g,"");//Remove XML starting tag
-    if(xmlData.indexOf("<![CDATA[") > 0 || xmlData.indexOf("<!--") > 0 ) return false;
-    var tags = util.getAllMatches(xmlData,tagsPattern);
-    if(tags.length === 0) return false; //non xml string
-    
-    var result = checkForMatchingTag(tags,0);
-    
+    xmlData = xmlData.replace(/(^\s*<\?xml.*?\?>)/g,"");//Remove XML starting tag
+    xmlData = xmlData.replace(/(<!DOCTYPE[\s\w\"\.\/\-\:]+(\[.*\])*\s*>)/g,"");//Remove DOCTYPE
 
-    if(result !== true) return false; else return true; 
+    var tags = [];
+    for (var i = 0; i < xmlData.length; i++) {
+
+        if(xmlData[i] === "<"){//starting of tag
+            //read until you reach to '>' avoiding any '>' in attribute value
+            
+            i++;
+            
+            if(xmlData[i] === "!"){
+                i = readCommentAndCDATA(xmlData,i);
+                continue;
+            }else{
+                var closingTag = false;
+                if(xmlData[i] === "/"){//closing tag
+                    closingTag = true;
+                    i++;
+                }
+                //read tagname
+                var tagName = "";
+                for(;i < xmlData.length 
+                    && xmlData[i] !== ">" 
+                    && xmlData[i] !== " "
+                    && xmlData[i] !== "\t" ; i++) {
+
+                    tagName +=xmlData[i];
+                }
+                tagName = tagName.trim();
+                
+                if(tagName[tagName.length-1] === "/"){//self closing tag without attributes
+                    tagName = tagName.substring(0,tagName.length-2);
+                    return validateTagName(tagName);
+                }
+                if(!validateTagName(tagName)) return false;
+
+                
+                var attrStr = "";
+                var startChar = "";
+                for(;i < xmlData.length ;i++){
+                    if(xmlData[i] === '"' || xmlData[i] === "'"){
+                        if(startChar === ""){
+                            startChar = xmlData[i];
+                        }else{
+                            startChar = "";
+                        }
+                    }else if(xmlData[i] === ">"){
+                        if(startChar === ""){
+                            break;
+                        }
+                    }
+                    attrStr += xmlData[i];
+                }
+                if(startChar !== "") return false;//You have forgot to close the quote
+                attrStr = attrStr.trim();
+                
+                if(attrStr[attrStr.length-1] === "/" ){//self closing tag
+                    attrStr = attrStr.substring(0,attrStr.length-2);
+                    
+                    if(!validateAttributeString(attrStr)){
+                        return false;
+                    }else{
+                        
+                        continue;
+                    }
+                }else if(closingTag){
+                    if(attrStr.length > 0){
+                        return false;
+                        //throw new Error("XML validation error: closing tag should not have any attribute");
+                    }else{
+                        var otg = tags.pop();    
+                        if(tagName !== otg){
+                            return false;
+                            //throw new Error("XML validation error: no mathicng closing tag");
+                        }
+                    }
+                }else{
+                    if(!validateAttributeString(attrStr)){
+                        return false;
+                    }
+                    tags.push(tagName);
+                }
+
+                //skip tag text value
+                //It may include comments and CDATA value
+                for(i++;i < xmlData.length ; i++){
+                    if(xmlData[i] === "<"){
+                        if(xmlData[i+1] === "!"){//comment or CADATA
+                            i++;
+                            i = readCommentAndCDATA(xmlData,i);
+                            continue;
+                        }else{
+                            break;
+                        }
+                    }
+                }//end of reading tag text value
+                if(xmlData[i] === "<") i--;
+            }
+        }else{
+            
+            if(xmlData[i] === " " || xmlData[i] === "\t") continue;
+            return false;
+        }
+    }
+
     
+    if(tags.length > 0){
+        return false;
+        //throw new Error("XML validation error");
+    }
+    
+    return true;
 }
 
+function readCommentAndCDATA(xmlData,i){
+    if(xmlData.length > i+5 && xmlData[i+1] === "-" && xmlData[i+2] === "-"){//comment
+        for(i+=3;i<xmlData.length;i++){
+            if(xmlData[i] === "-" && xmlData[i+1] === "-" && xmlData[i+2] === ">"){
+                i+=2;
+                break;
+            }
+        }
+    }else if( xmlData.length > i+9 
+        && xmlData[i+1] === "[" 
+        && xmlData[i+2] === "C"
+        && xmlData[i+3] === "D"
+        && xmlData[i+4] === "A"
+        && xmlData[i+5] === "T"
+        && xmlData[i+6] === "A"
+        && xmlData[i+7] === "["){
 
+        for(i+=8;i<xmlData.length;i++){
+            if(xmlData[i] === "]" && xmlData[i+1] === "]" && xmlData[i+2] === ">" ){
+                i+=2;
+                break;
+            }
+        }
+    }
+
+    return i;
+}
+//attr, ="sd", a="amit's", a="sd"b="saf", 
+function validateAttributeString(attrStr){
+    var attrNames = [];
+    for(var i=0; i< attrStr.length; i++){
+        var startChar = "";
+        //read attribute name
+        var attrName = "";
+        for(;i < attrStr.length && attrStr[i] !== "=" ; i++) {
+            attrName +=attrStr[i];
+        }
+        //validate attrName
+        attrName = attrName.trim();
+
+        
+        
+        if(!attrNames.hasOwnProperty(attrName)){
+            attrNames[attrName]=1;
+        }else{
+            return false;
+        }
+        if(!validateAttrName(attrName)){
+            return false;
+        }
+        i++;
+        
+        //skip whitespaces
+        for(;i < attrStr.length 
+            && (attrStr[i] === " "
+            || attrStr[i] === "\t") ; i++);
+
+        //read attribute value
+        startChar = attrStr[i++];
+        /*if(startChar !== "'" || startChar !== '"'){
+            
+            return false;
+        }*/
+        var attrVal = "";
+        for(;i < attrStr.length && attrStr[i] !== startChar; i++) {
+            attrVal +=attrStr[i];
+        }
+        
+        //validate attrVal
+
+        if(startChar !== ""){
+            startChar = "";
+        }
+    }
+
+    return true;
+}
+
+var validAttrRegxp = new RegExp("^[_a-zA-Z][\\w\\-\\.\\:]*$");
+
+function validateAttrName(attrName){
+    return util.doesMatch(attrName,validAttrRegxp);
+}
 var startsWithXML = new RegExp("^[Xx][Mm][Ll]");
 var startsWith = new RegExp("^([a-zA-Z]|_)[\\w\.\\-_:]*");
 
@@ -30,58 +211,4 @@ function validateTagName(tagname){
     else return true;
 }
 
-var attrStringPattern = new RegExp("<[\\w:\\-_\.]+(.*?)\/?>","g");
-var attrPattern = new RegExp("\\s+([\\w:\-]+)\\s*=\\s*(['\"])(.*?)\\2","g");
-function validateAttributes(xmlData){
-    var attrStrings = util.getAllMatches(xmlData,attrStringPattern);
-    for (i=0;i<attrStrings.length;i++){
-        if(attrStrings[i][1].trim().length > 0 && attrStrings[i][1].trim().length < 4){ //invalid attributes 
-            return false;
-        }else if(attrStrings[i][1].trim().length !== 0){
-            var attrsList = util.getAllMatches(attrStrings[i][1],attrPattern);
-            var attrNames=[];
-            for (j=0;j<attrsList.length;j++){
-                if(attrNames.hasOwnProperty(attrsList[j][1])){//duplicate attributes
-                    return false;
-                }else{
-                    attrNames[attrsList[j][1]]=1;
-                    //validate attribute value
-                    //if(!validateAttrValue(attrsList[3])) return false;
-                }
-            }
-        }
-    }
-    return true;
-}
-
-function checkForMatchingTag(tags,i){
-    if(tags.length === i) {
-        return true;
-    }else if(tags[i][0].indexOf("</") === 0) {//closing tag
-        return i;
-    }else if(tags[i][0].indexOf("/>") === tags[i][0].length-2){//Self closing tag
-        if(validateTagName(tags[i][0].substring(1)) === false) return -1;
-        return checkForMatchingTag(tags,i+1);
-
-    }else if(tags.length > i+1){
-        if(tags[i+1][0].indexOf("</") === 0){//next tag
-            if(validateTagName(tags[i][1]) === false) return -1;
-            if(tags[i][1] === tags[i+1][1]) {//matching with next closing tag
-                return checkForMatchingTag(tags,i+2);
-            }else {
-                return -1;//not matching
-            }
-        }else
-            var nextIndex = checkForMatchingTag(tags,i+1);
-            if(nextIndex !== -1 && tags[nextIndex] !== undefined && tags[nextIndex][0].indexOf("</") === 0){
-                if(validateTagName(tags[i][1]) === false) return -1;
-                if(tags[i][1] === tags[nextIndex][1]) {
-                    return checkForMatchingTag(tags,nextIndex+1);
-                }else {
-                    return -1;//not matching
-                }
-            }
-    }
-    return -1;
-}
 
