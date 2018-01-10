@@ -436,6 +436,8 @@ describe("XMLParser", function () {
         expect(result).toEqual(expected);
     });
 
+    
+
     it("should parse all type of nodes", function () {
         var fs = require("fs");
         var path = require("path");

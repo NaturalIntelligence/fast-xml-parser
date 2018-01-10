@@ -151,9 +151,7 @@ function parseValue(val,conversion){
     return val;
 }
 
-//var attrsRegx = new RegExp("(\\S+)=\\s*[\"']?((?:.(?![\"']?\\s+(?:\\S+)=|[>\"']))+.)[\"']?","g");
-//var attrsRegx = new RegExp("(\\S+)=\\s*(['\"])((?:.(?!\\2))*.)","g");
-var attrsRegx = new RegExp("(\\S+)\\s*=\\s*(['\"])(.*?)\\2","g");
+var attrsRegx = new RegExp("([\\w\\-\\.\\:]+)\\s*=\\s*(['\"])(.*?)\\2","g");
 function buildAttributesArr(attrStr,ignore,prefix,attrNodeName,ignoreNS,conversion){
     attrStr = attrStr || attrStr.trim();
     
@@ -167,6 +165,7 @@ function buildAttributesArr(attrStr,ignore,prefix,attrNodeName,ignoreNS,conversi
         }
         for (var i = 0; i < matches.length; i++) {
             var attrName = prefix + resolveNameSpace( matches[i][1],ignoreNS);
+            
             attrsCollection[attrName] = parseValue(matches[i][3],conversion);
         }
         return attrs;
