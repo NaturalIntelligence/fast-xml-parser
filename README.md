@@ -88,7 +88,7 @@ Don't forget to check the performance report on [comparejs](https://naturalintel
 
 ### Limitation
 * Parser doesn't check if the XML is valid or not. If the XML is not valid you may get invalid result. So you can call the validator function first to check the structure.
-* This is based on JS regular expression engine. So due to it's limitation fast-xml-parser face performance issue when it process XML string(data) which is very large like 10mb or more. (I'll look into this as soon as I get some free time)
+* This is based on JS regular expression engine. So due to it's limitation fast-xml-parser face performance issue when it process XML string(data) which is very large like 10mb or more. (I'll look into this as soon as I get some free time). **UPDATE**: from v2.9.0, I have rewritten the validator code. So that validator can handle large files as well. I have tested it up to 98mb xml file. I have some more ideas to increase the speed. And I'll work whenever I get the time.
 
 Report an issue or request for a feature [here](https://github.com/NaturalIntelligence/fast-xml-parser/issues)
 
