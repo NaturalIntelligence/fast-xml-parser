@@ -105,7 +105,7 @@ describe("XMLParser", function () {
     });
 
     it("should ignore namespace and text node attributes", function () {
-        var xmlData = "<root:node><tag ns:arg='value'>value</tag><intTag ns:arg='value' ns:arg2='value2' >45</intTag><floatTag>65.34</floatTag></root:node>";
+        var xmlData = "<root:node><tag ns:arg='value'>value</tag><intTag ns:arg='value' ns:arg2='value2' >45</intTag><floatTag>65.34</floatTag><nsTag xmlns:tns='urn:none' tns:attr='tns'></nsTag><nsTagNoAttr xmlns:tns='urn:none'></nsTagNoAttr></root:node>";
         var expected = {
             "node": {
                 "tag": {
@@ -117,7 +117,14 @@ describe("XMLParser", function () {
                     "@_arg2":"value2",
                     "#text": 45
                 },
-                "floatTag": 65.34
+                "floatTag": 65.34,
+                "nsTag":{
+                    "@_attr":"tns",
+                    "#text": ""
+                },
+                "nsTagNoAttr":{
+                    "#text": ""
+                }
             }
         };
 
