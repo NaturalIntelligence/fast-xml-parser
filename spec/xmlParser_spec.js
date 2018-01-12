@@ -105,7 +105,7 @@ describe("XMLParser", function () {
     });
 
     it("should ignore namespace and text node attributes", function () {
-        var xmlData = "<root:node><tag ns:arg='value'>value</tag><intTag ns:arg='value' ns:arg2='value2' >45</intTag><floatTag>65.34</floatTag></root:node>";
+        var xmlData = "<root:node><tag ns:arg='value'>value</tag><intTag ns:arg='value' ns:arg2='value2' >45</intTag><floatTag>65.34</floatTag><nsTag xmlns:tns='urn:none' tns:attr='tns'></nsTag><nsTagNoAttr xmlns:tns='urn:none'></nsTagNoAttr></root:node>";
         var expected = {
             "node": {
                 "tag": {
@@ -117,7 +117,12 @@ describe("XMLParser", function () {
                     "@_arg2":"value2",
                     "#text": 45
                 },
-                "floatTag": 65.34
+                "floatTag": 65.34,
+                "nsTag":{
+                    "@_attr":"tns",
+                    "#text": ""
+                },
+                "nsTagNoAttr": ""
             }
         };
 
@@ -393,9 +398,9 @@ describe("XMLParser", function () {
         expect(result).toEqual(expected);
     });
 
-    it("should parse nested elements with attributes wrapped in array", function () {
-        var xmlData = '<root>'
-            +'<Meet date="2017-05-03" type="A" name="Meeting \'A\'">'
+    it("should parse nested elements with attributes wrapped in object", function () {
+        var xmlData = '<root xmlns="urn:none" xmlns:tns="urn:none">'
+            +'<Meet xmlns="urn:none" tns:nsattr="attr" date="2017-05-03" type="A" name="Meeting \'A\'">'
             +   '<Event time="00:05:00" ID="574" Name="Some Event Name">'
             +         '<User ID="1">Bob</User>'
             +    '</Event>'
@@ -405,6 +410,7 @@ describe("XMLParser", function () {
             "root": {
                 "Meet": {
                     "$": {
+                        "nsattr": "attr",
                         "date": "2017-05-03",
                         "type": "A",
                         "name": "Meeting 'A'"
@@ -427,8 +433,9 @@ describe("XMLParser", function () {
         };
 
         var result = parser.parse(xmlData, {
-            attrPrefix:"",
-            attrNodeName:"$",
+            attrPrefix: "",
+            attrNodeName: "$",
+            ignoreNameSpace: true,
             ignoreTextNodeAttr: false,
             ignoreNonTextNodeAttr: false
         });
@@ -436,7 +443,7 @@ describe("XMLParser", function () {
         expect(result).toEqual(expected);
     });
 
-    
+
 
     it("should parse all type of nodes", function () {
         var fs = require("fs");

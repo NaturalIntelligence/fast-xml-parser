@@ -1,18 +1,29 @@
 process.env.NODE_ENV = 'test';
 //https://github.com/chaijs/chai-http
-
+const portfinder = require('portfinder');
 const Browser = require('zombie');
 const httpServer = require('http-server');
 
 describe("DemoApp", function() {
-  var browser = new Browser({site: 'http://localhost:8080'});
-  var server = httpServer.createServer();
-  server.listen(8080);
+  var server;
+  var browser;
 
   beforeEach(function(done){
-      browser.visit('/', done);
+      portfinder.getPort(function (err, port) {
+          if(err) {
+              return done(err);
+          }
+          server = httpServer.createServer();
+          server.listen(port);
+          browser = new Browser({site: 'http://localhost:'+port});
+          //
+          // `port` is guaranteed to be a free port
+          // in this scope.
+          //
+          browser.visit('/', done);
+      });
   });
-    
+
   describe("Parse XML", function() {
 
     it("should parse xml to json", function(done) {

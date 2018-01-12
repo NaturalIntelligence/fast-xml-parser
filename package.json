@@ -6,8 +6,8 @@
   "scripts": {
     "test": "jasmine spec/*spec.js",
     "bundle": "browserify bin/parser.js --s parser > lib/parser.js",
-    "coverage": "node ./benchmark/perfTest.js; istanbul cover jasmine --captureExceptions spec/*spec.js;",
-    "coverage:check": "node ./node_modules/istanbul/lib/cli.js check-coverage --branch 90 --statement 90"
+    "coverage": "node ./benchmark/perfTest.js; istanbul cover -x \"spec/*spec.js\" jasmine spec/*spec.js;",
+    "coverage:check": "istanbul check-coverage --branch 90 --statement 90"
   },
   "bin": {
     "xml2js": "cli.js"
@@ -58,12 +58,13 @@
   "license": "MIT",
   "devDependencies": {
     "benchmark": "^2.1.4",
-    "browserify": "^14.1.0",
+    "browserify": "^15.1.0",
     "coveralls": "^3.0.0",
-    "http-server": "^0.10.0",
+    "http-server": "^0.11.1",
     "istanbul": "^0.4.5",
-    "jasmine": "^2.6.0",
-    "jasmine-core": "^2.5.2",
+    "jasmine": "^2.8.0",
+    "jasmine-core": "^2.8.0",
+    "portfinder": "^1.0.13",
     "zombie": "^5.0.7"
   }
 }
