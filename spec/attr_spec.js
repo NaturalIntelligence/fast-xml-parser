@@ -109,7 +109,7 @@ describe("XMLParser", function () {
         expect(result).toBe(false);
     });
 
-/*
+
     it("should not validate xml with invalid attributes when duplicate attributes present", function () {
         var xmlData = "<rootNode  abc='123' abc=\"567\" />";
 
@@ -129,6 +129,6 @@ describe("XMLParser", function () {
 
         result = validator.validate(xmlData);
         expect(result).toBe(false);
-    });*/
+    });
 
 });

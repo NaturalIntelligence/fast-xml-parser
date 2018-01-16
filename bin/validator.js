@@ -178,10 +178,7 @@ function validateAttributeString(attrStr){
 
         //read attribute value
         startChar = attrStr[i++];
-        /*if(startChar !== "'" || startChar !== '"'){
-            
-            return false;
-        }*/
+        
         var attrVal = "";
         for(;i < attrStr.length && attrStr[i] !== startChar; i++) {
             attrVal +=attrStr[i];
@@ -190,6 +187,10 @@ function validateAttributeString(attrStr){
         //validate attrVal
 
         if(startChar !== ""){
+            i++;
+            if(i<attrStr.length && (attrStr[i] !== " " && attrStr[i] !== "\t") ){//when no spce between 2 attributes : a="sd"b="saf"
+                return false;
+            }
             startChar = "";
         }
     }
