@@ -133,6 +133,7 @@ function parseValue(val,conversion){
     if(val){
         if(!conversion || isNaN(val)){
             val = "" + val ;
+            val = val.replace("\n","");
         }else{
             if(val.indexOf(".") !== -1){
                 if(parseFloat){
@@ -154,7 +155,7 @@ function parseValue(val,conversion){
     return val;
 }
 
-var attrsRegx = new RegExp("([\\w\\-\\.\\:]+)\\s*=\\s*(['\"])(.*?)\\2","g");
+var attrsRegx = new RegExp("([\\w\\-\\.\\:]+)\\s*=\\s*(['\"])((.|\n)*?)\\2","gm");
 function buildAttributesArr(attrStr,ignore,prefix,attrNodeName,ignoreNS,conversion){
     attrStr = attrStr || attrStr.trim();
     

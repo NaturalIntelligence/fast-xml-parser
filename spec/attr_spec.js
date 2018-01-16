@@ -29,7 +29,29 @@ describe("XMLParser", function () {
         expect(result).toBe(true);
     });
 
+    it("should parse attributes with newline char", function () {
+        var xmlData = '<element id="7" data="foo\nbar" bug="true"/>';
+        var expected = {
+            "element": {
+                "id"    :     7,
+                "data"     :     "foobar",
+                "bug"   :     "true",
+            }
+        };
 
+        var result = parser.parse(xmlData, {
+            attrPrefix:"",
+            ignoreTextNodeAttr: false,
+            ignoreNonTextNodeAttr: false,
+            textAttrConversion: true
+        });
+
+        //console.log(JSON.stringify(result,null,4));
+        expect(result).toEqual(expected);
+
+        result = validator.validate(xmlData);
+        expect(result).toBe(true);
+    });
     //1. can start with _, or letter
     //2. can contain :,-,_,.,a-z,a-Z,0-9
 
@@ -108,6 +130,5 @@ describe("XMLParser", function () {
         result = validator.validate(xmlData);
         expect(result).toBe(false);
     });*/
-
 
 });
