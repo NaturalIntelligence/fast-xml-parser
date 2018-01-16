@@ -34,7 +34,7 @@ describe("XMLParser", function () {
         var expected = {
             "element": {
                 "id"    :     7,
-                "data"     :     "foobar",
+                "data"     :     "foo bar",
                 "bug"   :     "true",
             }
         };

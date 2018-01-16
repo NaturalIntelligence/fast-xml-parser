@@ -130,7 +130,7 @@ function parseValue(val,conversion){
     if(val){
         if(!conversion || isNaN(val)){
             val = "" + val ;
-            val = val.replace("\n","");
+            val = val.replace("\n"," ");
         }else{
             if(val.indexOf(".") !== -1){
                 if(parseFloat){
