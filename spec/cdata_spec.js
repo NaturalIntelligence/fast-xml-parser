@@ -1,4 +1,5 @@
 var parser = require("../bin/parser");
+var validator = require("../bin/validator");
 
 describe("XMLParser", function () {
 
@@ -38,6 +39,9 @@ describe("XMLParser", function () {
         //console.log(JSON.stringify(result,null,4));
 
         expect(result).toEqual(expected);
+
+        result = validator.validate(xmlData);
+        expect(result).toBe(true);
     });
 
 	it("should parse tag having CDATA 2", function () {
@@ -66,5 +70,8 @@ describe("XMLParser", function () {
         });
 
         expect(result).toEqual(expected);
+
+        result = validator.validate(xmlData);
+        expect(result).toBe(true);
     });
 });
