@@ -43,6 +43,7 @@ var buildOptions = function (options){
 var getTraversalObj =function (xmlData,options){
     options = buildOptions(options);
     //xmlData = xmlData.replace(/>(\s+)/g, ">");//Remove spaces and make it single line.
+    xmlData = xmlData.replace(/<!--(.|\n)*?-->/g, "");//Remove single and multiline comments
     var tags = getAllMatches(xmlData,tagsRegx);
     var xmlObj = new xmlNode('!xml');
     var currentNode = xmlObj;

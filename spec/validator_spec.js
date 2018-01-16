@@ -120,6 +120,15 @@ describe("XMLParser", function () {
         expect(result).toBe(true);
     });
 
+
+    it("should validate xml with comment", function () {
+        var xmlData = "<rootNode><!-- <tag> - - \n--><tag>1</tag><tag>val</tag></rootNode>";
+
+        var result = validator.validate(xmlData);
+        expect(result).toBe(true);
+    });
+
+
     it("should not validate xml with comment in a open tag", function () {
         var xmlData = "<rootNode<!-- <tag> -- -->><tag>1</tag><tag>val</tag></rootNode>";
 

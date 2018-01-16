@@ -74,4 +74,43 @@ describe("XMLParser", function () {
         result = validator.validate(xmlData);
         expect(result).toBe(true);
     });
+
+    it("should ignore comment", function () {
+        var xmlData = "<rootNode><!-- <tag> - - --><tag>1</tag><tag>val</tag></rootNode>";
+
+        var expected = {
+                        "rootNode": {
+                            "tag": [1, "val"]
+                        }
+                    };
+
+        var result = parser.parse(xmlData, {
+            ignoreTextNodeAttr: false
+        });
+
+        expect(result).toEqual(expected);
+
+        var result = validator.validate(xmlData);
+        expect(result).toBe(true);
+    });
+
+    it("should ignore multiline comments", function () {
+        var xmlData = "<rootNode><!-- <tag> - - \n--><tag>1</tag><tag>val</tag></rootNode>";
+
+        var expected = {
+                        "rootNode": {
+                            "tag": [1, "val"]
+                        }
+                    };
+
+        var result = parser.parse(xmlData, {
+            ignoreTextNodeAttr: false
+        });
+
+        expect(result).toEqual(expected);
+
+        var result = validator.validate(xmlData);
+        expect(result).toBe(true);
+    });
+
 });
