@@ -71,11 +71,7 @@ var getTraversalObj =function (xmlData,options){
                 attrs[options.textNodeName] = val;
                 childNode.val = attrs;
             }else{
-                if(val !== undefined && val != null){
-                    childNode.val = val;    
-                }else{
-                    childNode.val = "";
-                }
+                childNode.val = val;    
             }
             currentNode.addChild(childNode);
             i++;
