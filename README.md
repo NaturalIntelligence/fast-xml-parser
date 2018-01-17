@@ -11,6 +11,10 @@ You can use this library online (press try me button above), or as command from 
 [![bitHound Dev Dependencies](https://www.bithound.io/github/NaturalIntelligence/fast-xml-parser/badges/devDependencies.svg)](https://www.bithound.io/github/NaturalIntelligence/fast-xml-parser/master/dependencies/npm)
 [![bitHound Overall Score](https://www.bithound.io/github/NaturalIntelligence/fast-xml-parser/badges/score.svg)](https://www.bithound.io/github/NaturalIntelligence/fast-xml-parser) [![NPM total downloads](https://img.shields.io/npm/dt/fast-xml-parser.svg)](https://npm.im/fast-xml-parser)
 
+<a href="https://opencollective.com/fast-xml-parser/donate" target="_blank">
+  <img src="https://opencollective.com/fast-xml-parser/donate/button@2x.png?color=blue" width=300 />
+</a>
+
 ### How to use
 **Installation**
 
