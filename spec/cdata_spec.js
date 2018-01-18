@@ -75,6 +75,34 @@ describe("XMLParser", function () {
         expect(result).toBe(true);
     });
 
+
+    it("should parse tag having whitespaces before / after CDATA", function () {
+        var xmlData =  "<xml>"
+                    + " <a>text</a>"
+                    + " <b>\n       text    \n</b>"
+                    + " <c>     <![CDATA[text]]>    </c>"
+                    + " <d><![CDATA[text]]></d>"
+                    + "</xml>";
+        var expected = {
+                        "xml": {
+                            "a": "text",
+                            "b": "        text    \n",
+                            "c": "text",
+                            "d": "text"
+                        }
+                    };
+
+        var result = parser.parse(xmlData, {
+            ignoreTextNodeAttr: false
+        });
+
+        //console.log(JSON.stringify(result,null,4));
+        expect(result).toEqual(expected);
+
+        result = validator.validate(xmlData);
+        expect(result).toBe(true);
+    });
+
     it("should ignore comment", function () {
         var xmlData = "<rootNode><!-- <tag> - - --><tag>1</tag><tag>val</tag></rootNode>";
 

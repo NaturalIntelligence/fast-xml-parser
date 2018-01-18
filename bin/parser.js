@@ -14,7 +14,7 @@ var xmlNode = function(tagname,parent,val){
 //var tagsRegx = new RegExp("<(\\/?[\\w:-]+)([^>]*)>([^<]+)?","g");
 //var cdataRegx = "<!\\[CDATA\\[([^\\]\\]]*)\\]\\]>";
 var cdataRegx = "<!\\[CDATA\\[(.*?)(\\]\\]>)";
-var tagsRegx = new RegExp("<(\\/?[\\w:\\-\._]+)([^>]*)>("+cdataRegx+")*([^<]+)?","g");
+var tagsRegx = new RegExp("<(\\/?[\\w:\\-\._]+)([^>]*)>(\\s*"+cdataRegx+")*([^<]+)?","g");
 
 var defaultOptions = {
     attrPrefix : "@_",
@@ -45,6 +45,7 @@ var getTraversalObj =function (xmlData,options){
     //xmlData = xmlData.replace(/>(\s+)/g, ">");//Remove spaces and make it single line.
     xmlData = xmlData.replace(/<!--(.|\n)*?-->/g, "");//Remove single and multiline comments
     var tags = getAllMatches(xmlData,tagsRegx);
+    //console.log(tags);
     var xmlObj = new xmlNode('!xml');
     var currentNode = xmlObj;
 
