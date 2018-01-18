@@ -34,6 +34,7 @@ exports.validate = function(xmlData){
                     tagName +=xmlData[i];
                 }
                 tagName = tagName.trim();
+                //console.log(tagName);
                 
                 if(tagName[tagName.length-1] === "/"){//self closing tag without attributes
                     tagName = tagName.substring(0,tagName.length-2);
@@ -58,8 +59,9 @@ exports.validate = function(xmlData){
                     }
                     attrStr += xmlData[i];
                 }
-                if(startChar !== "") return false;//You have forgot to close the quote
+                if(startChar !== "") return false;//Unclosed quote
                 attrStr = attrStr.trim();
+                //console.log(attrStr, attrStr);
                 
                 if(attrStr[attrStr.length-1] === "/" ){//self closing tag
                     attrStr = attrStr.substring(0,attrStr.length-2);
@@ -203,12 +205,12 @@ var validAttrRegxp = new RegExp("^[_a-zA-Z][\\w\\-\\.\\:]*$");
 function validateAttrName(attrName){
     return util.doesMatch(attrName,validAttrRegxp);
 }
-var startsWithXML = new RegExp("^[Xx][Mm][Ll]");
+//var startsWithXML = new RegExp("^[Xx][Mm][Ll]");
 var startsWith = new RegExp("^([a-zA-Z]|_)[\\w\.\\-_:]*");
 
 function validateTagName(tagname){
-    if(util.doesMatch(tagname,startsWithXML)) return false;
-    else if(util.doesNotMatch(tagname,startsWith)) return false;
+    /*if(util.doesMatch(tagname,startsWithXML)) return false;
+    else*/ if(util.doesNotMatch(tagname,startsWith)) return false;
     else return true;
 }
 
