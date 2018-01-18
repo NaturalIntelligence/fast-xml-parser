@@ -52,6 +52,17 @@ var jsonObj = fastXmlParser.convertToJson(tObj);
 
 ```
 
+
+**attrNodeName**: (Valid name) Group all the attributes as properties of given name.  
+**ignoreNonTextNodeAttr**
+**ignoreTextNodeAttr**
+**ignoreNameSpace** : Remove namespace string from tag and attribute names. 
+**ignoreRootElement** : Remove root element from parsed JSON. 
+**textNodeConversion** : Parse the value of text node to float or integer.
+**textAttrConversion** : Parse the value of an attribute to float or integer.
+**arrayMode** : Put the value(s) of a tag or attribute in an array. 
+
+
 To use from command line
 ```bash
 $xml2js [-ns|-a|-c] <filename> [-o outputfile.json]
