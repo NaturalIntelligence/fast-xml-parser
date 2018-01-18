@@ -171,7 +171,7 @@ describe("XMLParser", function () {
         expect(result).toBe(true);
     });
 
-    it("should return false when tag starts with xml or XML etc", function () {
+    /*it("should return false when tag starts with xml or XML etc", function () {
         var xmlData = "<xmlNode  abc='123' bc='567'>val</xmlNode>";
 
         result = validator.validate(xmlData);
@@ -186,7 +186,7 @@ describe("XMLParser", function () {
 
         result = validator.validate(xmlData);
         expect(result).toBe(false);
-    });
+    });*/
 
     it("should return true for valid tag", function () {
         var xmlData = "<ns:start_tag-2.0></ns:start_tag-2.0>";
