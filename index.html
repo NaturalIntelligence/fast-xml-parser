@@ -76,6 +76,7 @@
                     <div class="row">
                         <div class="col-md-8" style=" color: white;">
                             <input type="checkbox" id="attrNodeName"> Group all the attributes as properties of given name.  <br>
+                            <input type="checkbox" id="ignoreTextNodeAttr" checked="true"> Ignore attributes from parsing <br>
                             <input type="checkbox" id="ignoreNameSpace"> Remove namespace string from tag and attribute names. <br>
                             <input type="checkbox" id="ignoreRootElement"> Remove root element from parsed JSON. <br>
                             <input type="checkbox" id="textNodeConversion" checked="true"> Parse the value of text node to float or integer.<br>
@@ -126,11 +127,11 @@
 
             function buildParsingConfig(){
                 var config = {
-                    attrPrefix : "@_",
+                    attrPrefix : "",
                     attrNodeName: $("#attrNodeName").prop("checked") ? "@" : false,
                     textNodeName : "#text",
-                    ignoreNonTextNodeAttr : true,
-                    ignoreTextNodeAttr : true,
+                    ignoreNonTextNodeAttr : $("#ignoreTextNodeAttr").prop("checked"),
+                    ignoreTextNodeAttr : $("#ignoreTextNodeAttr").prop("checked"),
                     ignoreNameSpace : $("#ignoreNameSpace").prop("checked"),
                     ignoreRootElement : $("#ignoreRootElement").prop("checked"),
                     textNodeConversion : $("#textNodeConversion").prop("checked"),
