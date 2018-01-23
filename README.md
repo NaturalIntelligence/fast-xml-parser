@@ -81,6 +81,8 @@ var isValid = parser.validate(xmlData);
 var jsonObj = parser.parse(xmlData);
 ```
 
+Or use directly from [CDN](https://cdnjs.com/libraries/fast-xml-parser)
+
 ## Comparision
 I decided to created this library when I couldn't find any library which can convert XML data to json without any callback and which is not based on any C/C++ library.
 
