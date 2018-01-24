@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+        <!DOCTYPE daily_western_horo_fr>
+        <daily_western_horo_fr>
+            <date valeur="2017-09-25"><signe valeur="balance">
+                        <nombre_chance>25
+                        </nombre_chance>
+                    </signe></date>
+        </daily_western_horo_fr>
