@@ -229,6 +229,16 @@ describe("XMLParser", function () {
         expect(result).toBe(true);
     });
 
+    it("should validate xml data with CRLF", function () {
+        var fs = require("fs");
+        var path = require("path");
+        var fileNamePath = path.join(__dirname, "assets/crlf.xml");
+        var xmlData = fs.readFileSync(fileNamePath).toString();
+
+        var result = validator.validate(xmlData);
+        expect(result).toBe(true);
+    });
+
     it("should return false for invalid xml", function () {
         var fs = require("fs");
         var path = require("path");
