@@ -1,3 +1,9 @@
+2.9.3 / 2018-01-26
+  * Merge pull request: Correctly remove CRLF line breaks
+  * Enable to parse attribute in online editor
+  * Fix testing demo app test
+  * Describe parsing options
+  * Add options for online demo
 2.9.2 / 2018-01-18
   * Remove check if tag starting with "XML"
   * Fix: when there are spaces before / after CDATA
