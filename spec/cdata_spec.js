@@ -1,5 +1,5 @@
-var parser = require("../bin/parser");
-var validator = require("../bin/validator");
+var parser = require("../src/parser");
+var validator = require("../src/validator");
 
 describe("XMLParser", function () {
 

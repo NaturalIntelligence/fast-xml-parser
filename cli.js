@@ -3,7 +3,7 @@
 var fs = require('fs');
 var path = require('path');
 var parser = require('./lib/parser');
-var readToEnd = require('./lib/read').readToEnd;
+var readToEnd = require('./src/read').readToEnd;
 
 
 if(process.argv[2] === "--help" || process.argv[2] === "-h"){

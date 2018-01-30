@@ -1,4 +1,4 @@
-var validator = require("../bin/validator");
+var validator = require("../src/validator");
 
 describe("XMLParser", function () {
 

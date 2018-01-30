@@ -1,7 +1,7 @@
 var Benchmark = require('benchmark');
 var suite = new Benchmark.Suite("XML Parser benchmark");
 
-var parser = require("../bin/parser");
+var parser = require("../src/parser");
 
 var fs = require("fs");
 var path = require("path");
