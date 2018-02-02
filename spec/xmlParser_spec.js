@@ -33,13 +33,14 @@ describe("XMLParser", function () {
     });
 
     it("should parse all values of attributes as string", function () {
-        var xmlData = "<rootNode><tag int='045' float='65.34'>value</tag></rootNode>";
+        var xmlData = "<rootNode><tag int='045' float='65.34' text='foo&ampbar&apos;'>value&amp;\r\n&apos;</tag></rootNode>";
         var expected = {
             "rootNode": {
                 "tag": {
-                    "#text": "value",
+                    "#text": "value&\r\n'",
                     "@_int": "045",
-                    "@_float": "65.34"
+                    "@_float": "65.34",
+                    "@_text": "foo&ampbar'"
                 }
             }
         };
