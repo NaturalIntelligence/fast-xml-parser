@@ -1,3 +1,7 @@
+2.9.4 / 2018-02-02
+  * Merge pull request: Decode HTML characters
+  * refactor source folder name
+  * ignore bundle / browser js to be published to npm
 2.9.3 / 2018-01-26
   * Merge pull request: Correctly remove CRLF line breaks
   * Enable to parse attribute in online editor
