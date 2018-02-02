@@ -133,6 +133,7 @@ Some of my other NPM pojects
  - [fast-lorem-ipsum](https://github.com/amitguptagwl/fast-lorem-ipsum) : Generate lorem ipsum words, sentences, paragraph very quickly.
 
 ### TODO
-* P2: parser online demo with more options
+* P2: parser performance improvement for large files
+* P2: validating XML stream data
 * P2: validator cli
 * P2: fast XML prettyfier
