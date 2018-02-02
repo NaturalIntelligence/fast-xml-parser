@@ -1,4 +1,5 @@
-var parser = require("../bin/parser");
+var parser = require("../src/parser");
+var validator = require("../src/validator");
 
 describe("XMLParser", function () {
 
@@ -38,6 +39,9 @@ describe("XMLParser", function () {
         //console.log(JSON.stringify(result,null,4));
 
         expect(result).toEqual(expected);
+
+        result = validator.validate(xmlData);
+        expect(result).toBe(true);
     });
 
 	it("should parse tag having CDATA 2", function () {
@@ -66,5 +70,75 @@ describe("XMLParser", function () {
         });
 
         expect(result).toEqual(expected);
+
+        result = validator.validate(xmlData);
+        expect(result).toBe(true);
     });
+
+
+    it("should parse tag having whitespaces before / after CDATA", function () {
+        var xmlData =  "<xml>"
+                    + " <a>text</a>"
+                    + " <b>\n       text    \n</b>"
+                    + " <c>     <![CDATA[text]]>    </c>"
+                    + " <d><![CDATA[text]]></d>"
+                    + "</xml>";
+        var expected = {
+                        "xml": {
+                            "a": "text",
+                            "b": "\n       text    \n",
+                            "c": "text",
+                            "d": "text"
+                        }
+                    };
+
+        var result = parser.parse(xmlData, {
+            ignoreTextNodeAttr: false
+        });
+
+        //console.log(JSON.stringify(result,null,4));
+        expect(result).toEqual(expected);
+
+        result = validator.validate(xmlData);
+        expect(result).toBe(true);
+    });
+
+    it("should ignore comment", function () {
+        var xmlData = "<rootNode><!-- <tag> - - --><tag>1</tag><tag>val</tag></rootNode>";
+
+        var expected = {
+                        "rootNode": {
+                            "tag": [1, "val"]
+                        }
+                    };
+
+        var result = parser.parse(xmlData, {
+            ignoreTextNodeAttr: false
+        });
+
+        expect(result).toEqual(expected);
+
+        var result = validator.validate(xmlData);
+        expect(result).toBe(true);
+    });
+
+    it("should ignore multiline comments", function () {
+        var xmlData = "<rootNode><!-- <tag> - - \n--><tag>1</tag><tag>val</tag></rootNode>";
+
+        var expected = {
+                        "rootNode": {
+                            "tag": [1, "val"]
+                        }
+                    };
+
+        var result = parser.parse(xmlData, {
+            ignoreTextNodeAttr: false
+        });
+
+        expect(result).toEqual(expected);
+
+        var result = validator.validate(xmlData);
+        expect(result).toBe(true);
+    });
+
 });

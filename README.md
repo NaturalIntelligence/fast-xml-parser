@@ -7,9 +7,24 @@ You can use this library online (press try me button above), or as command from 
 * Or you can transform/covert/parse XML data to JS/JSON object.
 * Or you can transform the XML in traversable JS object which can later be converted to JS/JSON object.
 
-[![Code Climate](https://codeclimate.com/github/NaturalIntelligence/fast-xml-parser/badges/gpa.svg)](https://codeclimate.com/github/NaturalIntelligence/fast-xml-parser) [<img src="https://www.paypalobjects.com/webstatic/en_US/btn/btn_donate_92x26.png" alt="Stubmatic donate button"/>](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=KQJAX48SPUKNC) <a href="https://liberapay.com/amitgupta/donate"><img alt="Donate using Liberapay" src="https://liberapay.com/assets/widgets/donate.svg"></a> [![Known Vulnerabilities](https://snyk.io/test/github/naturalintelligence/fast-xml-parser/badge.svg)](https://snyk.io/test/github/naturalintelligence/fast-xml-parser) [![Travis ci Build Status](https://travis-ci.org/NaturalIntelligence/fast-xml-parser.svg?branch=master)](https://travis-ci.org/NaturalIntelligence/fast-xml-parser) [![Coverage Status](https://coveralls.io/repos/github/NaturalIntelligence/fast-xml-parser/badge.svg?branch=master)](https://coveralls.io/github/NaturalIntelligence/fast-xml-parser?branch=master) [<img src="https://img.shields.io/badge/Try-me-blue.svg?colorA=FFA500&colorB=0000FF" alt="Try me"/>](https://naturalintelligence.github.io/fast-xml-parser/)
+[![Code Climate](https://codeclimate.com/github/NaturalIntelligence/fast-xml-parser/badges/gpa.svg)](https://codeclimate.com/github/NaturalIntelligence/fast-xml-parser) 
+[<img src="https://www.paypalobjects.com/webstatic/en_US/btn/btn_donate_92x26.png" alt="Stubmatic donate button"/>](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=KQJAX48SPUKNC) 
+<a href="https://liberapay.com/amitgupta/donate"><img alt="Donate using Liberapay" src="https://liberapay.com/assets/widgets/donate.svg"></a> 
+[![Known Vulnerabilities](https://snyk.io/test/github/naturalintelligence/fast-xml-parser/badge.svg)](https://snyk.io/test/github/naturalintelligence/fast-xml-parser) 
+[![NPM quality][quality-image]][quality-url]
+[![Travis ci Build Status](https://travis-ci.org/NaturalIntelligence/fast-xml-parser.svg?branch=master)](https://travis-ci.org/NaturalIntelligence/fast-xml-parser) 
+[![Coverage Status](https://coveralls.io/repos/github/NaturalIntelligence/fast-xml-parser/badge.svg?branch=master)](https://coveralls.io/github/NaturalIntelligence/fast-xml-parser?branch=master) 
+[<img src="https://img.shields.io/badge/Try-me-blue.svg?colorA=FFA500&colorB=0000FF" alt="Try me"/>](https://naturalintelligence.github.io/fast-xml-parser/)
 [![bitHound Dev Dependencies](https://www.bithound.io/github/NaturalIntelligence/fast-xml-parser/badges/devDependencies.svg)](https://www.bithound.io/github/NaturalIntelligence/fast-xml-parser/master/dependencies/npm)
-[![bitHound Overall Score](https://www.bithound.io/github/NaturalIntelligence/fast-xml-parser/badges/score.svg)](https://www.bithound.io/github/NaturalIntelligence/fast-xml-parser) [![NPM total downloads](https://img.shields.io/npm/dt/fast-xml-parser.svg)](https://npm.im/fast-xml-parser)
+[![bitHound Overall Score](https://www.bithound.io/github/NaturalIntelligence/fast-xml-parser/badges/score.svg)](https://www.bithound.io/github/NaturalIntelligence/fast-xml-parser) 
+[![NPM total downloads](https://img.shields.io/npm/dt/fast-xml-parser.svg)](https://npm.im/fast-xml-parser)
+
+[quality-image]: http://npm.packagequality.com/shield/fast-xml-parser.svg?style=flat-square
+[quality-url]: http://packagequality.com/#?package=fast-xml-parser
+
+<a href="https://opencollective.com/fast-xml-parser/donate" target="_blank">
+  <img src="https://opencollective.com/fast-xml-parser/donate/button@2x.png?color=blue" width=300 />
+</a>
 
 ### How to use
 **Installation**
@@ -48,6 +63,17 @@ var jsonObj = fastXmlParser.convertToJson(tObj);
 
 ```
 
+
+* **attrNodeName**: (Valid name) Group all the attributes as properties of given name.  
+* **ignoreNonTextNodeAttr** : Ignore attributes of non-text node.
+* **ignoreTextNodeAttr** : Ignore attributes for text node
+* **ignoreNameSpace** : Remove namespace string from tag and attribute names. 
+* **ignoreRootElement** : Remove root element from parsed JSON. 
+* **textNodeConversion** : Parse the value of text node to float or integer.
+* **textAttrConversion** : Parse the value of an attribute to float or integer.
+* **arrayMode** : Put the value(s) of a tag or attribute in an array. 
+
+
 To use from command line
 ```bash
 $xml2js [-ns|-a|-c] <filename> [-o outputfile.json]
@@ -65,6 +91,8 @@ To use it **on webpage**
 var isValid = parser.validate(xmlData);
 var jsonObj = parser.parse(xmlData);
 ```
+
+Or use directly from [CDN](https://cdnjs.com/libraries/fast-xml-parser)
 
 ## Comparision
 I decided to created this library when I couldn't find any library which can convert XML data to json without any callback and which is not based on any C/C++ library.

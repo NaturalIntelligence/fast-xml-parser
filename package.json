@@ -1,11 +1,11 @@
 {
   "name": "fast-xml-parser",
-  "version": "2.9.0",
+  "version": "2.9.3",
   "description": "Validate XML or Parse XML to JS/JSON very fast without C/C++ based libraries",
-  "main": "./bin/parser.js",
+  "main": "./src/parser.js",
   "scripts": {
     "test": "jasmine spec/*spec.js",
-    "bundle": "browserify bin/parser.js -s parser > lib/parser.js",
+    "bundle": "browserify src/parser.js -s parser > lib/parser.js",
     "coverage": "node ./benchmark/perfTest.js; istanbul cover -x \"spec/*spec.js\" jasmine spec/*spec.js;",
     "coverage:check": "istanbul check-coverage --branch 90 --statement 90"
   },

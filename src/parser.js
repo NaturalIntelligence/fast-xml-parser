@@ -15,7 +15,7 @@ var xmlNode = function(tagname,parent,val){
 //var tagsRegx = new RegExp("<(\\/?[\\w:-]+)([^>]*)>([^<]+)?","g");
 //var cdataRegx = "<!\\[CDATA\\[([^\\]\\]]*)\\]\\]>";
 var cdataRegx = "<!\\[CDATA\\[(.*?)(\\]\\]>)";
-var tagsRegx = new RegExp("<(\\/?[\\w:\\-\._]+)([^>]*)>("+cdataRegx+")*([^<]+)?","g");
+var tagsRegx = new RegExp("<(\\/?[\\w:\\-\._]+)([^>]*)>(\\s*"+cdataRegx+")*([^<]+)?","g");
 
 var defaultOptions = {
     attrPrefix : "@_",
@@ -44,7 +44,9 @@ var buildOptions = function (options){
 var getTraversalObj =function (xmlData,options){
     options = buildOptions(options);
     //xmlData = xmlData.replace(/>(\s+)/g, ">");//Remove spaces and make it single line.
+    xmlData = xmlData.replace(/<!--(.|\n)*?-->/g, "");//Remove single and multiline comments
     var tags = getAllMatches(xmlData,tagsRegx);
+    //console.log(tags);
     var xmlObj = new xmlNode('!xml');
     var currentNode = xmlObj;
 
@@ -72,11 +74,7 @@ var getTraversalObj =function (xmlData,options){
                 attrs[options.textNodeName] = val;
                 childNode.val = attrs;
             }else{
-                if(val !== undefined && val != null){
-                    childNode.val = val;    
-                }else{
-                    childNode.val = "";
-                }
+                childNode.val = val;
             }
             currentNode.addChild(childNode);
             i++;
@@ -134,6 +132,9 @@ function parseValue(val,conversion,isAttribute){
     if(val){
         if(!conversion || isNaN(val)){
             val = "" + he.decode(val, {isAttributeValue:isAttribute, strict:true});
+            if(isAttribute) {
+                val = val.replace(/\r?\n/g, " ");
+            }
         }else{
             if(val.indexOf(".") !== -1){
                 if(parseFloat){
@@ -155,7 +156,7 @@ function parseValue(val,conversion,isAttribute){
     return val;
 }
 
-var attrsRegx = new RegExp("([\\w\\-\\.\\:]+)\\s*=\\s*(['\"])(.*?)\\2","g");
+var attrsRegx = new RegExp("([\\w\\-\\.\\:]+)\\s*=\\s*(['\"])((.|\n)*?)\\2","gm");
 function buildAttributesArr(attrStr,ignore,prefix,attrNodeName,ignoreNS,conversion){
     attrStr = attrStr || attrStr.trim();
     
