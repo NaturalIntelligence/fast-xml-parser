@@ -1,3 +1,4 @@
+var he = require("he");
 var getAllMatches = require("./util").getAllMatches;
 
 var xmlNode = function(tagname,parent,val){
@@ -73,7 +74,7 @@ var getTraversalObj =function (xmlData,options){
                 attrs[options.textNodeName] = val;
                 childNode.val = attrs;
             }else{
-                childNode.val = val;    
+                childNode.val = val;
             }
             currentNode.addChild(childNode);
             i++;
@@ -127,11 +128,13 @@ function resolveNameSpace(tagname,ignore){
     return tagname;
 }
 
-function parseValue(val,conversion){
+function parseValue(val,conversion,isAttribute){
     if(val){
         if(!conversion || isNaN(val)){
-            val = "" + val ;
-            val = val.replace("\n"," ");
+            val = "" + he.decode(val, {isAttributeValue:isAttribute, strict:true});
+            if(isAttribute) {
+                val = val.replace(/\r?\n/g, " ");
+            }
         }else{
             if(val.indexOf(".") !== -1){
                 if(parseFloat){
@@ -164,7 +167,7 @@ function buildAttributesArr(attrStr,ignore,prefix,attrNodeName,ignoreNS,conversi
         for (var i = 0; i < matches.length; i++) {
             var attrName = resolveNameSpace(matches[i][1],ignoreNS);
             if(attrName.length && attrName !== "xmlns") {
-                attrs[prefix + attrName] = parseValue(matches[i][3], conversion);
+                attrs[prefix + attrName] = parseValue(matches[i][3], conversion, true);
             }
         }
         if(!Object.keys(attrs).length){

@@ -86,7 +86,7 @@ describe("XMLParser", function () {
         var expected = {
                         "xml": {
                             "a": "text",
-                            "b": "        text    \n",
+                            "b": "\n       text    \n",
                             "c": "text",
                             "d": "text"
                         }

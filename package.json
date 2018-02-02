@@ -5,11 +5,11 @@
   "main": "./src/parser.js",
   "scripts": {
     "test": "jasmine spec/*spec.js",
-    "bundle": "browserify src/parser.js --s parser > lib/parser.js",
+    "bundle": "browserify src/parser.js -s parser > lib/parser.js",
     "coverage": "node ./benchmark/perfTest.js; istanbul cover -x \"spec/*spec.js\" jasmine spec/*spec.js;",
     "coverage:check": "istanbul check-coverage --branch 90 --statement 90"
   },
-  "src": {
+  "bin": {
     "xml2js": "cli.js"
   },
   "repository": {
@@ -66,5 +66,8 @@
     "jasmine-core": "^2.8.0",
     "portfinder": "^1.0.13",
     "zombie": "^5.0.7"
+  },
+  "dependencies": {
+    "he": "~1.1.1"
   }
 }
