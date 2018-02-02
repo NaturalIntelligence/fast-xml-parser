@@ -80,15 +80,15 @@ describe("XMLParser", function () {
         var xmlData =  "<xml>"
                     + " <a>text</a>"
                     + " <b>\n       text    \n</b>"
-                    + " <c>     <![CDATA[text]]>    </c>"
-                    + " <d><![CDATA[text]]></d>"
+                    + " <c>     <![CDATA[text&amp;<]]>    </c>"
+                    + " <d><![CDATA[text&amp;<]]]]><![CDATA[>]]></d>"
                     + "</xml>";
         var expected = {
                         "xml": {
                             "a": "text",
                             "b": "\n       text    \n",
-                            "c": "text",
-                            "d": "text"
+                            "c": "text&amp;<",
+                            "d": "text&amp;<]]>"
                         }
                     };
 
