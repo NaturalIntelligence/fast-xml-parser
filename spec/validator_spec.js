@@ -34,10 +34,17 @@ describe("XMLParser", function () {
     });
 
     it("should validate self closing tags", function () {
-        var xmlData = "<rootNode/>";
-        result = validator.validate(xmlData);
+        var xmlData = "<rootNode><validtag1  /><validtag2/><validtag3  with='attrib'/></rootNode>";
+        var result = validator.validate(xmlData);
         expect(result).toBe(true);
     });
+
+    it("should validate self closing tags", function () {
+        var xmlData = "<rootNode><validtag1  /><invalid tag/><validtag3  with='attrib'/></rootNode>";
+        var result = validator.validate(xmlData);
+        expect(result).toBe(false);
+    });
+
 
     it("should not validate xml string when closing tag is different", function () {
         var xmlData = "<rootNode></rootnode>";

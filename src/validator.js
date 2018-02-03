@@ -60,12 +60,12 @@ exports.validate = function(xmlData){
                     attrStr += xmlData[i];
                 }
                 if(startChar !== "") return false;//Unclosed quote
-                attrStr = attrStr.trim();
+                //attrStr = attrStr.trim();
                 //console.log(attrStr, attrStr);
 
                 if(attrStr[attrStr.length-1] === "/" ){//self closing tag
-                    attrStr = attrStr.substring(0,attrStr.length-2);
-
+                    attrStr = attrStr.substring(0,attrStr.length-1);
+                    //console.log(attrStr);
                     if(!validateAttributeString(attrStr)){
                         return false;
                     }else{
@@ -73,7 +73,7 @@ exports.validate = function(xmlData){
                         continue;
                     }
                 }else if(closingTag){
-                    if(attrStr.length > 0){
+                    if(attrStr.trim().length > 0){
                         return false;
                         //throw new Error("XML validation error: closing tag should not have any attribute");
                     }else{
@@ -148,59 +148,51 @@ function readCommentAndCDATA(xmlData,i){
 
     return i;
 }
-//attr, ="sd", a="amit's", a="sd"b="saf",
+
+/**
+ * Select all the attributes whether valid or invalid.
+ */
+var validAttrStrRegxp = new RegExp("(\\s*)([^\\s=]+)\\s*(=)?(\\s*(['\"])((.|\\n)*?)\\5)?", "g");
+
+//attr, ="sd", a="amit's", a="sd"b="saf", ab  cd=""
+
 function validateAttributeString(attrStr){
+    //console.log("start:"+attrStr+":end");
+
+    //if(attrStr.trim().length === 0) return true; //empty string
+
+    var matches = util.getAllMatches(attrStr,validAttrStrRegxp);
     var attrNames = [];
-    for(var i=0; i< attrStr.length; i++){
-        var startChar = "";
-        //read attribute name
-        var attrName = "";
-        for(;i < attrStr.length && attrStr[i] !== "=" ; i++) {
-            attrName +=attrStr[i];
+
+
+    for(var i=0;i<matches.length;i++){
+        //console.log(matches[i]);
+        
+        if(matches[i][1].length === 0){//nospace before attribute name: a="sd"b="saf"
+            return false;
+        }else if(matches[i][3] === undefined){//independent attribute: ab 
+            return false;
+        }else if(matches[i][6] === undefined){//attribute without value: ab=
+            return false;
         }
-        //validate attrName
-        attrName = attrName.trim();
-
-
-
-        if(!attrNames.hasOwnProperty(attrName)){
+        attrName=matches[i][2];
+        if(!validateAttrName(attrName)){
+            //console.log("seems invalid");
+            return false;
+        }
+        if(!attrNames.hasOwnProperty(attrName)){//check for duplicate attribute.
             attrNames[attrName]=1;
         }else{
             return false;
         }
-        if(!validateAttrName(attrName)){
-            return false;
-        }
-        i++;
-
-        //skip whitespaces
-        for(;i < attrStr.length
-            && (attrStr[i] === " "
-            || attrStr[i] === "\t") ; i++);
-
-        //read attribute value
-        startChar = attrStr[i++];
-
-        var attrVal = "";
-        for(;i < attrStr.length && attrStr[i] !== startChar; i++) {
-            attrVal +=attrStr[i];
-        }
-
-        //validate attrVal
-
-        if(startChar !== ""){
-            i++;
-            if(i<attrStr.length && (attrStr[i] !== " " && attrStr[i] !== "\t") ){//when no spce between 2 attributes : a="sd"b="saf"
-                return false;
-            }
-            startChar = "";
-        }
     }
 
     return true;
+    
 }
 
 var validAttrRegxp = new RegExp("^[_a-zA-Z][\\w\\-\\.\\:]*$");
+
 
 function validateAttrName(attrName){
     return util.doesMatch(attrName,validAttrRegxp);

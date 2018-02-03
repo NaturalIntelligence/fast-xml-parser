@@ -124,11 +124,20 @@ describe("XMLParser", function () {
         expect(result).toBe(false);
     });
 
-    it("should not validate xml with invalid attributes when an attribute without value present", function () {
+
+    it("should not validate a tag with attribute presents without value ", function () {
+        var xmlData = "<rootNode ab cd='ef'></rootNode>";
+        var result = validator.validate(xmlData);
+        expect(result).toBe(false);
+    });
+
+    it("should not validate xml with invalid attributes presents without value", function () {
         var xmlData = "<rootNode  123 abc='123' bc='567' />";
 
         result = validator.validate(xmlData);
         expect(result).toBe(false);
     });
+
+
 
 });
