@@ -37,8 +37,8 @@ exports.validate = function(xmlData){
                 //console.log(tagName);
 
                 if(tagName[tagName.length-1] === "/"){//self closing tag without attributes
-                    tagName = tagName.substring(0,tagName.length-2);
-                    return validateTagName(tagName);
+                    tagName = tagName.substring(0,tagName.length-1);
+                    continue;
                 }
                 if(!validateTagName(tagName)) return false;
 
@@ -59,13 +59,12 @@ exports.validate = function(xmlData){
                     }
                     attrStr += xmlData[i];
                 }
-                if(startChar !== "") return false;//Unclosed quote
+                if(startChar !== "") return false;//open quote
                 //attrStr = attrStr.trim();
-                //console.log(attrStr, attrStr);
+                //console.log(attrStr);
 
                 if(attrStr[attrStr.length-1] === "/" ){//self closing tag
                     attrStr = attrStr.substring(0,attrStr.length-1);
-                    //console.log(attrStr);
                     if(!validateAttributeString(attrStr)){
                         return false;
                     }else{

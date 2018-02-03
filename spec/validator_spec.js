@@ -39,8 +39,8 @@ describe("XMLParser", function () {
         expect(result).toBe(true);
     });
 
-    it("should validate self closing tags", function () {
-        var xmlData = "<rootNode><validtag1  /><invalid tag/><validtag3  with='attrib'/></rootNode>";
+    it("should not validate self closing tags", function () {
+        var xmlData = "<rootNode><validtag1/><invalid tag/><validtag3  with='attrib'/></rootNode>";
         var result = validator.validate(xmlData);
         expect(result).toBe(false);
     });
