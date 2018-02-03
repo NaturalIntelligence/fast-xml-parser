@@ -1,21 +1,29 @@
 var util = require("./util");
+var he = require("he");
 
 var defaultOptions = {
-    attrPrefix : "@_",
-    attrNodeName: false,
-    textNodeName : "#text",
-    ignoreNonTextNodeAttr : true,
-    ignoreTextNodeAttr : true,
+    attrPrefix : "@_",                           //prefix for attributes
+    attrNodeName: false,                    //Group attributes in separate node
+    textNodeName : "#text",              //Name for property which will have value of the node in case nested nodes are present, or attributes
+    //ignoreNonTextNodeAttr : true,       //removed
+    //ignoreTextNodeAttr : true,
+    ignoreAttributes : true,                           //ignore attributes
+    allowBooleanAttributes : false,     //A tag can have attributes without any value
     ignoreNameSpace : false,
     ignoreRootElement : false,
-    textNodeConversion : true,
-    textAttrConversion : false,
+    convertNodeValue : true,              //convert the value of node to primitive type. E.g. "2" -> 2
+    convertAttributeValue : false,               //convert the value of attribute to primitive type. E.g. "2" -> 2
     arrayMode : false
 };
 
+//considerations
+//if convertNodeValue === true but node has CDATA, the value will not be coverted
+//Node value will be by default HTML decoded exclucing CDATA part.
+
+
 var buildOptions = function (options){
     if(!options) options = {};
-    var props = ["attrPrefix","attrNodeName","ignoreNonTextNodeAttr","ignoreTextNodeAttr","ignoreNameSpace","ignoreRootElement","textNodeName","textNodeConversion","textAttrConversion","arrayMode"];
+    var props = ["attrPrefix","attrNodeName","ignoreAttributes","ignoreNameSpace","ignoreRootElement","textNodeName","convertNodeValue","convertAttributeValue","arrayMode"];
     for (var i = 0; i < props.length; i++) {
         if(options[props[i]] === undefined){
             options[props[i]] = defaultOptions[props[i]];
@@ -25,7 +33,7 @@ var buildOptions = function (options){
 };
 
 
-var tagsPattern = new RegExp("<\\/?([\\w:\\-_\.]+)\\s*\/?>","g");
+//var tagsPattern = new RegExp("<\\/?([\\w:\\-_\.]+)\\s*\/?>","g");
 exports.parse = function(xmlData, options){
     options = buildOptions(options);    
     
@@ -90,7 +98,6 @@ exports.parse = function(xmlData, options){
                     attrStr += xmlData[i];
                 }
                 if(startChar !== "") return false;//open quote
-                //attrStr = attrStr.trim();
                 //console.log(attrStr, attrStr);
 
                 if(attrStr[attrStr.length-1] === "/" ){//self closing tag
@@ -98,15 +105,15 @@ exports.parse = function(xmlData, options){
                     //console.log(attrStr);
 
                     var operationResult = fillWithAttributes(currentObject[tagName],attrStr,options);
-                    if(operationResult === false){
-                        return false;
+                    if(operationResult.err !== undefined){
+                        return operationResult.err;
                     }else{
                         continue;
                     }
 
                 }else if(closingTag){
                     if(attrStr.trim().length > 0){
-                        return false;
+                        return { err: { code:"InvalidTag",msg:"closing tag " + tagName + " can't have attributes."}};
                         //throw new Error("XML validation error: closing tag should not have any attribute");
                     }else{
                         var otg = tags.pop();
@@ -114,20 +121,18 @@ exports.parse = function(xmlData, options){
                         currentObject= nodes[nodes.length -1];
                         //console.log(JSON.stringify(currentObject,null,4));
                         if(tagName !== otg){
-                            return false;
-                            //throw new Error("XML validation error: no mathicng closing tag");
+                            return { err: { code:"InvalidTag",msg:"closing tag " + otg + " is expected inplace of "+tagName+"."}};
                         }
                     }
                 }else{
                     tags.push(tagName);
                     currentObject[tagName] = {};
                     var operationResult = fillWithAttributes(currentObject[tagName],attrStr,options);
-                    if(operationResult === false){
-                        return false;
+                    if(operationResult.err !== undefined){
+                        return operationResult.err;
                     }else{
                         nodes.push(currentObject[tagName]);
                         currentObject= currentObject[tagName];
-                        //continue;
                     }
                 }
 
@@ -135,13 +140,15 @@ exports.parse = function(xmlData, options){
                 //It may include comments and CDATA value
                 var vals = [];
                 var val = ""
+                var cdatapresent = false;
                 for(i++;i < xmlData.length ; i++){
                     if(xmlData[i] === "<"){
                         if(xmlData[i+1] === "!"){//comment or CADATA
                             i++;
                             var end_index = readCommentAndCDATA(xmlData,i);
                             if(xmlData[i+1] === '['){
-                                vals.push(val); val = "";
+                                cdatapresent = true;
+                                vals.push(he.decode(val, { strict:true})); val = "";
                                 var cdataVal = xmlData.substring(i+8,end_index-2);
                                 vals.push(cdataVal);
                             }else{
@@ -155,29 +162,33 @@ exports.parse = function(xmlData, options){
                     }else{
                         val += xmlData[i] ;
                     }
+                    
                 }//end of reading tag text value
-                vals.push(val);
+                vals.push(he.decode(val, { strict:true}));
                 val = vals.join("");
                 if(xmlData[i] === "<") i--;
-                if(val !== "")
-                    currentObject["#text"] = val;
+                if(val !== ""){
+                    if(cdatapresent || !options.convertNodeValue)
+                        currentObject[options.textNodeName] = val;
+                    else
+                        currentObject[options.textNodeName] = parseValue(val);
+                }
             }
         }else{
 
             if(xmlData[i] === " " || xmlData[i] === "\t") continue;
-            return false;
+            return { err: { code:"InvalidChar",msg:"char " + xmlData[i] +" is not expected ."}};
         }
     }
 
 
     if(tags.length > 0){
-        return false;
-        //throw new Error("XML validation error");
+        return { err: { code:"InvalidXml",msg:"Invalid " + JSON.stringify(tags,null,4) +" found."}};
     }
     currentObject=nodes.pop();
     //console.log(currentObject);
-    console.log(JSON.stringify(currentObject,null,4));
-    return true;
+    //console.log(JSON.stringify(currentObject,null,4));
+    return { "json" : currentObject};
 }
 
 function readCommentAndCDATA(xmlData,i){
@@ -211,17 +222,17 @@ function readCommentAndCDATA(xmlData,i){
 
 function fillWithAttributes(node,attrStr,options){
 
-    var attrObj = validateAttributeString(attrStr,options.attrPrefix);
-    if(attrObj === false){
-        return false;
-    }else{
+    var attrObj = validateAndBuildAttributes(attrStr,options);
+    if(attrObj.err !== undefined){
+        return attrObj.err;
+    }else if(!options.ignoreAttributes){
         if(options.attrNodeName === false){//Group attributes as separate property
             for (var attr in attrObj) { node[attr] = attrObj[attr]; }
         }else{
             node[options.attrNodeName] = attrObj;
         }
-        return true;
     }
+    return true;
 }
 /**
  * Select all the attributes whether valid or invalid.
@@ -230,9 +241,9 @@ var validAttrStrRegxp = new RegExp("(\\s*)([^\\s=]+)\\s*(=)?(\\s*(['\"])((.|\\n)
 
 //attr, ="sd", a="amit's", a="sd"b="saf", ab  cd=""
 
-function validateAttributeString(attrStr,attrNamePrefix){
+function validateAndBuildAttributes(attrStr,options){
 
-    attrNamePrefix = attrNamePrefix === undefined ? "" : attrNamePrefix;
+    attrNamePrefix = options.attrNamePrefix === undefined ? "" : options.attrNamePrefix;
 
     var matches = util.getAllMatches(attrStr,validAttrStrRegxp);
     var attrNames = [];
@@ -240,27 +251,61 @@ function validateAttributeString(attrStr,attrNamePrefix){
 
     for(var i=0;i<matches.length;i++){
         if(matches[i][1].length === 0){//nospace before attribute name: a="sd"b="saf"
-            return false;
-        }else if(matches[i][3] === undefined){//independent attribute: ab 
-            return false;
+            return { err: { code:"InvalidAttr",msg:"attribute " + matches[i][2] + " has no space in starting."}};
+        }else if(matches[i][3] === undefined && !options.allowBooleanAttributes){//independent attribute: ab 
+            return { err: { code:"InvalidAttr",msg:"boolean attribute " + matches[i][2] + " is not allowed."}};
         }else if(matches[i][6] === undefined){//attribute without value: ab=
-            return false;
+            return { err: { code:"InvalidAttr",msg:"attribute " + matches[i][2] + " has no value assigned."}};
         }
         attrName=matches[i][2];
         if(!validateAttrName(attrName)){
-            return false;
+            return { err: { code:"InvalidAttr",msg:"attribute " + matches[i][2] + " has an invalid name."}};
         }
         if(!attrNames.hasOwnProperty(attrName)){//check for duplicate attribute.
             attrNames[attrName]=1;
         }else{
-            return false;
+            return { err: { code:"InvalidAttr",msg:"attribute " + matches[i][2] + " is repeated."}};
         }
-        attrObj[attrNamePrefix + matches[i][2]] = matches[i][6];
+        
+        if(options.convertAttributeValue){
+            attrObj[attrNamePrefix + matches[i][2]] = parseValue( he.decode(matches[i][6], {isAttributeValue:true, strict:true}),true);
+        }
+        else{
+            attrObj[attrNamePrefix + matches[i][2]] = he.decode(matches[i][6], {isAttributeValue:true, strict:true});
+        }
     }
 
     //console.log(attrObj);
     return attrObj;
     
+}
+
+function parseValue(val,isAttribute){
+    if(val){
+        if(isNaN(val)){
+            val = "" + val;
+            if(isAttribute) {
+                val = val.replace(/\r?\n/g, " ");
+            }
+        }else{//Number
+            if(val.indexOf(".") !== -1){
+                if(parseFloat){
+                    val = parseFloat(val);
+                }else{//IE support
+                    val = Number.parseFloat(val);
+                }
+            }else{
+                if(parseInt){
+                    val = parseInt(val,10);
+                }else{//IE support
+                    val = Number.parseInt(val,10);
+                }
+            }
+        }
+    }else{
+        val = "";
+    }
+    return val;
 }
 
 var validAttrRegxp = new RegExp("^[_a-zA-Z][\\w\\-\\.\\:]*$");
