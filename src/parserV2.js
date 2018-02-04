@@ -2,18 +2,18 @@ var util = require("./util");
 var he = require("he");
 
 var defaultOptions = {
-    attrPrefix : "@_",                           //prefix for attributes
-    attrNodeName: false,                    //Group attributes in separate node
-    textNodeName : "#text",              //Name for property which will have value of the node in case nested nodes are present, or attributes
-    //ignoreNonTextNodeAttr : true,       //removed
+    attrPrefix : "@_",                              //prefix for attributes
+    attrNodeName: false,                       //Group attributes in separate node
+    textNodeName : "#text",                 //Name for property which will have value of the node in case nested nodes are present, or attributes
+    //ignoreNonTextNodeAttr : true,       
     //ignoreTextNodeAttr : true,
-    ignoreAttributes : true,                           //ignore attributes
-    allowBooleanAttributes : false,     //A tag can have attributes without any value
-    ignoreNameSpace : false,
-    ignoreRootElement : false,
-    convertNodeValue : true,              //convert the value of node to primitive type. E.g. "2" -> 2
-    convertAttributeValue : false,               //convert the value of attribute to primitive type. E.g. "2" -> 2
-    arrayMode : false
+    ignoreAttributes : true,                     //ignore attributes
+    allowBooleanAttributes : false,         //A tag can have attributes without any value
+    ignoreNameSpace : false,                 //ignore namespace from the name of a tag and attribute. It also removes xmlns attribute
+    ignoreRootElement : false,               //
+    convertNodeValue : true,                 //convert the value of node to primitive type. E.g. "2" -> 2
+    convertAttributeValue : false,          //convert the value of attribute to primitive type. E.g. "2" -> 2
+    arrayMode : false                             //put the values in array
 };
 
 //considerations
@@ -75,7 +75,7 @@ exports.parse = function(xmlData, options){
 
                     tagName +=xmlData[i];
                 }
-                tagName = tagName.trim();
+                tagName = resolveNameSpace(tagName.trim(),options.ignoreNameSpace);
                 //console.log(tagName);
 
                 if(tagName[tagName.length-1] === "/"){//self closing tag without attributes
@@ -345,14 +345,18 @@ function validateAndBuildAttributes(attrStr,options){
         }else{
             return { err: { code:"InvalidAttr",msg:"attribute " + matches[i][2] + " is repeated."}};
         }
-        if( matches[i][3] === undefined && options.allowBooleanAttributes ){
-            attrObj[attrNamePrefix + matches[i][2]] = true;
-        }else if(options.convertAttributeValue){
-            attrObj[attrNamePrefix + matches[i][2]] = parseValue( he.decode(matches[i][6], {isAttributeValue:true, strict:true}),true);
+        var attrName = resolveNameSpace(matches[i][2],options.ignoreNameSpace);
+        if(attrName !== ""){
+            if( matches[i][3] === undefined && options.allowBooleanAttributes ){
+                attrObj[attrNamePrefix + attrName] = true;
+            }else if(options.convertAttributeValue){
+                attrObj[attrNamePrefix + attrName] = parseValue( he.decode(matches[i][6], {isAttributeValue:true, strict:true}),true);
+            }
+            else{
+                attrObj[attrNamePrefix + attrName] = he.decode(matches[i][6], {isAttributeValue:true, strict:true});
+            }
         }
-        else{
-            attrObj[attrNamePrefix + matches[i][2]] = he.decode(matches[i][6], {isAttributeValue:true, strict:true});
-        }
+        
     }
 
     return attrObj;
@@ -430,4 +434,24 @@ function isEmptyObject(obj) {
 function merge(a,b){
     for (var attr in a) { b[attr] = a[attr]; }
     return b;
+}
+
+/**
+ * remove leftside from tag / attribute name 
+ * E.g. ns:tag => tag
+ * @param {string} tagname 
+ * @param {boolean} ignore 
+ */
+function resolveNameSpace(tagname,ignore){
+    if(ignore){
+        var tags = tagname.split(":");
+        var prefix = tagname.charAt(0) === "/" ? "/" : "";
+        if(tags.length === 2) {
+            if(tags[0] === "xmlns") {
+                return "";
+            }
+            tagname = prefix + tags[1];
+        }
+    }
+    return tagname;
 }
