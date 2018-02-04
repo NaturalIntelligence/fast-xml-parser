@@ -86,28 +86,16 @@ exports.parse = function(xmlData, options){
                 if(!validateTagName(tagName)) return false;
 
 
-                var attrStr = "";
-                var startChar = "";
-                for(;i < xmlData.length ;i++){
-                    if(xmlData[i] === '"' || xmlData[i] === "'"){
-                        if(startChar === ""){
-                            startChar = xmlData[i];
-                        }else{
-                            startChar = "";
-                        }
-                    }else if(xmlData[i] === ">"){
-                        if(startChar === ""){
-                            break;
-                        }
-                    }
-                    attrStr += xmlData[i];
+                var result = readAttributeStr(xmlData,i);
+                if(result === false) {
+                    return { err: { code:"InvalidAttr",msg:"Attributes for " + tagName + " have open quote"}};
                 }
-                if(startChar !== "") return false;//open quote
-                //console.log(attrStr, attrStr);
+                var attrStr = result.value;
+                i = result.index;
 
                 if(attrStr[attrStr.length-1] === "/" ){//self closing tag
                     attrStr = attrStr.substring(0,attrStr.length-1);
-                    console.log(attrStr);
+                    //console.log(attrStr);
 
                     var operationResult = fillWithAttributes(attrObj,attrStr,options);
                     if(operationResult.err !== undefined){
@@ -121,8 +109,6 @@ exports.parse = function(xmlData, options){
                         }
                         continue;
                     }
-                    //currentObject= currentObject[tagName];
-
                 }else if(closingTag){
                     if(attrStr.trim().length > 0){
                         return { err: { code:"InvalidTag",msg:"closing tag " + tagName + " can't have attributes."}};
@@ -131,28 +117,14 @@ exports.parse = function(xmlData, options){
                         if(tagName !== otg){
                             return { err: { code:"InvalidTag",msg:"closing tag " + otg + " is expected inplace of "+tagName+"."}};
                         }
-                        var closingNode =  nodes.pop(); //nodes[nodes.length -1 ];
-                        currentObject = nodes[nodes.length -1 ];
 
-                        if( closingNode[options.textNodeName] !== undefined ) {
-                            if(countOwnKeys(closingNode) === 1){
-                                currentObject[tagName] = closingNode[options.textNodeName];
-                            }else if(countOwnKeys(closingNode) > 1 && closingNode[options.textNodeName] === ""){
-                                delete currentObject[tagName][options.textNodeName];
-                            }
-                        }
-
-                        var output = readTextValue(xmlData,i, options.convertNodeValue);
-                        i = output.index;
-
-                        if(output.value !== "") {
-                            currentObject[options.textNodeName] += output.value;
-                        }
+                        var result = handleClosingTag(xmlData,i, tagName, nodes,options);
+                        i=result.index;
+                        currentObject = result.currentNode;
                         continue;
                     }
                 }else{
                     var parentTag = tags[tags.length - 1];
-                    //console.log("parentTag", parentTag);
                     tags.push(tagName);
                     if( parentObject[options.textNodeName] === ""){
                         delete parentObject[options.textNodeName];
@@ -164,7 +136,6 @@ exports.parse = function(xmlData, options){
                     }else{
                         nodes.push(currentObject[tagName]);
                         parentObject = currentObject;
-                        //currentObject= currentObject[tagName];
                     }
                 }
 
@@ -177,7 +148,6 @@ exports.parse = function(xmlData, options){
                 merge(attrObj,currentObject[tagName]);
                 currentObject[tagName][options.textNodeName] = textValue;
                 currentObject= currentObject[tagName];
-                //console.log(currentObject);
             }
         }else{
 
@@ -191,6 +161,66 @@ exports.parse = function(xmlData, options){
         return { err: { code:"InvalidXml",msg:"Invalid " + JSON.stringify(tags,null,4) +" found."}};
     }
     return { "json" : rootNode};
+}
+
+/**
+ * Keep reading xmlData until '<' is found outside the attribute value.
+ * @param {string} xmlData 
+ * @param {number} i 
+ */
+function readAttributeStr(xmlData,i){
+    var attrStr = "";
+    var startChar = "";
+    for(;i < xmlData.length ;i++){
+        if(xmlData[i] === '"' || xmlData[i] === "'"){
+            if(startChar === ""){
+                startChar = xmlData[i];
+            }else{
+                startChar = "";
+            }
+        }else if(xmlData[i] === ">"){
+            if(startChar === ""){
+                break;
+            }
+        }
+        attrStr += xmlData[i];
+    }
+    if(startChar !== "") return false;//open quote
+
+    return { value: attrStr, index: i};
+}
+
+/**
+ * Pop the current node out from stack
+ * If the closing tag is having only textNode property, covert the closing tag into string and assign the value
+ * Read if there is any text after closing tag. Assign it to textNode property of parent node.
+ * 
+ * @param {String} xmlData 
+ * @param {number} i 
+ * @param {array} nodes 
+ * @param {object} options
+ */
+function handleClosingTag(xmlData,i, tagName, nodes,options){
+    var closingNode =  nodes.pop();
+    currentObject = nodes[nodes.length -1 ];
+
+    if( closingNode[options.textNodeName] !== undefined ) {
+        var keyCount = countOwnKeys(closingNode);
+        if( keyCount === 1){//convert to string
+            currentObject[tagName] = closingNode[options.textNodeName];
+        }else if(keyCount > 1 && closingNode[options.textNodeName] === ""){//remove empty textNode
+            delete currentObject[tagName][options.textNodeName];
+        }
+    }
+
+    var output = readTextValue(xmlData,i, options.convertNodeValue);
+    i = output.index;
+
+    if(output.value !== "") {
+        currentObject[options.textNodeName] += output.value;
+    }
+
+    return { index:i, currentNode: currentObject};
 }
 
 function readCommentAndCDATA(xmlData,i){
@@ -315,7 +345,6 @@ function validateAndBuildAttributes(attrStr,options){
         }else{
             return { err: { code:"InvalidAttr",msg:"attribute " + matches[i][2] + " is repeated."}};
         }
-        console.log(matches[i]);
         if( matches[i][3] === undefined && options.allowBooleanAttributes ){
             attrObj[attrNamePrefix + matches[i][2]] = true;
         }else if(options.convertAttributeValue){
@@ -326,7 +355,6 @@ function validateAndBuildAttributes(attrStr,options){
         }
     }
 
-    //console.log(attrObj);
     return attrObj;
     
 }
@@ -386,7 +414,6 @@ function countOwnKeys(obj) {
 
 
 function isEmptyObject(obj) {
-    //console.log("check:", obj)
     for (var key in obj) {
       if (Object.prototype.hasOwnProperty.call(obj, key)) {
         return false;
