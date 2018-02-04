@@ -43,10 +43,15 @@ exports.parse = function(xmlData, options){
 
     var tags = [];
     var nodes = [];
-    var currentObject = {};
+    var rootNode = {};
+    var currentObject = rootNode;
+    var parentObject = rootNode;
+
     nodes.push(currentObject);
     for (var i = 0; i < xmlData.length; i++) {
-
+        var attrObj = {};
+        var textValue = "";
+    
         if(xmlData[i] === "<"){//starting of tag
             //read until you reach to '>' avoiding any '>' in attribute value
 
@@ -75,7 +80,7 @@ exports.parse = function(xmlData, options){
 
                 if(tagName[tagName.length-1] === "/"){//self closing tag without attributes
                     tagName = tagName.substring(0,tagName.length-1);
-                    currentObject[tagName] = {};
+                    currentObject[tagName] = "";
                     continue;
                 }
                 if(!validateTagName(tagName)) return false;
@@ -102,77 +107,89 @@ exports.parse = function(xmlData, options){
 
                 if(attrStr[attrStr.length-1] === "/" ){//self closing tag
                     attrStr = attrStr.substring(0,attrStr.length-1);
-                    //console.log(attrStr);
+                    console.log(attrStr);
 
-                    var operationResult = fillWithAttributes(currentObject[tagName],attrStr,options);
+                    var operationResult = fillWithAttributes(attrObj,attrStr,options);
                     if(operationResult.err !== undefined){
                         return operationResult.err;
                     }else{
                         continue;
                     }
 
+                    if(isEmptyObject(attrObj)){
+                        currentObject[tagName] = textValue;
+                    }else{
+                        currentObject[tagName] = {};
+                        merge(attrObj,currentObject[tagName]);
+                    }
+                    //currentObject= currentObject[tagName];
+
+                    continue;
                 }else if(closingTag){
                     if(attrStr.trim().length > 0){
                         return { err: { code:"InvalidTag",msg:"closing tag " + tagName + " can't have attributes."}};
-                        //throw new Error("XML validation error: closing tag should not have any attribute");
                     }else{
                         var otg = tags.pop();
-                        nodes.pop();
-                        currentObject= nodes[nodes.length -1];
-                        //console.log(JSON.stringify(currentObject,null,4));
                         if(tagName !== otg){
                             return { err: { code:"InvalidTag",msg:"closing tag " + otg + " is expected inplace of "+tagName+"."}};
                         }
+                        var closingNode =  nodes.pop(); //nodes[nodes.length -1 ];
+                        currentObject = nodes[nodes.length -1 ];
+
+                        if( closingNode[options.textNodeName] !== undefined ) {
+                            if(countOwnKeys(closingNode) === 1){
+                                currentObject[tagName] = closingNode[options.textNodeName];
+                            }else if(countOwnKeys(closingNode) > 1 && closingNode[options.textNodeName] === ""){
+                                delete currentObject[tagName][options.textNodeName];
+                            }
+                        }
+
+                        var output = readTextValue(xmlData,i, options.convertNodeValue);
+                        i = output.index;
+
+                        if(output.value !== "") {
+                            currentObject[options.textNodeName] += output.value;
+                        }
+                        continue;
                     }
                 }else{
+                    var parentTag = tags[tags.length - 1];
+                    //console.log("parentTag", parentTag);
                     tags.push(tagName);
+                    if( parentObject[options.textNodeName] === ""){
+                        delete parentObject[options.textNodeName];
+                    }
+                    /* if(typeof parentObject[parentTag] === "string"){
+                        var strVal = parentObject[parentTag];
+                        parentObject[parentTag] = {};
+                        if(strVal !== "")      parentObject[parentTag][options.textNodeName] = strVal;
+                        currentObject = parentObject[parentTag];
+                    } */
                     currentObject[tagName] = {};
-                    var operationResult = fillWithAttributes(currentObject[tagName],attrStr,options);
+                    var operationResult = fillWithAttributes(attrObj,attrStr,options);
                     if(operationResult.err !== undefined){
                         return operationResult.err;
                     }else{
                         nodes.push(currentObject[tagName]);
-                        currentObject= currentObject[tagName];
+                        parentObject = currentObject;
+                        //currentObject= currentObject[tagName];
                     }
                 }
 
-                //skip tag text value
-                //It may include comments and CDATA value
-                var vals = [];
-                var val = ""
-                var cdatapresent = false;
-                for(i++;i < xmlData.length ; i++){
-                    if(xmlData[i] === "<"){
-                        if(xmlData[i+1] === "!"){//comment or CADATA
-                            i++;
-                            var end_index = readCommentAndCDATA(xmlData,i);
-                            if(xmlData[i+1] === '['){
-                                cdatapresent = true;
-                                vals.push(he.decode(val, { strict:true})); val = "";
-                                var cdataVal = xmlData.substring(i+8,end_index-2);
-                                vals.push(cdataVal);
-                            }else{
-                                //skip
-                            }
-                            i=end_index;
-                            continue;
-                        }else{
-                            break;
-                        }
-                    }else{
-                        val += xmlData[i] ;
-                    }
-                    
-                }//end of reading tag text value
-                vals.push(he.decode(val, { strict:true}));
-                val = vals.join("");
-                if(xmlData[i] === "<") i--;
-                if(val !== ""){
-                    if(cdatapresent || !options.convertNodeValue)
-                        currentObject[options.textNodeName] = val;
-                    else
-                        currentObject[options.textNodeName] = parseValue(val);
-                }
+                
+                var output = readTextValue(xmlData,i, options.convertNodeValue);
+                i = output.index;
+                textValue = output.value;
+                
+                
+                /* if(isEmptyObject(currentObject[tagName]) && isEmptyObject(attrObj)){
+                    currentObject[tagName] = textValue;
+                }else{ */
+                    merge(attrObj,currentObject[tagName]);
+                    currentObject[tagName][options.textNodeName] = textValue;
+                //}
+                currentObject= currentObject[tagName];
+                //console.log(currentObject);
             }
         }else{
 
@@ -185,10 +202,7 @@ exports.parse = function(xmlData, options){
     if(tags.length > 0){
         return { err: { code:"InvalidXml",msg:"Invalid " + JSON.stringify(tags,null,4) +" found."}};
     }
-    currentObject=nodes.pop();
-    //console.log(currentObject);
-    //console.log(JSON.stringify(currentObject,null,4));
-    return { "json" : currentObject};
+    return { "json" : rootNode};
 }
 
 function readCommentAndCDATA(xmlData,i){
@@ -219,6 +233,52 @@ function readCommentAndCDATA(xmlData,i){
     return i;
 }
 
+/**
+ * Reads until '<' is found. HTML Decode non-CDATA part. 
+ * @param {*} xmlData 
+ * @param {*} i 
+ */
+function readTextValue(xmlData,i,shouldConvert){
+    var vals = [];
+    var val = ""
+    var cdatapresent = false;
+    for(i++;i < xmlData.length ; i++){
+        if(xmlData[i] === "<"){
+            if(xmlData[i+1] === "!"){//comment or CADATA
+                i++;
+                var end_index = readCommentAndCDATA(xmlData,i);
+                if(xmlData[i+1] === '['){
+                    cdatapresent = true;
+                    vals.push(he.decode(val, { strict:true})); val = "";
+                    var cdataVal = xmlData.substring(i+8,end_index-2);
+                    vals.push(cdataVal);
+                }else{
+                    //skip
+                }
+                i=end_index;
+                continue;
+            }else{
+                break;
+            }
+        }else{
+            val += xmlData[i] ;
+        }
+        
+    }//end of reading tag text value
+    vals.push(he.decode(val, { strict:true}));
+    val = vals.join("");
+    if(xmlData[i] === "<") i--;
+
+    var textValue = "";
+    if(val.length !== 0){
+        if(cdatapresent || !shouldConvert){
+            textValue = val;
+        }else{
+            textValue = parseValue(val);
+        }
+    }
+    return { index: i, value: textValue};
+}
 
 function fillWithAttributes(node,attrStr,options){
 
@@ -227,7 +287,8 @@ function fillWithAttributes(node,attrStr,options){
         return attrObj.err;
     }else if(!options.ignoreAttributes){
         if(options.attrNodeName === false){//Group attributes as separate property
-            for (var attr in attrObj) { node[attr] = attrObj[attr]; }
+            //for (var attr in attrObj) { node[attr] = attrObj[attr]; }
+            merge(attrObj,node);
         }else{
             node[options.attrNodeName] = attrObj;
         }
@@ -323,4 +384,33 @@ function validateTagName(tagname){
     else return true;
 }
 
+function countOwnKeys(obj) {
+    var counter = 0;
+    for (var key in obj) {
+      if (Object.prototype.hasOwnProperty.call(obj, key)) {
+        counter ++;
+      }
+    }
+    return counter;
+  }
 
+
+function isEmptyObject(obj) {
+    //console.log("check:", obj)
+    for (var key in obj) {
+      if (Object.prototype.hasOwnProperty.call(obj, key)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  /**
+   * Merge a into b and returns b;
+   * @param {*} a 
+   * @param {*} b 
+   */
+function merge(a,b){
+    for (var attr in a) { b[attr] = a[attr]; }
+    return b;
+}
