@@ -2,7 +2,7 @@ var util = require("./util");
 var he = require("he");
 
 var defaultOptions = {
-    attrPrefix : "@_",                              //prefix for attributes
+    attrNamePrefix : "@_",                              //prefix for attributes
     attrNodeName: false,                       //Group attributes in separate node
     textNodeName : "#text",                 //Name for property which will have value of the node in case nested nodes are present, or attributes
     //ignoreNonTextNodeAttr : true,       
@@ -10,20 +10,18 @@ var defaultOptions = {
     ignoreAttributes : true,                     //ignore attributes
     allowBooleanAttributes : false,         //A tag can have attributes without any value
     ignoreNameSpace : false,                 //ignore namespace from the name of a tag and attribute. It also removes xmlns attribute
-    ignoreRootElement : false,               //
-    convertNodeValue : true,                 //convert the value of node to primitive type. E.g. "2" -> 2
-    convertAttributeValue : false,          //convert the value of attribute to primitive type. E.g. "2" -> 2
-    arrayMode : false                             //put the values in array
-};
+    //ignoreRootElement : false,               //
+    parseNodeValue : true,                 //convert the value of node to primitive type. E.g. "2" -> 2
+    parseAttributeValue : false,          //convert the value of attribute to primitive type. E.g. "2" -> 2
+    //arrayMode : false,                            //put the values in array
+    //selfClosingTagToNull : false              //Bydefault self closing tag is set to empty string. It'll set their value as null
 
-//considerations
-//if convertNodeValue === true but node has CDATA, the value will not be coverted
-//Node value will be by default HTML decoded exclucing CDATA part.
+};
 
 
 var buildOptions = function (options){
     if(!options) options = {};
-    var props = ["attrPrefix","attrNodeName","ignoreAttributes","ignoreNameSpace","ignoreRootElement","textNodeName","convertNodeValue","convertAttributeValue","arrayMode"];
+    var props = ["attrNamePrefix","attrNodeName","ignoreAttributes","ignoreNameSpace","ignoreRootElement","textNodeName","parseNodeValue","parseAttributeValue","arrayMode"];
     for (var i = 0; i < props.length; i++) {
         if(options[props[i]] === undefined){
             options[props[i]] = defaultOptions[props[i]];
@@ -37,7 +35,7 @@ var buildOptions = function (options){
 exports.parse = function(xmlData, options){
     options = buildOptions(options);    
     
-    xmlData = xmlData.replace(/(\r\n|\n|\r)/gm,"");//make it single line
+    xmlData = xmlData.replace(/(\r\n|\n|\r)/gm," ");//make it single line
     xmlData = xmlData.replace(/(^\s*<\?xml.*?\?>)/g,"");//Remove XML starting tag
     xmlData = xmlData.replace(/(<!DOCTYPE[\s\w\"\.\/\-\:]+(\[.*\])*\s*>)/g,"");//Remove DOCTYPE
 
@@ -140,7 +138,7 @@ exports.parse = function(xmlData, options){
                 }
 
                 
-                var output = readTextValue(xmlData,i, options.convertNodeValue);
+                var output = readTextValue(xmlData,i, options);
                 i = output.index;
                 textValue = output.value;
                 
@@ -213,7 +211,7 @@ function handleClosingTag(xmlData,i, tagName, nodes,options){
         }
     }
 
-    var output = readTextValue(xmlData,i, options.convertNodeValue);
+    var output = readTextValue(xmlData,i, options);
     i = output.index;
 
     if(output.value !== "") {
@@ -256,7 +254,7 @@ function readCommentAndCDATA(xmlData,i){
  * @param {*} xmlData 
  * @param {*} i 
  */
-function readTextValue(xmlData,i,shouldConvert){
+function readTextValue(xmlData,i,options){
     var vals = [];
     var val = ""
     var cdatapresent = false;
@@ -289,10 +287,10 @@ function readTextValue(xmlData,i,shouldConvert){
 
     var textValue = "";
     if(val.length !== 0){
-        if(cdatapresent || !shouldConvert){
+        if(cdatapresent || !options.parseNodeValue){
             textValue = val;
         }else{
-            textValue = parseValue(val);
+            textValue = parseValue(val,options,false);
         }
     }
     return { index: i, value: textValue};
@@ -349,8 +347,8 @@ function validateAndBuildAttributes(attrStr,options){
         if(attrName !== ""){
             if( matches[i][3] === undefined && options.allowBooleanAttributes ){
                 attrObj[attrNamePrefix + attrName] = true;
-            }else if(options.convertAttributeValue){
-                attrObj[attrNamePrefix + attrName] = parseValue( he.decode(matches[i][6], {isAttributeValue:true, strict:true}),true);
+            }else if(options.parseAttributeValue){
+                attrObj[attrNamePrefix + attrName] = parseValue( he.decode(matches[i][6], {isAttributeValue:true, strict:true}),options,true);
             }
             else{
                 attrObj[attrNamePrefix + attrName] = he.decode(matches[i][6], {isAttributeValue:true, strict:true});
@@ -363,13 +361,14 @@ function validateAndBuildAttributes(attrStr,options){
     
 }
 
-function parseValue(val,isAttribute){
+function parseValue(val,options,isAttribute){
     if(val){
-        if(isNaN(val)){
+        if( isNaN(val)){
             val = "" + val;
             if(isAttribute) {
                 val = val.replace(/\r?\n/g, " ");
             }
+
         }else{//Number
             if(val.indexOf(".") !== -1){
                 if(parseFloat){
