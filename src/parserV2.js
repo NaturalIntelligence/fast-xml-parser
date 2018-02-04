@@ -113,18 +113,16 @@ exports.parse = function(xmlData, options){
                     if(operationResult.err !== undefined){
                         return operationResult.err;
                     }else{
+                        if(isEmptyObject(attrObj)){
+                            currentObject[tagName] = textValue;
+                        }else{
+                            currentObject[tagName] = {};
+                            merge(attrObj,currentObject[tagName]);
+                        }
                         continue;
-                    }
-
-                    if(isEmptyObject(attrObj)){
-                        currentObject[tagName] = textValue;
-                    }else{
-                        currentObject[tagName] = {};
-                        merge(attrObj,currentObject[tagName]);
                     }
                     //currentObject= currentObject[tagName];
 
-                    continue;
                 }else if(closingTag){
                     if(attrStr.trim().length > 0){
                         return { err: { code:"InvalidTag",msg:"closing tag " + tagName + " can't have attributes."}};
@@ -159,12 +157,6 @@ exports.parse = function(xmlData, options){
                     if( parentObject[options.textNodeName] === ""){
                         delete parentObject[options.textNodeName];
                     }
-                    /* if(typeof parentObject[parentTag] === "string"){
-                        var strVal = parentObject[parentTag];
-                        parentObject[parentTag] = {};
-                        if(strVal !== "")      parentObject[parentTag][options.textNodeName] = strVal;
-                        currentObject = parentObject[parentTag];
-                    } */
                     currentObject[tagName] = {};
                     var operationResult = fillWithAttributes(attrObj,attrStr,options);
                     if(operationResult.err !== undefined){
@@ -182,12 +174,8 @@ exports.parse = function(xmlData, options){
                 textValue = output.value;
                 
                 
-                /* if(isEmptyObject(currentObject[tagName]) && isEmptyObject(attrObj)){
-                    currentObject[tagName] = textValue;
-                }else{ */
-                    merge(attrObj,currentObject[tagName]);
-                    currentObject[tagName][options.textNodeName] = textValue;
-                //}
+                merge(attrObj,currentObject[tagName]);
+                currentObject[tagName][options.textNodeName] = textValue;
                 currentObject= currentObject[tagName];
                 //console.log(currentObject);
             }
@@ -315,9 +303,9 @@ function validateAndBuildAttributes(attrStr,options){
             return { err: { code:"InvalidAttr",msg:"attribute " + matches[i][2] + " has no space in starting."}};
         }else if(matches[i][3] === undefined && !options.allowBooleanAttributes){//independent attribute: ab 
             return { err: { code:"InvalidAttr",msg:"boolean attribute " + matches[i][2] + " is not allowed."}};
-        }else if(matches[i][6] === undefined){//attribute without value: ab=
+        }/* else if(matches[i][6] === undefined){//attribute without value: ab=
             return { err: { code:"InvalidAttr",msg:"attribute " + matches[i][2] + " has no value assigned."}};
-        }
+        } */
         attrName=matches[i][2];
         if(!validateAttrName(attrName)){
             return { err: { code:"InvalidAttr",msg:"attribute " + matches[i][2] + " has an invalid name."}};
@@ -327,8 +315,10 @@ function validateAndBuildAttributes(attrStr,options){
         }else{
             return { err: { code:"InvalidAttr",msg:"attribute " + matches[i][2] + " is repeated."}};
         }
-        
-        if(options.convertAttributeValue){
+        console.log(matches[i]);
+        if( matches[i][3] === undefined && options.allowBooleanAttributes ){
+            attrObj[attrNamePrefix + matches[i][2]] = true;
+        }else if(options.convertAttributeValue){
             attrObj[attrNamePrefix + matches[i][2]] = parseValue( he.decode(matches[i][6], {isAttributeValue:true, strict:true}),true);
         }
         else{
