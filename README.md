@@ -1,6 +1,8 @@
 # [fast-xml-parser](https://www.npmjs.com/package/fast-xml-parser)
 Validate XML or Parse XML to JS/JSON very fast without C/C++ based libraries and no callback
 
+**Changes for V 3.0.0 are in progress** which will combine validator and parser and will be able to handle large XML files. So keep [watching](https://github.com/NaturalIntelligence/fast-xml-parser/watchers).
+
 You can use this library online (press try me button above), or as command from CLI, or in your website, or in npm repo.
 
 * This library let you validate the XML data syntactically. 
