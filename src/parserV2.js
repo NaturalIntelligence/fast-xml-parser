@@ -181,7 +181,7 @@ exports.parse = function(xmlData, options){
  * @param {*} options 
  */
 function addNode(newObj,currentObject,parentObject,tagName, nodes,tags,options){
-    if(typeof currentObject === "string"){
+    if(typeof currentObject !== "object"){
         var val = currentObject;
         currentObject = {};
         if(val !== ""){
@@ -354,7 +354,7 @@ function fillWithAttributes(node,attrStr,options){
     var attrObj = validateAndBuildAttributes(attrStr,options);
     if(attrObj.err !== undefined){
         return attrObj.err;
-    }else if(!options.ignoreAttributes){
+    }else if(!options.ignoreAttributes && !isEmptyObject(attrObj)){
         if(options.attrNodeName === false){//Group attributes as separate property
             //for (var attr in attrObj) { node[attr] = attrObj[attr]; }
             merge(attrObj,node);
@@ -499,10 +499,9 @@ function resolveNameSpace(tagname,ignore){
     if(ignore){
         var tags = tagname.split(":");
         var prefix = tagname.charAt(0) === "/" ? "/" : "";
-        if(tags.length === 2) {
-            if(tags[0] === "xmlns") {
-                return "";
-            }
+        if(tags[0] === "xmlns") {
+            return "";
+        }else if(tags.length === 2) {
             tagname = prefix + tags[1];
         }
     }
