@@ -40,12 +40,12 @@ exports.parse = function(xmlData, options){
     xmlData = xmlData.replace(/(<!DOCTYPE[\s\w\"\.\/\-\:]+(\[.*\])*\s*>)/g,"");//Remove DOCTYPE
 
     var tags = [];
-    var nodes = [];
+    var nodesStack = [];
     var rootNode = {};
     var currentObject = rootNode;
     var parentObject = rootNode;
 
-    nodes.push(currentObject);
+    nodesStack.push(currentObject);
     for (var i = 0; i < xmlData.length; i++) {
         var attrObj = {};
         var textValue = "";
@@ -97,7 +97,7 @@ exports.parse = function(xmlData, options){
 
                     var operationResult = fillWithAttributes(attrObj,attrStr,options);
                     if(operationResult.err !== undefined){
-                        return operationResult.err;
+                        return operationResult;
                     }else{
                         var newObj = {}
                         if(isEmptyObject(attrObj)){
@@ -105,7 +105,7 @@ exports.parse = function(xmlData, options){
                         }else{
                             merge(attrObj,newObj);
                         }
-                        currentObject = addNode(newObj,currentObject,parentObject,tagName, nodes,tags,options);
+                        currentObject = addNode(newObj,currentObject,parentObject,tagName, nodesStack,tags,options);
                         continue;
                     }
                 }else if(closingTag){
@@ -117,7 +117,7 @@ exports.parse = function(xmlData, options){
                             return { err: { code:"InvalidTag",msg:"closing tag " + otg + " is expected inplace of "+tagName+"."}};
                         }
 
-                        var result = handleClosingTag(xmlData,i, tagName, nodes,options);
+                        var result = handleClosingTag(xmlData,i, tagName, nodesStack,options);
                         i=result.index;
                         currentObject = result.currentNode;
                         continue;
@@ -127,7 +127,7 @@ exports.parse = function(xmlData, options){
 
                     var operationResult = fillWithAttributes(attrObj,attrStr,options);
                     if(operationResult.err !== undefined){
-                        return operationResult.err;
+                        return operationResult;
                     }
 
                     var output = readTextValue(xmlData,i, options);
@@ -145,13 +145,13 @@ exports.parse = function(xmlData, options){
                     }
 
                     
-                    if( parentObject[options.textNodeName] === ""){
+                    /* if( parentObject[options.textNodeName] === ""){
                         delete parentObject[options.textNodeName];
-                    }
-                    currentObject = addNode(newObj,currentObject,parentObject,tagName, nodes,tags,options);
+                    } */
+                    currentObject = addNode(newObj,currentObject,parentObject,tagName, nodesStack,tags,options);
                     tags.push(tagName);
                     
-                    nodes.push(newObj);
+                    nodesStack.push(newObj);
                     parentObject = currentObject;
                     currentObject= newObj;
                 }
@@ -172,38 +172,72 @@ exports.parse = function(xmlData, options){
 
 /**
  * 
- * @param {*} newObj 
- * @param {*} currentObject 
- * @param {*} parentObject 
- * @param {string} tagName 
- * @param {array} nodes 
+ * Algorithm
+ * :in context of newNode
+
+        check: if parentNode is primitive type
+            yes: 
+                make parentNode object,
+                add new node as property
+                add existing value as #text node if it is not ""
+                update refences
+            no: (parentNode is object)
+                check: if poperty already presents
+                    yes:
+                        check: if exisiting value of this property is an not an array
+                            yes: convert it to array,
+                            add newNode
+                    no:
+                        add new node as property
+ * @param {*} newNode 
+ * @param {*} parentNode temporary place holder
+ * @param {*} grandParentNode 
+ * @param {string} propertyName (tagName) 
+ * @param {array} nodesStack 
  * @param {array} tags 
  * @param {*} options 
  */
-function addNode(newObj,currentObject,parentObject,tagName, nodes,tags,options){
-    if(typeof currentObject !== "object"){
-        var val = currentObject;
-        currentObject = {};
-        if(val !== ""){
-            currentObject[options.textNodeName] = val;
-        }
-         var parentTag = tags[tags.length - 1];
-         parentObject[parentTag] = currentObject;
-         nodes.pop();
-         nodes.push(currentObject);
-    }
-    if(currentObject[tagName] !== undefined){//already present
-        var swap = currentObject[tagName];
-        if(!(currentObject[tagName]   instanceof Array)){
-            currentObject[tagName] = [];
-            currentObject[tagName].push(swap);
-        }
-        currentObject[tagName].push(newObj);
-    }else{
-        currentObject[tagName] = newObj;
-    }
+function addNode(newNode,parentNode,grandParentNode,propertyName, nodesStack, tags, options){
+    //if parentNode is not object, convert into object and update in stack and granparent
+    //add existing value as #text node if it is not empty
 
-    return currentObject;
+    if(typeof parentNode !== "object"){
+        //create new Node
+        var tempNode = {};
+        tempNode[propertyName] = newNode;
+
+        //update references
+        var parentTag = tags[tags.length - 1];
+        if(parentNode instanceof Array){
+            grandParentNode[parentTag] .push(tempNode);
+        }else {
+            if(parentNode !== ""){//avoid empty #text node
+                tempNode[options.textNodeName] = parentNode;
+            }
+            if(grandParentNode[parentTag] instanceof Array){
+                //remove parentNode (placeholder) from grandParent
+                grandParentNode[parentTag].pop();
+                grandParentNode[parentTag].push(tempNode);
+            }else{
+                grandParentNode[parentTag] = tempNode;
+            }
+            nodesStack. pop( );
+            nodesStack. push( tempNode);
+        }
+        return tempNode;
+    }else{
+        if(parentNode[propertyName] !== undefined){//already present
+            if(!(parentNode[propertyName]   instanceof Array)){
+                var swap = parentNode[propertyName];
+                parentNode[propertyName] = [];
+                parentNode[propertyName].push(swap);
+            }
+            parentNode[propertyName].push(newNode);
+        }else{
+            parentNode[propertyName] = newNode;
+        }
+        return parentNode;
+    }
 }
 
 /**
@@ -353,7 +387,7 @@ function fillWithAttributes(node,attrStr,options){
 
     var attrObj = validateAndBuildAttributes(attrStr,options);
     if(attrObj.err !== undefined){
-        return attrObj.err;
+        return attrObj;
     }else if(!options.ignoreAttributes && !isEmptyObject(attrObj)){
         if(options.attrNodeName === false){//Group attributes as separate property
             //for (var attr in attrObj) { node[attr] = attrObj[attr]; }
@@ -367,7 +401,7 @@ function fillWithAttributes(node,attrStr,options){
 /**
  * Select all the attributes whether valid or invalid.
  */
-var validAttrStrRegxp = new RegExp("(\\s*)([^\\s=]+)\\s*(=)?(\\s*(['\"])((.|\\n)*?)\\5)?", "g");
+var validAttrStrRegxp = new RegExp("(\\s*)([^\\s=]+)(\\s*=)?(\\s*(['\"])((.|\\n)*?)\\5)?", "g");
 
 //attr, ="sd", a="amit's", a="sd"b="saf", ab  cd=""
 
@@ -389,14 +423,14 @@ function validateAndBuildAttributes(attrStr,options){
         } */
         attrName=matches[i][2];
         if(!validateAttrName(attrName)){
-            return { err: { code:"InvalidAttr",msg:"attribute " + matches[i][2] + " has an invalid name."}};
+            return { err: { code:"InvalidAttr",msg:"attribute " + attrName + " is an invalid name."}};
         }
         if(!attrNames.hasOwnProperty(attrName)){//check for duplicate attribute.
             attrNames[attrName]=1;
         }else{
-            return { err: { code:"InvalidAttr",msg:"attribute " + matches[i][2] + " is repeated."}};
+            return { err: { code:"InvalidAttr",msg:"attribute " + attrName + " is repeated."}};
         }
-        var attrName = resolveNameSpace(matches[i][2],options.ignoreNameSpace);
+        attrName = resolveNameSpace(attrName,options.ignoreNameSpace);
         if(attrName !== ""){
             if( matches[i][3] === undefined && options.allowBooleanAttributes ){
                 attrObj[attrNamePrefix + attrName] = true;
@@ -414,13 +448,20 @@ function validateAndBuildAttributes(attrStr,options){
     
 }
 
+var validAttrRegxp = new RegExp("^[_a-zA-Z][\\w\\-\\.\\:]*$");
+
+function validateAttrName(attrName){
+    return util.doesMatch(attrName,validAttrRegxp);
+}
+
 function parseValue(val,options,isAttribute){
-    if(val){
+    if(val.trim() !== "" ){
         if( isNaN(val)){
             val = "" + val;
             if(isAttribute) {
                 val = val.replace(/\r?\n/g, " ");
             }
+            val = val === "true" ? true : val === "false" ? false : val;
 
         }else{//Number
             if(val.indexOf(".") !== -1){
@@ -443,12 +484,7 @@ function parseValue(val,options,isAttribute){
     return val;
 }
 
-var validAttrRegxp = new RegExp("^[_a-zA-Z][\\w\\-\\.\\:]*$");
 
-
-function validateAttrName(attrName){
-    return util.doesMatch(attrName,validAttrRegxp);
-}
 //var startsWithXML = new RegExp("^[Xx][Mm][Ll]");
 var startsWith = new RegExp("^([a-zA-Z]|_)[\\w\.\\-_:]*");
 
