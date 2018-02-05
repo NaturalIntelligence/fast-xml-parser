@@ -122,30 +122,58 @@ exports.parse = function(xmlData, options){
                         continue;
                     }
                 }else{
-                    var parentTag = tags[tags.length - 1];
+                   
+
+                    var operationResult = fillWithAttributes(attrObj,attrStr,options);
+                    if(operationResult.err !== undefined){
+                        return operationResult.err;
+                    }
+
+                    var output = readTextValue(xmlData,i, options);
+                    i = output.index;
+                    textValue = output.value;
+
+                    var newObj = {};
+
+                    if(isEmptyObject(attrObj)){
+                        newObj = textValue;    
+                    }else{
+                        merge(attrObj,newObj);
+                        if(textValue !== "")
+                            newObj[options.textNodeName] = textValue;
+                    }
+
                     tags.push(tagName);
                     if( parentObject[options.textNodeName] === ""){
                         delete parentObject[options.textNodeName];
                     }
-                    currentObject[tagName] = {};
-                    var operationResult = fillWithAttributes(attrObj,attrStr,options);
-                    if(operationResult.err !== undefined){
-                        return operationResult.err;
-                    }else{
-                        nodes.push(currentObject[tagName]);
-                        parentObject = currentObject;
+                    //handle repeated tags
+                    if(typeof currentObject === "string"){
+                        var val = currentObject;
+                        currentObject = {};
+                        if(val !== ""){
+                            currentObject[options.textNodeName] = val;
+                        }
+                         var parentTag = tags[tags.length - 2];
+                         parentObject[parentTag] = currentObject;
+                         nodes.pop();
+                         nodes.push(currentObject);
                     }
+                    if(currentObject[tagName]){//already present
+                        var swap = currentObject[tagName];
+                        if(!(currentObject[tagName]   instanceof Array)){
+                            currentObject[tagName] = [];
+                            currentObject[tagName].push(swap);
+                        }
+                        currentObject[tagName].push(newObj);
+                    }else{
+                        currentObject[tagName] = newObj;
+                    }
+                    
+                    nodes.push(newObj);
+                    parentObject = currentObject;
+                    currentObject= newObj;
                 }
-
-                
-                var output = readTextValue(xmlData,i, options);
-                i = output.index;
-                textValue = output.value;
-                
-                
-                merge(attrObj,currentObject[tagName]);
-                currentObject[tagName][options.textNodeName] = textValue;
-                currentObject= currentObject[tagName];
             }
         }else{
 
@@ -205,7 +233,12 @@ function handleClosingTag(xmlData,i, tagName, nodes,options){
     if( closingNode[options.textNodeName] !== undefined ) {
         var keyCount = countOwnKeys(closingNode);
         if( keyCount === 1){//convert to string
-            currentObject[tagName] = closingNode[options.textNodeName];
+            /* if(currentObject[tagName]   instanceof Array){
+                currentObject[tagName].push(closingNode[options.textNodeName]);
+            }else{ */
+                currentObject[tagName] = closingNode[options.textNodeName];
+            //}
+
         }else if(keyCount > 1 && closingNode[options.textNodeName] === ""){//remove empty textNode
             delete currentObject[tagName][options.textNodeName];
         }
@@ -215,6 +248,9 @@ function handleClosingTag(xmlData,i, tagName, nodes,options){
     i = output.index;
 
     if(output.value !== "") {
+        if(currentObject[options.textNodeName] === undefined){
+            currentObject[options.textNodeName] = "";
+        }
         currentObject[options.textNodeName] += output.value;
     }
 
@@ -431,7 +467,8 @@ function isEmptyObject(obj) {
    * @param {*} b 
    */
 function merge(a,b){
-    for (var attr in a) { b[attr] = a[attr]; }
+    if(b !== undefined)
+        for (var attr in a) { b[attr] = a[attr]; }
     return b;
 }
 
