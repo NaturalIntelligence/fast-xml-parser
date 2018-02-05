@@ -99,12 +99,13 @@ exports.parse = function(xmlData, options){
                     if(operationResult.err !== undefined){
                         return operationResult.err;
                     }else{
+                        var newObj = {}
                         if(isEmptyObject(attrObj)){
-                            currentObject[tagName] = textValue;
+                            newObj = "";
                         }else{
-                            currentObject[tagName] = {};
-                            merge(attrObj,currentObject[tagName]);
+                            merge(attrObj,newObj);
                         }
+                        currentObject = addNode(newObj,currentObject,parentObject,tagName, nodes,tags,options);
                         continue;
                     }
                 }else if(closingTag){
@@ -143,32 +144,12 @@ exports.parse = function(xmlData, options){
                             newObj[options.textNodeName] = textValue;
                     }
 
-                    tags.push(tagName);
+                    
                     if( parentObject[options.textNodeName] === ""){
                         delete parentObject[options.textNodeName];
                     }
-                    //handle repeated tags
-                    if(typeof currentObject === "string"){
-                        var val = currentObject;
-                        currentObject = {};
-                        if(val !== ""){
-                            currentObject[options.textNodeName] = val;
-                        }
-                         var parentTag = tags[tags.length - 2];
-                         parentObject[parentTag] = currentObject;
-                         nodes.pop();
-                         nodes.push(currentObject);
-                    }
-                    if(currentObject[tagName]){//already present
-                        var swap = currentObject[tagName];
-                        if(!(currentObject[tagName]   instanceof Array)){
-                            currentObject[tagName] = [];
-                            currentObject[tagName].push(swap);
-                        }
-                        currentObject[tagName].push(newObj);
-                    }else{
-                        currentObject[tagName] = newObj;
-                    }
+                    currentObject = addNode(newObj,currentObject,parentObject,tagName, nodes,tags,options);
+                    tags.push(tagName);
                     
                     nodes.push(newObj);
                     parentObject = currentObject;
@@ -187,6 +168,42 @@ exports.parse = function(xmlData, options){
         return { err: { code:"InvalidXml",msg:"Invalid " + JSON.stringify(tags,null,4) +" found."}};
     }
     return { "json" : rootNode};
+}
+
+/**
+ * 
+ * @param {*} newObj 
+ * @param {*} currentObject 
+ * @param {*} parentObject 
+ * @param {string} tagName 
+ * @param {array} nodes 
+ * @param {array} tags 
+ * @param {*} options 
+ */
+function addNode(newObj,currentObject,parentObject,tagName, nodes,tags,options){
+    if(typeof currentObject === "string"){
+        var val = currentObject;
+        currentObject = {};
+        if(val !== ""){
+            currentObject[options.textNodeName] = val;
+        }
+         var parentTag = tags[tags.length - 1];
+         parentObject[parentTag] = currentObject;
+         nodes.pop();
+         nodes.push(currentObject);
+    }
+    if(currentObject[tagName] !== undefined){//already present
+        var swap = currentObject[tagName];
+        if(!(currentObject[tagName]   instanceof Array)){
+            currentObject[tagName] = [];
+            currentObject[tagName].push(swap);
+        }
+        currentObject[tagName].push(newObj);
+    }else{
+        currentObject[tagName] = newObj;
+    }
+
+    return currentObject;
 }
 
 /**
