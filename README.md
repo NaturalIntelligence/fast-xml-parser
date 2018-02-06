@@ -116,18 +116,45 @@ Don't forget to check the performance report on [comparejs](https://naturalintel
 
 **validator benchmark: 21000 tps**
 
-### Limitation
-* Parser doesn't check if the XML is valid or not. If the XML is not valid you may get invalid result. So you can call the validator function first to check the structure.
-* This is based on JS regular expression engine. So due to it's limitation fast-xml-parser face performance issue when it process XML string(data) which is very large like 10mb or more. (I'll look into this as soon as I get some free time). **UPDATE**: from v2.9.0, I have rewritten the validator code. So that validator can handle large files as well. I have tested it up to 98mb xml file. I have some more ideas to increase the speed. And I'll work whenever I get the time.
-
-Report an issue or request for a feature [here](https://github.com/NaturalIntelligence/fast-xml-parser/issues)
-
 Your contribution in terms of donation, testing, bug fixes, code development etc. can help me to write fast algorithms.
 [<img src="https://www.paypalobjects.com/webstatic/en_US/btn/btn_donate_92x26.png" alt="Stubmatic donate button"/>](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=KQJAX48SPUKNC) 
 
-**Give me a [star](https://github.com/NaturalIntelligence/fast-xml-parser)**, if you really like this project.
+**Give a [star](https://github.com/NaturalIntelligence/fast-xml-parser)**, if you really like this project.
 
-**Fund collected (since the starting of the project)** : $0
+# Changes from v3 (in progress)
+
+* Can handle big files as well.
+* Validator is clubbed with parser
+* Meaningful error messages
+
+```
+"err": {
+    "code": "InvalidAttr",
+    "msg": "Attributes for rootNode have open quote"
+}
+```
+
+* Updated options 
+
+```
+    var defaultOptions = {
+        attrNamePrefix : "@_",                     //prefix for attributes
+        attrNodeName: false,                       //Group attributes in separate node
+        textNodeName : "#text",                 //Name for property which will have value of the node in case nested nodes are present, or attributes
+        ignoreAttributes : true,                     //ignore attributes
+        allowBooleanAttributes : false,         //A tag can have attributes without any value
+        ignoreNameSpace : false,                 //ignore namespace from the name of a tag and attribute. It also removes xmlns attribute
+        parseNodeValue : true,                     //convert the value of node to primitive type. E.g. "2" -> 2
+        parseAttributeValue : false,               //convert the value of attribute to primitive type. E.g. "2" -> 2
+        trimValues: true,                                //Trim string values of tag and attributes 
+    };
+```
+* Parse boolean values as well. E.g. `"true"` to `true` 
+* You can set pasrer not to *trim* whitespaces from attribute or tag /node value.
+* Tag / node and attribute value is by default HTML decoded. However CDATA value will not be decoded.
+* Tag / node value will not be parsed if CDATA presents.
+* Few validation bugs are also fixed
+
 
 Some of my other NPM pojects
  - [stubmatic](https://github.com/NaturalIntelligence/Stubmatic) : A stub server to mock behaviour of HTTP(s) / REST / SOAP services. Stubbing redis is on the way.
@@ -135,7 +162,6 @@ Some of my other NPM pojects
  - [fast-lorem-ipsum](https://github.com/amitguptagwl/fast-lorem-ipsum) : Generate lorem ipsum words, sentences, paragraph very quickly.
 
 ### TODO
-* P2: parser performance improvement for large files
 * P2: validating XML stream data
 * P2: validator cli
 * P2: fast XML prettyfier
