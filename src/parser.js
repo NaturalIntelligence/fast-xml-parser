@@ -1,4 +1,3 @@
-var he = require("he");
 var getAllMatches = require("./util").getAllMatches;
 
 var xmlNode = function(tagname,parent,val){
@@ -131,7 +130,7 @@ function resolveNameSpace(tagname,ignore){
 function parseValue(val,conversion,isAttribute){
     if(val){
         if(!conversion || isNaN(val)){
-            val = "" + he.decode(val, {isAttributeValue:isAttribute, strict:true});
+            val = "" + val;
             if(isAttribute) {
                 val = val.replace(/\r?\n/g, " ");
             }

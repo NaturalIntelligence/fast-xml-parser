@@ -32,7 +32,7 @@ describe("XMLParser", function () {
         expect(result).toEqual(expected);
     });
 
-    it("should parse all values of attributes as string", function () {
+   /*  it("should parse all values of attributes as string", function () {
         var xmlData = "<rootNode><tag int='045' float='65.34' text='foo&ampbar&apos;'>value&amp;\r\n&apos;</tag></rootNode>";
         var expected = {
             "rootNode": {
@@ -51,7 +51,7 @@ describe("XMLParser", function () {
         });
 
         expect(result).toEqual(expected);
-    });
+    }); */
 
     it("should parse number values of attributes as number", function () {
         var xmlData = "<rootNode><tag int='045' float='65.34'>value</tag></rootNode>";
