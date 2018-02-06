@@ -1,8 +1,26 @@
 var util = require("./util");
 
 
+var defaultOptions = {
+    allowBooleanAttributes : false,         //A tag can have attributes without any value
+};
+
+var buildOptions = function (options){
+    if(!options) options = {};
+    var props = ["allowBooleanAttributes"];
+    for (var i = 0; i < props.length; i++) {
+        if(options[props[i]] === undefined){
+            options[props[i]] = defaultOptions[props[i]];
+        }
+    }
+    return options;
+};
+
+
 var tagsPattern = new RegExp("<\\/?([\\w:\\-_\.]+)\\s*\/?>","g");
-exports.validate = function(xmlData){
+exports.validate = function(xmlData, options){
+    options = buildOptions(options);   
+
     xmlData = xmlData.replace(/(\r\n|\n|\r)/gm,"");//make it single line
     xmlData = xmlData.replace(/(^\s*<\?xml.*?\?>)/g,"");//Remove XML starting tag
     xmlData = xmlData.replace(/(<!DOCTYPE[\s\w\"\.\/\-\:]+(\[.*\])*\s*>)/g,"");//Remove DOCTYPE
@@ -40,51 +58,38 @@ exports.validate = function(xmlData){
                     tagName = tagName.substring(0,tagName.length-1);
                     continue;
                 }
-                if(!validateTagName(tagName)) return false;
+                if(!validateTagName(tagName)) 
+                return { err: { code:"InvalidTag",msg:"Tag " + tagName + " is an invalid name."}};
 
 
-                var attrStr = "";
-                var startChar = "";
-                for(;i < xmlData.length ;i++){
-                    if(xmlData[i] === '"' || xmlData[i] === "'"){
-                        if(startChar === ""){
-                            startChar = xmlData[i];
-                        }else{
-                            startChar = "";
-                        }
-                    }else if(xmlData[i] === ">"){
-                        if(startChar === ""){
-                            break;
-                        }
-                    }
-                    attrStr += xmlData[i];
+                var result = readAttributeStr(xmlData,i);
+                if(result === false) {
+                    return { err: { code:"InvalidAttr",msg:"Attributes for " + tagName + " have open quote"}};
                 }
-                if(startChar !== "") return false;//open quote
-                //attrStr = attrStr.trim();
-                //console.log(attrStr);
+                var attrStr = result.value;
+                i = result.index;
 
                 if(attrStr[attrStr.length-1] === "/" ){//self closing tag
                     attrStr = attrStr.substring(0,attrStr.length-1);
-                    if(!validateAttributeString(attrStr)){
-                        return false;
-                    }else{
-
+                    var isValid = validateAttributeString(attrStr, options);
+                    if(isValid === true){
                         continue;
+                    }else{
+                        return isValid;
                     }
                 }else if(closingTag){
                     if(attrStr.trim().length > 0){
-                        return false;
-                        //throw new Error("XML validation error: closing tag should not have any attribute");
+                        return { err: { code:"InvalidTag",msg:"closing tag " + tagName + " can't have attributes or invalid starting."}};
                     }else{
                         var otg = tags.pop();
                         if(tagName !== otg){
-                            return false;
-                            //throw new Error("XML validation error: no mathicng closing tag");
+                            return { err: { code:"InvalidTag",msg:"closing tag " + otg + " is expected inplace of "+tagName+"."}};
                         }
                     }
                 }else{
-                    if(!validateAttributeString(attrStr)){
-                        return false;
+                    var isValid = validateAttributeString(attrStr, options);
+                    if(isValid !== true ){
+                        return isValid;
                     }
                     tags.push(tagName);
                 }
@@ -107,14 +112,13 @@ exports.validate = function(xmlData){
         }else{
 
             if(xmlData[i] === " " || xmlData[i] === "\t") continue;
-            return false;
+            return { err: { code:"InvalidChar",msg:"char " + xmlData[i] +" is not expected ."}};
         }
     }
 
 
     if(tags.length > 0){
-        return false;
-        //throw new Error("XML validation error");
+        return { err: { code:"InvalidXml",msg:"Invalid " + JSON.stringify(tags,null,4).replace(/\r?\n/g,"") +" found."}};
     }
 
     return true;
@@ -149,40 +153,67 @@ function readCommentAndCDATA(xmlData,i){
 }
 
 /**
+ * Keep reading xmlData until '<' is found outside the attribute value.
+ * @param {string} xmlData 
+ * @param {number} i 
+ */
+function readAttributeStr(xmlData,i){
+    var attrStr = "";
+    var startChar = "";
+    for(;i < xmlData.length ;i++){
+        if(xmlData[i] === '"' || xmlData[i] === "'"){
+            if(startChar === ""){
+                startChar = xmlData[i];
+            }else{
+                startChar = "";
+            }
+        }else if(xmlData[i] === ">"){
+            if(startChar === ""){
+                break;
+            }
+        }
+        attrStr += xmlData[i];
+    }
+    if(startChar !== "") return false;
+
+    return { value: attrStr, index: i};
+}
+
+/**
  * Select all the attributes whether valid or invalid.
  */
-var validAttrStrRegxp = new RegExp("(\\s*)([^\\s=]+)\\s*(=)?(\\s*(['\"])((.|\\n)*?)\\5)?", "g");
+var validAttrStrRegxp = new RegExp("(\\s*)([^\\s=]+)(\\s*=)?(\\s*(['\"])((.|\\n)*?)\\5)?", "g");
 
 //attr, ="sd", a="amit's", a="sd"b="saf", ab  cd=""
 
-function validateAttributeString(attrStr){
+function validateAttributeString(attrStr,options){
     //console.log("start:"+attrStr+":end");
 
     //if(attrStr.trim().length === 0) return true; //empty string
 
     var matches = util.getAllMatches(attrStr,validAttrStrRegxp);
     var attrNames = [];
+    var attrObj = {};
 
 
     for(var i=0;i<matches.length;i++){
         //console.log(matches[i]);
         
         if(matches[i][1].length === 0){//nospace before attribute name: a="sd"b="saf"
-            return false;
-        }else if(matches[i][3] === undefined){//independent attribute: ab 
-            return false;
-        }else if(matches[i][6] === undefined){//attribute without value: ab=
-            return false;
-        }
-        attrName=matches[i][2];
+            return { err: { code:"InvalidAttr",msg:"attribute " + matches[i][2] + " has no space in starting."}};
+        }else if(matches[i][3] === undefined && !options.allowBooleanAttributes){//independent attribute: ab 
+            return { err: { code:"InvalidAttr",msg:"boolean attribute " + matches[i][2] + " is not allowed."}};
+        }/* else if(matches[i][6] === undefined){//attribute without value: ab=
+            return { err: { code:"InvalidAttr",msg:"attribute " + matches[i][2] + " has no value assigned."}};
+        } */
+        var attrName=matches[i][2];
         if(!validateAttrName(attrName)){
-            //console.log("seems invalid");
-            return false;
+            return { err: { code:"InvalidAttr",msg:"attribute " + attrName + " is an invalid name."}};
         }
         if(!attrNames.hasOwnProperty(attrName)){//check for duplicate attribute.
             attrNames[attrName]=1;
         }else{
-            return false;
+            return { err: { code:"InvalidAttr",msg:"attribute " + attrName + " is repeated."}};
         }
     }
 

@@ -120,7 +120,7 @@ describe("XMLParser", function () {
     });
 
     
-    it("should not validate xml atribute has '>' in value", function () {
+    it("should validate xml atribute has '>' in value", function () {
         var xmlData = "<rootNode attr=\"123>234\"><tag></tag><tag>1</tag><tag>val</tag></rootNode>";
         var expected = {
             "json": {

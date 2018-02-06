@@ -105,6 +105,7 @@ describe("XMLParser", function () {
                     + "</xml>";
         var expected = {
                         "xml": {
+                            "#text": "    ",
                             "a": "text",
                             "b": "        text     ",
                             "c": "     text    ",
