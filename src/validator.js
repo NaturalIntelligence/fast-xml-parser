@@ -23,7 +23,7 @@ exports.validate = function(xmlData, options){
 
     xmlData = xmlData.replace(/(\r\n|\n|\r)/gm,"");//make it single line
     xmlData = xmlData.replace(/(^\s*<\?xml.*?\?>)/g,"");//Remove XML starting tag
-    xmlData = xmlData.replace(/(<!DOCTYPE[\s\w\"\.\/\-\:]+(\[.*\])*\s*>)/g,"");//Remove DOCTYPE
+    //xmlData = xmlData.replace(/(<!DOCTYPE[\s\w\"\.\/\-\:]+(\[.*\])*\s*>)/g,"");//Remove DOCTYPE
 
     var tags = [];
     for (var i = 0; i < xmlData.length; i++) {
@@ -132,6 +132,22 @@ function readCommentAndCDATA(xmlData,i){
                 break;
             }
         }
+    }else if( xmlData.length > i+8
+        && xmlData[i+1] === "D"
+        && xmlData[i+2] === "O"
+        && xmlData[i+3] === "C"
+        && xmlData[i+4] === "T"
+        && xmlData[i+5] === "Y"
+        && xmlData[i+6] === "P"
+        && xmlData[i+7] === "E"){
+            var angleBracketsCount = 1;
+            for(i+=8;i<xmlData.length;i++){
+                if(xmlData[i] == "<") {angleBracketsCount++;}
+                else if(xmlData[i] == ">") {
+                    angleBracketsCount--;
+                    if(angleBracketsCount === 0) break;
+                }
+            }
     }else if( xmlData.length > i+9
         && xmlData[i+1] === "["
         && xmlData[i+2] === "C"

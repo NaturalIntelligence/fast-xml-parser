@@ -310,6 +310,23 @@ describe("XMLParser", function () {
         expect(result).toBe(true);
     });
 
+    it("should validate XML with DOCTYPE", function () {
+        var xmlData = '<?xml version="1.0" standalone="yes" ?>'
+            + '<!--open the DOCTYPE declaration -'
+            + '  the open square bracket indicates an internal DTD-->'
+            + '<!DOCTYPE foo ['
+            + ''
+            + ''
+            + '<!--define the internal DTD-->'
+            + '<!ELEMENT foo (#PCDATA)>'
+            + '<!--close the DOCTYPE declaration-->'
+            + ']>'
+            + '<foo>Hello World.</foo>';
+
+        var result = validator.validate(xmlData);
+        expect(result).toBe(true);
+    });
+
 });
 
 
