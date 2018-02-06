@@ -327,6 +327,50 @@ describe("XMLParser", function () {
         expect(result).toBe(true);
     });
 
+    it("should not validate XML when prolog doesn't start from 1st char", function () {
+        var xmlData = '  <?xml version="1.0" standalone="yes" ?>'
+            + '<foo>Hello World.</foo>';
+        var expected = {
+            "code": "InvalidXml",
+            "msg": "XML declaration allowed only at the start of the document."
+        }
+
+        var result = validator.validate(xmlData).err;
+        //console.log(JSON.stringify(result,null,4));
+        expect(result).toEqual(expected);
+    });
+
+    it("should not validate XML with prolog only", function () {
+        var xmlData = '<?xml version="1.0" standalone="yes" ?>'
+            + '<!--some comment -'
+            + '  end in this line-->'
+        var expected = {
+            "code": "InvalidXml",
+            "msg": "Start tag expected."
+        }
+        var result = validator.validate(xmlData).err;
+        expect(result).toEqual(expected);
+    });
+
+    it("should not validate XML with prolog &  DOCTYPE but not any other tag", function () {
+        var xmlData = '<?xml version="1.0" standalone="yes" ?>'
+            + '<!--open the DOCTYPE declaration -'
+            + '  the open square bracket indicates an internal DTD-->'
+            + '<!DOCTYPE foo ['
+            + ''
+            + ''
+            + '<!--define the internal DTD-->'
+            + '<!ELEMENT foo (#PCDATA)>'
+            + '<!--close the DOCTYPE declaration-->'
+            + ']>';
+        var expected = {
+            "code": "InvalidXml",
+            "msg": "Start tag expected."
+        }
+        var result = validator.validate(xmlData).err;
+        expect(result).toEqual(expected);
+    });
+
 });
 
 

@@ -22,18 +22,30 @@ exports.validate = function(xmlData, options){
     options = buildOptions(options);   
 
     xmlData = xmlData.replace(/(\r\n|\n|\r)/gm,"");//make it single line
-    xmlData = xmlData.replace(/(^\s*<\?xml.*?\?>)/g,"");//Remove XML starting tag
+    //xmlData = xmlData.replace(/(^\s*<\?xml.*?\?>)/g,"");//Remove XML starting tag
     //xmlData = xmlData.replace(/(<!DOCTYPE[\s\w\"\.\/\-\:]+(\[.*\])*\s*>)/g,"");//Remove DOCTYPE
 
     var tags = [];
+    var tagFound = false;
     for (var i = 0; i < xmlData.length; i++) {
 
         if(xmlData[i] === "<"){//starting of tag
             //read until you reach to '>' avoiding any '>' in attribute value
 
             i++;
-
-            if(xmlData[i] === "!"){
+            if(xmlData[i] === "?"){
+                if(i !== 1){
+                    return {err : { code : "InvalidXml", msg : "XML declaration allowed only at the start of the document."}};
+                }else{
+                    //read until ?> is found
+                    for(;i<xmlData.length;i++){
+                        if(xmlData[i] == "?" && xmlData[i+1] == ">"){
+                            i++;
+                            break;
+                        }
+                    }
+                }
+            }else if(xmlData[i] === "!"){
                 i = readCommentAndCDATA(xmlData,i);
                 continue;
             }else{
@@ -73,6 +85,7 @@ exports.validate = function(xmlData, options){
                     attrStr = attrStr.substring(0,attrStr.length-1);
                     var isValid = validateAttributeString(attrStr, options);
                     if(isValid === true){
+                        tagFound = true;
                         continue;
                     }else{
                         return isValid;
@@ -91,7 +104,7 @@ exports.validate = function(xmlData, options){
                     if(isValid !== true ){
                         return isValid;
                     }
-                    tags.push(tagName);
+                    tags.push(tagName); tagFound = true;
                 }
 
                 //skip tag text value
@@ -117,7 +130,9 @@ exports.validate = function(xmlData, options){
     }
 
 
-    if(tags.length > 0){
+    if(!tagFound){
+        return {err : { code : "InvalidXml", msg : "Start tag expected."}};
+    }else if(tags.length > 0){
         return { err: { code:"InvalidXml",msg:"Invalid " + JSON.stringify(tags,null,4).replace(/\r?\n/g,"") +" found."}};
     }
 
