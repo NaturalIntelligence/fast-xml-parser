@@ -2,28 +2,37 @@ var Benchmark = require('benchmark');
 var suite = new Benchmark.Suite("XML Parser benchmark");
 
 var parser = require("../src/parser");
+var xml2js = require("xml2js");
+var parser2 = require("../src/parserV2");
 
 var fs = require("fs");
 var path = require("path");
-var fileNamePath = path.join(__dirname, "sample.xml");
+var fileNamePath = path.join(__dirname, "../spec/assets/sample.xml");
 var xmlData = fs.readFileSync(fileNamePath).toString();
-var config = {
-            ignoreTextNodeAttr: false,
-            ignoreNonTextNodeAttr: false,
-            attrPrefix: "@",
-            textNodeName: "#_text",
-            ignoreNameSpace: true,
-        };
 
-suite.add('xml to traversal object', function() {
-  parser.getTraversalObj(xmlData, config);//14000
+suite
+.add('xml to json + validation V1', function() {
+  parser.validate(xmlData); 
+  parser.parse(xmlData); 
 })
-.add('xml to json', function() {
-  parser.parse(xmlData, config); //12300
+.add('xml to json + validation V2 ', function() {
+  parser2.parse(xmlData);
 })
-.add('xml validation', function() {
-  parser.validate(xmlData); //2000
+.add('xml2js ', function() {
+  xml2js.parseString(xmlData,function(err,result){
+    if (err) throw err;
+  });
 })
+/* .add('xml2js', {
+  'defer': true,
+  'fn' : function(deferred) {
+      xml2js.parseString(xmlData,function(err,result){
+        console.log("err", err);
+        if (err) throw err;
+        deferred.resolve();
+      });
+    }
+}) */
 
 .on('start',function(){
 	console.log("Running Suite: " + this.name);
@@ -40,7 +49,7 @@ suite.add('xml to traversal object', function() {
 // add listeners 
 .on('complete', function() {
   for (var j = 0; j < this.length; j++) {
-    console.log(this.name + ":" +   this[j].hz + " requests/second");
+    console.log(this[j].name + ":" +   this[j].hz + " requests/second");
   }
 })
 // run async 
