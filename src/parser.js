@@ -1,18 +1,6 @@
 var getAllMatches = require("./util").getAllMatches;
+var xmlNode = require("./xmlNode");
 
-var xmlNode = function(tagname,parent,val){
-    this.tagname = tagname;
-    this.parent = parent;
-    this.child = [];
-    this.val = val;
-    this.addChild = function (child){
-        this.child.push(child);
-    };
-};
-
-//var tagsRegx = new RegExp("<(\\/?[a-zA-Z0-9_:]+)([^>\\/]*)(\\/?)>([^<]+)?","g");
-//var tagsRegx = new RegExp("<(\\/?[\\w:-]+)([^>]*)>([^<]+)?","g");
-//var cdataRegx = "<!\\[CDATA\\[([^\\]\\]]*)\\]\\]>";
 var cdataRegx = "<!\\[CDATA\\[(.*?)(\\]\\]>)";
 var tagsRegx = new RegExp("<(\\/?[\\w:\\-\._]+)([^>]*)>(\\s*"+cdataRegx+")*([^<]+)?","g");
 
