@@ -1,6 +1,6 @@
 {
   "name": "fast-xml-parser",
-  "version": "2.9.4",
+  "version": "2.9.5",
   "description": "Validate XML or Parse XML to JS/JSON very fast without C/C++ based libraries",
   "main": "./src/parser.js",
   "scripts": {
@@ -65,7 +65,8 @@
     "jasmine": "^2.8.0",
     "jasmine-core": "^2.8.0",
     "portfinder": "^1.0.13",
-    "zombie": "^5.0.7"
+    "zombie": "^5.0.7",
+    "xml2js": "^0.4.19"
   },
   "dependencies": {
     "he": "~1.1.1"
