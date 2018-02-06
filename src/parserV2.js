@@ -15,13 +15,24 @@ var defaultOptions = {
     parseAttributeValue : false,          //convert the value of attribute to primitive type. E.g. "2" -> 2
     //arrayMode : false,                            //put the values in array
     //selfClosingTagToNull : false              //Bydefault self closing tag is set to empty string. It'll set their value as null
+    trimValues: true,                                //Trim string values of tag and attributes 
 
 };
 
 
 var buildOptions = function (options){
     if(!options) options = {};
-    var props = ["attrNamePrefix","attrNodeName","ignoreAttributes","ignoreNameSpace","ignoreRootElement","textNodeName","parseNodeValue","parseAttributeValue","arrayMode"];
+    var props = ["attrNamePrefix"
+            ,"attrNodeName"
+            ,"textNodeName"
+            ,"ignoreAttributes"
+            ,"allowBooleanAttributes"
+            ,"ignoreNameSpace"
+            ,"parseNodeValue"
+            ,"parseAttributeValue"
+            //,"arrayMode"
+            ,"trimValues"
+        ];
     for (var i = 0; i < props.length; i++) {
         if(options[props[i]] === undefined){
             options[props[i]] = defaultOptions[props[i]];
@@ -352,7 +363,7 @@ function readTextValue(xmlData,i,options){
                 var end_index = readCommentAndCDATA(xmlData,i);
                 if(xmlData[i+1] === '['){
                     cdatapresent = true;
-                    vals.push(he.decode(val, { strict:true})); val = "";
+                    vals.push(he.decode(options.trimValues ? val.trim() : val, { strict:true})); val = "";
                     var cdataVal = xmlData.substring(i+8,end_index-2);
                     vals.push(cdataVal);
                 }else{
@@ -368,16 +379,16 @@ function readTextValue(xmlData,i,options){
         }
         
     }//end of reading tag text value
-    vals.push(he.decode(val, { strict:true}));
+    vals.push(he.decode(options.trimValues ? val.trim() : val, { strict:true}));
     val = vals.join("");
     if(xmlData[i] === "<") i--;
 
     var textValue = "";
     if(val.length !== 0){
-        if(cdatapresent || !options.parseNodeValue){
+        if(cdatapresent){
             textValue = val;
         }else{
-            textValue = parseValue(val,options,false);
+            textValue = parseValue(val,options,options.parseNodeValue);
         }
     }
     return { index: i, value: textValue};
@@ -434,11 +445,8 @@ function validateAndBuildAttributes(attrStr,options){
         if(attrName !== ""){
             if( matches[i][3] === undefined && options.allowBooleanAttributes ){
                 attrObj[attrNamePrefix + attrName] = true;
-            }else if(options.parseAttributeValue){
-                attrObj[attrNamePrefix + attrName] = parseValue( he.decode(matches[i][6], {isAttributeValue:true, strict:true}),options,true);
-            }
-            else{
-                attrObj[attrNamePrefix + attrName] = he.decode(matches[i][6], {isAttributeValue:true, strict:true});
+            }else{
+                attrObj[attrNamePrefix + attrName] = parseValue( he.decode(matches[i][6], {isAttributeValue:true, strict:true}),options,options.parseAttributeValue);
             }
         }
         
@@ -454,13 +462,14 @@ function validateAttrName(attrName){
     return util.doesMatch(attrName,validAttrRegxp);
 }
 
-function parseValue(val,options,isAttribute){
+function parseValue(val,options,convert){
     if(val.trim() !== "" ){
-        if( isNaN(val)){
+        if(options.trimValues){
+            val = val.trim();
+        }
+        if( !convert || isNaN(val)){
             val = "" + val;
-            if(isAttribute) {
-                val = val.replace(/\r?\n/g, " ");
-            }
+            //val = val.replace(/\r?\n/g, " ");
             val = val === "true" ? true : val === "false" ? false : val;
 
         }else{//Number
