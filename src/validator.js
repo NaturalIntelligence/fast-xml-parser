@@ -21,7 +21,7 @@ var tagsPattern = new RegExp("<\\/?([\\w:\\-_\.]+)\\s*\/?>","g");
 exports.validate = function(xmlData, options){
     options = buildOptions(options);   
 
-    xmlData = xmlData.replace(/(\r\n|\n|\r)/gm,"");//make it single line
+    //xmlData = xmlData.replace(/(\r\n|\n|\r)/gm,"");//make it single line
     //xmlData = xmlData.replace(/(^\s*<\?xml.*?\?>)/g,"");//Remove XML starting tag
     //xmlData = xmlData.replace(/(<!DOCTYPE[\s\w\"\.\/\-\:]+(\[.*\])*\s*>)/g,"");//Remove DOCTYPE
 
@@ -124,7 +124,7 @@ exports.validate = function(xmlData, options){
             }
         }else{
 
-            if(xmlData[i] === " " || xmlData[i] === "\t") continue;
+            if(xmlData[i] === " " || xmlData[i] === "\t" || xmlData[i] === "\n" || xmlData[i] === "\r") continue;
             return { err: { code:"InvalidChar",msg:"char " + xmlData[i] +" is not expected ."}};
         }
     }
