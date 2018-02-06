@@ -42,6 +42,12 @@ var getTraversalObj =function (xmlData,options){
             nexttag = i+1 < tags.length ? resolveNameSpace(tags[i+1][1],options.ignoreNameSpace) : undefined,
             attrsStr = tags[i][2], attrs,
             val = tags[i][4] ===  undefined ? tags[i][6] :  simplifyCDATA(tags[i][0]);
+
+        if(tags[i][4]===undefined && typeof tags[i][6]==="string"){
+            //decode non CDATA text node
+            val = he.decode(val, {strict:true});
+        }
+
         if(tag.indexOf("/") === 0){//ending tag
             currentNode = currentNode.parent;
             continue;
@@ -120,7 +126,8 @@ function parseValue(val,conversion,isAttribute){
         if(!conversion || isNaN(val)){
             val = "" + val;
             if(isAttribute) {
-                val = val.replace(/\r?\n/g, " ");
+                //decode entities in attribute value
+                val = he.decode(val.replace(/\r?\n/g, " "), {isAttributeValue:isAttribute, strict:true});
             }
         }else{
             if(val.indexOf(".") !== -1){
