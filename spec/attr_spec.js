@@ -3,7 +3,6 @@ var validator = require("../src/validator");
 
 describe("XMLParser", function () {
 
-
     it("should parse attributes with valid names", function () {
         var xmlData = '<issue _ent-ity.23="Mjg2MzY2OTkyNA==" state="partial" version="1"></issue>';
         var expected = {
@@ -11,15 +10,13 @@ describe("XMLParser", function () {
                 "_ent-ity.23"    :     "Mjg2MzY2OTkyNA==",
                 "state"     :     "partial",
                 "version"   :     1,
-                "#text"     :     ""
             }
         };
 
         var result = parser.parse(xmlData, {
-            attrPrefix:"",
-            ignoreTextNodeAttr: false,
-            ignoreNonTextNodeAttr: false,
-            textAttrConversion: true
+            attributeNamePrefix:"",
+            ignoreAttributes: false,
+            parseAttributeValue: true
         });
 
         //console.log(JSON.stringify(result,null,4));
@@ -35,15 +32,14 @@ describe("XMLParser", function () {
             "element": {
                 "id"    :     7,
                 "data"     :     "foo bar",
-                "bug"   :     "true",
+                "bug"   :     true,
             }
         };
 
         var result = parser.parse(xmlData, {
-            attrPrefix:"",
-            ignoreTextNodeAttr: false,
-            ignoreNonTextNodeAttr: false,
-            textAttrConversion: true
+            attributeNamePrefix:"",
+            ignoreAttributes: false,
+            parseAttributeValue: true
         });
 
         //console.log(JSON.stringify(result,null,4));

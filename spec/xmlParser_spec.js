@@ -2,56 +2,38 @@ var parser = require("../src/parser");
 
 describe("XMLParser", function () {
 
-    it("should parse all values as string,int, or float", function () {
-        var xmlData = "<rootNode><tag>value</tag><intTag>045</intTag><floatTag>65.34</floatTag></rootNode>";
+    it("should parse all values as string, int, boolean or float", function () {
+        var xmlData = "<rootNode><tag>value</tag><boolean>true</boolean><intTag>045</intTag><floatTag>65.34</floatTag></rootNode>";
         var expected = {
             "rootNode": {
                 "tag": "value",
+                "boolean":true,
                 "intTag": 45,
                 "floatTag": 65.34
             }
         };
 
         var result = parser.parse(xmlData);
+        //console.log(JSON.stringify(result,null,4));
         expect(result).toEqual(expected);
     });
 
-    it("should parse all values as string", function () {
-        var xmlData = "<rootNode><tag>value</tag><intTag>045</intTag><floatTag>65.34</floatTag></rootNode>";
+    it("should not parse values to primitive type", function () {
+        var xmlData = "<rootNode><tag>value</tag><boolean>true</boolean><intTag>045</intTag><floatTag>65.34</floatTag></rootNode>";
         var expected = {
             "rootNode": {
                 "tag": "value",
+                "boolean":"true",
                 "intTag": "045",
                 "floatTag": "65.34"
             }
         };
 
         var result = parser.parse(xmlData, {
-            textNodeConversion : false
+            parseNodeValue : false
         });
         expect(result).toEqual(expected);
     });
-
-   /*  it("should parse all values of attributes as string", function () {
-        var xmlData = "<rootNode><tag int='045' float='65.34' text='foo&ampbar&apos;'>value&amp;\r\n&apos;</tag></rootNode>";
-        var expected = {
-            "rootNode": {
-                "tag": {
-                    "#text": "value&\r\n'",
-                    "@_int": "045",
-                    "@_float": "65.34",
-                    "@_text": "foo&ampbar'"
-                }
-            }
-        };
-
-        var result = parser.parse(xmlData, {
-            ignoreTextNodeAttr : false,
-            textAttrConversion : false
-        });
-
-        expect(result).toEqual(expected);
-    }); */
 
     it("should parse number values of attributes as number", function () {
         var xmlData = "<rootNode><tag int='045' float='65.34'>value</tag></rootNode>";
@@ -66,9 +48,8 @@ describe("XMLParser", function () {
         };
 
         var result = parser.parse(xmlData, {
-            ignoreTextNodeAttr : false,
-            ignoreNonTextNodeAttr : false,
-            textAttrConversion : true
+            ignoreAttributes : false,
+            parseAttributeValue : true
         });
 
         expect(result).toEqual(expected);
@@ -85,7 +66,7 @@ describe("XMLParser", function () {
         };
 
         var result = parser.parse(xmlData, {
-            textNodeConversion : true
+            parseNodeValue : true
         });
         expect(result).toEqual(expected);
     });
@@ -106,7 +87,14 @@ describe("XMLParser", function () {
     });
 
     it("should ignore namespace and text node attributes", function () {
-        var xmlData = "<root:node><tag ns:arg='value'>value</tag><intTag ns:arg='value' ns:arg2='value2' >45</intTag><floatTag>65.34</floatTag><nsTag xmlns:tns='urn:none' tns:attr='tns'></nsTag><nsTagNoAttr xmlns:tns='urn:none'></nsTagNoAttr></root:node>";
+        var xmlData = "<root:node>"
+        +"<tag ns:arg='value'>value</tag>"
+        +"<intTag ns:arg='value' ns:arg2='value2' >45</intTag>"
+        +"<floatTag>65.34</floatTag>"
+        +"<nsTag xmlns:tns='urn:none' tns:attr='tns'></nsTag>"
+        +"<nsTagNoAttr xmlns:tns='urn:none'></nsTagNoAttr>"
+        +"</root:node>";
+
         var expected = {
             "node": {
                 "tag": {
@@ -121,13 +109,17 @@ describe("XMLParser", function () {
                 "floatTag": 65.34,
                 "nsTag":{
                     "@_attr":"tns",
-                    "#text": ""
+                    //"#text": ""
                 },
                 "nsTagNoAttr": ""
             }
         };
 
-        var result = parser.parse(xmlData,{ ignoreNameSpace : true, ignoreTextNodeAttr : false});
+        var result = parser.parse(xmlData,{ 
+            ignoreNameSpace : true,
+            ignoreAttributes : false
+        });
+        
         expect(result).toEqual(expected);
     });
 
@@ -154,7 +146,7 @@ describe("XMLParser", function () {
         };
 
         var result = parser.parse(xmlData, {
-            ignoreTextNodeAttr: false
+            ignoreAttributes: false
         });
         expect(result).toEqual(expected);
     });
@@ -169,7 +161,7 @@ describe("XMLParser", function () {
 
         //console.log(parser.getTraversalObj(xmlData));
         var result = parser.parse(xmlData, {
-            ignoreTextNodeAttr: false
+            ignoreAttributes: false
         });
         expect(result).toEqual(expected);
     });
@@ -212,59 +204,6 @@ describe("XMLParser", function () {
         expect(result).toEqual(expected);
     });
 
-    it("should parse text nodes with value", function () {
-        var xmlData = "<rootNode>" +
-            "<parenttag attr1='some val' attr2='another val'>" +
-            "<tag attr1='val'>value</tag>" +
-            "<tag attr1='val' attr2='234'>45</tag>" +
-            "<tag>65.34</tag>" +
-            "</parenttag>" +
-            "</rootNode>";
-        var expected = {
-            "rootNode": {
-                "parenttag": {
-                    "tag": [{
-                        "@_attr1": "val",
-                        "#text": "value"
-                    }, {
-                        "@_attr1": "val",
-                        "@_attr2": "234",
-                        "#text": 45
-                    }, 65.34]
-                }
-            }
-        };
-
-        var result = parser.parse(xmlData, {
-            ignoreTextNodeAttr: false
-        });
-        expect(result).toEqual(expected);
-    });
-
-    it("should parse non-text nodes with value", function () {
-        var xmlData = "<rootNode>" +
-            "<parenttag attr1='some val' attr2='another val'>" +
-            "<tag>value</tag>" +
-            "<tag attr1='val' attr2='234'>45</tag>" +
-            "<tag>65.34</tag>" +
-            "</parenttag>" +
-            "</rootNode>";
-        var expected = {
-            "rootNode": {
-                "parenttag": {
-                    "@_attr1": "some val",
-                    "@_attr2": "another val",
-                    "tag": ["value", 45, 65.34]
-                }
-            }
-        };
-
-        var result = parser.parse(xmlData, {
-            ignoreNonTextNodeAttr: false
-        });
-        expect(result).toEqual(expected);
-    });
-
     it("should parse non-text nodes with value for repeated nodes", function () {
         var xmlData = "<rootNode>" +
             "<parenttag attr1='some val' attr2='another val'>" +
@@ -283,17 +222,31 @@ describe("XMLParser", function () {
                 "parenttag": [{
                     "@_attr1": "some val",
                     "@_attr2": "another val",
-                    "tag": ["value", 45, 65.34]
+                    "tag": [
+                        "value",
+                        {
+                            "@_attr1": "val",
+                            "@_attr2": '234',
+                            "#text": 45
+                        },
+                        65.34]
                 }, {
                     "@_attr1": "some val",
                     "@_attr2": "another val",
-                    "tag": ["value", 45, 65.34]
+                    "tag": [
+                        "value",
+                        {
+                            "@_attr1": "val",
+                            "@_attr2": '234',
+                            "#text": 45
+                        },
+                        65.34]
                 }]
             }
         };
 
         var result = parser.parse(xmlData, {
-            ignoreNonTextNodeAttr: false
+            ignoreAttributes: false
         });
         expect(result).toEqual(expected);
     });
@@ -309,7 +262,8 @@ describe("XMLParser", function () {
         };
 
         var result = parser.parse(xmlData, {
-            ignoreTextNodeAttr: false
+            ignoreAttributes: false,
+            trimValues: false
         });
         expect(result).toEqual(expected);
     });
@@ -325,7 +279,7 @@ describe("XMLParser", function () {
         };
 
         var result = parser.parse(xmlData, {
-            ignoreTextNodeAttr: false
+            ignoreAttributes: false
         });
         expect(result).toEqual(expected);
     });
@@ -338,27 +292,26 @@ describe("XMLParser", function () {
         };
 
         var result = parser.parse(xmlData, {
-            ignoreTextNodeAttr: false
+            ignoreAttributes: false
         });
         expect(result).toEqual(expected);
     });
     
 
-    it("should parse text value with tag", function () {
+    it("should not parse text value with tag", function () {
         var xmlData = "<score><c1>71<message>23</message></c1></score>";
         var expected = {
             "score": {
                 "c1": {
                     "message" : 23,
-                    "_text" : 71
+                    "_text" : "71"
                 }
             }
         };
 
         var result = parser.parse(xmlData,{
             textNodeName : "_text",
-            ignoreNonTextNodeAttr : false,
-            ignoreTextNodeAttr : false,
+            ignoreAttributes : false
         });
 
         expect(result).toEqual(expected);
@@ -392,7 +345,7 @@ describe("XMLParser", function () {
                     };
 
         var result = parser.parse(xmlData, {
-            ignoreTextNodeAttr: false,
+            ignoreAttributes: false,
             ignoreNonTextNodeAttr: false
         });
 
@@ -434,13 +387,13 @@ describe("XMLParser", function () {
         };
 
         var result = parser.parse(xmlData, {
-            attrPrefix: "",
+            attributeNamePrefix: "",
             attrNodeName: "$",
             ignoreNameSpace: true,
-            ignoreTextNodeAttr: false,
-            ignoreNonTextNodeAttr: false
+            ignoreAttributes: false,
         });
 
+        //console.log(JSON.stringify(result,null,4));
         expect(result).toEqual(expected);
     });
 
@@ -461,7 +414,7 @@ describe("XMLParser", function () {
                     "name": "Jack",
                     "age": 33,
                     "emptyNode": "",
-                    "booleanNode": ["false", "true"],
+                    "booleanNode": [false, true],
                     "selfclosing": [
                         "",
                         {
@@ -511,16 +464,16 @@ describe("XMLParser", function () {
         };
 
         var result = parser.parse(xmlData, {
-            ignoreTextNodeAttr: false,
+            ignoreAttributes: false,
             ignoreNonTextNodeAttr: false,
-            attrPrefix: "@",
+            attributeNamePrefix: "@",
             textNodeName: "#_text",
         });
         //console.log(JSON.stringify(result,null,4));
         expect(result).toEqual(expected);
     });
 
-  it("should parse nodes as arrays", function () {
+  /* it("should parse nodes as arrays", function () {
     var fs = require("fs");
     var path = require("path");
     var fileNamePath = path.join(__dirname, "assets/sample.xml");
@@ -535,7 +488,7 @@ describe("XMLParser", function () {
           "name": ["Jack"],
           "age": [33],
           "emptyNode": [""],
-          "booleanNode": ["false", "true"],
+          "booleanNode": [false, true],
           "selfclosing": [
             "",
             {
@@ -585,41 +538,14 @@ describe("XMLParser", function () {
     };
 
     var result = parser.parse(xmlData, {
-      ignoreTextNodeAttr: false,
+      ignoreAttributes: false,
       ignoreNonTextNodeAttr: false,
-      attrPrefix: "@",
+      attributeNamePrefix: "@",
       textNodeName: "#_text",
       arrayMode: true
     });
     expect(result).toEqual(expected);
-  });
-
-    it("should intermediate traversable JS object which can later covert to JSON", function () {
-        var xmlData = "<rootNode><tag></tag><tag>1</tag><tag>val</tag></rootNode>";
-
-        var tobj = parser.getTraversalObj(xmlData);
-        expect(tobj.parent).toBe(undefined);
-        expect(tobj.tagname).toBe("!xml");
-        expect(tobj.child.length).toBe(1);
-        expect(tobj.child[0].parent.tagname).toBe("!xml");
-        expect(tobj.child[0].tagname).toBe("rootNode");
-        expect(tobj.child[0].val).toBe(undefined);
-        expect(tobj.child[0].child.length).toBe(3);
-        expect(tobj.child[0].child[0].parent).toBe(tobj.child[0].child[1].parent);
-        expect(tobj.child[0].child[1].parent).toBe(tobj.child[0].child[2].parent);
-        expect(tobj.child[0].child[0].val).toBe("");
-        expect(tobj.child[0].child[1].val).toBe(1);
-        expect(tobj.child[0].child[2].val).toBe("val");
-
-        var expected = {
-            "rootNode": {
-                "tag": ["",1,"val"]
-            }
-        };
-        var jsobj = parser.convertToJson(tobj);
-        expect(jsobj).toEqual(expected);
-    });
-
+  }); */
 
     it("should skip namespace", function () {
         var xmlData = '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" >'
@@ -655,4 +581,40 @@ describe("XMLParser", function () {
         expect(result).toEqual(expected);
     });
 
+    /* it("should not trim tag value if not allowed ", function () {
+        var xmlData = "<rootNode>       123        </rootNode>";
+        var expected = {
+            "rootNode": "       123        "
+        };
+        var result = parser.parse(xmlData,{
+            parseNodeValue: false,
+            trimValues: false
+        }).json;
+        //console.log(JSON.stringify(result,null,4));
+        expect(result).toEqual(expected);
+    }); */
+
+    /* it("should validate XML with DOCTYPE", function () {
+        var xmlData = '<?xml version="1.0" standalone="yes" ?>'
+            + '<!--open the DOCTYPE declaration -'
+            + '  the open square bracket indicates an internal DTD-->'
+            + '<!DOCTYPE foo ['
+            + ''
+            + ''
+            + '<!--define the internal DTD-->'
+            + '<!ELEMENT foo (#PCDATA)>'
+            + '<!--close the DOCTYPE declaration-->'
+            + ']>'
+            + '<foo>Hello World.</foo>';
+
+        var expected = {
+            foo : "Hello World."
+        }
+            var result = parser.parse(xmlData,{
+                //parseNodeValue: false,
+                //trimValues: false
+            });
+        //console.log(JSON.stringify(result,null,4));
+        expect(result).toEqual(expected);
+    }); */
 });
