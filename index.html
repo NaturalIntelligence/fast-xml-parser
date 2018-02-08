@@ -76,11 +76,10 @@
                     <div class="row">
                         <div class="col-md-8" style=" color: white;">
                             <input type="checkbox" id="attrNodeName"> Group all the attributes as properties of given name.  <br>
-                            <input type="checkbox" id="ignoreTextNodeAttr" checked="true"> Ignore attributes from parsing <br>
+                            <input type="checkbox" id="ignoreAttributes" checked="true"> Ignore attributes from parsing <br>
                             <input type="checkbox" id="ignoreNameSpace"> Remove namespace string from tag and attribute names. <br>
-                            <input type="checkbox" id="ignoreRootElement"> Remove root element from parsed JSON. <br>
-                            <input type="checkbox" id="textNodeConversion" checked="true"> Parse the value of text node to float or integer.<br>
-                            <input type="checkbox" id="textAttrConversion"> Parse the value of an attribute to float or integer.<br>
+                            <input type="checkbox" id="parseNodeValue" checked="true"> Parse the value of text node to float or integer.<br>
+                            <input type="checkbox" id="ParseAttributeValue"> Parse the value of an attribute to float or integer.<br>
                             <input type="checkbox" id="arrayMode"> Put the value(s) of a tag or attribute in an array. <br>
                             <button id="submit" class="btn btn-primary" type="button">Parse to JSON</button>
                         </div>
@@ -127,15 +126,13 @@
 
             function buildParsingConfig(){
                 var config = {
-                    attrPrefix : "",
+                    attributeNamePrefix : "",
                     attrNodeName: $("#attrNodeName").prop("checked") ? "@" : false,
                     textNodeName : "#text",
-                    ignoreNonTextNodeAttr : $("#ignoreTextNodeAttr").prop("checked"),
-                    ignoreTextNodeAttr : $("#ignoreTextNodeAttr").prop("checked"),
+                    ignoreAttribute : $("#ignoreAttribute").prop("checked"),
                     ignoreNameSpace : $("#ignoreNameSpace").prop("checked"),
-                    ignoreRootElement : $("#ignoreRootElement").prop("checked"),
-                    textNodeConversion : $("#textNodeConversion").prop("checked"),
-                    textAttrConversion : $("#textAttrConversion").prop("checked"),
+                    parseNodeValue : $("#parseNodeValue").prop("checked"),
+                    parseAttributeValue : $("#parseAttributeValue").prop("checked"),
                     arrayMode : $("#arrayMode").prop("checked")
                 };
 
