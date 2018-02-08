@@ -3,8 +3,6 @@ var suite = new Benchmark.Suite("XML Parser benchmark");
 
 var parser = require("../src/parser");
 var xml2js = require("xml2js");
-var parser2 = require("../src/parserV2");
-var parser3 = require("../src/parserV3");
 
 var fs = require("fs");
 var path = require("path");
@@ -21,12 +19,6 @@ suite
 })
 .add('xml to json V1', function() {
     parser.parse(xmlData); 
-})
-.add('xml to json V2 ', function() {
-  parser2.parse(xmlData);
-})
-.add('xml to json V3 ', function() {
-  parser3.parse(xmlData);
 })
 .add('xml2js ', function() {
   xml2js.parseString(xmlData,function(err,result){
