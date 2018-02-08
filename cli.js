@@ -16,10 +16,9 @@ if(process.argv[2] === "--help" || process.argv[2] === "-h"){
 }else{
     var options = {
         ignoreNameSpace : true,
-        ignoreNonTextNodeAttr : false,
-        ignoreTextNodeAttr : false,
-        textNodeConversion : true,
-        textAttrConversion : true
+        ignoreAttributes : false,
+        parseNodeValue : true,
+        parseAttributeValue : true
     };
     var fileName = "";
     var outputFileName;
@@ -27,11 +26,10 @@ if(process.argv[2] === "--help" || process.argv[2] === "-h"){
 		if(process.argv[i] === "-ns"){
             options.ignoreNameSpace = false;
         }else if(process.argv[i] === "-a"){
-            options.ignoreNonTextNodeAttr = true;
-            options.ignoreTextNodeAttr = true;
+            options.ignoreAttributes = true;
         }else if(process.argv[i] === "-c"){
-            options.textNodeConversion = false;
-            options.textAttrConversion = false;
+            options.parseNodeValue = false;
+            options.parseAttributeValue = false;
         }else if(process.argv[i] === "-o"){
             outputFileName = process.argv[++i];
         }else{//filename
