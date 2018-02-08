@@ -61,9 +61,11 @@ var options = {
     textNodeName : "#text",
     ignoreAttributes : true,
     ignoreNameSpace : false,
+    allowBooleanAttributes : false,
     parseNodeValue : true,
     parseAttributeValue : false,
-    trimValues: true
+    trimValues: true,
+    decodeHTMLchar: false,
 };
 if(fastXmlParser.validate(xmlData)=== true){//optional
 	var jsonObj = fastXmlParser.parse(xmlData,options);
@@ -80,9 +82,11 @@ var jsonObj = fastXmlParser.convertToJson(tObj);
 * **attrNodeName**: (Valid name) Group all the attributes as properties of given name.  
 * **ignoreAttributes** : Ignore attributes to be parsed.
 * **ignoreNameSpace** : Remove namespace string from tag and attribute names. 
+* **allowBooleanAttributes** : a tag can have attributes without any value
 * **parseNodeValue** : Parse the value of text node to float, integer, or boolean.
 * **parseAttributeValue** : Parse the value of an attribute to float, integer, or boolean.
 * **trimValues** : trim string values of an attribute or node
+* **decodeHTMLchar** : decodes any named and numerical character HTML references excluding CDATA part.
 
 To use from command line
 ```bash
@@ -147,20 +151,7 @@ Installation of such libraries fails on some OS. You may require to install miss
 }
 ```
 
-* Updated options 
-
-```
-    var defaultOptions = {
-        attributeNamePrefix : "@_",                  //prefix for attributes
-        attrNodeName: false,                    //Group attributes in separate node
-        textNodeName : "#text",                 //Name for property which will have value of the node in case nested nodes are present, or attributes
-        ignoreAttributes : true,                //ignore attributes
-        ignoreNameSpace : false,                //ignore namespace from the name of a tag and attribute. It also removes xmlns attribute
-        parseNodeValue : true,                  //convert the value of node to primitive type. E.g. "2" -> 2
-        parseAttributeValue : false,            //convert the value of attribute to primitive type. E.g. "2" -> 2
-        trimValues: true,                       //Trim string values of tag and attributes 
-    };
-```
+* Updated options : check snippet aboove
 * Parse boolean values as well. E.g. `"true"` to `true` 
 * You can set pasrer not to *trim* whitespaces from attribute or tag /node value.
 * Tag / node and attribute value is by default HTML decoded. However CDATA value will not be decoded.
