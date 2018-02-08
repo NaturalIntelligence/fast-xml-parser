@@ -1,8 +1,6 @@
 
 
 
-var parser3 = require("../src/parserV3");
-var parser2 = require("../src/parserV2");
 var parser = require("../src/parser");
 var xml2js = require("xml2js");
 
@@ -20,23 +18,12 @@ xml2js.parseString(xmlData,function(err,result){
     //console.log(JSON.stringify(result,null,4));
 });
 
-
-var beforeTime = new Date();
-parser2.parse(xmlData);
-var endTime = new Date();
-console.log(endTime - beforeTime);
-
-var beforeTime = new Date();
-parser3.parse(xmlData);
-var endTime = new Date();
-console.log(endTime - beforeTime);
-
 var beforeTime = new Date();
 parser.validate(xmlData);
 var endTime = new Date();
-console.log(endTime.getMilliseconds() - beforeTime.getMilliseconds());
+console.log(endTime - beforeTime);
 
 var beforeTime = new Date();
 parser.parse(xmlData);
 var endTime = new Date();
-console.log(endTime.getMilliseconds() - beforeTime.getMilliseconds());
+console.log(endTime - beforeTime);
