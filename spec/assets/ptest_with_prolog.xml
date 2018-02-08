@@ -1,0 +1,43 @@
+<?xml version="1.0" standalone="yes" ?>
+<!--open the DOCTYPE declaration -
+  the open square bracket indicates an internal DTD-->
+<!DOCTYPE foo [
+
+
+<!--define the internal DTD-->
+<!ELEMENT foo (#PCDATA)>
+<!--close the DOCTYPE declaration-->
+]>
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+    <soap:Body>
+        <rpt:loadReportFileResponseElem
+                xmlns:s="http://bus.x.com/common/support/v1"
+                xmlns:rpt="http://bus.x.com/service/statement/v1">
+            <s:code>0</s:code>
+            <s:responseTime>2588</s:responseTime>
+            <s:responseDbTime>1893</s:responseDbTime>
+            <s:requestId>6b408fd09eb211e7a0807e34820340ec</s:requestId>
+            <s:route>172.16.x.x:9192</s:route>
+            <rpt:result>
+ <rpt:file><![CDATA[
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+    <soap:Body>
+        <rpt:loadReportFileResponseElem
+                xmlns:s="http://bus.x.com/common/support/v1"
+                xmlns:rpt="http://bus.x.com/service/statement/v1">
+            <s:code>0</s:code>
+            <s:responseTime>2588</s:responseTime>
+            <s:responseDbTime>1893</s:responseDbTime>
+            <s:requestId>6b408fd09eb211e7a0807e34820340ec</s:requestId>
+            <s:route>172.16.x.x:9192</s:route>
+            <rpt:result>
+ <rpt:file></rpt:file>
+            </rpt:result>
+        </rpt:loadReportFileResponseElem>
+    </soap:Body>
+</soap:Envelope>
+]]></rpt:file>
+            </rpt:result>
+        </rpt:loadReportFileResponseElem>
+    </soap:Body>
+</soap:Envelope>

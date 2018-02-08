@@ -2,8 +2,9 @@ var getAllMatches = function(string, regex) {
   var matches = [];
   var match = regex.exec(string);
   while (match) {
-  	var allmatches = [];
-    for (var index = 0; index < match.length; index++) {
+    var allmatches = [];
+    var len = match.length;
+    for (var index = 0; index < len; index++) {
   		allmatches.push(match[index]);
   	}
     matches.push(allmatches);
@@ -15,7 +16,7 @@ var getAllMatches = function(string, regex) {
 
 var doesMatch = function(string,regex){
   var match = regex.exec(string);
-  if(match === null || match === undefined) return false;
+  if(match === null || typeof match === "undefined") return false;
   else return true;
 }
 
@@ -25,7 +26,7 @@ var doesNotMatch = function(string,regex){
 
 
 exports.isExist= function(v){
-  return v !== undefined  & v !== null
+  return typeof v !== "undefined";
 }
 
 exports.isEmptyObject= function(obj) {
@@ -40,8 +41,8 @@ exports.isEmptyObject= function(obj) {
 exports.merge =function (target,a){
   if(a){
     var keys = Object.keys(a) // will return an array of own properties
-
-    for(var i = 0; i < keys.length; i++){
+    var len = keys.length; //don't make it inline
+    for(var i = 0; i < len; i++){
       target[keys[i]] = a[keys[i]] ;
     }
   }

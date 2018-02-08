@@ -17,7 +17,7 @@ var buildOptions = function (options){
 };
 
 
-var tagsPattern = new RegExp("<\\/?([\\w:\\-_\.]+)\\s*\/?>","g");
+//var tagsPattern = new RegExp("<\\/?([\\w:\\-_\.]+)\\s*\/?>","g");
 exports.validate = function(xmlData, options){
     options = buildOptions(options);   
 

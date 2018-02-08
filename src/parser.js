@@ -1,7 +1,7 @@
 var util = require("./util");
 var xmlNode = require("./xmlNode");
 var he = require("he");
-var TagType = Object.freeze({"OPENING":1, "CLOSING":2, "SELF":3, "CDATA": 4});
+var TagType = {"OPENING":1, "CLOSING":2, "SELF":3, "CDATA": 4};
 
 //var tagsRegx = new RegExp("<(\\/?[\\w:\\-\._]+)([^>]*)>(\\s*"+cdataRegx+")*([^<]+)?","g");
 //var tagsRegx = new RegExp("<(\\/?)((\\w*:)?([\\w:\\-\._]+))([^>]*)>([^<]*)("+cdataRegx+"([^<]*))*([^<]+)?","g");
@@ -15,6 +15,7 @@ var defaultOptions = {
     textNodeName : "#text",
     ignoreAttributes : true,
     ignoreNameSpace : false,
+    //allowBooleanAttributes : false,         //a tag can have attributes without any value
     //ignoreRootElement : false,
     parseNodeValue : true,
     parseAttributeValue : false,
@@ -34,8 +35,9 @@ var buildOptions = function (options){
                         "arrayMode",
                         "trimValues",
                 ];
-    for (var i = 0; i < props.length; i++) {
-        if(options[props[i]] === undefined){
+    var len = props.length;
+    for (var i = 0; i < len; i++) {
+        if(typeof options[props[i]] === "undefined"){
             options[props[i]] = defaultOptions[props[i]];
         }
     }
@@ -101,7 +103,7 @@ function checkForTagType(match){
         return TagType.CDATA;
     }else if(match[10] === "/"){
         return TagType.CLOSING;
-    }else if(match[8] !== undefined && match[8].substr(match[8].length-1) === "/"){
+    }else if(typeof match[8] !== "undefined" && match[8].substr(match[8].length-1) === "/"){
         return TagType.SELF;
     }else{
         return TagType.OPENING;
@@ -167,8 +169,9 @@ function buildAttributesArr(attrStr,options,resolveNS,parseAttrVal){
         if( attrStr.length > 3){
 
             var matches = util.getAllMatches(attrStr,attrsRegx);
+            var len = matches.length; //don't make it inline
             var attrs = {};
-            for (var i = 0; i < matches.length; i++) {
+            for (var i = 0; i < len ; i++) {
                 var attrName = resolveNS(matches[i][1]);
                 if(attrName.length && attrName !== "xmlns") {
                     attrs[options.attributeNamePrefix + attrName] = parseAttrVal(matches[i][3],options);
@@ -194,7 +197,7 @@ var convertToJson = function (node, textNodeName,arrayMode){
     for (var index = 0; index < node.child.length; index++) {
         var prop = node.child[index].tagname;
         var obj = convertToJson(node.child[index],textNodeName, arrayMode);
-        if(jObj[prop] !== undefined){
+        if(typeof jObj[prop] !== "undefined"){
             if(!Array.isArray(jObj[prop])){
                 var swap = jObj[prop];
                 jObj[prop] = [];
