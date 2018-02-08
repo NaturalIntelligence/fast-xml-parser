@@ -2,7 +2,7 @@ var parser = require("../src/parser");
 
 describe("XMLParser", function () {
 
-/*     it("should parse all values as string, int, boolean or float", function () {
+    it("should parse all values as string, int, boolean or float", function () {
         var xmlData = "<rootNode><tag>value</tag><boolean>true</boolean><intTag>045</intTag><floatTag>65.34</floatTag></rootNode>";
         var expected = {
             "rootNode": {
@@ -471,7 +471,7 @@ describe("XMLParser", function () {
         });
         //console.log(JSON.stringify(result,null,4));
         expect(result).toEqual(expected);
-    }); */
+    });
 
   /* it("should parse nodes as arrays", function () {
     var fs = require("fs");
@@ -547,7 +547,7 @@ describe("XMLParser", function () {
     expect(result).toEqual(expected);
   }); */
 
-   /*  it("should skip namespace", function () {
+    it("should skip namespace", function () {
         var xmlData = '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" >'
             +'   <soapenv:Header>'
             +'      <cor:applicationID>dashboardweb</cor:applicationID>'
@@ -579,7 +579,7 @@ describe("XMLParser", function () {
 
         var result = parser.parse(xmlData,{ ignoreNameSpace : true});
         expect(result).toEqual(expected);
-    }); */
+    });
 
     it("should not trim tag value if not allowed ", function () {
         var xmlData = "<rootNode>       123        </rootNode>";
@@ -655,5 +655,5 @@ describe("XMLParser", function () {
         expect(result).toEqual(expected);
     });
 
-    
+
 });
