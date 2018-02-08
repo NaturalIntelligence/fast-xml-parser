@@ -43,6 +43,7 @@ var fastXmlParser = require('fast-xml-parser');
 var jsonObj = fastXmlParser.parse(xmlData);
 
 // when a tag has attributes
+/* upto 2.9.x
 var options = {
     attrPrefix : "@_",
     attrNodeName: false,
@@ -55,6 +56,18 @@ var options = {
     textAttrConversion : false,
     arrayMode : false
 };
+*/
+//from 3.0.0
+var options = {
+    attributeNamePrefix : "@_",
+    attrNodeName: false,
+    textNodeName : "#text",
+    ignoreAttributes : true,
+    ignoreNameSpace : false,
+    parseNodeValue : true,
+    parseAttributeValue : false,
+    trimValues: true,                                //Trim string values of tag and attributes 
+};
 if(fastXmlParser.validate(xmlData)=== true){//optional
 	var jsonObj = fastXmlParser.parse(xmlData,options);
 }
@@ -65,16 +78,13 @@ var jsonObj = fastXmlParser.convertToJson(tObj);
 
 ```
 
-
+* **attributeNamePrefix** : prepend given string to attribute name for identification
 * **attrNodeName**: (Valid name) Group all the attributes as properties of given name.  
-* **ignoreNonTextNodeAttr** : Ignore attributes of non-text node.
-* **ignoreTextNodeAttr** : Ignore attributes for text node
+* **ignoreAttributes** : Ignore attributes to be parsed.
 * **ignoreNameSpace** : Remove namespace string from tag and attribute names. 
-* **ignoreRootElement** : Remove root element from parsed JSON. 
-* **textNodeConversion** : Parse the value of text node to float or integer.
-* **textAttrConversion** : Parse the value of an attribute to float or integer.
-* **arrayMode** : Put the value(s) of a tag or attribute in an array. 
-
+* **parseNodeValue** : Parse the value of text node to float, integer, or boolean.
+* **parseAttributeValue** : Parse the value of an attribute to float, integer, or boolean.
+* **trimValues** : trim string values of an attribute or node
 
 To use from command line
 ```bash
@@ -110,9 +120,24 @@ Why not C/C++ based libraries?
 Installation of such libraries fails on some OS. You may require to install missing dependency manually.
 
 ### Benchmark report
-![npm_xml2json_compare](https://cloud.githubusercontent.com/assets/7692328/22402086/7526a3a6-e5e2-11e6-8e6b-301691725c21.png)
 
-Don't forget to check the performance report on [comparejs](https://naturalintelligence.github.io/comparejs/?q=xml2json).
+। file size | fxp 3.0 validator | fxp 3.0 parser | xml2js 0.4.19 ।
+। ---------- | ----------------------- | ------------------- | ------------------- ।
+। 1.5k | 16581.06758 | 14032.09323 | 4615.930805 ।
+। 1.5m | 14918.47793 | 13.23366098 | 5.90682005 ।
+। 13m | 1.834479235 | 1.135582008 | -1 ।
+। 1.3k with CDATA | 30583.35319 | 43160.52342 | 8398.556349 ।
+। 1.3m with CDATA | 27.29266471 | 52.68877009 | 7.966000795 ।
+। 1.6k with cdata,prolog,doctype | 27690.26082 | 41433.98547 | 7872.399268 ।
+। 98m | 0.08473858148 | 0.2600104004 | -1 ।
+
+* -1 indicates error or incorrect output.
+
+![npm_xml2json_compare](static/img/fxpv3-vs-xml2jsv0419_chart.png)
+
+![npm_xml2json_compare](static/img/fxp-validatorv3.png)
+
+
 
 **validator benchmark: 21000 tps**
 
@@ -121,11 +146,10 @@ Your contribution in terms of donation, testing, bug fixes, code development etc
 
 **Give a [star](https://github.com/NaturalIntelligence/fast-xml-parser)**, if you really like this project.
 
-# Changes from v3 (in progress)
+# Changes from v3
 
-* Can handle big files as well.
-* Validator is clubbed with parser
-* Meaningful error messages
+* It can handle big file now. Performance report is given above.
+* Meaningful error messages from validator
 
 ```
 "err": {
@@ -138,28 +162,26 @@ Your contribution in terms of donation, testing, bug fixes, code development etc
 
 ```
     var defaultOptions = {
-        attrNamePrefix : "@_",                     //prefix for attributes
-        attrNodeName: false,                       //Group attributes in separate node
+        attributeNamePrefix : "@_",                  //prefix for attributes
+        attrNodeName: false,                    //Group attributes in separate node
         textNodeName : "#text",                 //Name for property which will have value of the node in case nested nodes are present, or attributes
-        ignoreAttributes : true,                     //ignore attributes
-        allowBooleanAttributes : false,         //A tag can have attributes without any value
-        ignoreNameSpace : false,                 //ignore namespace from the name of a tag and attribute. It also removes xmlns attribute
-        parseNodeValue : true,                     //convert the value of node to primitive type. E.g. "2" -> 2
-        parseAttributeValue : false,               //convert the value of attribute to primitive type. E.g. "2" -> 2
-        trimValues: true,                                //Trim string values of tag and attributes 
+        ignoreAttributes : true,                //ignore attributes
+        ignoreNameSpace : false,                //ignore namespace from the name of a tag and attribute. It also removes xmlns attribute
+        parseNodeValue : true,                  //convert the value of node to primitive type. E.g. "2" -> 2
+        parseAttributeValue : false,            //convert the value of attribute to primitive type. E.g. "2" -> 2
+        trimValues: true,                       //Trim string values of tag and attributes 
     };
 ```
 * Parse boolean values as well. E.g. `"true"` to `true` 
 * You can set pasrer not to *trim* whitespaces from attribute or tag /node value.
 * Tag / node and attribute value is by default HTML decoded. However CDATA value will not be decoded.
 * Tag / node value will not be parsed if CDATA presents.
-* Few validation bugs are also fixed
+* Few validation and parsing bugs are also fixed
 
 
 Some of my other NPM pojects
  - [stubmatic](https://github.com/NaturalIntelligence/Stubmatic) : A stub server to mock behaviour of HTTP(s) / REST / SOAP services. Stubbing redis is on the way.
- - [compare js](https://github.com/NaturalIntelligence/comparejs) : compare the features of JS code, libraries, and NPM repos.
- - [fast-lorem-ipsum](https://github.com/amitguptagwl/fast-lorem-ipsum) : Generate lorem ipsum words, sentences, paragraph very quickly.
+  - [fast-lorem-ipsum](https://github.com/amitguptagwl/fast-lorem-ipsum) : Generate lorem ipsum words, sentences, paragraph very quickly.
 
 ### TODO
 * P2: validating XML stream data
