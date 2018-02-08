@@ -7,7 +7,7 @@
             "name": "Jasmine Tests",
             "program": "${workspaceFolder}/node_modules/jasmine/bin/jasmine.js",
             "args": [
-                "${workspaceFolder}/spec/parserV2_spec.js"
+                "${workspaceFolder}/spec/attr_spec.js"
             ],
             "internalConsoleOptions": "openOnSessionStart"
         }
