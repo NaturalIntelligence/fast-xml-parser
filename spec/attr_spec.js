@@ -49,6 +49,26 @@ describe("XMLParser", function () {
         expect(result).toBe(true);
     });
 
+    it("should parse node values with newline char", function () {
+        var xmlData = '<element><a>a\r\nb\nc</a><b>\na</b></element>';
+        var expected = {
+            "element": {
+                "a": "a\r\nb\nc",
+                "b": "a"
+            }
+        };
+
+        var result = parser.parse(xmlData, {
+            trimValues: true
+        });
+
+        //console.log(JSON.stringify(result,null,4));
+        expect(result).toEqual(expected);
+
+        result = validator.validate(xmlData);
+        expect(result).toBe(true);
+    });
+
     it("should not decode HTML entities / char by default", function () {
         var xmlData = '<element id="7" data="foo\nbar" bug="foo&ampbar&apos;"/>';
         var expected = {

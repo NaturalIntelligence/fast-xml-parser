@@ -48,9 +48,8 @@ var buildOptions = function (options){
 
 var getTraversalObj =function (xmlData,options){
     options = buildOptions(options);
-    xmlData = xmlData.replace(/\r?\n/g, " ");//make it single line
-    xmlData = xmlData.replace(/<!--.*?-->/g, "");//Remove  comments
-    
+    xmlData = xmlData.replace(/<!--[\s\S]*?-->/g, "");//Remove  comments
+
     var xmlObj = new xmlNode('!xml');
     var currentNode = xmlObj;
 
@@ -166,9 +165,10 @@ function parseValue(val,shouldParse){
 //var attrsRegx = new RegExp("([\\w\\-\\.\\:]+)\\s*=\\s*(['\"])((.|\n)*?)\\2","gm");
 var attrsRegx = new RegExp("([^\\s=]+)\\s*(=\\s*(['\"])(.*?)\\3)?","g");
 function buildAttributesMap(attrStr,options){
+    attrStr = attrStr.replace(/\r?\n/g, " "); //remove CRLF from attribute values
     if( !options.ignoreAttributes && typeof attrStr === "string" ){
         //attrStr = attrStr || attrStr.trim();
-        
+
         var matches = util.getAllMatches(attrStr,attrsRegx);
         var len = matches.length; //don't make it inline
         var attrs = {};
@@ -186,7 +186,7 @@ function buildAttributesMap(attrStr,options){
                 }else if(options.allowBooleanAttributes){
                     attrs[options.attributeNamePrefix + attrName] = true;
                 }
-                
+
             }
         }
         if(!Object.keys(attrs).length){
