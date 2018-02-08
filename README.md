@@ -1,8 +1,6 @@
 # [fast-xml-parser](https://www.npmjs.com/package/fast-xml-parser)
 Validate XML or Parse XML to JS/JSON very fast without C/C++ based libraries and no callback
 
-**Changes for V 3.0.0 are in progress** which will combine validator and parser and will be able to handle large XML files. So keep [watching](https://github.com/NaturalIntelligence/fast-xml-parser/watchers).
-
 You can use this library online (press try me button above), or as command from CLI, or in your website, or in npm repo.
 
 * This library let you validate the XML data syntactically. 
@@ -42,7 +40,6 @@ or using [yarn](https://yarnpkg.com/)
 var fastXmlParser = require('fast-xml-parser');
 var jsonObj = fastXmlParser.parse(xmlData);
 
-// when a tag has attributes
 /* upto 2.9.x
 var options = {
     attrPrefix : "@_",
@@ -66,7 +63,7 @@ var options = {
     ignoreNameSpace : false,
     parseNodeValue : true,
     parseAttributeValue : false,
-    trimValues: true,                                //Trim string values of tag and attributes 
+    trimValues: true
 };
 if(fastXmlParser.validate(xmlData)=== true){//optional
 	var jsonObj = fastXmlParser.parse(xmlData,options);
@@ -77,6 +74,7 @@ var tObj = fastXmlParser.getTraversalObj(xmlData,options);
 var jsonObj = fastXmlParser.convertToJson(tObj);
 
 ```
+**OPTIONS** :
 
 * **attributeNamePrefix** : prepend given string to attribute name for identification
 * **attrNodeName**: (Valid name) Group all the attributes as properties of given name.  
@@ -136,15 +134,6 @@ Installation of such libraries fails on some OS. You may require to install miss
 ![npm_xml2json_compare](static/img/fxpv3-vs-xml2jsv0419_chart.png)
 
 ![npm_xml2json_compare](static/img/fxp-validatorv3.png)
-
-
-
-**validator benchmark: 21000 tps**
-
-Your contribution in terms of donation, testing, bug fixes, code development etc. can help me to write fast algorithms.
-[<img src="https://www.paypalobjects.com/webstatic/en_US/btn/btn_donate_92x26.png" alt="Stubmatic donate button"/>](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=KQJAX48SPUKNC) 
-
-**Give a [star](https://github.com/NaturalIntelligence/fast-xml-parser)**, if you really like this project.
 
 # Changes from v3
 
