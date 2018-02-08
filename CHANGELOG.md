@@ -1,3 +1,29 @@
+3.0.0 / 2018-02-08
+  * change online tool with new changes
+  * update info about new options
+  * separate tag value processing to separate function
+  * make HTML decoding optional
+  * give an option to allow boolean attributes
+  * change cli options as per v3
+  * Correct comparison table format on README
+  * update v3 information
+  * some performance improvement changes
+  * Make regex object local to the method and move some common methods to util
+  * Change parser to
+    - handle multiple instances of CDATA
+    - make triming of value optionals
+    - HTML decode attribute and text value
+    - refactor code to separate files
+  * Ignore newline chars without RE (in validator)
+  * validate for XML prolog
+  * Validate DOCTYPE without RE
+  * Update validator to return error response
+  * Update README to add detail about V3
+  * Separate xmlNode model class
+  * include vscode debug config
+  * fix for repeated object
+  * fix attribute regex for boolean attributes
+  * Fix validator for invalid attributes
 2.9.4 / 2018-02-02
   * Merge pull request: Decode HTML characters
   * refactor source folder name
