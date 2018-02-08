@@ -1,6 +1,7 @@
 # [fast-xml-parser](https://www.npmjs.com/package/fast-xml-parser)
 Validate XML or Parse XML to JS/JSON very fast without C/C++ based libraries and no callback
 
+<p style="color:red;"> **Note**: If you are using v3, your code may start failing in parsing and validation both. I apologize for the breaking changes. But code was supposed to be changed to support large files and many other options. Please refer the code example below for more detail.</p>
 You can use this library online (press try me button above), or as command from CLI, or in your website, or in npm repo.
 
 * This library let you validate the XML data syntactically. 
@@ -73,7 +74,7 @@ if(fastXmlParser.validate(xmlData)=== true){//optional
 
 //Intermediate obj
 var tObj = fastXmlParser.getTraversalObj(xmlData,options);
-var jsonObj = fastXmlParser.convertToJson(tObj);
+var jsonObj = fastXmlParser.convertToJson(tObj,options);
 
 ```
 **OPTIONS** :
@@ -102,7 +103,8 @@ To use it **on webpage**
 
 1. Download and include [parser.js](https://github.com/NaturalIntelligence/fast-xml-parser/blob/master/lib/parser.js)
 ```js
-var isValid = parser.validate(xmlData);
+var result = parser.validate(xmlData);
+if(result !== true) cnosole.log(result.err);
 var jsonObj = parser.parse(xmlData);
 ```
 
@@ -141,7 +143,7 @@ Installation of such libraries fails on some OS. You may require to install miss
 
 # Changes from v3
 
-* It can handle big file now. Performance report is given above.
+* It can handle big file now (I have tested up to 98mb). Performance report is given above.
 * Meaningful error messages from validator
 
 ```
@@ -154,8 +156,9 @@ Installation of such libraries fails on some OS. You may require to install miss
 * Updated options : check snippet aboove
 * Parse boolean values as well. E.g. `"true"` to `true` 
 * You can set pasrer not to *trim* whitespaces from attribute or tag /node value.
-* Tag / node and attribute value is by default HTML decoded. However CDATA value will not be decoded.
+* You can set pasrer to HTML decode Tag / node and attribute values. However CDATA value will not be HTML decoded.
 * Tag / node value will not be parsed if CDATA presents.
+* You can set validator and parser to allow boolean values.
 * Few validation and parsing bugs are also fixed
 
 
