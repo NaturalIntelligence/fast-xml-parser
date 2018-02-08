@@ -7,7 +7,7 @@ var TagType = Object.freeze({"OPENING":1, "CLOSING":2, "SELF":3, "CDATA": 4});
 //var tagsRegx = new RegExp("<(\\/?)((\\w*:)?([\\w:\\-\._]+))([^>]*)>([^<]*)("+cdataRegx+"([^<]*))*([^<]+)?","g");
 
 //treat cdata as a tag
-var tagsRegx = new RegExp("<((!\\[CDATA\\[(.*?)(\\]\\]>))|((\\w*:)?([\\w:\\-\\._]+))([^>]*)>|((\\/)((\\w*:)?([\\w:\\-\\._]+))>))([^<]*)","g");
+
 
 var defaultOptions = {
     attributeNamePrefix : "@_",
@@ -47,8 +47,6 @@ var getTraversalObj =function (xmlData,options){
     xmlData = xmlData.replace(/\r?\n/g, " ");//make it single line
     xmlData = xmlData.replace(/<!--.*?-->/g, "");//Remove  comments
     
-    var tags = util.getAllMatches(xmlData,tagsRegx);
-    //console.log(tags);
     var xmlObj = new xmlNode('!xml');
     var currentNode = xmlObj;
 
@@ -58,6 +56,7 @@ var getTraversalObj =function (xmlData,options){
     var parseNodeVal = options.parseNodeValue ? parseValue : noParse;
     var parseAttrVal = options.parseAttributeValue ? parseValue : noParse;
 
+    var tagsRegx = new RegExp("<((!\\[CDATA\\[(.*?)(\\]\\]>))|((\\w*:)?([\\w:\\-\\._]+))([^>]*)>|((\\/)((\\w*:)?([\\w:\\-\\._]+))>))([^<]*)","g");
     var tag = tagsRegx.exec(xmlData);
     var nextTag = tagsRegx.exec(xmlData);
     var previousMatch,nextMatch;
@@ -66,7 +65,11 @@ var getTraversalObj =function (xmlData,options){
 
         if(tagType === TagType.CLOSING){
             //add parsed data to parent node
-            currentNode.parent.val = (currentNode.parent.val || "") +  parseNodeVal(he.decode(tag[14]),options);
+            if(currentNode.parent && tag[14]){
+                currentNode.parent.val = util.getValue(currentNode.parent.val) + "" + parseNodeVal(he.decode(tag[14]),options);
+            }
+
+            //currentNode.parent.val = (currentNode.parent.val || "")  + parseNodeVal(he.decode(tag[14]),options);
             currentNode = currentNode.parent;
         }else if(tagType === TagType.CDATA){
             //no attribute
@@ -91,6 +94,8 @@ var getTraversalObj =function (xmlData,options){
     return xmlObj;
 };
 
+
+
 function checkForTagType(match){
     if(match[4] === "]]>"){
         return TagType.CDATA;
@@ -107,7 +112,8 @@ var fakeCall =  function(a) {return a;}
 var fakeCallNoReturn =  function() {}
 
 var xml2json = function (xmlData,options){
-    return convertToJson(getTraversalObj(xmlData,options), buildOptions(options).textNodeName, buildOptions(options).arrayMode);
+    options = buildOptions(options);
+    return convertToJson(getTraversalObj(xmlData,options), options.textNodeName, options.arrayMode);
 };
 
 
@@ -147,7 +153,7 @@ function parseValue(val,options){
         }
         return val;
     }else{
-        if(isExist(val)) return val;
+        if(util.isExist(val)) return val;
         else return  "";
     }
 }

@@ -299,12 +299,12 @@ describe("XMLParser", function () {
     
 
     it("should not parse text value with tag", function () {
-        var xmlData = "<score><c1>71<message>23</message></c1></score>";
+        var xmlData = "<score><c1>71<message>23</message>29</c1></score>";
         var expected = {
             "score": {
                 "c1": {
                     "message" : 23,
-                    "_text" : "71"
+                    "_text" : "7129"
                 }
             }
         };

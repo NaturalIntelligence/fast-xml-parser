@@ -34,16 +34,28 @@ exports.isEmptyObject= function(obj) {
 
 /**
  * Copy all the properties of a into b.
- * @param {*} b
+ * @param {*} target
  * @param {*} a 
  */
-exports.merge =function (b,a){
-  if(b !== undefined)
-      for (var attr in a) {
-          if (Object.prototype.hasOwnProperty.call(a, attr)) {
-              b[attr] = a[attr]; 
-          }
-      }
+exports.merge =function (target,a){
+  if(a){
+    var keys = Object.keys(a) // will return an array of own properties
+
+    for(var i = 0; i < keys.length; i++){
+      target[keys[i]] = a[keys[i]] ;
+    }
+  }
+}
+/* exports.merge =function (b,a){
+  return Object.assign(b,a);
+} */
+
+exports.getValue = function (v){
+  if(exports.isExist(v)){
+      return v;
+  }else{
+      return "";
+  }
 }
 
 exports.doesMatch = doesMatch
