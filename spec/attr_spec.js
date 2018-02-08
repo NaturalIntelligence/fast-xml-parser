@@ -48,8 +48,78 @@ describe("XMLParser", function () {
         result = validator.validate(xmlData);
         expect(result).toBe(true);
     });
-    //1. can start with _, or letter
-    //2. can contain :,-,_,.,a-z,a-Z,0-9
+
+    it("should not decode HTML entities / char by default", function () {
+        var xmlData = '<element id="7" data="foo\nbar" bug="foo&ampbar&apos;"/>';
+        var expected = {
+            "element": {
+                "id"    :     7,
+                "data"     :     "foo bar",
+                "bug"   :     "foo&ampbar&apos;",
+            }
+        };
+
+        var result = parser.parse(xmlData, {
+            attributeNamePrefix:"",
+            ignoreAttributes: false,
+            parseAttributeValue: true
+        });
+
+        //console.log(JSON.stringify(result,null,4));
+        expect(result).toEqual(expected);
+
+        result = validator.validate(xmlData);
+        expect(result).toBe(true);
+    });
+
+    it("should decode HTML entities / char", function () {
+        var xmlData = '<element id="7" data="foo\nbar" bug="foo&ampbar&apos;"/>';
+        var expected = {
+            "element": {
+                "id"    :     7,
+                "data"     :     "foo bar",
+                "bug"   :     "foo&ampbar'",
+            }
+        };
+
+        var result = parser.parse(xmlData, {
+            attributeNamePrefix:"",
+            ignoreAttributes: false,
+            parseAttributeValue: true,
+            decodeHTMLchar: true
+        });
+
+        //console.log(JSON.stringify(result,null,4));
+        expect(result).toEqual(expected);
+
+        result = validator.validate(xmlData);
+        expect(result).toBe(true);
+    });
+
+    it("should parse Boolean Attributes", function () {
+        var xmlData = '<element id="7" data/>';
+        var expected = {
+            "element": {
+                "id"    :     7,
+                "data"     :     true
+            }
+        };
+
+        var result = parser.parse(xmlData, {
+            attributeNamePrefix:"",
+            ignoreAttributes: false,
+            parseAttributeValue: true,
+            allowBooleanAttributes : true
+        });
+
+        //console.log(JSON.stringify(result,null,4));
+        expect(result).toEqual(expected);
+
+        result = validator.validate(xmlData,{
+            allowBooleanAttributes: true
+        });
+        expect(result).toBe(true);
+    });
 
 
     it("should not parse attributes with name start with number", function () {
@@ -169,16 +239,6 @@ describe("XMLParser", function () {
         };
         var result = validator.validate(xmlData);
         expect(result).toEqual(expected);
-    });
-
-    it("should  validate a tag with boolean attribute if allowed ", function () {
-        var xmlData = "<rootNode ab cd='ef'></rootNode>";
-        
-        var result = validator.validate(xmlData,{
-            allowBooleanAttributes: true
-        });
-        //console.log(JSON.stringify(result,null,4));
-        expect(result).toBe(true);
     });
 
     it("should not validate xml with invalid attributes presents without value", function () {
