@@ -1,3 +1,5 @@
+3.0.1 / 2018-02-09
+  * fix CRLF: replace it with single space in attributes value only.
 3.0.0 / 2018-02-08
   * change online tool with new changes
   * update info about new options
