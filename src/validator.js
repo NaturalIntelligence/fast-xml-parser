@@ -213,7 +213,7 @@ function readAttributeStr(xmlData,i){
 /**
  * Select all the attributes whether valid or invalid.
  */
-var validAttrStrRegxp = new RegExp("(\\s*)([^\\s=]+)(\\s*=)?(\\s*(['\"])((.|\\n)*?)\\5)?", "g");
+var validAttrStrRegxp = new RegExp("(\\s*)([^\\s=]+)(\\s*=)?(\\s*(['\"])(([\\s\\S])*?)\\5)?", "g");
 
 //attr, ="sd", a="amit's", a="sd"b="saf", ab  cd=""
 

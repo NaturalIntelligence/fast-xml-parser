@@ -48,13 +48,13 @@ var buildOptions = function (options){
 
 var getTraversalObj =function (xmlData,options){
     options = buildOptions(options);
-    xmlData = xmlData.replace(/\r?\n/g, " ");//make it single line
-    xmlData = xmlData.replace(/<!--.*?-->/g, "");//Remove  comments
+    //xmlData = xmlData.replace(/\r?\n/g, " ");//make it single line
+    xmlData = xmlData.replace(/<!--[\s\S]*?-->/g, "");//Remove  comments
     
     var xmlObj = new xmlNode('!xml');
     var currentNode = xmlObj;
 
-    var tagsRegx = new RegExp("<((!\\[CDATA\\[(.*?)(\\]\\]>))|((\\w*:)?([\\w:\\-\\._]+))([^>]*)>|((\\/)((\\w*:)?([\\w:\\-\\._]+))>))([^<]*)","g");
+    var tagsRegx = new RegExp("<((!\\[CDATA\\[([\\s\\S]*?)(\\]\\]>))|((\\w*:)?([\\w:\\-\\._]+))([^>]*)>|((\\/)((\\w*:)?([\\w:\\-\\._]+))>))([^<]*)","g");
     var tag = tagsRegx.exec(xmlData);
     var nextTag = tagsRegx.exec(xmlData);
     var previousMatch,nextMatch;
@@ -167,6 +167,7 @@ function parseValue(val,shouldParse){
 var attrsRegx = new RegExp("([^\\s=]+)\\s*(=\\s*(['\"])(.*?)\\3)?","g");
 function buildAttributesMap(attrStr,options){
     if( !options.ignoreAttributes && typeof attrStr === "string" ){
+        attrStr = attrStr.replace(/\r?\n/g, " ");
         //attrStr = attrStr || attrStr.trim();
         
         var matches = util.getAllMatches(attrStr,attrsRegx);

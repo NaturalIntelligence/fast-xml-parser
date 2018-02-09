@@ -1,0 +1,36 @@
+<?xml version="1.0" standalone="yes" ?>
+<!--open the DOCTYPE declaration -
+  the open square bracket indicates an internal DTD-->
+<!DOCTYPE foo [
+
+
+<!--define the internal DTD-->
+<!ELEMENT foo (#PCDATA)>
+<!--close the DOCTYPE declaration-->
+]>
+<ns:root xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+    <ptag attr="val" boolean>some data
+        <nestedtag>
+            nesteddata<!--single line comment-->
+        </nestedtag>
+        after
+    </ptag>
+    <ptag>before text
+    <![CDATA[
+        <nestedtag>
+            nested cdata 1<!--single line comment-->
+        </nestedtag>
+    ]]>middle
+    <![CDATA[
+        <nestedtag>
+            nested cdata 2<!--multi line
+             comment-->
+        </nestedtag>
+    ]]>after
+    <![CDATA[
+        <nestedtag>
+            nested cdata 3
+        </nestedtag>
+    ]]>end
+    </ptag>
+</ns:root>

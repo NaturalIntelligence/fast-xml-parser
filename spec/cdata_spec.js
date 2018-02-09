@@ -189,4 +189,34 @@ describe("XMLParser", function () {
         expect(result).toEqual(expected);
     });
 
+    it("should validate XML with repeated multiline CDATA and comments", function () {
+        var fs = require("fs");
+        var path = require("path");
+        var fileNamePath = path.join(__dirname, "assets/mixed.xml");
+        var xmlData = fs.readFileSync(fileNamePath).toString();
+
+
+        var expected = {
+            "ns:root": {
+                "ptag": [
+                    {
+                        "nestedtag": "nesteddata",
+                        "@_attr": "val",
+                        "@_boolean": true,
+                        "#text": "some dataafter"
+                    },
+                    "before text\n        <nestedtag>\n            nested cdata 1\n        </nestedtag>\n    middle\n        <nestedtag>\n            nested cdata 2\n        </nestedtag>\n    after\n        <nestedtag>\n            nested cdata 3\n        </nestedtag>\n    end"
+                ],
+                "@_xmlns:soap": "http://schemas.xmlsoap.org/soap/envelope/"
+            }
+        };
+
+            var result = parser.parse(xmlData,{
+                ignoreAttributes:false,
+                allowBooleanAttributes:true
+            });
+        //console.log(JSON.stringify(result,null,4));
+        expect(result).toEqual(expected);
+    });
+
 });
