@@ -189,6 +189,73 @@ describe("XMLParser", function () {
         expect(result).toEqual(expected);
     });
 
+    it("should parse CDATA as separate tag", function () {
+        var xmlData =  "<xml>"
+                    + " <a><![CDATA[text]]></a>"
+                    + " <b>\n       text    \n</b>"
+                    + " <c>     <![CDATA[text]]>after    </c>"
+                    + " <d>23<![CDATA[]]>   24</d>"
+                    + "</xml>";
+        var expected = {
+                        "xml": {
+                            "a": {
+                                "__cdata" : "text"
+                            },
+                            "b": "text",
+                            "c": {
+                                "#text" : "\\cafter",
+                                "__cdata" : "text"
+                            },
+                            "d": {
+                                "#text" : "23\\c24",
+                                "__cdata" : ""
+                            }
+                        }
+                    };
+
+        var result = parser.parse(xmlData, {
+            ignoreAttributes: false,
+            cdataTagName : "__cdata"
+        });
+
+        //console.log(JSON.stringify(result,null,4));
+        expect(result).toEqual(expected);
+    });
+
+    it("should parse CDATA as separate tag without preserving cdata position", function () {
+        var xmlData =  "<xml>"
+                    + " <a><![CDATA[text]]></a>"
+                    + " <b>\n       text    \n</b>"
+                    + " <c>     <![CDATA[text]]>after    </c>"
+                    + " <d>23<![CDATA[]]>   24</d>"
+                    + "</xml>";
+        var expected = {
+                        "xml": {
+                            "a": {
+                                "__cdata" : "text"
+                            },
+                            "b": "text",
+                            "c": {
+                                "#text" : "after",
+                                "__cdata" : "text"
+                            },
+                            "d": {
+                                "#text" : "2324",
+                                "__cdata" : ""
+                            }
+                        }
+                    };
+
+        var result = parser.parse(xmlData, {
+            ignoreAttributes: false,
+            cdataTagName : "__cdata",
+            cdataPositionChar : ""
+        });
+
+        //console.log(JSON.stringify(result,null,4));
+        expect(result).toEqual(expected);
+    });
+
     it("should validate XML with repeated multiline CDATA and comments", function () {
         var fs = require("fs");
         var path = require("path");

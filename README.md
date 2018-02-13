@@ -27,6 +27,19 @@ You can use this library online (press try me button above), or as command from 
   <img src="https://opencollective.com/fast-xml-parser/donate/button@2x.png?color=blue" width=300 />
 </a>
 
+### Main Features
+
+* Works with node packages, in browser, and in CLI
+* Faster than any pure JS implementation
+* It can handle big files (tested up to 100mb)
+* You can parse CDATA as separate property
+* You can prefix attributes or group them to separate property. Or can ignore them from result completely.
+* You can parse tag's or attribute's value to premitive type: string, integer, float, or boolean. And can optionally decode for HTML char.
+* You can remove namespace from tag name while parsing
+* It supports boolean attributes, if configured.
+
+
+
 ### How to use
 **Installation**
 
@@ -58,7 +71,7 @@ var options = {
 //from 3.0.0
 var options = {
     attributeNamePrefix : "@_",
-    attrNodeName: false,
+    attrNodeName: "attr", //default is 'false'
     textNodeName : "#text",
     ignoreAttributes : true,
     ignoreNameSpace : false,
@@ -67,6 +80,8 @@ var options = {
     parseAttributeValue : false,
     trimValues: true,
     decodeHTMLchar: false,
+    cdataTagName: "__cdata", //default is 'false'
+    cdataPositionChar: "\\c",
 };
 if(fastXmlParser.validate(xmlData)=== true){//optional
 	var jsonObj = fastXmlParser.parse(xmlData,options);
@@ -88,6 +103,8 @@ var jsonObj = fastXmlParser.convertToJson(tObj,options);
 * **parseAttributeValue** : Parse the value of an attribute to float, integer, or boolean.
 * **trimValues** : trim string values of an attribute or node
 * **decodeHTMLchar** : decodes any named and numerical character HTML references excluding CDATA part.
+* **cdataTagName** : If specified, parser parse CDATA as nested tag instead of adding it's value to parent tag.
+* **cdataPositionChar** : It'll help to covert JSON back to XML without loosing CDATA position.
 
 To use from command line
 ```bash

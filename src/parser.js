@@ -22,6 +22,8 @@ var defaultOptions = {
     arrayMode : false,
     trimValues: true,                                //Trim string values of tag and attributes 
     decodeHTMLchar: false,
+    cdataTagName: false,
+    cdataPositionChar: "\\c"
     //decodeStrict: false,
 };
 
@@ -36,6 +38,7 @@ var buildOptions = function (options){
                         "parseAttributeValue",
                         "arrayMode",
                         "trimValues",
+                        "cdataPositionChar",
                 ];
     var len = props.length;
     for (var i = 0; i < len; i++) {
@@ -69,10 +72,20 @@ var getTraversalObj =function (xmlData,options){
 
             currentNode = currentNode.parent;
         }else if(tagType === TagType.CDATA){
-            //no attribute
-            //add text to parent node
-            //add parsed data to parent node
-            currentNode.val = (currentNode.val || "") + (tag[3] || "") + processTagValue(tag[14],options);
+            if(options.cdataTagName){
+                //add cdata node
+                var childNode = new xmlNode( options.cdataTagName,currentNode,tag[3]);
+                childNode.attrsMap = buildAttributesMap(tag[8],options);
+                currentNode.addChild(childNode);
+                //for backtracking
+                currentNode.val = util.getValue(currentNode.val) + options.cdataPositionChar;
+                //add rest value to parent node
+                if(tag[14]){
+                    currentNode.val += processTagValue(tag[14],options);
+                }
+            }else{
+                currentNode.val = (currentNode.val || "") + (tag[3] || "") + processTagValue(tag[14],options);
+            }
         }else if(tagType === TagType.SELF){
             var childNode = new xmlNode( options.ignoreNameSpace ? tag[7] : tag[5],currentNode, "");
             if(tag[8] && tag[8].length > 1){
@@ -125,7 +138,7 @@ var fakeCallNoReturn =  function() {}
 
 var xml2json = function (xmlData,options){
     options = buildOptions(options);
-    return convertToJson(getTraversalObj(xmlData,options), options.textNodeName, options.arrayMode);
+    return convertToJson(getTraversalObj(xmlData,options), options);
 };
 
 
@@ -202,13 +215,13 @@ function buildAttributesMap(attrStr,options){
     }
 }
 
-var convertToJson = function (node, textNodeName,arrayMode){
+var convertToJson = function (node, options){
     var jObj = {};
 
     //traver through all the children
     for (var index = 0; index < node.child.length; index++) {
         var prop = node.child[index].tagname;
-        var obj = convertToJson(node.child[index],textNodeName, arrayMode);
+        var obj = convertToJson(node.child[index],options);
         if(typeof jObj[prop] !== "undefined"){
             if(!Array.isArray(jObj[prop])){
                 var swap = jObj[prop];
@@ -217,7 +230,7 @@ var convertToJson = function (node, textNodeName,arrayMode){
             }
             jObj[prop].push(obj);
         }else{
-            jObj[prop] = arrayMode ? [obj] : obj;
+            jObj[prop] = options.arrayMode ? [obj] : obj;
         }
     }
     util.merge(jObj,node.attrsMap);
@@ -226,8 +239,8 @@ var convertToJson = function (node, textNodeName,arrayMode){
         return util.isExist(node.val)? node.val :  "";
     }else{
         if(util.isExist(node.val)){
-            if(!(typeof node.val === "string" && node.val === "")){
-                jObj[textNodeName] = node.val;
+            if(!(typeof node.val === "string" && (node.val === "" || node.val === options.cdataPositionChar))){
+                jObj[options.textNodeName] = node.val;
             }
         }
     }
