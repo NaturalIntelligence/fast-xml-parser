@@ -1,21 +1,14 @@
 //parse Empty Node as self closing node
+var he = require("he");
 
 var defaultOptions = {
     attributeNamePrefix : "@_",
     attrNodeName: false,
     textNodeName : "#text",
     ignoreAttributes : true,
-    ignoreNameSpace : false,
-    allowBooleanAttributes : false,         //a tag can have attributes without any value
-    //ignoreRootElement : false,
-    parseNodeValue : true,
-    parseAttributeValue : false,
-    arrayMode : false,
-    trimValues: true,                                //Trim string values of tag and attributes 
-    decodeHTMLchar: false,
+    encodeHTMLchar: false,
     cdataTagName: false,
     cdataPositionChar: "\\c"
-    //decodeStrict: false,
 };
 
 function Parser(options){
@@ -33,6 +26,11 @@ function Parser(options){
     }
     this.replaceCDATAstr = replaceCDATAstr;
     this.replaceCDATAarr = replaceCDATAarr;
+    if(this.options.encodeHTMLchar){
+        this.encodeHTMLchar = encodeHTMLchar;
+    }else{
+        this.encodeHTMLchar = a => a;
+    }
 }
 
 
@@ -49,7 +47,7 @@ Parser.prototype.j2x = function(jObj){
         if(typeof jObj[key] !== "object"){//premitive type
             var attr = this.isAttribute(key);
             if(attr){
-                attrStr += " " +attr+"=\""+jObj[key]+"\"";
+                attrStr += " " +attr+"=\""+ this.encodeHTMLchar(jObj[key], true) +"\"";
             }else if(this.isCDATA(key)){
                 //check if textnode is present -> replace the value
                 //else just add the value
@@ -64,10 +62,10 @@ Parser.prototype.j2x = function(jObj){
                     if(jObj[this.options.cdataTagName]){
                         //value will added while processing cdata
                     }else{
-                        val += jObj[key];    
+                        val += this.encodeHTMLchar(jObj[key]);    
                     }
                 }else{
-                    val += "<" + key + ">"+jObj[key]+"</"+key+">";
+                    val += "<" + key + ">"+this.encodeHTMLchar(jObj[key])+"</"+key+">";
                 }
             }
         }else if(Array.isArray(jObj[key])){
@@ -88,7 +86,7 @@ Parser.prototype.j2x = function(jObj){
                         var result = this.j2x(item);
                         val += "<"+key + result.attrStr +">" +  result.val + "</"+key+">";
                     }else{
-                        val += "<"+key+">" +  item + "</"+key+">";
+                        val += "<"+key+">" +  this.encodeHTMLchar(item) + "</"+key+">";
                     }
                 }
             }
@@ -98,7 +96,7 @@ Parser.prototype.j2x = function(jObj){
                 var Ks = Object.keys(jObj[key]);
                 var L = Ks.length;
                 for(var j=0;j<L;j++){
-                    attrStr += " "+Ks[j]+"=\"" + jObj[key][Ks[j]] + "\"";
+                    attrStr += " "+Ks[j]+"=\"" + this.encodeHTMLchar(jObj[key][Ks[j]]) + "\"";
                 }
             }else{
                 var result = this.j2x(jObj[key]);
@@ -110,6 +108,7 @@ Parser.prototype.j2x = function(jObj){
 }
 
 function replaceCDATAstr(str,cdata){
+    str = this.encodeHTMLchar(str);
     if(this.options.cdataPositionChar === "" || str === ""){
         return str + "<![CDATA[" +cdata+"]]>";
     }else{
@@ -118,6 +117,7 @@ function replaceCDATAstr(str,cdata){
 }
 
 function replaceCDATAarr(str,cdata){
+    str = this.encodeHTMLchar(str);
     if(this.options.cdataPositionChar === "" || str === ""){
         return str + "<![CDATA[" + cdata.join("]]><![CDATA[")+"]]>";
     }else{
@@ -126,6 +126,10 @@ function replaceCDATAarr(str,cdata){
         }
         return str;
     }
+}
+
+function encodeHTMLchar(val, isAttribute){
+    return he.encode("" + val, {isAttributeValue : isAttribute, useNamedReferences: true});
 }
 
 function isAttribute(name,options){

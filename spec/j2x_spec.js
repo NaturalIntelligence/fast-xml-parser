@@ -205,4 +205,34 @@ describe("XMLParser", function () {
         expect(result).toEqual(expected);
       });
 
+
+      it("should encode HTML char when parsing to XML", function () {
+        var jObj = {
+            a : {
+                "@": {
+                    b : "val>1",
+                    c : "val<2"
+                },
+                "#text": "text\\cvalue>\\c",
+                tag: {
+                    k: 34,
+                    g: "35 g>"
+                },
+                "__cdata": [
+                    "this text is > from CDATA",
+                    "this is another text"
+                ]
+            }
+        };
+        var parser = new Parser({
+            cdataTagName : "__cdata",
+            attrNodeName : "@",
+            encodeHTMLchar: true
+        });
+        var result = parser.parse(jObj);
+        //console.log(result);
+        var expected = '<a b="val&gt;1" c="val&lt;2"><tag><k>34</k><g>35 g&gt;</g></tag>text<![CDATA[this text is > from CDATA]]>value&gt;<![CDATA[this is another text]]></a>';
+        expect(result).toEqual(expected);
+      });
+
 });
