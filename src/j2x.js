@@ -26,22 +26,18 @@ function Parser(options){
         this.attrPrefixLen = this.options.attributeNamePrefix.length;
         this.isAttribute = isAttribute;
     }
+    if(this.options.cdataTagName){
+        this.isCDATA = isCDATA;
+    }else{
+        this.isCDATA = a => false;
+    }
+    this.replaceCDATAstr = replaceCDATAstr;
+    this.replaceCDATAarr = replaceCDATAarr;
 }
 
 
 Parser.prototype.parse = function(jObj){
     return this.j2x(jObj).val;
-    /* if(options.ignoreAttributes){
-        //don't check for attribute prefix of attribute group
-    }else if(options.attrNodeName) {
-        //then avoid checking for prefix
-    }else{
-        //then check each property if it is prefixed with options.attributeNamePrefix
-    }
-
-    if(options.allowBooleanAttributes){
-        //then 
-    } */
 }
 
 Parser.prototype.j2x = function(jObj){
@@ -54,27 +50,51 @@ Parser.prototype.j2x = function(jObj){
             var attr = this.isAttribute(key);
             if(attr){
                 attrStr += " " +attr+"=\""+jObj[key]+"\"";
+            }else if(this.isCDATA(key)){
+                //check if textnode is present -> replace the value
+                //else just add the value
+
+                if(jObj[this.options.textNodeName]){
+                    val += this.replaceCDATAstr(jObj[this.options.textNodeName], jObj[key]);
+                }else{
+                    val += this.replaceCDATAstr("", jObj[key]);
+                }
             }else{
                 if(key === this.options.textNodeName){
-                    val += jObj[key];
+                    if(jObj[this.options.cdataTagName]){
+                        //value will added while processing cdata
+                    }else{
+                        val += jObj[key];    
+                    }
                 }else{
                     val += "<" + key + ">"+jObj[key]+"</"+key+">";
                 }
             }
         }else if(Array.isArray(jObj[key])){
-            var arrLen = jObj[key].length;
-            for(var j=0;j<arrLen;j++){
-                var item = jObj[key][j];
-                if(typeof item === "object"){
-                    var result = this.j2x(item);
-                    val += "<"+key + result.attrStr +">" +  result.val + "</"+key+">";
+            if(this.isCDATA(key)){
+                //check if textnode is present -> replace the value
+                //else just add the value
+
+                if(jObj[this.options.textNodeName]){
+                    val += this.replaceCDATAarr(jObj[this.options.textNodeName], jObj[key]);
                 }else{
-                    val += "<"+key+">" +  item + "</"+key+">";
+                    val += this.replaceCDATAarr("", jObj[key]);
+                }
+            }else{
+                var arrLen = jObj[key].length;
+                for(var j=0;j<arrLen;j++){
+                    var item = jObj[key][j];
+                    if(typeof item === "object"){
+                        var result = this.j2x(item);
+                        val += "<"+key + result.attrStr +">" +  result.val + "</"+key+">";
+                    }else{
+                        val += "<"+key+">" +  item + "</"+key+">";
+                    }
                 }
             }
         }else{
             
-            if(key === this.options.attrNodeName){
+            if(this.options.attrNodeName && key === this.options.attrNodeName){
                 var Ks = Object.keys(jObj[key]);
                 var L = Ks.length;
                 for(var j=0;j<L;j++){
@@ -89,9 +109,36 @@ Parser.prototype.j2x = function(jObj){
     return {attrStr : attrStr , val : val};
 }
 
+function replaceCDATAstr(str,cdata){
+    if(this.options.cdataPositionChar === "" || str === ""){
+        return str + "<![CDATA[" +cdata+"]]>";
+    }else{
+        return str.replace(this.options.cdataPositionChar,"<![CDATA[" +cdata+"]]>")
+    }
+}
+
+function replaceCDATAarr(str,cdata){
+    if(this.options.cdataPositionChar === "" || str === ""){
+        return str + "<![CDATA[" + cdata.join("]]><![CDATA[")+"]]>";
+    }else{
+        for(var v in cdata){
+            str = str.replace(this.options.cdataPositionChar, "<![CDATA[" +cdata[v]+"]]>");
+        }
+        return str;
+    }
+}
+
 function isAttribute(name,options){
     if(name.startsWith(this.options.attributeNamePrefix)){
         return name.substr(this.attrPrefixLen);
+    }else{
+        return false;
+    }
+}
+
+function isCDATA(name){
+    if(name === this.options.cdataTagName){
+        return true;
     }else{
         return false;
     }

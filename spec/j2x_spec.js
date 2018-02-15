@@ -109,4 +109,100 @@ describe("XMLParser", function () {
         expect(result).toEqual(expected);
       });
 
+      it("should parse grouped attributes as tag name when options are not set", function () {
+        var jObj = {
+            a : {
+                "@": {
+                    b : "val1",
+                    c : "val2"
+                },
+                "#text": "textvalue",
+                tag: {
+                    k: 34
+                }
+            }
+        };
+        var parser = new Parser({
+            ignoreAttributes : false
+        });
+        var result = parser.parse(jObj);
+        //console.log(result);
+        var expected = '<a><@><b>val1</b><c>val2</c></@>textvalue<tag><k>34</k></tag></a>';
+        expect(result).toEqual(expected);
+      });
+
+      it("should parse to XML with cdata", function () {
+        var jObj = {
+            a : {
+                "@": {
+                    b : "val1",
+                    c : "val2"
+                },
+                "#text": "textvalue\\c",
+                "__cdata": "this text is from CDATA",
+                tag: {
+                    k: 34
+                }
+            }
+        };
+        var parser = new Parser({
+            cdataTagName : "__cdata",
+        });
+        var result = parser.parse(jObj);
+        //console.log(result);
+        var expected = '<a><@><b>val1</b><c>val2</c></@>textvalue<![CDATA[this text is from CDATA]]><tag><k>34</k></tag></a>';
+        expect(result).toEqual(expected);
+      });
+
+      it("should parse to XML with multiple cdata", function () {
+        var jObj = {
+            a : {
+                "@": {
+                    b : "val1",
+                    c : "val2"
+                },
+                "#text": "text\\cvalue\\c",
+                tag: {
+                    k: 34
+                },
+                "__cdata": [
+                    "this text is from CDATA",
+                    "this is another text"
+                ]
+            }
+        };
+        var parser = new Parser({
+            cdataTagName : "__cdata",
+        });
+        var result = parser.parse(jObj);
+        //console.log(result);
+        var expected = '<a><@><b>val1</b><c>val2</c></@><tag><k>34</k></tag>text<![CDATA[this text is from CDATA]]>value<![CDATA[this is another text]]></a>';
+        expect(result).toEqual(expected);
+      });
+
+      it("should parse to XML with multiple cdata but textnode is not present", function () {
+        var jObj = {
+            a : {
+                "@": {
+                    b : "val1",
+                    c : "val2"
+                },
+                tag: {
+                    k: 34
+                },
+                "__cdata": [
+                    "this text is from CDATA",
+                    "this is another text"
+                ]
+            }
+        };
+        var parser = new Parser({
+            cdataTagName : "__cdata",
+        });
+        var result = parser.parse(jObj);
+        //console.log(result);
+        var expected = '<a><@><b>val1</b><c>val2</c></@><tag><k>34</k></tag><![CDATA[this text is from CDATA]]><![CDATA[this is another text]]></a>';
+        expect(result).toEqual(expected);
+      });
+
 });
