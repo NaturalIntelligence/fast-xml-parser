@@ -30,12 +30,12 @@ You can use this library online (press try me button above), or as command from 
 ### Main Features
 
 * Works with node packages, in browser, and in CLI
-* Faster than any pure JS implementation
-* It can handle big files (tested up to 100mb)
-* You can parse CDATA as separate property
+* Faster than any pure JS implementation.
+* It can handle big files (tested up to 100mb).
+* You can parse CDATA as separate property.
 * You can prefix attributes or group them to separate property. Or can ignore them from result completely.
 * You can parse tag's or attribute's value to premitive type: string, integer, float, or boolean. And can optionally decode for HTML char.
-* You can remove namespace from tag name while parsing
+* You can remove namespace from tag or attribute name while parsing
 * It supports boolean attributes, if configured.
 
 
@@ -179,11 +179,9 @@ Installation of such libraries fails on some OS. You may require to install miss
 * Few validation and parsing bugs are also fixed
 
 
-Some of my other NPM pojects
+### Worth to mention
+
  - [stubmatic](https://github.com/NaturalIntelligence/Stubmatic) : A stub server to mock behaviour of HTTP(s) / REST / SOAP services. Stubbing redis is on the way.
+ - **[fastify-xml-body-parser](https://github.com/NaturalIntelligence/fastify-xml-body-parser/)** : Fastify plugin / module to parse XML payload / body into JS object using fast-xml-parser.
   - [fast-lorem-ipsum](https://github.com/amitguptagwl/fast-lorem-ipsum) : Generate lorem ipsum words, sentences, paragraph very quickly.
 
-### TODO
-* P2: validating XML stream data
-* P2: validator cli
-* P2: fast XML prettyfier

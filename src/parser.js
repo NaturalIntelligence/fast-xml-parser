@@ -133,14 +133,10 @@ function checkForTagType(match){
     }
 }
 
-var fakeCall =  function(a) {return a;}
-var fakeCallNoReturn =  function() {}
-
 var xml2json = function (xmlData,options){
     options = buildOptions(options);
     return convertToJson(getTraversalObj(xmlData,options), options);
 };
-
 
 function resolveNameSpace(tagname,options){
     if(options.ignoreNameSpace ){
@@ -154,7 +150,6 @@ function resolveNameSpace(tagname,options){
         }
     }
     return tagname;
-
 }
 
 function parseValue(val,shouldParse){
@@ -247,9 +242,6 @@ var convertToJson = function (node, options){
     //add value
     return jObj;
 };
-
-
-
 
 exports.parse = xml2json;
 exports.getTraversalObj = getTraversalObj;

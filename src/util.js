@@ -59,6 +59,9 @@ exports.getValue = function (v){
   }
 }
 
+var fakeCall =  function(a) {return a;}
+var fakeCallNoReturn =  function() {}
+
 exports.doesMatch = doesMatch
 exports.doesNotMatch = doesNotMatch
 exports.getAllMatches = getAllMatches;
