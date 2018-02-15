@@ -5,12 +5,16 @@ var path = require('path');
 var parser = require('./lib/parser');
 var readToEnd = require('./src/read').readToEnd;
 
-
 if(process.argv[2] === "--help" || process.argv[2] === "-h"){
     console.log("Fast XML Parser " + require(path.join(__dirname + "/package.json")).version);
     console.log("----------------");
-    console.log("xml2js [-ns|-a|-c] <filename> [-o outputfile.json]");
-    console.log("cat xmlfile.xml | xml2js [-ns|-a|-c] [-o outputfile.json]");
+    console.log("xml2js [-ns|-a|-c|-v|-V] <filename> [-o outputfile.json]");
+    console.log("cat xmlfile.xml | xml2js [-ns|-a|-c|-v|-V] [-o outputfile.json]");
+    console.log("-ns: remove namespace from tag and atrribute name.");
+    console.log("-a: don't parse attributes.");
+    console.log("-c: parse values to premitive type.");
+    console.log("-v: validate before parsing.");
+    console.log("-V: validate only.");
 }else if(process.argv[2] === "--version"){
     console.log(require(path.join(__dirname + "/package.json")).version);
 }else{
@@ -22,6 +26,8 @@ if(process.argv[2] === "--help" || process.argv[2] === "-h"){
     };
     var fileName = "";
     var outputFileName;
+    var validate = false;
+    var validateOnly = false;
 	for(var i=2; i<process.argv.length;i++){
 		if(process.argv[i] === "-ns"){
             options.ignoreNameSpace = false;
@@ -32,12 +38,28 @@ if(process.argv[2] === "--help" || process.argv[2] === "-h"){
             options.parseAttributeValue = false;
         }else if(process.argv[i] === "-o"){
             outputFileName = process.argv[++i];
+        }else if(process.argv[i] === "-v"){
+            validate = true;
+        }else if(process.argv[i] === "-V"){
+            validateOnly = true;
         }else{//filename
             fileName = process.argv[i];
         }
     }
     var callback = function (xmlData) {
-        output = JSON.stringify(parser.parse(xmlData,options),null,4);
+        var output = "";
+        if(validate){
+            var result = parser.validate(xmlData);
+            if(result === true){
+                output = JSON.stringify(parser.parse(xmlData,options),null,4);        
+            }else{
+                output = result;
+            }
+        }else if(validateOnly){
+            output = parser.validate(xmlData);
+        }else{
+            output = JSON.stringify(parser.parse(xmlData,options),null,4);
+        }
         if (outputFileName) {
             writeToFile(outputFileName, output);
         } else {
