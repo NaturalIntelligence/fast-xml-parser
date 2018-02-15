@@ -84,4 +84,29 @@ describe("XMLParser", function () {
         var expected = '<a b="val1" c="val2">textvalue<tag><k>34</k></tag></a>';
         expect(result).toEqual(expected);
       });
+
+      it("should parse to XML with attributes as separate node", function () {
+        var jObj = {
+            a : {
+                "@": {
+                    b : "val1",
+                    c : "val2"
+                },
+                "#text": "textvalue",
+                tag: {
+                    k: 34
+                }
+            }
+        };
+        var parser = new Parser({
+            ignoreAttributes : false,
+            attributeNamePrefix : "@_",
+            attrNodeName: "@"
+        });
+        var result = parser.parse(jObj);
+        //console.log(result);
+        var expected = '<a b="val1" c="val2">textvalue<tag><k>34</k></tag></a>';
+        expect(result).toEqual(expected);
+      });
+
 });

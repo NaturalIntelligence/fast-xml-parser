@@ -20,7 +20,6 @@ var defaultOptions = {
 
 function Parser(options){
     this.options = Object.assign({},defaultOptions,options);
-    //this.jObj = jObj;
     if(this.options.ignoreAttributes) {
         this.isAttribute = a => false;
     }else{
@@ -74,8 +73,17 @@ Parser.prototype.j2x = function(jObj){
                 }
             }
         }else{
-            var result = this.j2x(jObj[key]);
-            val  += "<" + key + result.attrStr + ">"+result.val + "</"+key+">";
+            
+            if(key === this.options.attrNodeName){
+                var Ks = Object.keys(jObj[key]);
+                var L = Ks.length;
+                for(var j=0;j<L;j++){
+                    attrStr += " "+Ks[j]+"=\"" + jObj[key][Ks[j]] + "\"";
+                }
+            }else{
+                var result = this.j2x(jObj[key]);
+                val  += "<" + key + result.attrStr + ">"+result.val + "</"+key+">";
+            }
         }
     }
     return {attrStr : attrStr , val : val};
