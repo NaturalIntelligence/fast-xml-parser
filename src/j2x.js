@@ -9,7 +9,8 @@ var defaultOptions = {
     encodeHTMLchar: false,
     cdataTagName: false,
     cdataPositionChar: "\\c",
-    format: false
+    format: false,
+    indentBy: "  "
 };
 
 function Parser(options){
@@ -150,7 +151,7 @@ function replaceCDATAarr(str,cdata){
 }
 
 function indentate(level){
-    return "\t".repeat(level);
+    return this.options.indentBy.repeat(level);
 }
 function encodeHTMLchar(val, isAttribute){
     return he.encode("" + val, {isAttributeValue : isAttribute, useNamedReferences: true});
