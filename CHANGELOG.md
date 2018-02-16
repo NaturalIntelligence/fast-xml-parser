@@ -1,3 +1,22 @@
+3.2.0 / 2018-02-16
+  * Merge pull request : Dev to Master
+  * Update README and version
+  * j2x:add performance test
+  * j2x: Remove extra empty line before closing tag
+  * j2x: suppress empty nodes to self closing node if configured
+  * j2x: provide option to give indentation depth
+  * j2x: make optional formatting
+  * j2x: encodeHTMLchat
+  * j2x: handle cdata tag
+  * j2x: handle grouped attributes
+  * convert json to xml
+    - nested object
+    - array
+    - attributes
+    - text value
+  * small refactoring
+  * Merge pull request: Update cli.js to let user validate XML file or data
+  * Add option for rendering CDATA as separate property
 3.0.1 / 2018-02-09
   * fix CRLF: replace it with single space in attributes value only.
 3.0.0 / 2018-02-08
