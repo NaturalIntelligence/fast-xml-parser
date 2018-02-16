@@ -1,5 +1,5 @@
 # [fast-xml-parser](https://www.npmjs.com/package/fast-xml-parser)
-Validate XML or Parse XML to JS/JSON very fast without C/C++ based libraries and no callback
+Validate XML or Parse XML to JS/JSON and vise versa rapidly without C/C++ based libraries and no callback
 
 <p style="color:red;"> **Note**: If you are using v3, your code may start failing in parsing and validation both. I apologize for the breaking changes. But code was supposed to be changed to support large files and many other options. Please refer the code example below for more detail.</p>
 You can use this library online (press try me button above), or as command from CLI, or in your website, or in npm repo.
@@ -108,13 +108,15 @@ var jsonObj = fastXmlParser.convertToJson(tObj,options);
 
 To use from command line
 ```bash
-$xml2js [-ns|-a|-c] <filename> [-o outputfile.json]
-$cat xmlfile.xml | xml2js [-ns|-a|-c] [-o outputfile.json]
+$xml2js [-ns|-a|-c|-v|-V] <filename> [-o outputfile.json]
+$cat xmlfile.xml | xml2js [-ns|-a|-c|-v|-V] [-o outputfile.json]
 ```
 
--ns : To include namespaces (bedefault ignored)
--a : To ignore attributes
--c : To ignore value conversion (i.e. "-3" will not be converted to number -3)
+* -ns : To include namespaces (bedefault ignored)
+* -a : To ignore attributes
+* -c : To ignore value conversion (i.e. "-3" will not be converted to number -3)
+* -v : validate before parsing
+* -V : only validate
 
 To use it **on webpage**
 
@@ -132,11 +134,11 @@ var Parser = require("fast-xml-parser").j2xParser;
 //default options need not to set
 var defaultOptions = {
     attributeNamePrefix : "@_",
-    attrNodeName: "@", //default is set to false
+    attrNodeName: "@", //default is false
     textNodeName : "#text",
     ignoreAttributes : true,
     encodeHTMLchar: false,
-    cdataTagName: "__cdata", //default is set to false
+    cdataTagName: "__cdata", //default is false
     cdataPositionChar: "\\c",
     format: false, 
     indentBy: "  ",
@@ -150,7 +152,7 @@ var xml = parser.parse(json_or_js_obj);
 
 
 * **attributeNamePrefix** : Identify attributes with this prefix otherwise treat them as a tag.
-* **attrNodeName**: Identify attributes with this name when they are grouped under single property.  
+* **attrNodeName**: Identify attributes when they are grouped under single property.  
 * **ignoreAttributes** : Don't check for attributes. Treats everything as tag.
 * **encodeHTMLchar** : encodes values (except cdata values) when writing to XML.
 * **cdataTagName** : If specified, parse matching tag as CDATA
@@ -221,7 +223,7 @@ Installation of such libraries fails on some OS. You may require to install miss
 
 ### Worth to mention
 
- - [stubmatic](https://github.com/NaturalIntelligence/Stubmatic) : A stub server to mock behaviour of HTTP(s) / REST / SOAP services. Stubbing redis is on the way.
+ - [stubmatic](https://github.com/NaturalIntelligence/Stubmatic) : A stub server to mock behaviour of HTTP(s) / REST / SOAP services.
  - **[fastify-xml-body-parser](https://github.com/NaturalIntelligence/fastify-xml-body-parser/)** : Fastify plugin / module to parse XML payload / body into JS object using fast-xml-parser.
   - [fast-lorem-ipsum](https://github.com/amitguptagwl/fast-lorem-ipsum) : Generate lorem ipsum words, sentences, paragraph very quickly.
-
+- [Grapes](https://github.com/amitguptagwl/grapes) : Flexible Regular expression engine which can be applied on char stream. (under development)
