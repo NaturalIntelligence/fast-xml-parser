@@ -8,7 +8,8 @@ var defaultOptions = {
     ignoreAttributes : true,
     encodeHTMLchar: false,
     cdataTagName: false,
-    cdataPositionChar: "\\c"
+    cdataPositionChar: "\\c",
+    format: false
 };
 
 function Parser(options){
@@ -31,14 +32,25 @@ function Parser(options){
     }else{
         this.encodeHTMLchar = a => a;
     }
+
+    if(this.options.format){
+        this.indentate = indentate; 
+        this.tagEndChar = ">\n";
+        this.newLine = "\n";
+    }else{
+        this.indentate = () => "";
+        this.tagEndChar = ">";
+        this.newLine = "";
+    }
+
 }
 
 
 Parser.prototype.parse = function(jObj){
-    return this.j2x(jObj).val;
+    return this.j2x(jObj,0).val;
 }
 
-Parser.prototype.j2x = function(jObj){
+Parser.prototype.j2x = function(jObj,level){
     var xmlStr = "", attrStr = "" , val = "";
     var keys = Object.keys(jObj);
     var len = keys.length;
@@ -49,15 +61,12 @@ Parser.prototype.j2x = function(jObj){
             if(attr){
                 attrStr += " " +attr+"=\""+ this.encodeHTMLchar(jObj[key], true) +"\"";
             }else if(this.isCDATA(key)){
-                //check if textnode is present -> replace the value
-                //else just add the value
-
                 if(jObj[this.options.textNodeName]){
                     val += this.replaceCDATAstr(jObj[this.options.textNodeName], jObj[key]);
                 }else{
                     val += this.replaceCDATAstr("", jObj[key]);
                 }
-            }else{
+            }else{//tag value
                 if(key === this.options.textNodeName){
                     if(jObj[this.options.cdataTagName]){
                         //value will added while processing cdata
@@ -65,10 +74,10 @@ Parser.prototype.j2x = function(jObj){
                         val += this.encodeHTMLchar(jObj[key]);    
                     }
                 }else{
-                    val += "<" + key + ">"+this.encodeHTMLchar(jObj[key])+"</"+key+">";
+                    val += this.indentate(level) + "<" + key + ">" +this.encodeHTMLchar(jObj[key])+"</"+key+ this.tagEndChar;
                 }
             }
-        }else if(Array.isArray(jObj[key])){
+        }else if(Array.isArray(jObj[key])){//repeated nodes
             if(this.isCDATA(key)){
                 //check if textnode is present -> replace the value
                 //else just add the value
@@ -78,15 +87,21 @@ Parser.prototype.j2x = function(jObj){
                 }else{
                     val += this.replaceCDATAarr("", jObj[key]);
                 }
-            }else{
+            }else{//nested nodes
                 var arrLen = jObj[key].length;
                 for(var j=0;j<arrLen;j++){
                     var item = jObj[key][j];
                     if(typeof item === "object"){
-                        var result = this.j2x(item);
-                        val += "<"+key + result.attrStr +">" +  result.val + "</"+key+">";
+                        var result = this.j2x(item,level+1);
+                        val += this.indentate(level) 
+                                    + "<"+key + result.attrStr 
+                                    + this.tagEndChar 
+                                    + result.val 
+                                    + this.newLine
+                                    + this.indentate(level)
+                                    + "</"+key+this.tagEndChar;
                     }else{
-                        val += "<"+key+">" +  this.encodeHTMLchar(item) + "</"+key+">";
+                        val += this.indentate(level) + "<"+key+">"+  this.encodeHTMLchar(item) + "</"+key+this.tagEndChar;
                     }
                 }
             }
@@ -99,8 +114,14 @@ Parser.prototype.j2x = function(jObj){
                     attrStr += " "+Ks[j]+"=\"" + this.encodeHTMLchar(jObj[key][Ks[j]]) + "\"";
                 }
             }else{
-                var result = this.j2x(jObj[key]);
-                val  += "<" + key + result.attrStr + ">"+result.val + "</"+key+">";
+                var result = this.j2x(jObj[key],level+1);
+                val  += this.indentate(level) 
+                            + "<" + key + result.attrStr 
+                            + this.tagEndChar 
+                            + result.val 
+                            + this.newLine
+                            + this.indentate(level)
+                            + "</"+key+this.tagEndChar;
             }
         }
     }
@@ -128,6 +149,9 @@ function replaceCDATAarr(str,cdata){
     }
 }
 
+function indentate(level){
+    return "\t".repeat(level);
+}
 function encodeHTMLchar(val, isAttribute){
     return he.encode("" + val, {isAttributeValue : isAttribute, useNamedReferences: true});
 }
