@@ -272,7 +272,7 @@ describe("XMLParser", function () {
       });
 
 
-    /*   it("should format when parsing to XML", function () {
+      it("should format when parsing to XML", function () {
         var jObj = {
             a : {
                 "@": {
@@ -298,16 +298,14 @@ describe("XMLParser", function () {
         });
         var result = parser.parse(jObj);
         var expected = '<a b="val&gt;1" c="val&lt;2">\n'
-        +'\t<tag>\n'
-        +'\t\t<k>34</k>\n'
-        +'\t\t<g>35 g&gt;</g>\n'
-        +'\t\n'
-        +'\t</tag>\n'
-        +'text<![CDATA[this text is > from CDATA]]>value&gt;<![CDATA[this is another text]]>\n'
-        +'</a>\n';
-        console.log(result);
-        console.log(expected);
+        +'  <tag>\n'
+        +'    <k>34</k>\n'
+        +'    <g>35 g&gt;</g>\n'
+        +'  </tag>\n'
+        +'text<![CDATA[this text is > from CDATA]]>value&gt;<![CDATA[this is another text]]></a>\n';
+        //console.log(result);
+        //console.log(expected);
         expect(result).toEqual(expected);
-      }); */
+      });
 
 });

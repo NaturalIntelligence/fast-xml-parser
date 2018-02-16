@@ -92,9 +92,6 @@ Parser.prototype.j2x = function(jObj,level){
             }
         }else if(Array.isArray(jObj[key])){//repeated nodes
             if(this.isCDATA(key)){
-                //check if textnode is present -> replace the value
-                //else just add the value
-
                 if(jObj[this.options.textNodeName]){
                     val += this.replaceCDATAarr(jObj[this.options.textNodeName], jObj[key]);
                 }else{
@@ -109,7 +106,6 @@ Parser.prototype.j2x = function(jObj,level){
                         val  += this.buildObjNode(result.val,key,result.attrStr,level);
                     }else{
                         val += this.buildTextNode(item,key,"",level);
-                        //val += this.indentate(level) + "<"+key+">"+  this.encodeHTMLchar(item) + "</"+key+this.tagEndChar;
                     }
                 }
             }
@@ -156,7 +152,7 @@ function buildObjectNode(val,key,attrStr,level){
                 + "<" + key + attrStr 
                 + this.tagEndChar 
                 + val 
-                + this.newLine
+                //+ this.newLine
                 + this.indentate(level)
                 + "</"+key+this.tagEndChar;
 }
