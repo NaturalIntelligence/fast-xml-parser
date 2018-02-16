@@ -1,4 +1,4 @@
-var Parser = require("../src/j2x");
+var Parser = require("../src/parser").j2xParser;
 
 describe("XMLParser", function () {
 
