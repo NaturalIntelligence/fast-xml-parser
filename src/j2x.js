@@ -17,7 +17,7 @@ var defaultOptions = {
 function Parser(options){
     this.options = Object.assign({},defaultOptions,options);
     if(this.options.ignoreAttributes) {
-        this.isAttribute = a => false;
+        this.isAttribute = function(a){ return false};
     }else{
         this.attrPrefixLen = this.options.attributeNamePrefix.length;
         this.isAttribute = isAttribute;
@@ -25,14 +25,14 @@ function Parser(options){
     if(this.options.cdataTagName){
         this.isCDATA = isCDATA;
     }else{
-        this.isCDATA = a => false;
+        this.isCDATA = function(a){ return false};
     }
     this.replaceCDATAstr = replaceCDATAstr;
     this.replaceCDATAarr = replaceCDATAarr;
     if(this.options.encodeHTMLchar){
         this.encodeHTMLchar = encodeHTMLchar;
     }else{
-        this.encodeHTMLchar = a => a;
+        this.encodeHTMLchar = function(a){ return a};
     }
 
     if(this.options.format){
@@ -40,7 +40,7 @@ function Parser(options){
         this.tagEndChar = ">\n";
         this.newLine = "\n";
     }else{
-        this.indentate = () => "";
+        this.indentate = function(){ return ""};;
         this.tagEndChar = ">";
         this.newLine = "";
     }
