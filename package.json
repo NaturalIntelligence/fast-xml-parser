@@ -67,8 +67,8 @@
     "jasmine": "^2.8.0",
     "jasmine-core": "^2.8.0",
     "portfinder": "^1.0.13",
-    "zombie": "^5.0.7",
-    "xml2js": "^0.4.19"
+    "xml2js": "^0.4.19",
+    "zombie": "^5.0.7"
   },
   "dependencies": {
     "he": "~1.1.1"
