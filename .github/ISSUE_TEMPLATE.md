@@ -1,5 +1,7 @@
 ## Important
-If you are raising a bug please fill it in following format to avoid long communication and fast resolution.
+If have some **questions**, please read the README or check `spec` folder for examples. Otherwise stackoverflow is the better place to discuss technical questions until or unless they are bug.
+
+If you are raising a **bug** please fill it in following format to avoid long communication and fast resolution.
 
 ### Checklist
 Please fill below checklist
