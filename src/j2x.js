@@ -10,7 +10,8 @@ var defaultOptions = {
     cdataTagName: false,
     cdataPositionChar: "\\c",
     format: false,
-    indentBy: "  "
+    indentBy: "  ",
+    supressEmptyNode: false
 };
 
 function Parser(options){
@@ -44,6 +45,17 @@ function Parser(options){
         this.newLine = "";
     }
 
+    if(this.options.supressEmptyNode){
+        this.buildTextNode = buildEmptyTextNode;
+        this.buildObjNode = buildEmptyObjNode;
+    }else{
+        this.buildTextNode = buildTextValNode;
+        this.buildObjNode = buildObjectNode;
+    }
+
+    this.buildTextValNode = buildTextValNode;
+    this.buildObjectNode = buildObjectNode;
+
 }
 
 
@@ -75,7 +87,7 @@ Parser.prototype.j2x = function(jObj,level){
                         val += this.encodeHTMLchar(jObj[key]);    
                     }
                 }else{
-                    val += this.indentate(level) + "<" + key + ">" +this.encodeHTMLchar(jObj[key])+"</"+key+ this.tagEndChar;
+                    val += this.buildTextNode(jObj[key],key,"",level);
                 }
             }
         }else if(Array.isArray(jObj[key])){//repeated nodes
@@ -94,15 +106,10 @@ Parser.prototype.j2x = function(jObj,level){
                     var item = jObj[key][j];
                     if(typeof item === "object"){
                         var result = this.j2x(item,level+1);
-                        val += this.indentate(level) 
-                                    + "<"+key + result.attrStr 
-                                    + this.tagEndChar 
-                                    + result.val 
-                                    + this.newLine
-                                    + this.indentate(level)
-                                    + "</"+key+this.tagEndChar;
+                        val  += this.buildObjNode(result.val,key,result.attrStr,level);
                     }else{
-                        val += this.indentate(level) + "<"+key+">"+  this.encodeHTMLchar(item) + "</"+key+this.tagEndChar;
+                        val += this.buildTextNode(item,key,"",level);
+                        //val += this.indentate(level) + "<"+key+">"+  this.encodeHTMLchar(item) + "</"+key+this.tagEndChar;
                     }
                 }
             }
@@ -116,13 +123,7 @@ Parser.prototype.j2x = function(jObj,level){
                 }
             }else{
                 var result = this.j2x(jObj[key],level+1);
-                val  += this.indentate(level) 
-                            + "<" + key + result.attrStr 
-                            + this.tagEndChar 
-                            + result.val 
-                            + this.newLine
-                            + this.indentate(level)
-                            + "</"+key+this.tagEndChar;
+                val  += this.buildObjNode(result.val,key,result.attrStr,level);
             }
         }
     }
@@ -147,6 +148,40 @@ function replaceCDATAarr(str,cdata){
             str = str.replace(this.options.cdataPositionChar, "<![CDATA[" +cdata[v]+"]]>");
         }
         return str;
+    }
+}
+
+function buildObjectNode(val,key,attrStr,level){
+    return this.indentate(level) 
+                + "<" + key + attrStr 
+                + this.tagEndChar 
+                + val 
+                + this.newLine
+                + this.indentate(level)
+                + "</"+key+this.tagEndChar;
+}
+
+function buildEmptyObjNode(val,key,attrStr,level){
+    if(val !== "" ){
+        return this.buildObjectNode(val,key,attrStr,level);
+    }else{
+        return this.indentate(level) 
+                + "<" + key + attrStr 
+                + "/"
+                + this.tagEndChar 
+                //+ this.newLine
+    }
+}
+
+function buildTextValNode(val,key,attrStr,level){
+    return this.indentate(level) + "<" + key + attrStr +  ">" +this.encodeHTMLchar(val)+"</"+key+ this.tagEndChar;
+}
+
+function buildEmptyTextNode(val,key,attrStr,level){
+    if(val !== ""){
+        return this.buildTextValNode(val,key,attrStr,level);
+    }else{
+        return this.indentate(level) + "<" + key + attrStr + "/" + this.tagEndChar;
     }
 }
 

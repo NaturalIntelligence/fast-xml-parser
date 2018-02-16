@@ -235,6 +235,42 @@ describe("XMLParser", function () {
         expect(result).toEqual(expected);
       });
 
+      it("should supress empty node to self closing node when parsing to XML", function () {
+        var jObj = {
+            a : {
+                "@": {
+                    b : "val>1",
+                    c : "val<2"
+                },
+                "#text": "text\\cvalue>\\c",
+                tag: {
+                    k: 34,
+                    g: "",
+                    nested: {
+                        "@": {
+                            b : "val>1",
+                            c : "val<2"
+                        }
+                    }
+                },
+                "__cdata": [
+                    "this text is > from CDATA",
+                    ""
+                ]
+            }
+        };
+        var parser = new Parser({
+            cdataTagName : "__cdata",
+            attrNodeName : "@",
+            encodeHTMLchar: true,
+            supressEmptyNode: true
+        });
+        var result = parser.parse(jObj);
+        //console.log(result);
+        var expected = '<a b="val&gt;1" c="val&lt;2"><tag><k>34</k><g/><nested b="val&gt;1" c="val&lt;2"/></tag>text<![CDATA[this text is > from CDATA]]>value&gt;<![CDATA[]]></a>';
+        expect(result).toEqual(expected);
+      });
+
 
     /*   it("should format when parsing to XML", function () {
         var jObj = {
