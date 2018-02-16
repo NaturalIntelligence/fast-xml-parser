@@ -247,3 +247,4 @@ exports.parse = xml2json;
 exports.getTraversalObj = getTraversalObj;
 exports.convertToJson = convertToJson;
 exports.validate = require("./validator").validate;
+exports.j2xParser = require("./j2x");

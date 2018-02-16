@@ -118,14 +118,46 @@ $cat xmlfile.xml | xml2js [-ns|-a|-c] [-o outputfile.json]
 
 To use it **on webpage**
 
-1. Download and include [parser.js](https://github.com/NaturalIntelligence/fast-xml-parser/blob/master/lib/parser.js)
+1. Download and include [parser.js] Or use directly from [CDN](https://cdnjs.com/libraries/fast-xml-parser)(https://github.com/NaturalIntelligence/fast-xml-parser/blob/master/lib/parser.js)
 ```js
 var result = parser.validate(xmlData);
 if(result !== true) cnosole.log(result.err);
 var jsonObj = parser.parse(xmlData);
 ```
 
-Or use directly from [CDN](https://cdnjs.com/libraries/fast-xml-parser)
+## JSON or JS Object to XML
+
+```js
+var Parser = require("fast-xml-parser").j2xParser;
+//default options need not to set
+var defaultOptions = {
+    attributeNamePrefix : "@_",
+    attrNodeName: "@", //default is set to false
+    textNodeName : "#text",
+    ignoreAttributes : true,
+    encodeHTMLchar: false,
+    cdataTagName: "__cdata", //default is set to false
+    cdataPositionChar: "\\c",
+    format: false, 
+    indentBy: "  ",
+    supressEmptyNode: false
+};
+var parser = new Parser(defaultOptions);
+var xml = parser.parse(json_or_js_obj);
+
+```
+**OPTIONS** :
+
+
+* **attributeNamePrefix** : Identify attributes with this prefix otherwise treat them as a tag.
+* **attrNodeName**: Identify attributes with this name when they are grouped under single property.  
+* **ignoreAttributes** : Don't check for attributes. Treats everything as tag.
+* **encodeHTMLchar** : encodes values (except cdata values) when writing to XML.
+* **cdataTagName** : If specified, parse matching tag as CDATA
+* **cdataPositionChar** : Identify the position where CDATA tag should be placed. If it is blank then CDATA will be added in the last of tag's value.
+* **format** : If set to true, then format the XML output.
+* **indentBy** : indent by this char `when` format is set to `true` 
+* **supressEmptyNode** : If set to `true`, tags with no value (text or nested tags) are written as self closing tags. 
 
 ## Comparision
 I decided to created this library when I couldn't find any library which can convert XML data to json without any callback and which is not based on any C/C++ library.
@@ -158,6 +190,14 @@ Installation of such libraries fails on some OS. You may require to install miss
 
 ![npm_xml2json_compare](static/img/fxp-validatorv3.png)
 
+#### Benchmark for JSON to XML
+
+| file size | fxp 3.2 js to xml | xml2js 0.4.19 builder |
+|------------|-----------------|-----------------|
+| 1.3k | 160148.9801 | 10384.99401|
+| 1.1m | 173.6374831 | 8.611884025|
+
+![npm_xml2json_compare](static/img/j2x.png)
 # Changes from v3
 
 * It can handle big file now (I have tested up to 98mb). Performance report is given above.
