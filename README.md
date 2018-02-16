@@ -120,7 +120,7 @@ $cat xmlfile.xml | xml2js [-ns|-a|-c|-v|-V] [-o outputfile.json]
 
 To use it **on webpage**
 
-1. Download and include [parser.js] Or use directly from [CDN](https://cdnjs.com/libraries/fast-xml-parser)(https://github.com/NaturalIntelligence/fast-xml-parser/blob/master/lib/parser.js)
+1. Download and include [parser.js] (https://github.com/NaturalIntelligence/fast-xml-parser/blob/master/lib/parser.js) Or use directly from [CDN](https://cdnjs.com/libraries/fast-xml-parser)
 ```js
 var result = parser.validate(xmlData);
 if(result !== true) cnosole.log(result.err);
