@@ -33,8 +33,9 @@
     "transformer",
     "checker",
     "assert",
-    "arrayMode",
-    "big"
+    "big",
+    "js2xml",
+    "json2xml"
   ],
   "author": "Amit Gupta (https://github.com/amitguptagwl)",
   "contributors": [
