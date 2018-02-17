@@ -7,7 +7,8 @@
     "test": "jasmine spec/*spec.js",
     "bundle": "browserify src/parser.js -s parser > lib/parser.js",
     "coverage": "node ./benchmark/perfTest.js; istanbul cover -x \"spec/*spec.js\" jasmine spec/*spec.js;",
-    "coverage:check": "istanbul check-coverage --branch 90 --statement 90"
+    "coverage:check": "istanbul check-coverage --branch 90 --statement 90",
+    "postinstall": "opencollective postinstall"
   },
   "bin": {
     "xml2js": "cli.js"
@@ -71,6 +72,11 @@
     "zombie": "^5.0.7"
   },
   "dependencies": {
-    "he": "~1.1.1"
+    "he": "~1.1.1",
+    "opencollective": "^1.0.3"
+  },
+  "collective": {
+    "type": "opencollective",
+    "url": "https://opencollective.com/fast-xml-parser"
   }
 }
