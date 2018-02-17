@@ -1,3 +1,5 @@
+3.2.1 / 2018-02-17
+  * fix: empty attribute should be parsed
 3.2.0 / 2018-02-16
   * Merge pull request : Dev to Master
   * Update README and version
