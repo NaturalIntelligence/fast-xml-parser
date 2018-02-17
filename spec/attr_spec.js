@@ -97,10 +97,11 @@ describe("XMLParser", function () {
     });
 
     it("should parse Boolean Attributes", function () {
-        var xmlData = '<element id="7" data/>';
+        var xmlData = '<element id="7" str="" data/>';
         var expected = {
             "element": {
                 "id"    :     7,
+                "str" : "" ,
                 "data"     :     true
             }
         };
@@ -121,7 +122,7 @@ describe("XMLParser", function () {
         expect(result).toBe(true);
     });
 
-
+   
     it("should not parse attributes with name start with number", function () {
         var xmlData = '<issue 35entity="Mjg2MzY2OTkyNA==" ></issue>';
         

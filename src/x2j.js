@@ -27,30 +27,9 @@ var defaultOptions = {
     //decodeStrict: false,
 };
 
-var buildOptions = function (options){
-    if(!options) options = {};
-    var props = ["attributeNamePrefix",
-                        "attrNodeName",
-                        "ignoreAttributes",
-                        "ignoreNameSpace",
-                        "textNodeName",
-                        "parseNodeValue",
-                        "parseAttributeValue",
-                        "arrayMode",
-                        "trimValues",
-                        "cdataPositionChar",
-                ];
-    var len = props.length;
-    for (var i = 0; i < len; i++) {
-        if(typeof options[props[i]] === "undefined"){
-            options[props[i]] = defaultOptions[props[i]];
-        }
-    }
-    return options;
-};
-
 var getTraversalObj =function (xmlData,options){
-    options = buildOptions(options);
+    //options = buildOptions(options);
+    options = Object.assign({},defaultOptions,options);
     //xmlData = xmlData.replace(/\r?\n/g, " ");//make it single line
     xmlData = xmlData.replace(/<!--[\s\S]*?-->/g, "");//Remove  comments
     
@@ -134,7 +113,7 @@ function checkForTagType(match){
 }
 
 var xml2json = function (xmlData,options){
-    options = buildOptions(options);
+    options = Object.assign({},defaultOptions,options);
     return convertToJson(getTraversalObj(xmlData,options), options);
 };
 
@@ -184,7 +163,7 @@ function buildAttributesMap(attrStr,options){
         for (var i = 0; i < len ; i++) {
             var attrName = resolveNameSpace(matches[i][1],options);
             if(attrName.length && attrName !== "xmlns") {
-                if(matches[i][4]){
+                if(matches[i][4] !== undefined){
                     if(options.trimValues){
                         matches[i][4] = matches[i][4].trim();
                     }
