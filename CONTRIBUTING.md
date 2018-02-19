@@ -1,0 +1,19 @@
+## Thanks
+I would like to thank you for your valuable time and effort and applogies if this PR is rejected due to any reason.
+
+This repository is written with the aim of providing high performance not in terms of speed only but comfortability of the user as well.
+
+### DoD
+Here is the check list to publish any change
+
+* Changes are not half implemented due to the library limitation or any other reason.
+* Changes are well discussed by raising github issue. So they are well known by other contributers and users
+* Please write tests for the new changes
+* Don't forget to write tests for negative cases
+* If possible please take becnchmark difference of before and after changes.
+
+Changes need to do be done by owner
+* Increase the version number
+* Update the change log & README if required
+* Generate the browser bundle
+* Release in github
