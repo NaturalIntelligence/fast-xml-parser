@@ -1,3 +1,6 @@
+3.2.2 / 2018-02-22
+  * fix: attribute xmlns should not be removed if ignoreNameSpace is false
+  * create CONTRIBUTING.md
 3.2.1 / 2018-02-17
   * fix: empty attribute should be parsed
 3.2.0 / 2018-02-16
