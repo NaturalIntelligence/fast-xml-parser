@@ -11,7 +11,7 @@ Please fill below checklist
 * [ ] Have you include expected output?
 * [ ] Have you checked if you are using correct configuration?
 * [ ] Did you try online [tool](https://naturalintelligence.github.io/fast-xml-parser/)?
-* [ ] Did you [star](https://github.com/NaturalIntelligence/fast-xml-parser/stargazers) the repository for further updates? ;)
+* [ ] Did you [bookmarked](https://github.com/NaturalIntelligence/fast-xml-parser/stargazers) the repository for further updates? ;)
 
 ### Input data
 Please include your sample code here
