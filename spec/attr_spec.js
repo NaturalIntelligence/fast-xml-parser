@@ -122,6 +122,55 @@ describe("XMLParser", function () {
         expect(result).toBe(true);
     });
 
+    it("should not remove xmlns when namespaces are not set to be ignored", function () {
+        var xmlData = '<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"></project>';
+        var expected = {
+            "project": {
+                "xmlns": "http://maven.apache.org/POM/4.0.0",
+                "xmlns:xsi": "http://www.w3.org/2001/XMLSchema-instance",
+                "xsi:schemaLocation": "http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+            }
+        };
+
+        var result = parser.parse(xmlData, {
+            attributeNamePrefix:"",
+            ignoreAttributes: false,
+        });
+
+        //console.log(JSON.stringify(result,null,4));
+        expect(result).toEqual(expected);
+
+        result = validator.validate(xmlData,{
+            allowBooleanAttributes: true
+        });
+        expect(result).toBe(true);
+    });
+
+    it("should remove xmlns when namespaces are set to be ignored", function () {
+        var xmlData = '<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"></project>';
+        var expected = {
+            "project": {
+                //"xmlns": "http://maven.apache.org/POM/4.0.0",
+                //"xmlns:xsi": "http://www.w3.org/2001/XMLSchema-instance",
+                "schemaLocation": "http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+            }
+        };
+
+        var result = parser.parse(xmlData, {
+            attributeNamePrefix:"",
+            ignoreAttributes: false,
+            ignoreNameSpace: true
+        });
+
+        //console.log(JSON.stringify(result,null,4));
+        expect(result).toEqual(expected);
+
+        result = validator.validate(xmlData,{
+            allowBooleanAttributes: true
+        });
+        expect(result).toBe(true);
+    });
+
    
     it("should not parse attributes with name start with number", function () {
         var xmlData = '<issue 35entity="Mjg2MzY2OTkyNA==" ></issue>';
