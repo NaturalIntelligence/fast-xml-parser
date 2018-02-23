@@ -220,6 +220,7 @@ Installation of such libraries fails on some OS. You may require to install miss
 * You can set validator and parser to allow boolean values.
 * Few validation and parsing bugs are also fixed
 
+**Note**: The size of the bundle file is 4 times of original file due to inclusion of `he` package.
 
 ### Worth to mention
 
