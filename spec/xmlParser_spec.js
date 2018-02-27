@@ -91,8 +91,8 @@ describe("XMLParser", function () {
         +"<tag ns:arg='value'>value</tag>"
         +"<intTag ns:arg='value' ns:arg2='value2' >45</intTag>"
         +"<floatTag>65.34</floatTag>"
-        +"<nsTag xmlns:tns='urn:none' tns:attr='tns'></nsTag>"
-        +"<nsTagNoAttr xmlns:tns='urn:none'></nsTagNoAttr>"
+        +"<nsTag xmlns:tns-ns='urn:none' tns-ns:attr='tns'></nsTag>"
+        +"<nsTagNoAttr xmlns:tns-ns='urn:none'></nsTagNoAttr>"
         +"</root:node>";
 
         var expected = {
@@ -353,8 +353,8 @@ describe("XMLParser", function () {
     });
 
     it("should parse nested elements with attributes wrapped in object", function () {
-        var xmlData = '<root xmlns="urn:none" xmlns:tns="urn:none">'
-            +'<Meet xmlns="urn:none" tns:nsattr="attr" date="2017-05-03" type="A" name="Meeting \'A\'">'
+        var xmlData = '<root xmlns="urn:none" xmlns:tns-ns="urn:none">'
+            +'<Meet xmlns="urn:none" tns-ns:nsattr="attr" date="2017-05-03" type="A" name="Meeting \'A\'">'
             +   '<Event time="00:05:00" ID="574" Name="Some Event Name">'
             +         '<User ID="1">Bob</User>'
             +    '</Event>'
@@ -548,19 +548,19 @@ describe("XMLParser", function () {
   }); */
 
     it("should skip namespace", function () {
-        var xmlData = '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" >'
-            +'   <soapenv:Header>'
+        var xmlData = '<soap-env:Envelope xmlns:soap-env="http://schemas.xmlsoap.org/soap/envelope/" >'
+            +'   <soap-env:Header>'
             +'      <cor:applicationID>dashboardweb</cor:applicationID>'
             +'      <cor:providerID>abc</cor:providerID>'
-            +'   </soapenv:Header>'
-            +'   <soapenv:Body>'
+            +'   </soap-env:Header>'
+            +'   <soap-env:Body>'
             +'      <man:getOffers>'
             +'         <man:customerId>'
             +'            <cor:msisdn>123456789</cor:msisdn>'
             +'         </man:customerId>'
             +'      </man:getOffers>'
-            +'   </soapenv:Body>'
-            +'</soapenv:Envelope>';
+            +'   </soap-env:Body>'
+            +'</soap-env:Envelope>';
         var expected = {
             "Envelope": {
                 "Header": {

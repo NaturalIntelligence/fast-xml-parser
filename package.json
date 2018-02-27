@@ -61,15 +61,14 @@
   "license": "MIT",
   "devDependencies": {
     "benchmark": "^2.1.4",
-    "browserify": "^15.1.0",
+    "browserify": "^16.1.0",
     "coveralls": "^3.0.0",
     "http-server": "^0.11.1",
     "istanbul": "^0.4.5",
-    "jasmine": "^2.8.0",
-    "jasmine-core": "^2.8.0",
+    "jasmine": "^3.0.0",
     "portfinder": "^1.0.13",
     "xml2js": "^0.4.19",
-    "zombie": "^5.0.7"
+    "zombie": "^5.0.8"
   },
   "dependencies": {
     "he": "~1.1.1",
