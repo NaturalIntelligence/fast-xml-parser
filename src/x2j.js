@@ -36,7 +36,7 @@ var getTraversalObj =function (xmlData,options){
     var xmlObj = new xmlNode('!xml');
     var currentNode = xmlObj;
 
-    var tagsRegx = new RegExp("<((!\\[CDATA\\[([\\s\\S]*?)(\\]\\]>))|((\\w*:)?([\\w:\\-\\._]+))([^>]*)>|((\\/)((\\w*:)?([\\w:\\-\\._]+))>))([^<]*)","g");
+    var tagsRegx = new RegExp("<((!\\[CDATA\\[([\\s\\S]*?)(\\]\\]>))|(([\\w:\\-\\._]*:)?([\\w:\\-\\._]+))([^>]*)>|((\\/)(([\\w:\\-\\._]*:)?([\\w:\\-\\._]+))>))([^<]*)","g");
     var tag = tagsRegx.exec(xmlData);
     var nextTag = tagsRegx.exec(xmlData);
     var previousMatch,nextMatch;

@@ -147,7 +147,7 @@ describe("XMLParser", function () {
     });
 
     it("should remove xmlns when namespaces are set to be ignored", function () {
-        var xmlData = '<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"></project>';
+        var xmlData = '<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi-ns="http://www.w3.org/2001/XMLSchema-instance" xsi-ns:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"></project>';
         var expected = {
             "project": {
                 //"xmlns": "http://maven.apache.org/POM/4.0.0",

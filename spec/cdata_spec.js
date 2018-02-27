@@ -262,7 +262,6 @@ describe("XMLParser", function () {
         var fileNamePath = path.join(__dirname, "assets/mixed.xml");
         var xmlData = fs.readFileSync(fileNamePath).toString();
 
-
         var expected = {
             "ns:root": {
                 "ptag": [
