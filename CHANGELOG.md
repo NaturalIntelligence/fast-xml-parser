@@ -1,3 +1,5 @@
+3.2.3 / 2018-02-28
+  * Merge pull request from  Delagen/master: fix namespaces can contain the same characters as xml names
 3.2.2 / 2018-02-22
   * fix: attribute xmlns should not be removed if ignoreNameSpace is false
   * create CONTRIBUTING.md
