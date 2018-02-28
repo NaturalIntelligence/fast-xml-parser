@@ -1,6 +1,6 @@
 {
   "name": "fast-xml-parser",
-  "version": "3.2.2",
+  "version": "3.2.3",
   "description": "Validate XML or Parse XML to JS/JSON very fast without C/C++ based libraries",
   "main": "./src/parser.js",
   "scripts": {
@@ -72,6 +72,7 @@
   },
   "dependencies": {
     "he": "~1.1.1",
+    "nimnjs": "^1.1.0",
     "opencollective": "^1.0.3"
   },
   "collective": {
