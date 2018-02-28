@@ -1,3 +1,6 @@
 {
-  "ignore": ["**/lib/**"]
+  "ignore": [
+    "lib/**",
+    "static/**"
+    ]
 }
