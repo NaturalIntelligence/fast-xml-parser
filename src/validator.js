@@ -183,6 +183,9 @@ function readCommentAndCDATA(xmlData,i){
     return i;
 }
 
+var doubleQuote = '"';
+var singleQuote = "'";
+
 /**
  * Keep reading xmlData until '<' is found outside the attribute value.
  * @param {string} xmlData 
@@ -192,9 +195,12 @@ function readAttributeStr(xmlData,i){
     var attrStr = "";
     var startChar = "";
     for(;i < xmlData.length ;i++){
-        if(xmlData[i] === '"' || xmlData[i] === "'"){
+        if(xmlData[i] === doubleQuote || xmlData[i] === singleQuote){
             if(startChar === ""){
                 startChar = xmlData[i];
+            }else if(startChar !== xmlData[i]){
+                //if vaue is enclosed with double quote then single quotes are allowed inside the value and vice versa
+                continue;
             }else{
                 startChar = "";
             }

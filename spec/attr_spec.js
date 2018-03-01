@@ -305,6 +305,18 @@ describe("XMLParser", function () {
         expect(result).toEqual(expected);
     });
 
-
+    it("should validate xml with attributeshaving openquote in value", function () {
+        var xmlData = "<rootNode  123 abc='1\"23' bc=\"56'7\" />";
+        var expected = {
+            "err": {
+                "code": "InvalidAttr",
+               // "msg": "attribute 123 is an invalid name."
+                "msg": "boolean attribute 123 is not allowed."
+            }
+        };
+        result = validator.validate(xmlData);
+        //console.log(JSON.stringify(result,null,4));
+        expect(result).toEqual(expected);
+    });
 
 });
