@@ -1,3 +1,8 @@
+3.2.4 / 2018-03-01
+  * fix #59 fix in validator when open in attribute value
+  * Create nexttodo.md
+  * exclude static from bitHound tests
+  * add package lock
 3.2.3 / 2018-02-28
   * Merge pull request from  Delagen/master: fix namespaces can contain the same characters as xml names
 3.2.2 / 2018-02-22
