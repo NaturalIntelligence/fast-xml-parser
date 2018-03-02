@@ -193,18 +193,18 @@ var convertToJson = function (node, options){
     var jObj = {};
 
     //traver through all the children
-    for (var index = 0; index < node.child.length; index++) {
-        var prop = node.child[index].tagname;
-        var obj = convertToJson(node.child[index],options);
-        if(typeof jObj[prop] !== "undefined"){
-            if(!Array.isArray(jObj[prop])){
-                var swap = jObj[prop];
-                jObj[prop] = [];
-                jObj[prop].push(swap);
+    var keys = Object.keys(node.child);
+    for (var index = 0; index < keys.length; index++) {
+        var tagname = keys[index];
+        if(node.child[tagname] && node.child[tagname].length > 1){
+            jObj[tagname] = [];
+            for(var tag in node.child[tagname]){
+                var obj = convertToJson(node.child[tagname][tag],options);
+                jObj[tagname].push(obj);
             }
-            jObj[prop].push(obj);
         }else{
-            jObj[prop] = options.arrayMode ? [obj] : obj;
+            var obj = convertToJson(node.child[tagname][0],options);
+            jObj[tagname] = obj;
         }
     }
     util.merge(jObj,node.attrsMap);
