@@ -49,8 +49,8 @@ const charsArr = [
 
 var _e = function(node,e_schema,options){
     if(typeof e_schema === "string"){//premitive
-        if(node.val){
-            return getValue(node.val,e_schema);
+        if(node[0].val){
+            return getValue(node[0].val,e_schema);
         }else{
             return getValue(node,e_schema);
         }
@@ -90,7 +90,7 @@ var _e = function(node,e_schema,options){
                     }else if(node.child[key]){
                         r =  _e(node.child[key],e_schema[key],options) ;//node.child[key] is an array
                     }else if( key === options.textNodeName){
-                        r =  _e(node,e_schema[key],options) ;
+                        r =  _e(node.val,e_schema[key],options) ;
                     }
                     str = processValue(str,r);
                 }

@@ -4,7 +4,7 @@ var nimn = require("nimnjs");
 
 describe("XMLParser", function () {
 
-    /* it("should parse to XML with different data types to nimnjs", function () {
+    it("should parse to XML with different data types to nimnjs", function () {
         var xmlData = "<rootNode><tag>value</tag><boolean>true</boolean><intTag>045</intTag><floatTag>65.34</floatTag></rootNode>";
         var jsonData = {
             "rootNode": {
@@ -29,13 +29,13 @@ describe("XMLParser", function () {
         nimnParser.addDataHandler("boolean");
         nimnParser.addSchema(schema);
         var nimndataExpected = nimnParser.encode(jsonData);
-        console.log(nimndataExpected);
+        //console.log(nimndataExpected);
         
         var node = parser.getTraversalObj(xmlData);
         var nimnData = parser.convert2nimn(node,schema);
-        console.log(nimnData);
+        //console.log(nimnData);
 
-        //expect(nimndataExpected).toEqual(nimnData);
+        expect(nimndataExpected).toEqual(nimnData);
     });
 
     it("should parse repeated nodes in array", function () {
@@ -59,14 +59,14 @@ describe("XMLParser", function () {
         var nimnParser = new nimn();
         nimnParser.addSchema(schema);
         var nimndataExpected = nimnParser.encode(jsonData);
-        console.log(nimndataExpected);
+        //console.log(nimndataExpected);
         
         var node = parser.getTraversalObj(xmlData);
         var nimnData = parser.convert2nimn(node,schema);
-        console.log(nimnData);
+        //console.log(nimnData);
 
-        //expect(nimndataExpected).toEqual(nimnData);
-    }); */
+        expect(nimndataExpected).toEqual(nimnData);
+    }); 
 
     it("should preserve node value", function () {
         var xmlData = "<rootNode attr1=' some val ' name='another val'> some val </rootNode>";
@@ -89,7 +89,7 @@ describe("XMLParser", function () {
         var nimnParser = new nimn();
         nimnParser.addSchema(schema);
         var nimndataExpected = nimnParser.encode(jsonData);
-        console.log(nimndataExpected);
+        //console.log(nimndataExpected);
         
         var node = parser.getTraversalObj(xmlData,{
             ignoreAttributes: false,
@@ -99,9 +99,48 @@ describe("XMLParser", function () {
             ignoreAttributes: false,
             trimValues: false
         });
-        console.log(nimnData);
+        //console.log(nimnData);
 
+        expect(nimndataExpected).toEqual(nimnData);
     });
 
+    it("should not parse text value with tag", function () {
+        var xmlData = "<score><c1>71<message>23</message>29</c1></score>";
+        var jsonData = {
+            "score": {
+                "c1": {
+                    "message" : 23,
+                    "_text" : "7129"
+                }
+            }
+        };
+        var schema = {
+            "score": {
+                "c1": {
+                    "message" : "number",
+                    "_text" : "string"
+                }
+            }
+        };
+
+        var nimnParser = new nimn();
+        nimnParser.addSchema(schema);
+        var nimndataExpected = nimnParser.encode(jsonData);
+        //console.log(nimndataExpected);
+        
+        var node = parser.getTraversalObj(xmlData,{
+            textNodeName : "_text",
+            ignoreAttributes : false
+        });
+        var nimnData = parser.convert2nimn(node,schema,{
+            textNodeName : "_text",
+            ignoreAttributes : false
+        });
+        //console.log(nimnData);
+
+        expect(nimndataExpected).toEqual(nimnData);
+    });
+
+    
 });
 
