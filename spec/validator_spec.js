@@ -381,6 +381,18 @@ describe("XMLParser", function () {
         expect(result).toBe(true);
     });
 
+    it("should not validate XML PIs with invalid values", function () {
+        var xmlData = '<?xml version="1.0"?>'
+        +'<?mso-contentType valid="value" invalid="?>" ?>'
+        +'<h1></h1>'
+        +'<?mso-contentType something="val"?>';
+
+        var expected = { code: 'InvalidChar', msg: 'char " is not expected .' }
+        
+        var result = validator.validate(xmlData).err;
+        expect(result).toEqual(expected);
+    });
+
 });
 
 
