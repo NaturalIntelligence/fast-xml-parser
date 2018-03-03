@@ -4,7 +4,7 @@ var nimn = require("nimnjs");
 
 describe("XMLParser", function () {
 
-    it("should parse to XML with different data types to nimnjs", function () {
+    /* it("should parse to XML with different data types to nimnjs", function () {
         var xmlData = "<rootNode><tag>value</tag><boolean>true</boolean><intTag>045</intTag><floatTag>65.34</floatTag></rootNode>";
         var jsonData = {
             "rootNode": {
@@ -66,8 +66,42 @@ describe("XMLParser", function () {
         console.log(nimnData);
 
         //expect(nimndataExpected).toEqual(nimnData);
-    });
+    }); */
 
+    it("should preserve node value", function () {
+        var xmlData = "<rootNode attr1=' some val ' name='another val'> some val </rootNode>";
+        var jsonData = {
+            "rootNode": {
+                "@_attr1": " some val ",
+                "@_name": "another val",
+                "#text": " some val "
+            }
+        };
+
+        var schema = {
+            "rootNode": {
+                "@_attr1": "string",
+                "@_name": "string",
+                "#text": "string"
+            }
+        };
+
+        var nimnParser = new nimn();
+        nimnParser.addSchema(schema);
+        var nimndataExpected = nimnParser.encode(jsonData);
+        console.log(nimndataExpected);
+        
+        var node = parser.getTraversalObj(xmlData,{
+            ignoreAttributes: false,
+            trimValues: false
+        });
+        var nimnData = parser.convert2nimn(node,schema,{
+            ignoreAttributes: false,
+            trimValues: false
+        });
+        console.log(nimnData);
+
+    });
 
 });
 

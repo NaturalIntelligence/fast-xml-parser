@@ -49,7 +49,11 @@ const charsArr = [
 
 var _e = function(node,e_schema,options){
     if(typeof e_schema === "string"){//premitive
-        return getValue(node.val,e_schema);
+        if(node.val){
+            return getValue(node.val,e_schema);
+        }else{
+            return getValue(node,e_schema);
+        }
     }else{
         var hasValidData = hasData(node);
         if(hasValidData === true){
@@ -81,7 +85,7 @@ var _e = function(node,e_schema,options){
                     //options.attrNodeName will be present in attrsMap
                     var r;
                     if(Array.isArray(node))  node = node[0];
-                    if(!options.ignoreAttributes && node.attrsMap[key]){
+                    if(!options.ignoreAttributes && node.attrsMap && node.attrsMap[key]){
                         r =  _e(node.attrsMap[key],e_schema[key],options) ;
                     }else if(node.child[key]){
                         r =  _e(node.child[key],e_schema[key],options) ;//node.child[key] is an array
