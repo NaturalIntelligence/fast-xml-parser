@@ -370,6 +370,16 @@ describe("XMLParser", function () {
         var result = validator.validate(xmlData).err;
         expect(result).toEqual(expected);
     });
+    
+    it("should validate XML PIs", function () {
+        var xmlData = '<?xml version="1.0"?>'
+        +'<?mso-contentType?>'
+        +'<h1></h1>'
+        +'<?mso-contentType something="val"?>';
+        
+        var result = validator.validate(xmlData);
+        expect(result).toBe(true);
+    });
 
 });
 

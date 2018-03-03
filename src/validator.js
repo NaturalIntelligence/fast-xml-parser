@@ -34,16 +34,9 @@ exports.validate = function(xmlData, options){
 
             i++;
             if(xmlData[i] === "?"){
-                if(i !== 1){
-                    return {err : { code : "InvalidXml", msg : "XML declaration allowed only at the start of the document."}};
-                }else{
-                    //read until ?> is found
-                    for(;i<xmlData.length;i++){
-                        if(xmlData[i] == "?" && xmlData[i+1] == ">"){
-                            i++;
-                            break;
-                        }
-                    }
+                i = readPI(xmlData,++i);
+                if(i.err){
+                    return i;
                 }
             }else if(xmlData[i] === "!"){
                 i = readCommentAndCDATA(xmlData,i);
@@ -138,7 +131,29 @@ exports.validate = function(xmlData, options){
 
     return true;
 }
-
+/**
+ * Read Processing insstructions and skip
+ * @param {*} xmlData 
+ * @param {*} i 
+ */
+function readPI(xmlData,i){
+    var start = i;
+    for(;i<xmlData.length;i++){
+        if(xmlData[i] == "?" || xmlData[i] == " "){//tagname
+            var tagname = xmlData.substr(start,i-start);
+            if(i > 5 && tagname === "xml"){
+                return {err : { code : "InvalidXml", msg : "XML declaration allowed only at the start of the document."}};
+            }else if(xmlData[i] == "?" && xmlData[i+1] == ">"){
+                //check if valid attribut string
+                i++;
+                break;
+            }else{
+                continue;
+            }
+        }
+    }
+    return i;
+}
 function readCommentAndCDATA(xmlData,i){
     if(xmlData.length > i+5 && xmlData[i+1] === "-" && xmlData[i+2] === "-"){//comment
         for(i+=3;i<xmlData.length;i++){
