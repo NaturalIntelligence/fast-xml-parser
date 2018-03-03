@@ -49,7 +49,7 @@ const charsArr = [
 
 var _e = function(node,e_schema,options){
     if(typeof e_schema === "string"){//premitive
-        if(node[0].val){
+        if(node && node[0] && node[0].val !== undefined){
             return getValue(node[0].val,e_schema);
         }else{
             return getValue(node,e_schema);
@@ -65,32 +65,34 @@ var _e = function(node,e_schema,options){
                 //var itemSchemaType = itemSchema;
                 var arr_len = node.length;
 
-                for(var arr_i=0;arr_i < arr_len;arr_i++){
-                    var r;
-                    if(typeof itemSchema === "string"){
-                        r = getValue(node[arr_i].val,itemSchema);
-                    }else{
-                        r = _e(node[arr_i].child[e_schema][arr_i],itemSchema,options) ;
+                if(typeof itemSchema === "string"){
+                    for(var arr_i=0;arr_i < arr_len;arr_i++){
+                        var r = getValue(node[arr_i].val,itemSchema);
+                        str = processValue(str,r);
                     }
-                    str = processValue(str,r);
+                }else{
+                    for(var arr_i=0;arr_i < arr_len;arr_i++){
+                        r = _e(node[arr_i],itemSchema,options) ;
+                        str = processValue(str,r);
+                    }
                 }
                 str += chars.arrayEnd;//indicates that next item is not array item
             }else{//object
                 str += chars.objStart;
                 var keys = Object.keys(e_schema);
+                if(Array.isArray(node))  node = node[0];
                 for(var i in keys){
                     var key = keys[i];
                     //a property defined in schema can be present either in attrsMap or children tags
                     //options.textNodeName will not present in both maps, take it's value from val
                     //options.attrNodeName will be present in attrsMap
                     var r;
-                    if(Array.isArray(node))  node = node[0];
                     if(!options.ignoreAttributes && node.attrsMap && node.attrsMap[key]){
                         r =  _e(node.attrsMap[key],e_schema[key],options) ;
-                    }else if(node.child[key]){
-                        r =  _e(node.child[key],e_schema[key],options) ;//node.child[key] is an array
                     }else if( key === options.textNodeName){
                         r =  _e(node.val,e_schema[key],options) ;
+                    }else{
+                        r =  _e(node.child[key],e_schema[key],options) ;
                     }
                     str = processValue(str,r);
                 }
@@ -125,7 +127,7 @@ var isAppChar = function(ch){
 function hasData(jObj){
     if(jObj === undefined) return chars.missingChar;
     else if(jObj === null) return chars.nilChar;
-    else if(jObj.child && Object.keys(jObj.child).length === 0 && jObj.attrsMap && Object.keys(jObj.attrsMap).length === 0){
+    else if(jObj.child && Object.keys(jObj.child).length === 0 && ( !jObj.attrsMap || Object.keys(jObj.attrsMap).length === 0)){
         return chars.emptyChar;
     }else{
         return true;
