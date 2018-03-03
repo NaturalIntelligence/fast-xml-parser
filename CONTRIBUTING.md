@@ -3,6 +3,8 @@ I would like to thank you for your valuable time and effort and applogies if thi
 
 This repository is written with the aim of providing high performance not in terms of speed only but comfortability of the user as well.
 
+If your change is not a bug fix please check **nexttodo.md** before implementing any new feature.
+
 ### DoD
 Here is the check list to publish any change
 
