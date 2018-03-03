@@ -1,5 +1,4 @@
 var parser = require("../src/parser");
-var nimnparser = require("../src/nimndata");
 var nimn = require("nimnjs");
 
 describe("XMLParser", function () {
@@ -32,7 +31,7 @@ describe("XMLParser", function () {
         //console.log(nimndataExpected);
         
         var node = parser.getTraversalObj(xmlData);
-        var nimnData = parser.convert2nimn(node,schema);
+        var nimnData = parser.convertTonimn(node,schema);
         //console.log(nimnData);
 
         expect(nimndataExpected).toEqual(nimnData);
@@ -62,7 +61,7 @@ describe("XMLParser", function () {
         //console.log(nimndataExpected);
         
         var node = parser.getTraversalObj(xmlData);
-        var nimnData = parser.convert2nimn(node,schema);
+        var nimnData = parser.convertTonimn(node,schema);
         //console.log(nimnData);
 
         expect(nimndataExpected).toEqual(nimnData);
@@ -95,7 +94,7 @@ describe("XMLParser", function () {
             ignoreAttributes: false,
             trimValues: false
         });
-        var nimnData = parser.convert2nimn(node,schema,{
+        var nimnData = parser.convertTonimn(node,schema,{
             ignoreAttributes: false,
             trimValues: false
         });
@@ -132,7 +131,7 @@ describe("XMLParser", function () {
             textNodeName : "_text",
             ignoreAttributes : false
         });
-        var nimnData = parser.convert2nimn(node,schema,{
+        var nimnData = parser.convertTonimn(node,schema,{
             textNodeName : "_text",
             ignoreAttributes : false
         });
@@ -245,7 +244,7 @@ describe("XMLParser", function () {
             textNodeName: "#_text",
         };
         var node = parser.getTraversalObj(xmlData,options);
-        var nimnData = parser.convert2nimn(node,schema,options);
+        var nimnData = parser.convertTonimn(node,schema,options);
         //console.log(nimnData);
 
         expect(nimndataExpected).toEqual(nimnData);

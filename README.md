@@ -1,12 +1,5 @@
 # [fast-xml-parser](https://www.npmjs.com/package/fast-xml-parser)
-Validate XML or Parse XML to JS/JSON and vise versa rapidly without C/C++ based libraries and no callback
-
-<p style="color:red;"> **Note**: If you are using v3, your code may start failing in parsing and validation both. I apologize for the breaking changes. But code was supposed to be changed to support large files and many other options. Please refer the code example below for more detail.</p>
-You can use this library online (press try me button above), or as command from CLI, or in your website, or in npm repo.
-
-* This library let you validate the XML data syntactically. 
-* Or you can transform/covert/parse XML data to JS/JSON object.
-* Or you can transform the XML in traversable JS object which can later be converted to JS/JSON object.
+Validate XML, Parse XML to JS/JSON and vise versa, or parse XML to Nimn rapidly without C/C++ based libraries and no callback
 
 [![Code Climate](https://codeclimate.com/github/NaturalIntelligence/fast-xml-parser/badges/gpa.svg)](https://codeclimate.com/github/NaturalIntelligence/fast-xml-parser) 
 [<img src="https://www.paypalobjects.com/webstatic/en_US/btn/btn_donate_92x26.png" alt="Stubmatic donate button"/>](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=KQJAX48SPUKNC) 
@@ -29,19 +22,26 @@ You can use this library online (press try me button above), or as command from 
 
 ### Main Features
 
-* Works with node packages, in browser, and in CLI
+* Validate XML data syntactically
+* Transform XML to JSON or Nimn
+* Transform JSON back to XML
+* Works with node packages, in browser, and in CLI (press try me button above for demo)
 * Faster than any pure JS implementation.
 * It can handle big files (tested up to 100mb).
-* You can parse CDATA as separate property.
-* You can prefix attributes or group them to separate property. Or can ignore them from result completely.
-* You can parse tag's or attribute's value to premitive type: string, integer, float, or boolean. And can optionally decode for HTML char.
-* You can remove namespace from tag or attribute name while parsing
-* It supports boolean attributes, if configured.
+* Various options are available to customize the transformation
+    * You can parse CDATA as separate property.
+    * You can prefix attributes or group them to separate property. Or can ignore them from result completely.
+    * You can parse tag's or attribute's value to premitive type: string, integer, float, or boolean. And can optionally decode for HTML char.
+    * You can remove namespace from tag or attribute name while parsing
+    * It supports boolean attributes, if configured.
 
 
 
-### How to use
-**Installation**
+## How to use
+
+**in NPM package**
+
+install it first
 
 `$npm install fast-xml-parser`
 
@@ -49,26 +49,21 @@ or using [yarn](https://yarnpkg.com/)
 
 `$yarn add fast-xml-parser`
 
-**Usage**
+**From CLI**
+
+Install it globally with `-g` option.
+
+`$npm install fast-xml-parser -g`
+
+**on webpage**
+
+Include it from [parser.js](https://github.com/NaturalIntelligence/fast-xml-parser/blob/master/lib/parser.js) Or  directly from [CDN](https://cdnjs.com/libraries/fast-xml-parser)
+
+### Usage
 ```js
 var fastXmlParser = require('fast-xml-parser');
 var jsonObj = fastXmlParser.parse(xmlData);
 
-/* upto 2.9.x
-var options = {
-    attrPrefix : "@_",
-    attrNodeName: false,
-    textNodeName : "#text",
-    ignoreNonTextNodeAttr : true,
-    ignoreTextNodeAttr : true,
-    ignoreNameSpace : true,
-    ignoreRootElement : false,
-    textNodeConversion : true,
-    textAttrConversion : false,
-    arrayMode : false
-};
-*/
-//from 3.0.0
 var options = {
     attributeNamePrefix : "@_",
     attrNodeName: "attr", //default is 'false'
@@ -120,14 +115,13 @@ $cat xmlfile.xml | xml2js [-ns|-a|-c|-v|-V] [-o outputfile.json]
 
 To use it **on webpage**
 
-1. Download and include [parser.js](https://github.com/NaturalIntelligence/fast-xml-parser/blob/master/lib/parser.js) Or use directly from [CDN](https://cdnjs.com/libraries/fast-xml-parser)
 ```js
 var result = parser.validate(xmlData);
 if(result !== true) cnosole.log(result.err);
 var jsonObj = parser.parse(xmlData);
 ```
 
-## JSON or JS Object to XML
+### JSON or JS Object to XML
 
 ```js
 var Parser = require("fast-xml-parser").j2xParser;
@@ -150,6 +144,7 @@ var xml = parser.parse(json_or_js_obj);
 ```
 **OPTIONS** :
 
+With the correct options, you can get the almost original XML without losing any information.
 
 * **attributeNamePrefix** : Identify attributes with this prefix otherwise treat them as a tag.
 * **attrNodeName**: Identify attributes when they are grouped under single property.  
@@ -161,18 +156,26 @@ var xml = parser.parse(json_or_js_obj);
 * **indentBy** : indent by this char `when` format is set to `true` 
 * **supressEmptyNode** : If set to `true`, tags with no value (text or nested tags) are written as self closing tags. 
 
+### XML to Nimn
+NIMN (निम्न) data is the schema aware compressed form of data. It reduces JSON up to 50% or more of original data by removing field information. Check [specification](https://github.com/nimndata/spec) for more detail.
+
+```js
+var fastXmlParser = require('fast-xml-parser');
+//set the options same for xml to json
+var tObj = fastXmlParser.getTraversalObj(xmlData,options);
+
+var jsondata = fastXmlParser.convertToJson(tObj,options);
+
+var nimndata = fastXmlParser.convertTonimn(tObj,schema,options);
+```
+* check [nimnjs](https://github.com/nimndata/nimnjs-node) to know more about schema, json to nimndata and reverse transformation.
+
+
 ## Comparision
-I decided to created this library when I couldn't find any library which can convert XML data to json without any callback and which is not based on any C/C++ library.
+We've copared various libraries which transforms XML to JS. Most of them either are dependent on C/C++ libraries, or slow, or don't do reverse transformation. 
 
-Libraries that I compared
-* xml-mapping : fast, result is not satisfactory
-* xml2js : fast, result is not satisfactory
-* xml2js-expat : couldn't test performance as it gives error on high load. Installation failed on travis and on my local machine using 'yarn'.
-* xml2json : based on node-expat which is based on C/C++. Installation failed on travis.
-* fast-xml-parser : very very fast.
-
-Why not C/C++ based libraries?
-Installation of such libraries fails on some OS. You may require to install missing dependency manually.
+*Why not C/C++ based libraries?*
+C/C++ based liraries are no doubt faster than this library but they don't run in browser, and a user need to install extra supporting libraries on their computer.
 
 ### Benchmark report
 
@@ -200,35 +203,15 @@ Installation of such libraries fails on some OS. You may require to install miss
 | 1.1m | 173.6374831 | 8.611884025|
 
 ![npm_xml2json_compare](static/img/j2x.png)
-# Changes from v3
-
-* It can handle big file now (I have tested up to 98mb). Performance report is given above.
-* Meaningful error messages from validator
-
-```
-"err": {
-    "code": "InvalidAttr",
-    "msg": "Attributes for rootNode have open quote"
-}
-```
-
-* Updated options : check snippet aboove
-* Parse boolean values as well. E.g. `"true"` to `true` 
-* You can set pasrer not to *trim* whitespaces from attribute or tag /node value.
-* You can set pasrer to HTML decode Tag / node and attribute values. However CDATA value will not be HTML decoded.
-* Tag / node value will not be parsed if CDATA presents.
-* You can set validator and parser to allow boolean values.
-* Few validation and parsing bugs are also fixed
-
-**Note**: The size of the bundle file is 4 times of original file due to inclusion of `he` package.
 
 ### Worth to mention
 
- - [stubmatic](https://github.com/NaturalIntelligence/Stubmatic) : A stub server to mock behaviour of HTTP(s) / REST / SOAP services.
- - [fastify-xml-body-parser](https://github.com/NaturalIntelligence/fastify-xml-body-parser/) : Fastify plugin / module to parse XML payload / body into JS object using fast-xml-parser.
-  - [fast-lorem-ipsum](https://github.com/amitguptagwl/fast-lorem-ipsum) : Generate lorem ipsum words, sentences, paragraph very quickly.
-- [Grapes](https://github.com/amitguptagwl/grapes) : Flexible Regular expression engine which can be applied on char stream. (under development)
 - **[NIMN निम्न](https://github.com/nimndata/spec)** : Schema aware object compression
+- **[imglab](https://github.com/NaturalIntelligence/imglab)** : Web based tool to label images for object. So that they can be used to train dlib or other object detectors. You can integrate 3rd party libraries for fast labeling.
+- [fast-lorem-ipsum](https://github.com/amitguptagwl/fast-lorem-ipsum) : Generate lorem ipsum words, sentences, paragraph very quickly.
+- [stubmatic](https://github.com/NaturalIntelligence/Stubmatic) : A stub server to mock behaviour of HTTP(s) / REST / SOAP services.
+- [fastify-xml-body-parser](https://github.com/NaturalIntelligence/fastify-xml-body-parser/) : Fastify plugin / module to parse XML payload / body into JS object using fast-xml-parser.
+- [Grapes](https://github.com/amitguptagwl/grapes) : Flexible Regular expression engine (for java) which can be applied on char stream. (under development)
 
 ## Contributors
 

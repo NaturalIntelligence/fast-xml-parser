@@ -1,5 +1,5 @@
 exports.parse = require("./x2j").parse;
-exports.convert2nimn = require("../src/nimndata").convert2nimn;
+exports.convertTonimn = require("../src/nimndata").convert2nimn;
 exports.getTraversalObj = require("./x2j").getTraversalObj;
 exports.convertToJson = require("./x2j").convertToJson;
 exports.validate = require("./validator").validate;
