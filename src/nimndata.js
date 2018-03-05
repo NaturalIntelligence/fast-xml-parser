@@ -2,24 +2,6 @@ var char = function (a){
     return String.fromCharCode(a);
 }
 
-var defaultOptions = {
-    attributeNamePrefix : "@_",
-    attrNodeName: false,
-    textNodeName : "#text",
-    ignoreAttributes : true,
-    ignoreNameSpace : false,
-    allowBooleanAttributes : false,         //a tag can have attributes without any value
-    //ignoreRootElement : false,
-    parseNodeValue : true,
-    parseAttributeValue : false,
-    arrayMode : false,
-    trimValues: true,                                //Trim string values of tag and attributes 
-    decodeHTMLchar: false,
-    cdataTagName: false,
-    cdataPositionChar: "\\c"
-    //decodeStrict: false,
-};
-
 const chars = {
     nilChar : char(254),
     missingChar : char(200),
@@ -134,10 +116,10 @@ function hasData(jObj){
     }
 }
 
+var defaultOptions = require("./x2j").defaultOptions;
 var convert2nimn = function(node,e_schema,options){
     options = Object.assign({},defaultOptions,options);
     return _e(node,e_schema,options)
 }
 
-//exports.convert2nimn = _e;
 exports.convert2nimn = convert2nimn;

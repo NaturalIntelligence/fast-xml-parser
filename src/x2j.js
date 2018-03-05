@@ -27,8 +27,9 @@ var defaultOptions = {
     //decodeStrict: false,
 };
 
+exports.defaultOptions = defaultOptions;
+
 var getTraversalObj =function (xmlData,options){
-    //options = buildOptions(options);
     options = Object.assign({},defaultOptions,options);
     //xmlData = xmlData.replace(/\r?\n/g, " ");//make it single line
     xmlData = xmlData.replace(/<!--[\s\S]*?-->/g, "");//Remove  comments
