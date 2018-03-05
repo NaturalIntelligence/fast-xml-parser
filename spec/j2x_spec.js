@@ -50,6 +50,24 @@ describe("XMLParser", function () {
         expect(result).toEqual(expected);
       });
 
+      it("should supress undefined nodes", function () {
+        var jObj = {
+            a : {
+                b : [
+                    undefined,
+                    "val1",
+                    { c : "val2",
+                      d : undefined,
+                      e : "val3"}
+                ]
+            }
+        };
+        var parser = new Parser();
+        var result = parser.parse(jObj);
+        var expected = "<a><b>val1</b><b><c>val2</c><e>val3</e></b></a>";
+        expect(result).toEqual(expected);
+      });
+
       it("should parse  attributes properties as tag when options are not given", function () {
         var jObj = {
             a : {

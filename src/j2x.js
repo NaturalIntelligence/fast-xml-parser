@@ -36,7 +36,7 @@ function Parser(options){
     }
 
     if(this.options.format){
-        this.indentate = indentate; 
+        this.indentate = indentate;
         this.tagEndChar = ">\n";
         this.newLine = "\n";
     }else{
@@ -69,7 +69,9 @@ Parser.prototype.j2x = function(jObj,level){
     var len = keys.length;
     for(var i=0;i<len;i++){
         var key = keys[i];
-        if(typeof jObj[key] !== "object"){//premitive type
+        if(typeof jObj[key] === "undefined"){
+          // supress undefined node
+        }else if(typeof jObj[key] !== "object"){//premitive type
             var attr = this.isAttribute(key);
             if(attr){
                 attrStr += " " +attr+"=\""+ this.encodeHTMLchar(jObj[key], true) +"\"";
@@ -84,7 +86,7 @@ Parser.prototype.j2x = function(jObj,level){
                     if(jObj[this.options.cdataTagName]){
                         //value will added while processing cdata
                     }else{
-                        val += this.encodeHTMLchar(jObj[key]);    
+                        val += this.encodeHTMLchar(jObj[key]);
                     }
                 }else{
                     val += this.buildTextNode(jObj[key],key,"",level);
@@ -101,7 +103,9 @@ Parser.prototype.j2x = function(jObj,level){
                 var arrLen = jObj[key].length;
                 for(var j=0;j<arrLen;j++){
                     var item = jObj[key][j];
-                    if(typeof item === "object"){
+                    if(typeof item === "undefined"){
+                      // supress undefined node
+                    }else if(typeof item === "object"){
                         var result = this.j2x(item,level+1);
                         val  += this.buildObjNode(result.val,key,result.attrStr,level);
                     }else{
@@ -110,7 +114,7 @@ Parser.prototype.j2x = function(jObj,level){
                 }
             }
         }else{
-            
+
             if(this.options.attrNodeName && key === this.options.attrNodeName){
                 var Ks = Object.keys(jObj[key]);
                 var L = Ks.length;
@@ -148,10 +152,10 @@ function replaceCDATAarr(str,cdata){
 }
 
 function buildObjectNode(val,key,attrStr,level){
-    return this.indentate(level) 
-                + "<" + key + attrStr 
-                + this.tagEndChar 
-                + val 
+    return this.indentate(level)
+                + "<" + key + attrStr
+                + this.tagEndChar
+                + val
                 //+ this.newLine
                 + this.indentate(level)
                 + "</"+key+this.tagEndChar;
@@ -161,10 +165,10 @@ function buildEmptyObjNode(val,key,attrStr,level){
     if(val !== "" ){
         return this.buildObjectNode(val,key,attrStr,level);
     }else{
-        return this.indentate(level) 
-                + "<" + key + attrStr 
+        return this.indentate(level)
+                + "<" + key + attrStr
                 + "/"
-                + this.tagEndChar 
+                + this.tagEndChar
                 //+ this.newLine
     }
 }
