@@ -1,11 +1,12 @@
+"use strict";
 //parse Empty Node as self closing node
-var he = require("he");
+const he = require("he");
 
-var defaultOptions = {
-    attributeNamePrefix : "@_",
+const defaultOptions = {
+    attributeNamePrefix: "@_",
     attrNodeName: false,
-    textNodeName : "#text",
-    ignoreAttributes : true,
+    textNodeName: "#text",
+    ignoreAttributes: true,
     encodeHTMLchar: false,
     cdataTagName: false,
     cdataPositionChar: "\\c",
@@ -14,41 +15,41 @@ var defaultOptions = {
     supressEmptyNode: false
 };
 
-function Parser(options){
-    this.options = Object.assign({},defaultOptions,options);
-    if(this.options.ignoreAttributes) {
-        this.isAttribute = function(a){ return false};
-    }else{
+function Parser(options) {
+    this.options = Object.assign({}, defaultOptions, options);
+    if (this.options.ignoreAttributes) {
+        this.isAttribute = function(/*a*/) { return false;};
+    } else {
         this.attrPrefixLen = this.options.attributeNamePrefix.length;
         this.isAttribute = isAttribute;
     }
-    if(this.options.cdataTagName){
+    if (this.options.cdataTagName) {
         this.isCDATA = isCDATA;
-    }else{
-        this.isCDATA = function(a){ return false};
+    } else {
+        this.isCDATA = function(/*a*/) { return false;};
     }
     this.replaceCDATAstr = replaceCDATAstr;
     this.replaceCDATAarr = replaceCDATAarr;
-    if(this.options.encodeHTMLchar){
+    if (this.options.encodeHTMLchar) {
         this.encodeHTMLchar = encodeHTMLchar;
-    }else{
-        this.encodeHTMLchar = function(a){ return a};
+    } else {
+        this.encodeHTMLchar = function(a) { return a;};
     }
 
-    if(this.options.format){
+    if (this.options.format) {
         this.indentate = indentate;
         this.tagEndChar = ">\n";
         this.newLine = "\n";
-    }else{
-        this.indentate = function(){ return ""};;
+    } else {
+        this.indentate = function() { return "";};
         this.tagEndChar = ">";
         this.newLine = "";
     }
 
-    if(this.options.supressEmptyNode){
+    if (this.options.supressEmptyNode) {
         this.buildTextNode = buildEmptyTextNode;
         this.buildObjNode = buildEmptyObjNode;
-    }else{
+    } else {
         this.buildTextNode = buildTextValNode;
         this.buildObjNode = buildObjectNode;
     }
@@ -58,158 +59,156 @@ function Parser(options){
 
 }
 
+Parser.prototype.parse = function(jObj) {
+    return this.j2x(jObj, 0).val;
+};
 
-Parser.prototype.parse = function(jObj){
-    return this.j2x(jObj,0).val;
-}
-
-Parser.prototype.j2x = function(jObj,level){
-    var xmlStr = "", attrStr = "" , val = "";
-    var keys = Object.keys(jObj);
-    var len = keys.length;
-    for(var i=0;i<len;i++){
-        var key = keys[i];
-        if(typeof jObj[key] === "undefined"){
-          // supress undefined node
-        }else if(typeof jObj[key] !== "object"){//premitive type
-            var attr = this.isAttribute(key);
-            if(attr){
-                attrStr += " " +attr+"=\""+ this.encodeHTMLchar(jObj[key], true) +"\"";
-            }else if(this.isCDATA(key)){
-                if(jObj[this.options.textNodeName]){
+Parser.prototype.j2x = function(jObj, level) {
+    let attrStr = "";
+    let val = "";
+    const keys = Object.keys(jObj);
+    const len = keys.length;
+    for (let i = 0; i < len; i++) {
+        const key = keys[i];
+        if (typeof jObj[key] === "undefined") {
+            // supress undefined node
+        }
+        else if (typeof jObj[key] !== "object") {//premitive type
+            const attr = this.isAttribute(key);
+            if (attr) {
+                attrStr += " " + attr + "=\"" + this.encodeHTMLchar(jObj[key], true) + "\"";
+            } else if (this.isCDATA(key)) {
+                if (jObj[this.options.textNodeName]) {
                     val += this.replaceCDATAstr(jObj[this.options.textNodeName], jObj[key]);
-                }else{
+                } else {
                     val += this.replaceCDATAstr("", jObj[key]);
                 }
-            }else{//tag value
-                if(key === this.options.textNodeName){
-                    if(jObj[this.options.cdataTagName]){
+            } else {//tag value
+                if (key === this.options.textNodeName) {
+                    if (jObj[this.options.cdataTagName]) {
                         //value will added while processing cdata
-                    }else{
+                    } else {
                         val += this.encodeHTMLchar(jObj[key]);
                     }
-                }else{
-                    val += this.buildTextNode(jObj[key],key,"",level);
+                } else {
+                    val += this.buildTextNode(jObj[key], key, "", level);
                 }
             }
-        }else if(Array.isArray(jObj[key])){//repeated nodes
-            if(this.isCDATA(key)){
-                if(jObj[this.options.textNodeName]){
+        } else if (Array.isArray(jObj[key])) {//repeated nodes
+            if (this.isCDATA(key)) {
+                if (jObj[this.options.textNodeName]) {
                     val += this.replaceCDATAarr(jObj[this.options.textNodeName], jObj[key]);
-                }else{
+                } else {
                     val += this.replaceCDATAarr("", jObj[key]);
                 }
-            }else{//nested nodes
-                var arrLen = jObj[key].length;
-                for(var j=0;j<arrLen;j++){
-                    var item = jObj[key][j];
-                    if(typeof item === "undefined"){
-                      // supress undefined node
-                    }else if(typeof item === "object"){
-                        var result = this.j2x(item,level+1);
-                        val  += this.buildObjNode(result.val,key,result.attrStr,level);
-                    }else{
-                        val += this.buildTextNode(item,key,"",level);
+            } else {//nested nodes
+                const arrLen = jObj[key].length;
+                for (let j = 0; j < arrLen; j++) {
+                    const item = jObj[key][j];
+                    if (typeof item === "undefined") {
+                        // supress undefined node
+                    }
+                    else if (typeof item === "object") {
+                        const result = this.j2x(item, level + 1);
+                        val += this.buildObjNode(result.val, key, result.attrStr, level);
+                    } else {
+                        val += this.buildTextNode(item, key, "", level);
                     }
                 }
             }
-        }else{
-
-            if(this.options.attrNodeName && key === this.options.attrNodeName){
-                var Ks = Object.keys(jObj[key]);
-                var L = Ks.length;
-                for(var j=0;j<L;j++){
-                    attrStr += " "+Ks[j]+"=\"" + this.encodeHTMLchar(jObj[key][Ks[j]]) + "\"";
+        } else {
+            if (this.options.attrNodeName && key === this.options.attrNodeName) {
+                const Ks = Object.keys(jObj[key]);
+                const L = Ks.length;
+                for (let j = 0; j < L; j++) {
+                    attrStr += " " + Ks[j] + "=\"" + this.encodeHTMLchar(jObj[key][Ks[j]]) + "\"";
                 }
-            }else{
-                var result = this.j2x(jObj[key],level+1);
-                val  += this.buildObjNode(result.val,key,result.attrStr,level);
+            } else {
+                const result = this.j2x(jObj[key], level + 1);
+                val += this.buildObjNode(result.val, key, result.attrStr, level);
             }
         }
     }
-    return {attrStr : attrStr , val : val};
-}
+    return {attrStr: attrStr, val: val};
+};
 
-function replaceCDATAstr(str,cdata){
+function replaceCDATAstr(str, cdata) {
     str = this.encodeHTMLchar(str);
-    if(this.options.cdataPositionChar === "" || str === ""){
-        return str + "<![CDATA[" +cdata+"]]>";
-    }else{
-        return str.replace(this.options.cdataPositionChar,"<![CDATA[" +cdata+"]]>")
+    if (this.options.cdataPositionChar === "" || str === "") {
+        return str + "<![CDATA[" + cdata + "]]>";
+    } else {
+        return str.replace(this.options.cdataPositionChar, "<![CDATA[" + cdata + "]]>");
     }
 }
 
-function replaceCDATAarr(str,cdata){
+function replaceCDATAarr(str, cdata) {
     str = this.encodeHTMLchar(str);
-    if(this.options.cdataPositionChar === "" || str === ""){
-        return str + "<![CDATA[" + cdata.join("]]><![CDATA[")+"]]>";
-    }else{
-        for(var v in cdata){
-            str = str.replace(this.options.cdataPositionChar, "<![CDATA[" +cdata[v]+"]]>");
+    if (this.options.cdataPositionChar === "" || str === "") {
+        return str + "<![CDATA[" + cdata.join("]]><![CDATA[") + "]]>";
+    } else {
+        for (const v in cdata) {
+            str = str.replace(this.options.cdataPositionChar, "<![CDATA[" + cdata[v] + "]]>");
         }
         return str;
     }
 }
 
-function buildObjectNode(val,key,attrStr,level){
+function buildObjectNode(val, key, attrStr, level) {
     return this.indentate(level)
-                + "<" + key + attrStr
-                + this.tagEndChar
-                + val
-                //+ this.newLine
-                + this.indentate(level)
-                + "</"+key+this.tagEndChar;
+           + "<" + key + attrStr
+           + this.tagEndChar
+           + val
+           //+ this.newLine
+           + this.indentate(level)
+           + "</" + key + this.tagEndChar;
 }
 
-function buildEmptyObjNode(val,key,attrStr,level){
-    if(val !== "" ){
-        return this.buildObjectNode(val,key,attrStr,level);
-    }else{
+function buildEmptyObjNode(val, key, attrStr, level) {
+    if (val !== "") {
+        return this.buildObjectNode(val, key, attrStr, level);
+    } else {
         return this.indentate(level)
-                + "<" + key + attrStr
-                + "/"
-                + this.tagEndChar
-                //+ this.newLine
+               + "<" + key + attrStr
+               + "/"
+               + this.tagEndChar;
+        //+ this.newLine
     }
 }
 
-function buildTextValNode(val,key,attrStr,level){
-    return this.indentate(level) + "<" + key + attrStr +  ">" +this.encodeHTMLchar(val)+"</"+key+ this.tagEndChar;
+function buildTextValNode(val, key, attrStr, level) {
+    return this.indentate(level) + "<" + key + attrStr + ">" + this.encodeHTMLchar(val) + "</" + key + this.tagEndChar;
 }
 
-function buildEmptyTextNode(val,key,attrStr,level){
-    if(val !== ""){
-        return this.buildTextValNode(val,key,attrStr,level);
-    }else{
+function buildEmptyTextNode(val, key, attrStr, level) {
+    if (val !== "") {
+        return this.buildTextValNode(val, key, attrStr, level);
+    } else {
         return this.indentate(level) + "<" + key + attrStr + "/" + this.tagEndChar;
     }
 }
 
-function indentate(level){
+function indentate(level) {
     return this.options.indentBy.repeat(level);
 }
-function encodeHTMLchar(val, isAttribute){
-    return he.encode("" + val, {isAttributeValue : isAttribute, useNamedReferences: true});
+
+function encodeHTMLchar(val, isAttribute) {
+    return he.encode("" + val, {isAttributeValue: isAttribute, useNamedReferences: true});
 }
 
-function isAttribute(name,options){
-    if(name.startsWith(this.options.attributeNamePrefix)){
+function isAttribute(name/*, options*/) {
+    if (name.startsWith(this.options.attributeNamePrefix)) {
         return name.substr(this.attrPrefixLen);
-    }else{
+    } else {
         return false;
     }
 }
 
-function isCDATA(name){
-    if(name === this.options.cdataTagName){
-        return true;
-    }else{
-        return false;
-    }
+function isCDATA(name) {
+    return name === this.options.cdataTagName;
 }
+
 //formatting
 //indentation
 //\n after each closing or self closing tag
-
 
 module.exports = Parser;

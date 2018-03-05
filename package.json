@@ -2,16 +2,17 @@
   "name": "fast-xml-parser",
   "version": "3.3.0",
   "description": "Validate XML or Parse XML to JS/JSON very fast without C/C++ based libraries",
-  "main": "./src/parser.js",
+  "main": "./lib/parser.js",
   "scripts": {
     "test": "jasmine spec/*spec.js",
-    "bundle": "browserify src/parser.js -s parser > lib/parser.js",
+    "lint": "eslint src/*.js spec/*.js",
+    "bundle": "webpack",
     "coverage": "node ./benchmark/perfTest.js; istanbul cover -x \"spec/*spec.js\" jasmine spec/*spec.js;",
     "coverage:check": "istanbul check-coverage --branch 90 --statement 90",
-    "postinstall": "opencollective postinstall"
+    "postinstall": "opencollective postinstall || exit 0"
   },
   "bin": {
-    "xml2js": "cli.js"
+    "xml2js": "./cli.js"
   },
   "repository": {
     "type": "git",
@@ -62,20 +63,26 @@
   ],
   "license": "MIT",
   "devDependencies": {
+    "@babel/core": "^7.0.0-beta.40",
+    "@babel/preset-env": "^7.0.0-beta.40",
+    "@babel/plugin-transform-runtime": "^7.0.0-beta.40",
+    "babel-loader": "^8.0.0-beta.2",
     "benchmark": "^2.1.4",
-    "browserify": "^16.1.0",
     "coveralls": "^3.0.0",
+    "eslint": "^4.18.1",
     "http-server": "^0.11.1",
     "istanbul": "^0.4.5",
     "jasmine": "^3.0.0",
+    "opencollective": "^1.0.3",
     "portfinder": "^1.0.13",
+    "webpack": "^4.0.1",
+    "webpack-cli": "^2.0.9",
     "xml2js": "^0.4.19",
     "zombie": "^5.0.8"
   },
   "dependencies": {
     "he": "~1.1.1",
-    "nimnjs": "^1.2.2",
-    "opencollective": "^1.0.3"
+    "nimnjs": "^1.2.2"
   },
   "collective": {
     "type": "opencollective",

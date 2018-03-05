@@ -1,3 +1,5 @@
+"use strict";
+
 exports.parse = require("./x2j").parse;
 exports.convertTonimn = require("../src/nimndata").convert2nimn;
 exports.getTraversalObj = require("./x2j").getTraversalObj;
