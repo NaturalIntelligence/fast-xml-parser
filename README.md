@@ -40,31 +40,23 @@ Validate XML, Parse XML to JS/JSON and vise versa, or parse XML to Nimn rapidly 
 
 ## How to use
 
-**in NPM package**
+To use it in **NPM package**  install it first
 
-install it first
+`$npm install fast-xml-parser` or using [yarn](https://yarnpkg.com/) `$yarn add fast-xml-parser`
 
-`$npm install fast-xml-parser`
-
-or using [yarn](https://yarnpkg.com/)
-
-`$yarn add fast-xml-parser`
-
-**From CLI**
-
-Install it globally with `-g` option.
+To use it from **CLI** Install it globally with `-g` option.
 
 `$npm install fast-xml-parser -g`
 
-**on webpage**
+To use it on a**webpage** Include it from [parser.js](https://github.com/NaturalIntelligence/fast-xml-parser/blob/master/lib/parser.js) Or  directly from [CDN](https://cdnjs.com/libraries/fast-xml-parser)
 
-Include it from [parser.js](https://github.com/NaturalIntelligence/fast-xml-parser/blob/master/lib/parser.js) Or  directly from [CDN](https://cdnjs.com/libraries/fast-xml-parser)
-
-### Usage
+### XML to JSON or XML to Nimn
 ```js
 var fastXmlParser = require('fast-xml-parser');
 var jsonObj = fastXmlParser.parse(xmlData);
-
+//construct schema manually or with the help of schema builder
+var nimndata = fastXmlParser.parseToNimn(xmlData,schema);
+//or
 var options = {
     attributeNamePrefix : "@_",
     attrNodeName: "attr", //default is 'false'
@@ -87,7 +79,13 @@ if(fastXmlParser.validate(xmlData)=== true){//optional
 var tObj = fastXmlParser.getTraversalObj(xmlData,options);
 var jsonObj = fastXmlParser.convertToJson(tObj,options);
 
+//construct schema manually or with the help of schema builder
+var nimndata = fastXmlParser.convertTonimn(tObj,schema,options);
+
 ```
+* NIMN (निम्न) data is the schema aware compressed form of data. It reduces JSON up to 50% or more of original data by removing field information. Check [specification](https://github.com/nimndata/spec) for more detail.
+* Check [nimnjs](https://github.com/nimndata/nimnjs-node) to know more about schema, json to nimndata and reverse transformation.
+
 **OPTIONS** :
 
 * **attributeNamePrefix** : prepend given string to attribute name for identification
@@ -122,7 +120,7 @@ if(result !== true) cnosole.log(result.err);
 var jsonObj = parser.parse(xmlData);
 ```
 
-### JSON or JS Object to XML
+### JSON / JS Object to XML
 
 ```js
 var Parser = require("fast-xml-parser").j2xParser;
@@ -156,21 +154,6 @@ With the correct options, you can get the almost original XML without losing any
 * **format** : If set to true, then format the XML output.
 * **indentBy** : indent by this char `when` format is set to `true` 
 * **supressEmptyNode** : If set to `true`, tags with no value (text or nested tags) are written as self closing tags. 
-
-### XML to Nimn
-NIMN (निम्न) data is the schema aware compressed form of data. It reduces JSON up to 50% or more of original data by removing field information. Check [specification](https://github.com/nimndata/spec) for more detail.
-
-```js
-var fastXmlParser = require('fast-xml-parser');
-//set the options same for xml to json
-var tObj = fastXmlParser.getTraversalObj(xmlData,options);
-
-var jsondata = fastXmlParser.convertToJson(tObj,options);
-
-var nimndata = fastXmlParser.convertTonimn(tObj,schema,options);
-```
-* check [nimnjs](https://github.com/nimndata/nimnjs-node) to know more about schema, json to nimndata and reverse transformation.
-
 
 ## Comparision
 We've copared various libraries which transforms XML to JS. Most of them either are dependent on C/C++ libraries, or slow, or don't do reverse transformation. 
