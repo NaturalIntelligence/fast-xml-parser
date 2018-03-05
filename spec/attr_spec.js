@@ -1,21 +1,22 @@
-var parser = require("../src/parser");
-var validator = require("../src/validator");
+"use strict";
 
-describe("XMLParser", function () {
+const parser = require("../src/parser");
+const validator = require("../src/validator");
 
-    it("should parse attributes with valid names", function () {
-        var xmlData = '<issue _ent-ity.23="Mjg2MzY2OTkyNA==" state="partial" version="1"></issue>';
-        var expected = {
+describe("XMLParser", function() {
+    it("should parse attributes with valid names", function() {
+        const xmlData = `<issue _ent-ity.23="Mjg2MzY2OTkyNA==" state="partial" version="1"></issue>`;
+        const expected = {
             "issue": {
-                "_ent-ity.23"    :     "Mjg2MzY2OTkyNA==",
-                "state"     :     "partial",
-                "version"   :     1,
+                "_ent-ity.23": "Mjg2MzY2OTkyNA==",
+                "state":       "partial",
+                "version":     1
             }
         };
 
-        var result = parser.parse(xmlData, {
-            attributeNamePrefix:"",
-            ignoreAttributes: false,
+        let result = parser.parse(xmlData, {
+            attributeNamePrefix: "",
+            ignoreAttributes:    false,
             parseAttributeValue: true
         });
 
@@ -26,19 +27,19 @@ describe("XMLParser", function () {
         expect(result).toBe(true);
     });
 
-    it("should parse attributes with newline char", function () {
-        var xmlData = '<element id="7" data="foo\nbar" bug="true"/>';
-        var expected = {
+    it("should parse attributes with newline char", function() {
+        const xmlData = `<element id="7" data="foo\nbar" bug="true"/>`;
+        const expected = {
             "element": {
-                "id"    :     7,
-                "data"     :     "foo bar",
-                "bug"   :     true,
+                "id":   7,
+                "data": "foo bar",
+                "bug":  true
             }
         };
 
-        var result = parser.parse(xmlData, {
-            attributeNamePrefix:"",
-            ignoreAttributes: false,
+        let result = parser.parse(xmlData, {
+            attributeNamePrefix: "",
+            ignoreAttributes:    false,
             parseAttributeValue: true
         });
 
@@ -49,19 +50,19 @@ describe("XMLParser", function () {
         expect(result).toBe(true);
     });
 
-    it("should not decode HTML entities / char by default", function () {
-        var xmlData = '<element id="7" data="foo\nbar" bug="foo&ampbar&apos;"/>';
-        var expected = {
+    it("should not decode HTML entities / char by default", function() {
+        const xmlData = `<element id="7" data="foo\nbar" bug="foo&ampbar&apos;"/>`;
+        const expected = {
             "element": {
-                "id"    :     7,
-                "data"     :     "foo bar",
-                "bug"   :     "foo&ampbar&apos;",
+                "id":   7,
+                "data": "foo bar",
+                "bug":  "foo&ampbar&apos;"
             }
         };
 
-        var result = parser.parse(xmlData, {
-            attributeNamePrefix:"",
-            ignoreAttributes: false,
+        let result = parser.parse(xmlData, {
+            attributeNamePrefix: "",
+            ignoreAttributes:    false,
             parseAttributeValue: true
         });
 
@@ -72,21 +73,21 @@ describe("XMLParser", function () {
         expect(result).toBe(true);
     });
 
-    it("should decode HTML entities / char", function () {
-        var xmlData = '<element id="7" data="foo\r\nbar" bug="foo&ampbar&apos;"/>';
-        var expected = {
+    it("should decode HTML entities / char", function() {
+        const xmlData = `<element id="7" data="foo\r\nbar" bug="foo&ampbar&apos;"/>`;
+        const expected = {
             "element": {
-                "id"    :     7,
-                "data"     :     "foo bar",
-                "bug"   :     "foo&ampbar'",
+                "id":   7,
+                "data": "foo bar",
+                "bug":  "foo&ampbar'"
             }
         };
 
-        var result = parser.parse(xmlData, {
-            attributeNamePrefix:"",
-            ignoreAttributes: false,
+        let result = parser.parse(xmlData, {
+            attributeNamePrefix: "",
+            ignoreAttributes:    false,
             parseAttributeValue: true,
-            decodeHTMLchar: true
+            decodeHTMLchar:      true
         });
 
         //console.log(JSON.stringify(result,null,4));
@@ -96,59 +97,59 @@ describe("XMLParser", function () {
         expect(result).toBe(true);
     });
 
-    it("should parse Boolean Attributes", function () {
-        var xmlData = '<element id="7" str="" data/>';
-        var expected = {
+    it("should parse Boolean Attributes", function() {
+        const xmlData = `<element id="7" str="" data/>`;
+        const expected = {
             "element": {
-                "id"    :     7,
-                "str" : "" ,
-                "data"     :     true
+                "id":   7,
+                "str":  "",
+                "data": true
             }
         };
 
-        var result = parser.parse(xmlData, {
-            attributeNamePrefix:"",
-            ignoreAttributes: false,
-            parseAttributeValue: true,
-            allowBooleanAttributes : true
+        let result = parser.parse(xmlData, {
+            attributeNamePrefix:    "",
+            ignoreAttributes:       false,
+            parseAttributeValue:    true,
+            allowBooleanAttributes: true
         });
 
         //console.log(JSON.stringify(result,null,4));
         expect(result).toEqual(expected);
 
-        result = validator.validate(xmlData,{
+        result = validator.validate(xmlData, {
             allowBooleanAttributes: true
         });
         expect(result).toBe(true);
     });
 
-    it("should not remove xmlns when namespaces are not set to be ignored", function () {
-        var xmlData = '<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"></project>';
-        var expected = {
+    it("should not remove xmlns when namespaces are not set to be ignored", function() {
+        const xmlData = `<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"></project>`;
+        const expected = {
             "project": {
-                "xmlns": "http://maven.apache.org/POM/4.0.0",
-                "xmlns:xsi": "http://www.w3.org/2001/XMLSchema-instance",
+                "xmlns":              "http://maven.apache.org/POM/4.0.0",
+                "xmlns:xsi":          "http://www.w3.org/2001/XMLSchema-instance",
                 "xsi:schemaLocation": "http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
             }
         };
 
-        var result = parser.parse(xmlData, {
-            attributeNamePrefix:"",
-            ignoreAttributes: false,
+        let result = parser.parse(xmlData, {
+            attributeNamePrefix: "",
+            ignoreAttributes:    false
         });
 
         //console.log(JSON.stringify(result,null,4));
         expect(result).toEqual(expected);
 
-        result = validator.validate(xmlData,{
+        result = validator.validate(xmlData, {
             allowBooleanAttributes: true
         });
         expect(result).toBe(true);
     });
 
-    it("should remove xmlns when namespaces are set to be ignored", function () {
-        var xmlData = '<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi-ns="http://www.w3.org/2001/XMLSchema-instance" xsi-ns:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"></project>';
-        var expected = {
+    it("should remove xmlns when namespaces are set to be ignored", function() {
+        const xmlData = `<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi-ns="http://www.w3.org/2001/XMLSchema-instance" xsi-ns:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"></project>`;
+        const expected = {
             "project": {
                 //"xmlns": "http://maven.apache.org/POM/4.0.0",
                 //"xmlns:xsi": "http://www.w3.org/2001/XMLSchema-instance",
@@ -156,165 +157,161 @@ describe("XMLParser", function () {
             }
         };
 
-        var result = parser.parse(xmlData, {
-            attributeNamePrefix:"",
-            ignoreAttributes: false,
-            ignoreNameSpace: true
+        let result = parser.parse(xmlData, {
+            attributeNamePrefix: "",
+            ignoreAttributes:    false,
+            ignoreNameSpace:     true
         });
 
         //console.log(JSON.stringify(result,null,4));
         expect(result).toEqual(expected);
 
-        result = validator.validate(xmlData,{
+        result = validator.validate(xmlData, {
             allowBooleanAttributes: true
         });
         expect(result).toBe(true);
     });
 
-   
-    it("should not parse attributes with name start with number", function () {
-        var xmlData = '<issue 35entity="Mjg2MzY2OTkyNA==" ></issue>';
-        
-        var expected = {
+    it("should not parse attributes with name start with number", function() {
+        const xmlData = `<issue 35entity="Mjg2MzY2OTkyNA==" ></issue>`;
+
+        const expected = {
             "err": {
                 "code": "InvalidAttr",
-                "msg": "attribute 35entity is an invalid name."
+                "msg":  "attribute 35entity is an invalid name."
             }
         };
-        var result = validator.validate(xmlData);
+        const result = validator.validate(xmlData);
 
         expect(result).toEqual(expected);
     });
 
-    it("should not parse attributes with invalid char", function () {
-        var xmlData = '<issue enti+ty="Mjg2MzY2OTkyNA=="></issue>';
-        var expected = {
+    it("should not parse attributes with invalid char", function() {
+        const xmlData = `<issue enti+ty="Mjg2MzY2OTkyNA=="></issue>`;
+        const expected = {
             "err": {
                 "code": "InvalidAttr",
-                "msg": "attribute enti+ty is an invalid name."
+                "msg":  "attribute enti+ty is an invalid name."
             }
         };
 
-        var result = validator.validate(xmlData);
+        const result = validator.validate(xmlData);
 
         expect(result).toEqual(expected);
     });
 
-
-    it("should not parse attributes in closing tag", function () {
-        var xmlData = '<issue></issue invalid="true">';
-        var expected = {
+    it("should not parse attributes in closing tag", function() {
+        const xmlData = `<issue></issue invalid="true">`;
+        const expected = {
             "err": {
                 "code": "InvalidTag",
-                "msg": "closing tag issue can't have attributes or invalid starting."
+                "msg":  "closing tag issue can't have attributes or invalid starting."
             }
         };
-        var result = validator.validate(xmlData);
+        const result = validator.validate(xmlData);
 
         expect(result).toEqual(expected);
     });
 
-    it("should err for invalid atributes", function () {
-        var xmlData = "<rootNode =''></rootNode>";
-        var expected = {
+    it("should err for invalid atributes", function() {
+        const xmlData = `<rootNode =''></rootNode>`;
+        const expected = {
             "err": {
                 "code": "InvalidAttr",
-                "msg": "attribute '' has no space in starting."
+                "msg":  "attribute '' has no space in starting."
             }
         };
-        var result = validator.validate(xmlData);
+        const result = validator.validate(xmlData);
         expect(result).toEqual(expected);
     });
 
-    it("should validate xml with atributes", function () {
-        var xmlData = "<rootNode attr=\"123\"><tag></tag><tag>1</tag><tag>val</tag></rootNode>";
-  
-        var result = validator.validate(xmlData);
+    it("should validate xml with atributes", function() {
+        const xmlData = `<rootNode attr="123"><tag></tag><tag>1</tag><tag>val</tag></rootNode>`;
+
+        const result = validator.validate(xmlData);
         expect(result).toBe(true);
     });
 
-    it("should validate xml atribute has '>' in value", function () {
-        var xmlData = "<rootNode attr=\"123>234\"><tag></tag><tag>1</tag><tag>val</tag></rootNode>";
+    it("should validate xml atribute has '>' in value", function() {
+        const xmlData = `<rootNode attr="123>234"><tag></tag><tag>1</tag><tag>val</tag></rootNode>`;
 
-        result = validator.validate(xmlData);
+        const result = validator.validate(xmlData);
         expect(result).toBe(true);
     });
 
-    it("should not validate xml with invalid atributes", function () {
-        var xmlData = "<rootNode attr=\"123><tag></tag><tag>1</tag><tag>val</tag></rootNode>";
-        var expected = {
+    it("should not validate xml with invalid atributes", function() {
+        const xmlData = `<rootNode attr="123><tag></tag><tag>1</tag><tag>val</tag></rootNode>`;
+        const expected = {
             "err": {
                 "code": "InvalidAttr",
-                "msg": "Attributes for rootNode have open quote"
+                "msg":  "Attributes for rootNode have open quote"
             }
         };
-        result = validator.validate(xmlData);
+        const result = validator.validate(xmlData);
         expect(result).toEqual(expected);
     });
 
-
-    it("should not validate xml with invalid attributes when duplicate attributes present", function () {
-        var xmlData = "<rootNode  abc='123' abc=\"567\" />";
-        var expected = {
+    it("should not validate xml with invalid attributes when duplicate attributes present", function() {
+        const xmlData = `<rootNode  abc='123' abc="567" />`;
+        const expected = {
             "err": {
                 "code": "InvalidAttr",
-                "msg": "attribute abc is repeated."
+                "msg":  "attribute abc is repeated."
             }
         };
-        result = validator.validate(xmlData);
+        const result = validator.validate(xmlData);
         //console.log(JSON.stringify(result,null,4));
         expect(result).toEqual(expected);
     });
 
-    it("should not validate xml with invalid attributes when no space between 2 attributes", function () {
-        var xmlData = "<rootNode  abc='123'bc='567' />";
-        var expected = {
+    it("should not validate xml with invalid attributes when no space between 2 attributes", function() {
+        const xmlData = `<rootNode  abc='123'bc='567' />`;
+        const expected = {
             "err": {
                 "code": "InvalidAttr",
-                "msg": "attribute bc has no space in starting."
+                "msg":  "attribute bc has no space in starting."
             }
         };
-        result = validator.validate(xmlData);
+        const result = validator.validate(xmlData);
         expect(result).toEqual(expected);
     });
 
-
-    it("should not validate a tag with attribute presents without value ", function () {
-        var xmlData = "<rootNode ab cd='ef'></rootNode>";
-        var expected = {
+    it("should not validate a tag with attribute presents without value ", function() {
+        const xmlData = `<rootNode ab cd='ef'></rootNode>`;
+        const expected = {
             "err": {
                 "code": "InvalidAttr",
-                "msg": "boolean attribute ab is not allowed."
+                "msg":  "boolean attribute ab is not allowed."
             }
         };
-        var result = validator.validate(xmlData);
+        const result = validator.validate(xmlData);
         expect(result).toEqual(expected);
     });
 
-    it("should not validate xml with invalid attributes presents without value", function () {
-        var xmlData = "<rootNode  123 abc='123' bc='567' />";
-        var expected = {
+    it("should not validate xml with invalid attributes presents without value", function() {
+        const xmlData = `<rootNode  123 abc='123' bc='567' />`;
+        const expected = {
             "err": {
                 "code": "InvalidAttr",
-               // "msg": "attribute 123 is an invalid name."
-                "msg": "boolean attribute 123 is not allowed."
+                // "msg": "attribute 123 is an invalid name."
+                "msg":  "boolean attribute 123 is not allowed."
             }
         };
-        result = validator.validate(xmlData);
+        const result = validator.validate(xmlData);
         //console.log(JSON.stringify(result,null,4));
         expect(result).toEqual(expected);
     });
 
     it("should validate xml with attributeshaving openquote in value", function () {
-        var xmlData = "<rootNode  123 abc='1\"23' bc=\"56'7\" />";
-        var expected = {
+        const xmlData = "<rootNode  123 abc='1\"23' bc=\"56'7\" />";
+        const expected = {
             "err": {
                 "code": "InvalidAttr",
                // "msg": "attribute 123 is an invalid name."
                 "msg": "boolean attribute 123 is not allowed."
             }
         };
-        result = validator.validate(xmlData);
+        const result = validator.validate(xmlData);
         //console.log(JSON.stringify(result,null,4));
         expect(result).toEqual(expected);
     });

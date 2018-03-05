@@ -1,12 +1,13 @@
 language: node_js
 node_js:
-  - 4
-  - 5
   - 6
   - 7
   - 8
+  - 9
 script: npm run coverage
-cache: yarn
+cache:
+  directories:
+    - "node_modules"
 addons:
     code_climate:
         repo_token: ca31e4b1924e441790988993f307af5359d99d164d8308c39f81c81b8121f30f

@@ -1,13 +1,10 @@
 # Unrelevant files and folders
 benchmark
 coverage
-test
 spec
-.travis.yml
-.codeclimate.yml
-todo
+src/*
+!src/read.js
+static
+.*
 index.html
-static/*
-.github
-lib
-.vscode
+webpack*

@@ -1,11 +1,12 @@
 #!/usr/bin/env node
+"use strict";
+/*eslint-disable no-console*/
+const fs = require("fs");
+const path = require("path");
+const parser = require("./lib/parser");
+const readToEnd = require("./src/read").readToEnd;
 
-var fs = require('fs');
-var path = require('path');
-var parser = require('./lib/parser');
-var readToEnd = require('./src/read').readToEnd;
-
-if(process.argv[2] === "--help" || process.argv[2] === "-h"){
+if (process.argv[2] === "--help" || process.argv[2] === "-h") {
     console.log("Fast XML Parser " + require(path.join(__dirname + "/package.json")).version);
     console.log("----------------");
     console.log("xml2js [-ns|-a|-c|-v|-V] <filename> [-o outputfile.json]");
@@ -15,50 +16,50 @@ if(process.argv[2] === "--help" || process.argv[2] === "-h"){
     console.log("-c: parse values to premitive type.");
     console.log("-v: validate before parsing.");
     console.log("-V: validate only.");
-}else if(process.argv[2] === "--version"){
+} else if (process.argv[2] === "--version") {
     console.log(require(path.join(__dirname + "/package.json")).version);
-}else{
-    var options = {
-        ignoreNameSpace : true,
-        ignoreAttributes : false,
-        parseNodeValue : true,
-        parseAttributeValue : true
+} else {
+    const options = {
+        ignoreNameSpace:     true,
+        ignoreAttributes:    false,
+        parseNodeValue:      true,
+        parseAttributeValue: true
     };
-    var fileName = "";
-    var outputFileName;
-    var validate = false;
-    var validateOnly = false;
-	for(var i=2; i<process.argv.length;i++){
-		if(process.argv[i] === "-ns"){
+    let fileName = "";
+    let outputFileName;
+    let validate = false;
+    let validateOnly = false;
+    for (let i = 2; i < process.argv.length; i++) {
+        if (process.argv[i] === "-ns") {
             options.ignoreNameSpace = false;
-        }else if(process.argv[i] === "-a"){
+        } else if (process.argv[i] === "-a") {
             options.ignoreAttributes = true;
-        }else if(process.argv[i] === "-c"){
+        } else if (process.argv[i] === "-c") {
             options.parseNodeValue = false;
             options.parseAttributeValue = false;
-        }else if(process.argv[i] === "-o"){
+        } else if (process.argv[i] === "-o") {
             outputFileName = process.argv[++i];
-        }else if(process.argv[i] === "-v"){
+        } else if (process.argv[i] === "-v") {
             validate = true;
-        }else if(process.argv[i] === "-V"){
+        } else if (process.argv[i] === "-V") {
             validateOnly = true;
-        }else{//filename
+        } else {//filename
             fileName = process.argv[i];
         }
     }
-    var callback = function (xmlData) {
-        var output = "";
-        if(validate){
-            var result = parser.validate(xmlData);
-            if(result === true){
-                output = JSON.stringify(parser.parse(xmlData,options),null,4);        
-            }else{
+    const callback = function(xmlData) {
+        let output = "";
+        if (validate) {
+            const result = parser.validate(xmlData);
+            if (result === true) {
+                output = JSON.stringify(parser.parse(xmlData, options), null, 4);
+            } else {
                 output = result;
             }
-        }else if(validateOnly){
+        } else if (validateOnly) {
             output = parser.validate(xmlData);
-        }else{
-            output = JSON.stringify(parser.parse(xmlData,options),null,4);
+        } else {
+            output = JSON.stringify(parser.parse(xmlData, options), null, 4);
         }
         if (outputFileName) {
             writeToFile(outputFileName, output);
@@ -67,26 +68,33 @@ if(process.argv[2] === "--help" || process.argv[2] === "-h"){
         }
     };
 
-    try{
+    try {
         if (!fileName) {
-            readToEnd(process.stdin, function (err, data) {
-                if (err) throw err;
+            readToEnd(process.stdin, function(err, data) {
+                if (err) {
+                    throw err;
+                }
                 callback(data);
             });
-        }else {
-            fs.readFile(fileName, function (err, data) {
-                if (err) throw err;
+        } else {
+            fs.readFile(fileName, function(err, data) {
+                if (err) {
+                    throw err;
+                }
                 callback(data);
             });
         }
-    }catch(e){
+    }
+    catch (e) {
         console.log("Seems an invalid file or stream." + e);
     }
 }
 
-function writeToFile(fileName, data){
-	fs.writeFile(fileName, data, function (err) {
-		if (err) throw err;
-	 	console.log('JSON output has been written to ' + fileName);
-	});
+function writeToFile(fileName, data) {
+    fs.writeFile(fileName, data, function(err) {
+        if (err) {
+            throw err;
+        }
+        console.log('JSON output has been written to ' + fileName);
+    });
 }
