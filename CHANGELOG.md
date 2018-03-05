@@ -1,5 +1,25 @@
+3.3.0 / 2018-03-05
+  * use common default options for XML parsing for consistency. And add `parseToNimn` method.
+  * update nexttodo
+  * update README about XML to Nimn transformation and remove special notes about 3.x release
+  * update CONTRIBUTING.ms mentioning nexttodo
+  * add negative case for XML PIs
+  * validate xml processing instruction tags    https://github.com/NaturalIntelligence/fast-xml-parser/issues/62
+  * nimndata: handle array with object
+  * nimndata: node with nested node and text node
+  * nimndata: handle attributes and text node
+  * nimndata: add options, handle array
+  * add xml to nimn data converter
+  * x2j: direct access property with tagname
+  * update changelog
+  * fix validator when single quote presents in value enclosed with double quotes or vice versa
+  * Revert "remove unneded nimnjs dependency, move opencollective to devDependencies and replace it
+    with more light opencollective-postinstall"
+    This reverts commit d47aa7181075d82db4fee97fd8ea32b056fe3f46.
+  * Merge pull request: https://github.com/NaturalIntelligence/fast-xml-parser/issues/63 from HaroldPutman/suppress-undefined
+    Keep undefined nodes out of the XML output :     This is useful when you are deleting nodes from the JSON and rewriting XML.
 3.2.4 / 2018-03-01
-  * fix #59 fix in validator when open in attribute value
+  * fix #59 fix in validator when open quote presents in attribute value
   * Create nexttodo.md
   * exclude static from bitHound tests
   * add package lock
