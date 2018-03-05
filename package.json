@@ -36,7 +36,9 @@
     "assert",
     "big",
     "js2xml",
-    "json2xml"
+    "json2xml",
+    "nimn",
+    "xml2nimn"
   ],
   "author": "Amit Gupta (https://github.com/amitguptagwl)",
   "contributors": [
@@ -72,7 +74,7 @@
   },
   "dependencies": {
     "he": "~1.1.1",
-    "nimnjs": "^1.1.0",
+    "nimnjs": "^1.2.2",
     "opencollective": "^1.0.3"
   },
   "collective": {
