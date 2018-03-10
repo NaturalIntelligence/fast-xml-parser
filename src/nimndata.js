@@ -1,3 +1,4 @@
+"use strict";
 const char = function(a) {
     return String.fromCharCode(a);
 };
