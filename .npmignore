@@ -2,7 +2,6 @@
 benchmark
 coverage
 spec
-src/*
 !src/read.js
 static
 .*
