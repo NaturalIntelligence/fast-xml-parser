@@ -2,11 +2,11 @@
   "name": "fast-xml-parser",
   "version": "3.3.0",
   "description": "Validate XML or Parse XML to JS/JSON very fast without C/C++ based libraries",
-  "main": "./lib/parser.js",
+  "main": "./src/parser.js",
   "scripts": {
     "test": "jasmine spec/*spec.js",
     "lint": "eslint src/*.js spec/*.js",
-    "bundle": "webpack",
+    "bundle": "browserify src/parser.js -s parser > lib/parser.js",
     "coverage": "node ./benchmark/perfTest.js; istanbul cover -x \"spec/*spec.js\" jasmine spec/*spec.js;",
     "coverage:check": "istanbul check-coverage --branch 90 --statement 90",
     "postinstall": "opencollective postinstall || exit 0"
@@ -75,9 +75,8 @@
     "jasmine": "^3.0.0",
     "opencollective": "^1.0.3",
     "portfinder": "^1.0.13",
-    "webpack": "^4.0.1",
-    "webpack-cli": "^2.0.9",
     "xml2js": "^0.4.19",
+    "browserify": "^16.1.1",
     "zombie": "^5.0.8"
   },
   "dependencies": {
