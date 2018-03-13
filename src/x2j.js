@@ -114,11 +114,6 @@ function checkForTagType(match) {
     }
 }
 
-const xml2json = function(xmlData, options) {
-    options = Object.assign({}, defaultOptions, options);
-    return convertToJson(getTraversalObj(xmlData, options), options);
-};
-
 function resolveNameSpace(tagname, options) {
     if (options.ignoreNameSpace) {
         const tags = tagname.split(":");
@@ -195,82 +190,4 @@ function buildAttributesMap(attrStr, options) {
     }
 }
 
-const convertToJson = function(node, options) {
-    const jObj = {};
-
-    //traver through all the children
-    const keys = Object.keys(node.child);
-    
-    for (let index = 0; index < keys.length; index++) {
-        var tagname = keys[index];
-        if (node.child[tagname] && node.child[tagname].length > 1) {
-            jObj[tagname] = [];
-            for (var tag in node.child[tagname]) {
-                jObj[tagname].push(convertToJson(node.child[tagname][tag], options));
-            }
-        } else {
-            jObj[tagname] = convertToJson(node.child[tagname][0], options);
-        }
-    }
-    util.merge(jObj, node.attrsMap);
-    //add attrsMap as new children
-    if (util.isEmptyObject(jObj)) {
-        return util.isExist(node.val) ? node.val : "";
-    } else {
-        if (util.isExist(node.val)) {
-            if (!(typeof node.val === "string" && (node.val === "" || node.val === options.cdataPositionChar))) {
-                jObj[options.textNodeName] = node.val;
-            }
-        }
-    }
-    //add value
-    return jObj;
-};
-
-
-//TODO: do it later
-const convertToJsonString = function(node, options) {
-    let jObj = "{";
-
-    //traver through all the children
-    const keys = Object.keys(node.child);
-    
-    for (let index = 0; index < keys.length; index++) {
-        var tagname = keys[index];
-        if (node.child[tagname] && node.child[tagname].length > 1) {
-            jObj  += "\"" + tagname + "\" : [ ";
-            for (var tag in node.child[tagname]) {
-                jObj += convertToJson(node.child[tagname][tag], options) + " , ";
-            }
-            jObj = jObj.substr(0,jObj.length-1) + " ] "; //remove extra comma in last
-        } else {
-            jObj += "\"" +tagname + "\" : " + convertToJson(node.child[tagname][0], options);
-        }
-    }
-    util.merge(jObj, node.attrsMap);
-    //add attrsMap as new children
-    if (util.isEmptyObject(jObj)) {
-        return util.isExist(node.val) ? node.val : "";
-    } else {
-        if (util.isExist(node.val)) {
-            if (!(typeof node.val === "string" && (node.val === "" || node.val === options.cdataPositionChar))) {
-                jObj += "\"" + options.textNodeName +"\" : " + stringval(node.val);
-            }
-        }
-    }
-    //add value
-    return jObj + "}";
-};
-
-function stringval(v){
-    if(v === true || v === false || !isNaN(v)){
-        return v;
-    }else{
-        return "\"" + v + "\"";
-    }
-}
-
-exports.parse = xml2json;
 exports.getTraversalObj = getTraversalObj;
-exports.convertToJson = convertToJson;
-exports.convertToJsonString = convertToJsonString;

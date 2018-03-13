@@ -17,7 +17,7 @@ describe("XMLParser", function() {
 
         const result = parser.convertToJsonString(parser.getTraversalObj(xmlData));
         //console.log(JSON.stringify(result,null,4));
-        console.log(result);
+        //console.log(result);
         //expect(result).toEqual(expected);
     });
 });
