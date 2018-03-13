@@ -19,8 +19,14 @@ suite
     .add("validation", function() {
         parser.validate(xmlData);
     })
-    .add("xml to json V1", function() {
+    .add("xml to json", function() {
         parser.parse(xmlData);
+    })
+    .add("xml to json + json string", function() {
+        JSON.stringify(parser.parse(xmlData));
+    })
+    .add("xml to json string", function() {
+        parser.convertToJsonString(parser.getTraversalObj(xmlData));
     })
     .add("xml2js ", function() {
         xml2js.parseString(xmlData, function(err, result) {
