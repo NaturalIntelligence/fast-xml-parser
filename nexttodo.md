@@ -1,8 +1,8 @@
-* Replace dependecy `he`, as it is increasing browser bundle size from 17kb to 110kb
-* build properties only once
 * check test coverage and write necessary tests
 * validate XML stream data
-* Parse JSON string to XML. Currently it transforms JSON object to XML
-* Parse XML to nimn data format
-* Find alternative of open collective, instead of removing it completely
+* Fix jTox for json array. Not sure if a bug exist.
+* generate separate and combined browser bundle for xml -> nimn, xml -> json , json -> xml
+* Es6 to es5 migration without workaround.
+* Parse JSON string to XML. Currently it transforms JSON object to XML. Partially done. Need to work on performance.
+* build properties only once
 * XML to JSON ML : https://en.wikipedia.org/wiki/JsonML
