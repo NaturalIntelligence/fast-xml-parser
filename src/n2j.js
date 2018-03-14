@@ -1,3 +1,5 @@
+"use strict";
+
 const util = require("./util");
 
 const convertToJson =function(node, options) {
