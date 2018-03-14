@@ -2,7 +2,6 @@
 
 const util = require("./util");
 const xmlNode = require("./xmlNode");
-const he = require("he");
 const TagType = {"OPENING": 1, "CLOSING": 2, "SELF": 3, "CDATA": 4};
 
 //const tagsRegx = new RegExp("<(\\/?[\\w:\\-\._]+)([^>]*)>(\\s*"+cdataRegx+")*([^<]+)?","g");
@@ -96,9 +95,6 @@ function processTagValue(val, options) {
             val = val.trim();
         }
         val = options.tagValueProcessor(val);
-        /* if (options.decodeHTMLchar) {
-            val = he.decode(val);
-        } */
         val = parseValue(val, options.parseNodeValue);
     }
 
@@ -172,7 +168,6 @@ function buildAttributesMap(attrStr, options) {
                         matches[i][4] = matches[i][4].trim();
                     }
                     if (options.decodeHTMLchar) {
-                        //matches[i][4] = he.decode(matches[i][4], {isAttributeValue: true});
                         matches[i][4] = options.attrValueProcessor(matches[i][4]);
                     }
                     attrs[options.attributeNamePrefix + attrName] = parseValue(matches[i][4], options.parseAttributeValue);
