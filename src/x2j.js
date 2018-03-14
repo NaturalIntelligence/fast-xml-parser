@@ -22,9 +22,11 @@ const defaultOptions = {
     parseAttributeValue:    false,
     arrayMode:              false,
     trimValues:             true,                                //Trim string values of tag and attributes
-    decodeHTMLchar:         false,
+    //decodeHTMLchar:         false,
     cdataTagName:           false,
-    cdataPositionChar:      "\\c"
+    cdataPositionChar:      "\\c",
+    tagValueProcessor: a => a,
+    attrValueProcessor: a => a
     //decodeStrict: false,
 };
 
@@ -93,9 +95,10 @@ function processTagValue(val, options) {
         if (options.trimValues) {
             val = val.trim();
         }
-        if (options.decodeHTMLchar) {
+        val = options.tagValueProcessor(val);
+        /* if (options.decodeHTMLchar) {
             val = he.decode(val);
-        }
+        } */
         val = parseValue(val, options.parseNodeValue);
     }
 
@@ -169,7 +172,8 @@ function buildAttributesMap(attrStr, options) {
                         matches[i][4] = matches[i][4].trim();
                     }
                     if (options.decodeHTMLchar) {
-                        matches[i][4] = he.decode(matches[i][4], {isAttributeValue: true});
+                        //matches[i][4] = he.decode(matches[i][4], {isAttributeValue: true});
+                        matches[i][4] = options.attrValueProcessor(matches[i][4]);
                     }
                     attrs[options.attributeNamePrefix + attrName] = parseValue(matches[i][4], options.parseAttributeValue);
                 } else if (options.allowBooleanAttributes) {

@@ -1,6 +1,7 @@
 "use strict";
 
 const Parser = require("../src/parser").j2xParser;
+const he = require("he");
 
 describe("XMLParser", function() {
     it("should parse to XML with nested tags", function() {
@@ -246,7 +247,9 @@ describe("XMLParser", function() {
         const parser = new Parser({
                                       cdataTagName:   "__cdata",
                                       attrNodeName:   "@",
-                                      encodeHTMLchar: true
+                                      encodeHTMLchar: true,
+                                      tagValueProcessor: a=> he.encode(a, { useNamedReferences: true}),
+                                      attrValueProcessor: a=> he.encode(a, {isAttributeValue: isAttribute, useNamedReferences: true})
                                   });
         const result = parser.parse(jObj);
         //console.log(result);
@@ -282,7 +285,9 @@ describe("XMLParser", function() {
                                       cdataTagName:     "__cdata",
                                       attrNodeName:     "@",
                                       encodeHTMLchar:   true,
-                                      supressEmptyNode: true
+                                      supressEmptyNode: true,
+                                      tagValueProcessor: a=> he.encode(a, { useNamedReferences: true}),
+                                      attrValueProcessor: a=> he.encode(a, {isAttributeValue: isAttribute, useNamedReferences: true})
                                   });
         const result = parser.parse(jObj);
         //console.log(result);
@@ -312,7 +317,9 @@ describe("XMLParser", function() {
                                       cdataTagName:   "__cdata",
                                       attrNodeName:   "@",
                                       encodeHTMLchar: true,
-                                      format:         true
+                                      format:         true,
+                                      tagValueProcessor: a=> he.encode(a, { useNamedReferences: true}),
+                                      attrValueProcessor: a=> he.encode(a, {isAttributeValue: isAttribute, useNamedReferences: true})
                                   });
         const result = parser.parse(jObj);
         const expected = `<a b="val&gt;1" c="val&lt;2">

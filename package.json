@@ -76,10 +76,10 @@
     "portfinder": "^1.0.13",
     "xml2js": "^0.4.19",
     "browserify": "^16.1.1",
+    "he": "~1.1.1",
     "zombie": "^5.0.8"
   },
   "dependencies": {
-    "he": "~1.1.1",
     "nimnjs": "^1.2.2"
   }
 }

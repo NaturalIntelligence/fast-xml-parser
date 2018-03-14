@@ -2,6 +2,7 @@
 
 const parser = require("../src/parser");
 const validator = require("../src/validator");
+const he = require("he");
 
 describe("XMLParser", function() {
     it("should parse attributes with valid names", function() {
@@ -87,7 +88,8 @@ describe("XMLParser", function() {
             attributeNamePrefix: "",
             ignoreAttributes:    false,
             parseAttributeValue: true,
-            decodeHTMLchar:      true
+            decodeHTMLchar:      true,
+            attrValueProcessor: a => he.decode(a, {isAttributeValue: true})
         });
 
         //console.log(JSON.stringify(result,null,4));

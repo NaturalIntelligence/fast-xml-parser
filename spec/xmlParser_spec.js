@@ -1,6 +1,7 @@
 "use strict";
 
 const parser = require("../src/parser");
+const he = require("he");
 
 describe("XMLParser", function() {
 
@@ -638,7 +639,8 @@ describe("XMLParser", function() {
         };
         const result = parser.parse(xmlData, {
             parseNodeValue: false,
-            decodeHTMLchar: true
+            decodeHTMLchar: true,
+            tagValueProcessor : a => he.decode(a)
         });
         //console.log(JSON.stringify(result,null,4));
         expect(result).toEqual(expected);

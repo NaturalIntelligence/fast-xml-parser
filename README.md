@@ -67,9 +67,10 @@ var options = {
     parseNodeValue : true,
     parseAttributeValue : false,
     trimValues: true,
-    decodeHTMLchar: false,
     cdataTagName: "__cdata", //default is 'false'
     cdataPositionChar: "\\c",
+    attrValueProcessor: a => he.decode(a, {isAttributeValue: true}),//default is a=>a
+    tagValueProcessor : a => he.decode(a) //default is a=>a
 };
 if(fastXmlParser.validate(xmlData)=== true){//optional
 	var jsonObj = fastXmlParser.parse(xmlData,options);
@@ -96,9 +97,11 @@ var nimndata = fastXmlParser.convertTonimn(tObj,schema,options);
 * **parseNodeValue** : Parse the value of text node to float, integer, or boolean.
 * **parseAttributeValue** : Parse the value of an attribute to float, integer, or boolean.
 * **trimValues** : trim string values of an attribute or node
-* **decodeHTMLchar** : decodes any named and numerical character HTML references excluding CDATA part.
+* **decodeHTMLchar** : This options has been removed from 3.3.4. Instead, use tagValueProcessor, and attrValueProcessor. See above example.
 * **cdataTagName** : If specified, parser parse CDATA as nested tag instead of adding it's value to parent tag.
 * **cdataPositionChar** : It'll help to covert JSON back to XML without loosing CDATA position.
+* **tagValueProcessor** : Process tag value during transformation. Like HTML decoding, word capitalization, etc. Applicable in case of string only.
+* **attrValueProcessor** : Process attribute value during transformation. Like HTML decoding, word capitalization, etc. Applicable in case of string only.
 
 To use from command line
 ```bash
@@ -130,12 +133,13 @@ var defaultOptions = {
     attrNodeName: "@", //default is false
     textNodeName : "#text",
     ignoreAttributes : true,
-    encodeHTMLchar: false,
     cdataTagName: "__cdata", //default is false
     cdataPositionChar: "\\c",
     format: false, 
     indentBy: "  ",
-    supressEmptyNode: false
+    supressEmptyNode: false,
+    tagValueProcessor: a=> he.encode(a, { useNamedReferences: true}),// default is a=>a
+    attrValueProcessor: a=> he.encode(a, {isAttributeValue: isAttribute, useNamedReferences: true})// default is a=>a
 };
 var parser = new Parser(defaultOptions);
 var xml = parser.parse(json_or_js_obj);
@@ -148,12 +152,14 @@ With the correct options, you can get the almost original XML without losing any
 * **attributeNamePrefix** : Identify attributes with this prefix otherwise treat them as a tag.
 * **attrNodeName**: Identify attributes when they are grouped under single property.  
 * **ignoreAttributes** : Don't check for attributes. Treats everything as tag.
-* **encodeHTMLchar** : encodes values (except cdata values) when writing to XML.
+* **encodeHTMLchar** : This option has been removed from 3.3.4. Use tagValueProcessor, and attrValueProcessor instead. See above example.
 * **cdataTagName** : If specified, parse matching tag as CDATA
 * **cdataPositionChar** : Identify the position where CDATA tag should be placed. If it is blank then CDATA will be added in the last of tag's value.
 * **format** : If set to true, then format the XML output.
 * **indentBy** : indent by this char `when` format is set to `true` 
 * **supressEmptyNode** : If set to `true`, tags with no value (text or nested tags) are written as self closing tags. 
+* **tagValueProcessor** : Process tag value during transformation. Like HTML encoding, word capitalization, etc. Applicable in case of string only.
+* **attrValueProcessor** : Process attribute value during transformation. Like HTML encoding, word capitalization, etc. Applicable in case of string only.
 
 ## Comparision
 We've copared various libraries which transforms XML to JS. Most of them either are dependent on C/C++ libraries, or slow, or don't do reverse transformation. 
