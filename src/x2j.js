@@ -21,7 +21,6 @@ const defaultOptions = {
     parseAttributeValue:    false,
     arrayMode:              false,
     trimValues:             true,                                //Trim string values of tag and attributes
-    //decodeHTMLchar:         false,
     cdataTagName:           false,
     cdataPositionChar:      "\\c",
     tagValueProcessor: a => a,
@@ -167,9 +166,7 @@ function buildAttributesMap(attrStr, options) {
                     if (options.trimValues) {
                         matches[i][4] = matches[i][4].trim();
                     }
-                    if (options.decodeHTMLchar) {
-                        matches[i][4] = options.attrValueProcessor(matches[i][4]);
-                    }
+                    matches[i][4] = options.attrValueProcessor(matches[i][4]);
                     attrs[options.attributeNamePrefix + attrName] = parseValue(matches[i][4], options.parseAttributeValue);
                 } else if (options.allowBooleanAttributes) {
                     attrs[options.attributeNamePrefix + attrName] = true;
