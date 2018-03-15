@@ -1,9 +1,6 @@
 {
   "ignore": [
-    "bin/**",
-    "browser/**",
-    "lib/**",
     "static/**",
-    "tasks"
+    "parser*"
     ]
 }

@@ -1,7 +1,7 @@
 const getAllMatches = (string, regex) => {
     const matches = [];
     let match;
-    while (match = regex.exec(string)) {
+    while ((match = regex.exec(string)) !== null) {
         matches.push([...match]);
     }
     return matches;

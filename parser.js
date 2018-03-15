@@ -85,6 +85,9 @@ module.exports =
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
+"use strict";
+
+
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -448,6 +451,9 @@ module.exports = {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
+"use strict";
+
+
 var _require = __webpack_require__(/*! ./util */ "./src/util.js"),
     isEmptyObject = _require.isEmptyObject,
     merge = _require.merge,
@@ -503,6 +509,9 @@ module.exports = {
   \**************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
 
 var char = function char(a) {
   return String.fromCharCode(a);
@@ -696,6 +705,9 @@ module.exports = {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
+"use strict";
+
+
 var _require = __webpack_require__(/*! ./x2j */ "./src/x2j.js"),
     getTraversalObj = _require.getTraversalObj;
 
@@ -743,15 +755,24 @@ module.exports = {
   !*** ./src/util.js ***!
   \*********************/
 /*! no static exports found */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
-function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+"use strict";
+
+
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance"); }
+
+function _iterableToArray(iter) { if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } }
 
 var getAllMatches = function getAllMatches(string, regex) {
   var matches = [];
   var match;
 
-  while (match = regex.exec(string)) {
+  while ((match = regex.exec(string)) !== null) {
     matches.push(_toConsumableArray(match));
   }
 
@@ -818,6 +839,9 @@ module.exports = {
   \**************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
 
 var util = __webpack_require__(/*! ./util */ "./src/util.js");
 
@@ -1231,6 +1255,9 @@ module.exports = {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
+"use strict";
+
+
 var util = __webpack_require__(/*! ./util */ "./src/util.js");
 
 var _require = __webpack_require__(/*! ./xml-node */ "./src/xml-node.js"),
@@ -1469,7 +1496,10 @@ module.exports = {
   !*** ./src/xml-node.js ***!
   \*************************/
 /*! no static exports found */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
