@@ -1,3 +1,10 @@
+3.3.5 / 2018-03-15
+  * fix https://github.com/NaturalIntelligence/fast-xml-parser/issues/67 : attrNodeName invalid behavior
+  * fix: remove decodeHTML char condition
+3.3.4 / 2018-03-14
+  * remove dependency on "he" package
+  * refactor code to separate methods in separate files.
+  * draft code for transforming XML to json string. It is not officially documented due to performance issue.
 3.3.0 / 2018-03-05
   * use common default options for XML parsing for consistency. And add `parseToNimn` method.
   * update nexttodo
