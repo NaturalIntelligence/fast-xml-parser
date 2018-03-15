@@ -17,7 +17,7 @@ const defaultOptions = {
 
 function Parser(options) {
     this.options = Object.assign({}, defaultOptions, options);
-    if (this.options.ignoreAttributes) {
+    if (this.options.ignoreAttributes || this.options.attrNodeName) {
         this.isAttribute = function(/*a*/) { return false;};
     } else {
         this.attrPrefixLen = this.options.attributeNamePrefix.length;

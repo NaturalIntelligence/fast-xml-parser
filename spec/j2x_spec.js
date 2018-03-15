@@ -4,6 +4,7 @@ const Parser = require("../src/parser").j2xParser;
 const he = require("he");
 
 describe("XMLParser", function() {
+
     it("should parse to XML with nested tags", function() {
         const jObj = {
             a: {
@@ -260,6 +261,7 @@ describe("XMLParser", function() {
     it("should supress empty node to self closing node when parsing to XML", function() {
         const jObj = {
             a: {
+                "notattr" : "val",
                 "@":       {
                     b: "val>1",
                     c: "val<2"
@@ -283,6 +285,7 @@ describe("XMLParser", function() {
         };
         const parser = new Parser({
                                       cdataTagName:     "__cdata",
+                                      attributeNamePrefix: "",
                                       attrNodeName:     "@",
                                       encodeHTMLchar:   true,
                                       supressEmptyNode: true,
@@ -291,7 +294,7 @@ describe("XMLParser", function() {
                                   });
         const result = parser.parse(jObj);
         //console.log(result);
-        const expected = `<a b="val&gt;1" c="val&lt;2"><tag><k>34</k><g/><nested b="val&gt;1" c="val&lt;2"/></tag>text<![CDATA[this text is > from CDATA]]>value&gt;<![CDATA[]]></a>`;
+        const expected = `<a b="val&gt;1" c="val&lt;2"><notattr>val</notattr><tag><k>34</k><g/><nested b="val&gt;1" c="val&lt;2"/></tag>text<![CDATA[this text is > from CDATA]]>value&gt;<![CDATA[]]></a>`;
         expect(result).toEqual(expected);
     });
 
@@ -329,6 +332,45 @@ describe("XMLParser", function() {
   </tag>
 text<![CDATA[this text is > from CDATA]]>value&gt;<![CDATA[this is another text]]></a>
 `;
+        //console.log(result);
+        //console.log(expected);
+        expect(result).toEqual(expected);
+    });
+
+
+    it("should format when parsing to XML", function() {
+        const jObj = {
+            root: {
+                element:  {
+                    $: {
+                        aaa: "aaa",
+                        bbb: "bbb"
+                    },
+                    _: 1
+                },
+                element2: {
+                    $:          {
+                        aaa: "aaa2",
+                        bbb: "bbb2"
+                    },
+                    subelement: {$: {aaa: "sub_aaa"}}
+                },
+                date:"test"
+            }
+        };
+        const parser = new Parser({
+            attributeNamePrefix: "",
+            attrNodeName:        "$",
+            textNodeName:        "_",
+            ignoreAttributes:    false,
+            cdataTagName:        "$cdata",
+            cdataPositionChar:   "\\c",
+            format:              false,
+            indentBy:            "\t",
+            supressEmptyNode:    true
+        });
+        const result = parser.parse(jObj);
+        const expected = '<root><element aaa="aaa" bbb="bbb">1</element><element2 aaa="aaa2" bbb="bbb2"><subelement aaa="sub_aaa"/></element2><date>test</date></root>';
         //console.log(result);
         //console.log(expected);
         expect(result).toEqual(expected);
