@@ -1,0 +1,8 @@
+{
+	"exclude": [
+		"webpack/*",
+		"webpack.*",
+		"test/**/*.js"
+	],
+	"sourceMap": true
+}

@@ -8,7 +8,7 @@ const parser = require("../src/parser");
 
 const fs = require("fs");
 const path = require("path");
-const fileNamePath = path.join(__dirname, "../spec/assets/sample.xml");
+const fileNamePath = path.join(__dirname, "../test/assets/sample.xml");
 const xmlData = fs.readFileSync(fileNamePath).toString();
 
 suite
@@ -27,10 +27,10 @@ suite
     .on("start", function() {
         console.log("Running Suite: " + this.name);
     })
-    .on("error", function(e) {
+    .on("error", function(/*e*/) {
         console.log("Error in Suite: " + this.name);
     })
-    .on("abort", function(e) {
+    .on("abort", function(/*e*/) {
         console.log("Aborting Suite: " + this.name);
     })
     /*.on('cycle',function(event){

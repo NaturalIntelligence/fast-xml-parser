@@ -1,5 +1,3 @@
-"use strict";
-
 process.env.NODE_ENV = "test";
 //https://github.com/chaijs/chai-http
 const portfinder = require("portfinder");
@@ -27,7 +25,6 @@ describe("DemoApp", function() {
     });
 
     describe("Parse XML", function() {
-
         it("should parse xml to json", function(done) {
             //browser.assert.input('#textNodeConversion', true);
             browser.pressButton("#submit");

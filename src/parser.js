@@ -1,18 +1,25 @@
-"use strict";
+const {getTraversalObj} = require("./x2j");
+const {convertToNimn} = require("./nimn-data");
+const {validate} = require("./validator");
+const j2xParser = require("./j2x");
+const {defaultOptions} = require("./x2j");
+const {convertToJson} = require("./n2j");
+const {convertToJsonString} = require("./n2j-str");
 
-const nodeToJson = require("./n2j");
-const xmlToNodeobj = require("./x2j");
+const parseToNimn = (xmlData, schema, options) => convertToNimn(getTraversalObj(xmlData, options), schema, options);
 
-exports.parse = function(xmlData, options) {
-    options = Object.assign({}, xmlToNodeobj.defaultOptions, options);
-    return nodeToJson.convertToJson(xmlToNodeobj.getTraversalObj(xmlData, options), options);
+const parse = (xmlData, options) => {
+    options = Object.assign({}, defaultOptions, options);
+    return convertToJson(getTraversalObj(xmlData, options), options);
 };
-exports.convertTonimn = require("../src/nimndata").convert2nimn;
-exports.getTraversalObj = xmlToNodeobj.getTraversalObj;
-exports.convertToJson = nodeToJson.convertToJson;
-exports.convertToJsonString = require("./n2j_str").convertToJsonString;
-exports.validate = require("./validator").validate;
-exports.j2xParser = require("./j2x");
-exports.parseToNimn = function (xmlData,schema,options){
-    return exports.convertTonimn(exports.getTraversalObj(xmlData,options), schema, options);
+
+module.exports = {
+    parse,
+    parseToNimn,
+    convertToJson,
+    convertToJsonString,
+    convertToNimn,
+    getTraversalObj,
+    validate,
+    j2xParser
 };

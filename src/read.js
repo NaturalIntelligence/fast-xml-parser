@@ -1,5 +1,3 @@
-"use strict";
-
 // Copyright 2013 Timothy J Fontaine <tjfontaine@gmail.com>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -36,57 +34,47 @@ http.get('http://nodejs.org', function(response) {
 
 */
 
-let stream = require("stream");
-const util = require("util");
+const {Transform} = require("stream");
 
-if (!stream.Transform) {
-    stream = require("readable-stream");
-}
-
-function ReadToEnd(opts) {
-    if (!(this instanceof ReadToEnd)) {
-        return new ReadToEnd(opts);
+class ReadToEnd extends Transform {
+    constructor(opts) {
+        super(opts);
+        this._rte_encoding = opts.encoding || "utf8";
+        this._buff = "";
     }
 
-    stream.Transform.call(this, opts);
+    _transform(chunk, encoding, done) {
+        this._buff += chunk.toString(this._rte_encoding);
+        this.push(chunk);
+        done();
+    }
 
-    this._rte_encoding = opts.encoding || "utf8";
-
-    this._buff = "";
+    _flush(done) {
+        this.emit("complete", undefined, this._buff);
+        done();
+    }
 }
 
-module.exports = ReadToEnd;
-util.inherits(ReadToEnd, stream.Transform);
-
-ReadToEnd.prototype._transform = function(chunk, encoding, done) {
-    this._buff += chunk.toString(this._rte_encoding);
-    this.push(chunk);
-    done();
-};
-
-ReadToEnd.prototype._flush = function(done) {
-    this.emit("complete", undefined, this._buff);
-    done();
-};
-
-ReadToEnd.readToEnd = function(stream, options, cb) {
+const readToEnd = (stream, options, cb) => {
     if (!cb) {
         cb = options;
         options = {};
     }
 
-    const dest = new ReadToEnd(options);
+    const destStream = new ReadToEnd(options);
 
-    stream.pipe(dest);
+    stream.pipe(destStream);
 
     stream.on("error", function(err) {
-        stream.unpipe(dest);
+        stream.unpipe(destStream);
         cb(err);
     });
 
-    dest.on("complete", cb);
+    destStream.on("complete", cb);
 
-    dest.resume();
+    destStream.resume();
 
-    return dest;
+    return destStream;
 };
+
+module.exports = {ReadToEnd, readToEnd};

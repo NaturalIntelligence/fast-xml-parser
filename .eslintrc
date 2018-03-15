@@ -4,8 +4,14 @@
     "sourceType": "module"
   },
   "extends": "eslint:recommended",
+  "rules": {
+    "no-console": "off"
+  },
   "env": {
     "node": true,
-    "jasmine": true
+    "mocha": true
+  },
+  "globals": {
+    "expect": true
   }
 }
