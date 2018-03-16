@@ -16,7 +16,7 @@ addons:
         repo_token: ca31e4b1924e441790988993f307af5359d99d164d8308c39f81c81b8121f30f
 install:
   - npm install --only=production --production
-  - npm install nyc mocha chai source-map-support @babel/register he http-server portfinder zombie
+  - npm install nyc mocha chai source-map-support @babel/core @babel/preset-env @babel/runtime @babel/plugin-transform-runtime @babel/register he http-server portfinder zombie
 after_success:
   - npm run coverage:codeclimate
   - npm run coverage:coveralls
