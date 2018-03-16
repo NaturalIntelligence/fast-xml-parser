@@ -1,5 +1,4 @@
-const {j2xParser: Parser} = require("../parser");
-const {isAttribute} = require("../src/j2x");
+const {j2xParser: Parser, isAttribute} = require("../parser");
 const he = require("he");
 
 describe("XMLParser", function() {

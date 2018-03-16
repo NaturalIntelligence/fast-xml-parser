@@ -340,7 +340,7 @@ function indentate(level) {
 function isAttribute(name
 /*, options*/
 ) {
-  if (!this.options.attrNodeName && name.startsWith(this.options.attributeNamePrefix)) {
+  if (name.startsWith(this.options.attributeNamePrefix)) {
     return name.substr(this.attrPrefixLen);
   } else {
     return false;
@@ -354,7 +354,10 @@ function isCDATA(name) {
 //\n after each closing or self closing tag
 
 
-module.exports = Parser;
+module.exports = {
+  Parser: Parser,
+  isAttribute: isAttribute
+};
 
 /***/ }),
 
@@ -717,16 +720,18 @@ var _require2 = __webpack_require__(/*! ./nimn-data */ "./src/nimn-data.js"),
 var _require3 = __webpack_require__(/*! ./validator */ "./src/validator.js"),
     validate = _require3.validate;
 
-var j2xParser = __webpack_require__(/*! ./j2x */ "./src/j2x.js");
+var _require4 = __webpack_require__(/*! ./j2x */ "./src/j2x.js"),
+    j2xParser = _require4.Parser,
+    isAttribute = _require4.isAttribute;
 
-var _require4 = __webpack_require__(/*! ./x2j */ "./src/x2j.js"),
-    defaultOptions = _require4.defaultOptions;
+var _require5 = __webpack_require__(/*! ./x2j */ "./src/x2j.js"),
+    defaultOptions = _require5.defaultOptions;
 
-var _require5 = __webpack_require__(/*! ./n2j */ "./src/n2j.js"),
-    convertToJson = _require5.convertToJson;
+var _require6 = __webpack_require__(/*! ./n2j */ "./src/n2j.js"),
+    convertToJson = _require6.convertToJson;
 
-var _require6 = __webpack_require__(/*! ./n2j-str */ "./src/n2j-str.js"),
-    convertToJsonString = _require6.convertToJsonString;
+var _require7 = __webpack_require__(/*! ./n2j-str */ "./src/n2j-str.js"),
+    convertToJsonString = _require7.convertToJsonString;
 
 var parseToNimn = function parseToNimn(xmlData, schema, options) {
   return convertToNimn(getTraversalObj(xmlData, options), schema, options);
@@ -745,6 +750,7 @@ module.exports = {
   convertToNimn: convertToNimn,
   getTraversalObj: getTraversalObj,
   validate: validate,
+  isAttribute: isAttribute,
   j2xParser: j2xParser
 };
 

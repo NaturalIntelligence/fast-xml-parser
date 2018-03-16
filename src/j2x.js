@@ -180,7 +180,7 @@ function indentate(level) {
 }
 
 function isAttribute(name/*, options*/) {
-    if (!this.options.attrNodeName && name.startsWith(this.options.attributeNamePrefix)) {
+    if (name.startsWith(this.options.attributeNamePrefix)) {
         return name.substr(this.attrPrefixLen);
     } else {
         return false;
@@ -195,4 +195,4 @@ function isCDATA(name) {
 //indentation
 //\n after each closing or self closing tag
 
-module.exports = Parser;
+module.exports = {Parser, isAttribute};

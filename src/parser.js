@@ -1,7 +1,7 @@
 const {getTraversalObj} = require("./x2j");
 const {convertToNimn} = require("./nimn-data");
 const {validate} = require("./validator");
-const j2xParser = require("./j2x");
+const {Parser: j2xParser, isAttribute} = require("./j2x");
 const {defaultOptions} = require("./x2j");
 const {convertToJson} = require("./n2j");
 const {convertToJsonString} = require("./n2j-str");
@@ -21,5 +21,6 @@ module.exports = {
     convertToNimn,
     getTraversalObj,
     validate,
+    isAttribute,
     j2xParser
 };
