@@ -23,8 +23,8 @@ const defaultOptions = {
     trimValues:             true,                                //Trim string values of tag and attributes
     cdataTagName:           false,
     cdataPositionChar:      "\\c",
-    tagValueProcessor: a => a,
-    attrValueProcessor: a => a
+    tagValueProcessor: function(a) {return a},
+    attrValueProcessor: function(a) {return a}
     //decodeStrict: false,
 };
 
