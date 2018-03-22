@@ -10,8 +10,8 @@ const defaultOptions = {
     format: false,
     indentBy: "  ",
     supressEmptyNode: false,
-    tagValueProcessor: (a) => a,
-    attrValueProcessor: (a) => a
+    tagValueProcessor: function(a) {return a;},
+    attrValueProcessor: function(a) {return a;}
 };
 
 class Parser {
