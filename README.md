@@ -1,5 +1,5 @@
 # [fast-xml-parser](https://www.npmjs.com/package/fast-xml-parser)
-Validate XML, Parse XML to JS/JSON and vise versa, or parse XML to Nimn rapidly without C/C++ based libraries and no callback
+Validate XML, Parse XML to JS/JSON and vice versa, or parse XML to Nimn rapidly without C/C++ based libraries and no callback
 
  
 [![Backers on Open Collective](https://opencollective.com/fast-xml-parser/backers/badge.svg)](#backers) [![Sponsors on Open Collective](https://opencollective.com/fast-xml-parser/sponsors/badge.svg)](#sponsors) [![Known Vulnerabilities](https://snyk.io/test/github/naturalintelligence/fast-xml-parser/badge.svg)](https://snyk.io/test/github/naturalintelligence/fast-xml-parser) 
@@ -32,7 +32,7 @@ Validate XML, Parse XML to JS/JSON and vise versa, or parse XML to Nimn rapidly 
 * Various options are available to customize the transformation
     * You can parse CDATA as separate property.
     * You can prefix attributes or group them to separate property. Or can ignore them from result completely.
-    * You can parse tag's or attribute's value to premitive type: string, integer, float, or boolean. And can optionally decode for HTML char.
+    * You can parse tag's or attribute's value to primitive type: string, integer, float, or boolean. And can optionally decode for HTML char.
     * You can remove namespace from tag or attribute name while parsing
     * It supports boolean attributes, if configured.
 
@@ -48,7 +48,7 @@ To use it from **CLI** Install it globally with `-g` option.
 
 `$npm install fast-xml-parser -g`
 
-To use it on a**webpage** Include it from [parser.js](https://github.com/NaturalIntelligence/fast-xml-parser/blob/master/lib/parser.js) Or  directly from [CDN](https://cdnjs.com/libraries/fast-xml-parser)
+To use it on a **webpage** include it from [parser.js](https://github.com/NaturalIntelligence/fast-xml-parser/blob/master/lib/parser.js) or directly from [CDN](https://cdnjs.com/libraries/fast-xml-parser)
 
 ### XML to JSON or XML to Nimn
 ```js
@@ -99,7 +99,7 @@ var nimndata = fastXmlParser.convertTonimn(tObj,schema,options);
 * **trimValues** : trim string values of an attribute or node
 * **decodeHTMLchar** : This options has been removed from 3.3.4. Instead, use tagValueProcessor, and attrValueProcessor. See above example.
 * **cdataTagName** : If specified, parser parse CDATA as nested tag instead of adding it's value to parent tag.
-* **cdataPositionChar** : It'll help to covert JSON back to XML without loosing CDATA position.
+* **cdataPositionChar** : It'll help to covert JSON back to XML without losing CDATA position.
 * **tagValueProcessor** : Process tag value during transformation. Like HTML decoding, word capitalization, etc. Applicable in case of string only.
 * **attrValueProcessor** : Process attribute value during transformation. Like HTML decoding, word capitalization, etc. Applicable in case of string only.
 
@@ -109,7 +109,7 @@ $xml2js [-ns|-a|-c|-v|-V] <filename> [-o outputfile.json]
 $cat xmlfile.xml | xml2js [-ns|-a|-c|-v|-V] [-o outputfile.json]
 ```
 
-* -ns : To include namespaces (bedefault ignored)
+* -ns : To include namespaces (by default ignored)
 * -a : To ignore attributes
 * -c : To ignore value conversion (i.e. "-3" will not be converted to number -3)
 * -v : validate before parsing
@@ -162,10 +162,10 @@ With the correct options, you can get the almost original XML without losing any
 * **attrValueProcessor** : Process attribute value during transformation. Like HTML encoding, word capitalization, etc. Applicable in case of string only.
 
 ## Comparision
-We've copared various libraries which transforms XML to JS. Most of them either are dependent on C/C++ libraries, or slow, or don't do reverse transformation. 
+We've compared various libraries which transforms XML to JS. Most of them either are dependent on C/C++ libraries, or slow, or don't do reverse transformation. 
 
 *Why not C/C++ based libraries?*
-C/C++ based liraries are no doubt faster than this library but they don't run in browser, and a user need to install extra supporting libraries on their computer.
+C/C++ based libraries are no doubt faster than this library but they don't run in browser, and a user need to install extra supporting libraries on their computer.
 
 ### Benchmark report
 
