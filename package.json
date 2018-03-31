@@ -81,5 +81,6 @@
   },
   "dependencies": {
     "nimnjs": "^1.2.2"
-  }
+  },
+  "typings": "src/parser.d.ts"
 }
