@@ -196,7 +196,7 @@ C/C++ based libraries are no doubt faster than this library but they don't run i
 
 ### Worth to mention
 
-- **[निम्न (NIMN)](https://github.com/nimndata/spec)** : Schema aware object compression
+- **[निम्न (NIMN)](https://github.com/nimndata/spec)** : Schema aware object compression. 60% more compressed than JSON. 40% more compressed than msgpack.
 - **[imglab](https://github.com/NaturalIntelligence/imglab)** : Web based tool to label images for object. So that they can be used to train dlib or other object detectors. You can integrate 3rd party libraries for fast labeling.
 - [fast-lorem-ipsum](https://github.com/amitguptagwl/fast-lorem-ipsum) : Generate lorem ipsum words, sentences, paragraph very quickly.
 - [stubmatic](https://github.com/NaturalIntelligence/Stubmatic) : A stub server to mock behaviour of HTTP(s) / REST / SOAP services.
@@ -220,6 +220,7 @@ This project exists thanks to [all](graphs/contributors) the people who contribu
 [![Abby Armada](https://avatars3.githubusercontent.com/u/4226336?s=60&v=4)](https://github.com/abbyarmada)
 [![Jérémy Benoist](https://avatars1.githubusercontent.com/u/62333?s=60&v=4)](https://github.com/j0k3r)
 [![Harold Putman](https://avatars1.githubusercontent.com/u/4070255?s=60&v=4)](https://github.com/HaroldPutman)
+[![Benjamin Bock](https://avatars0.githubusercontent.com/u/4932?s=60&v=4)](https://github.com/bb)
 
 
 
