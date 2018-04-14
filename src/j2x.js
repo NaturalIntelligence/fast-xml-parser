@@ -141,7 +141,7 @@ function replaceCDATAarr(str, cdata) {
     if (this.options.cdataPositionChar === "" || str === "") {
         return str + "<![CDATA[" + cdata.join("]]><![CDATA[") + "]]>";
     } else {
-        for (const v in cdata) {
+        for (let v in cdata) {
             str = str.replace(this.options.cdataPositionChar, "<![CDATA[" + cdata[v] + "]]>");
         }
         return str;
