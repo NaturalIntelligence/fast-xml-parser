@@ -21,10 +21,10 @@ Validate XML, Parse XML to JS/JSON and vice versa, or parse XML to Nimn rapidly 
 <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=KQJAX48SPUKNC"> <img src="https://www.paypalobjects.com/webstatic/en_US/btn/btn_donate_92x26.png" alt="Stubmatic donate button"/></a>
 <a href="https://liberapay.com/amitgupta/donate"><img alt="Donate using Liberapay" src="https://liberapay.com/assets/widgets/donate.svg"></a>
 
-<img align="right" src="static/img/fxp_logo.png" width="180px" alt="FXP logo"/> 
-![FXP logo](static/img/fxp_logo.png)
 
 ### Main Features
+
+<img align="right" src="static/img/fxp_logo.png" width="180px" alt="FXP logo"/> 
 
 * Validate XML data syntactically
 * Transform XML to JSON or Nimn
