@@ -6,22 +6,11 @@ const defaultOptions = {
     allowBooleanAttributes: false         //A tag can have attributes without any value
 };
 
-const buildOptions = function(options) {
-    if (!options) {
-        options = {};
-    }
-    const props = ["allowBooleanAttributes"];
-    for (let i = 0; i < props.length; i++) {
-        if (options[props[i]] === undefined) {
-            options[props[i]] = defaultOptions[props[i]];
-        }
-    }
-    return options;
-};
+const props = ["allowBooleanAttributes"];
 
 //const tagsPattern = new RegExp("<\\/?([\\w:\\-_\.]+)\\s*\/?>","g");
 exports.validate = function(xmlData, options) {
-    options = buildOptions(options);
+    options = util.buildOptions(options,defaultOptions,props);
 
     //xmlData = xmlData.replace(/(\r\n|\n|\r)/gm,"");//make it single line
     //xmlData = xmlData.replace(/(^\s*<\?xml.*?\?>)/g,"");//Remove XML starting tag

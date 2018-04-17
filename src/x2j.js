@@ -1,7 +1,7 @@
 "use strict";
 
 const util = require("./util");
-const { buildOptions } = require("./util");
+const buildOptions = require("./util").buildOptions;
 const xmlNode = require("./xmlNode");
 const TagType = {"OPENING": 1, "CLOSING": 2, "SELF": 3, "CDATA": 4};
 

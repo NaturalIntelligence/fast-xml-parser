@@ -80,7 +80,8 @@
     "zombie": "^5.0.8"
   },
   "dependencies": {
-    "nimnjs": "^1.2.2"
+    "nimnjs": "^1.2.2",
+    "update": "^0.7.4"
   },
   "typings": "src/parser.d.ts"
 }

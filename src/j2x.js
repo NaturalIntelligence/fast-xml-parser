@@ -1,6 +1,6 @@
 "use strict";
 //parse Empty Node as self closing node
-const { buildOptions } = require("./util");
+const buildOptions = require("./util").buildOptions;
 
 const defaultOptions = {
     attributeNamePrefix: "@_",

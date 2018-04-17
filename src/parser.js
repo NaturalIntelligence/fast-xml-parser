@@ -2,11 +2,11 @@
 
 const nodeToJson = require("./n2j");
 const xmlToNodeobj = require("./x2j");
-const {defaultOptions,props} = require("./x2j");
-const { buildOptions } = require("./util");
+const x2j = require("./x2j");
+const buildOptions = require("./util").buildOptions;
 
 exports.parse = function(xmlData, options) {
-    options = buildOptions(options,defaultOptions,props);
+    options = buildOptions(options,x2j.defaultOptions,x2j.props);
     return nodeToJson.convertToJson(xmlToNodeobj.getTraversalObj(xmlData, options), options);
 };
 exports.convertTonimn = require("../src/nimndata").convert2nimn;
