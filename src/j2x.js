@@ -1,5 +1,6 @@
 "use strict";
 //parse Empty Node as self closing node
+const { buildOptions } = require("./util");
 
 const defaultOptions = {
     attributeNamePrefix: "@_",
@@ -15,8 +16,22 @@ const defaultOptions = {
     attrValueProcessor: function(a) {return a}
 };
 
+const props = [
+    "attributeNamePrefix",
+    "attrNodeName",
+    "textNodeName",
+    "ignoreAttributes",
+    "cdataTagName",
+    "cdataPositionChar",
+    "format",
+    "indentBy",
+    "supressEmptyNode",
+    "tagValueProcessor",
+    "attrValueProcessor"
+]
+
 function Parser(options) {
-    this.options = Object.assign({}, defaultOptions, options);
+    this.options = buildOptions(options,defaultOptions,props);
     if (this.options.ignoreAttributes || this.options.attrNodeName) {
         this.isAttribute = function(/*a*/) { return false;};
     } else {

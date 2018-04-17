@@ -1,3 +1,16 @@
+3.3.8 / 2018-04-17
+  * fix #73 : IE doesn't support Object.assign
+3.3.7 / 2018-04-14
+  * fix: use let insted of const in for loop of validator
+  * Merge pull request
+    https://github.com/NaturalIntelligence/fast-xml-parser/issues/71 from bb/master
+    first draft of typings for typescript
+    https://github.com/NaturalIntelligence/fast-xml-parser/issues/69
+  * Merge pull request
+    https://github.com/NaturalIntelligence/fast-xml-parser/issues/70 from bb/patch-1
+    fix some typos in readme
+3.3.6 / 2018-03-21
+  * change arrow functions to full notation for IE compatibility
 3.3.5 / 2018-03-15
   * fix https://github.com/NaturalIntelligence/fast-xml-parser/issues/67 : attrNodeName invalid behavior
   * fix: remove decodeHTML char condition

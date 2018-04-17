@@ -1,11 +1,12 @@
 "use strict";
 
 const util = require("./util");
-const xmlToNodeobj = require("./x2j");
+const { buildOptions } = require("./util");
+const { defaultOptions, props} = require("./x2j");
 
 //TODO: do it later
 const convertToJsonString = function(node, options) {
-    options = Object.assign({}, xmlToNodeobj.defaultOptions, options);
+    options = buildOptions(options,defaultOptions,props);
 
     options.indentBy = options.indentBy || "";
     return _cToJsonStr(node, options,0);

@@ -1,6 +1,7 @@
 "use strict";
 
 const util = require("./util");
+const { buildOptions } = require("./util");
 const xmlNode = require("./xmlNode");
 const TagType = {"OPENING": 1, "CLOSING": 2, "SELF": 3, "CDATA": 4};
 
@@ -30,9 +31,11 @@ const defaultOptions = {
 
 exports.defaultOptions = defaultOptions;
 
+const props = ["attributeNamePrefix", "attrNodeName", "textNodeName", "ignoreAttributes", "ignoreNameSpace", "allowBooleanAttributes", "parseNodeValue", "parseAttributeValue", "arrayMode", "trimValues", "cdataTagName", "cdataPositionChar", "tagValueProcessor", "attrValueProcessor"];
+exports.props = props;
+
 const getTraversalObj = function(xmlData, options) {
-    //options = buildOptions(options);
-    options = Object.assign({}, defaultOptions, options);
+    options = buildOptions(options,defaultOptions,props);
     //xmlData = xmlData.replace(/\r?\n/g, " ");//make it single line
     xmlData = xmlData.replace(/<!--[\s\S]*?-->/g, "");//Remove  comments
 

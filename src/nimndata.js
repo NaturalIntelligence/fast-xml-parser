@@ -123,9 +123,11 @@ function hasData(jObj) {
     }
 }
 
-const defaultOptions = require("./x2j").defaultOptions;
+const {defaultOptions,props} = require("./x2j");
+const { buildOptions } = require("./util");
+
 const convert2nimn = function(node, e_schema, options) {
-    options = Object.assign({}, defaultOptions, options);
+    options = buildOptions(options,defaultOptions,props);
     return _e(node, e_schema, options);
 };
 
