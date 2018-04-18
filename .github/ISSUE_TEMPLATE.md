@@ -10,23 +10,23 @@
 Please fill below checklist
 
 * [ ] Are you running the latest version?
-* [ ] Have you include sample input? 
-* [ ] Have you include actual output?
-* [ ] Have you include expected output?
+* [ ] Have you included sample input? 
+* [ ] Have you included actual output or error?
+* [ ] Have you included expected output?
 * [ ] Have you checked if you are using correct configuration?
 * [ ] Did you try online [tool](https://naturalintelligence.github.io/fast-xml-parser/)?
 * [ ] Did you [bookmarked](https://github.com/NaturalIntelligence/fast-xml-parser/stargazers) the repository for further updates? ;)
 
-### Input data
-Please include your sample code here
+### Input
+Please include your sample code or steps to reproduce here
 
 ### Code
 ```js
 Include the code being used for parsing
 ```
 
-### Output data
-Please include output data here
+### Output
+Please include output data or error here
 
 ### expected data
 Please include expected output data here
