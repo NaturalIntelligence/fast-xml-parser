@@ -1,4 +1,4 @@
-const util = require("./util");
+const {buildOptions, getValue, isExist, getAllMatches} = require("./util");
 const {XmlNode} = require("./xml-node");
 const TagType = {"OPENING": 1, "CLOSING": 2, "SELF": 3, "CDATA": 4};
 
@@ -21,14 +21,17 @@ const defaultOptions = {
     trimValues: true,                                //Trim string values of tag and attributes
     cdataTagName: false,
     cdataPositionChar: "\\c",
-    tagValueProcessor: function(a) {return a;},
-    attrValueProcessor: function(a) {return a;}
+    tagValueProcessor: (a) => a,
+    attrValueProcessor: (a) => a
     //decodeStrict: false,
 };
 
-const getTraversalObj = (xmlData, options) => {
+exports.defaultOptions = defaultOptions;
+const props = ["attributeNamePrefix", "attrNodeName", "textNodeName", "ignoreAttributes", "ignoreNameSpace", "allowBooleanAttributes", "parseNodeValue", "parseAttributeValue", "arrayMode", "trimValues", "cdataTagName", "cdataPositionChar", "tagValueProcessor", "attrValueProcessor"];
+
+const getTraversalObj = function(xmlData, options) {
     //options = buildOptions(options);
-    options = Object.assign({}, defaultOptions, options);
+    options = buildOptions(options,defaultOptions,props);
     //xmlData = xmlData.replace(/\r?\n/g, " ");//make it single line
     xmlData = xmlData.replace(/<!--[\s\S]*?-->/g, "");//Remove  comments
 
@@ -44,7 +47,7 @@ const getTraversalObj = (xmlData, options) => {
         if (tagType === TagType.CLOSING) {
             //add parsed data to parent node
             if (currentNode.parent && tag[14]) {
-                currentNode.parent.val = util.getValue(currentNode.parent.val) + "" + processTagValue(tag[14], options);
+                currentNode.parent.val = getValue(currentNode.parent.val) + "" + processTagValue(tag[14], options);
             }
 
             currentNode = currentNode.parent;
@@ -55,7 +58,7 @@ const getTraversalObj = (xmlData, options) => {
                 childNode.attrsMap = buildAttributesMap(tag[8], options);
                 currentNode.addChild(childNode);
                 //for backtracking
-                currentNode.val = util.getValue(currentNode.val) + options.cdataPositionChar;
+                currentNode.val = getValue(currentNode.val) + options.cdataPositionChar;
                 //add rest value to parent node
                 if (tag[14]) {
                     currentNode.val += processTagValue(tag[14], options);
@@ -135,7 +138,7 @@ function parseValue(val, shouldParse) {
         }
         return val;
     }
-    if (util.isExist(val)) {
+    if (isExist(val)) {
         return val;
     }
     return "";
@@ -150,7 +153,7 @@ function buildAttributesMap(attrStr, options) {
         attrStr = attrStr.replace(/\r?\n/g, " ");
         //attrStr = attrStr || attrStr.trim();
 
-        const matches = util.getAllMatches(attrStr, attrsRegx);
+        const matches = getAllMatches(attrStr, attrsRegx);
         const attrs = {};
         for (let match of matches) {
             const attrName = resolveNameSpace(match[1], options);
@@ -180,6 +183,7 @@ function buildAttributesMap(attrStr, options) {
 }
 
 module.exports = {
+    props,
     defaultOptions,
     getTraversalObj
 };

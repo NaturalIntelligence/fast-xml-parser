@@ -1,4 +1,4 @@
-const {isExist} = require("./util");
+const {isExist, buildOptions} = require("./util");
 
 const defaultOptions = {
     attributeNamePrefix: "@_",
@@ -10,114 +10,129 @@ const defaultOptions = {
     format: false,
     indentBy: "  ",
     supressEmptyNode: false,
-    tagValueProcessor: function(a) {return a;},
-    attrValueProcessor: function(a) {return a;}
+    tagValueProcessor: (a) => a,
+    attrValueProcessor: (a) => a
 };
 
-class Parser {
-    constructor(options) {
-        this.options = Object.assign({}, defaultOptions, options);
-        if (this.options.ignoreAttributes || this.options.attrNodeName) {
-            this.isAttribute = function(/*a*/) { return false;};
-        } else {
-            this.attrPrefixLen = this.options.attributeNamePrefix.length;
-            this.isAttribute = isAttribute;
-        }
-        if (this.options.cdataTagName) {
-            this.isCDATA = isCDATA;
-        } else {
-            this.isCDATA = function(/*a*/) { return false;};
-        }
-        this.replaceCDATAstr = replaceCDATAstr;
-        this.replaceCDATAarr = replaceCDATAarr;
+const props = [
+    "attributeNamePrefix",
+    "attrNodeName",
+    "textNodeName",
+    "ignoreAttributes",
+    "cdataTagName",
+    "cdataPositionChar",
+    "format",
+    "indentBy",
+    "supressEmptyNode",
+    "tagValueProcessor",
+    "attrValueProcessor"
+];
 
-        if (this.options.format) {
-            this.indentate = indentate;
-            this.tagEndChar = ">\n";
-            this.newLine = "\n";
-        } else {
-            this.indentate = () => "";
-            this.tagEndChar = ">";
-            this.newLine = "";
-        }
+function Parser(options) {
+    this.options = buildOptions(options, defaultOptions, props);
+    if (this.options.ignoreAttributes || this.options.attrNodeName) {
+        this.isAttribute = function(/*a*/) { return false;};
+    } else {
+        this.attrPrefixLen = this.options.attributeNamePrefix.length;
+        this.isAttribute = isAttribute;
+    }
+    if (this.options.cdataTagName) {
+        this.isCDATA = isCDATA;
+    } else {
+        this.isCDATA = (/*a*/) => false;
+    }
+    this.replaceCDATAstr = replaceCDATAstr;
+    this.replaceCDATAarr = replaceCDATAarr;
 
-        if (this.options.supressEmptyNode) {
-            this.buildTextNode = buildEmptyTextNode;
-            this.buildObjNode = buildEmptyObjNode;
-        } else {
-            this.buildTextNode = buildTextValNode;
-            this.buildObjNode = buildObjectNode;
-        }
-
-        this.buildTextValNode = buildTextValNode;
-        this.buildObjectNode = buildObjectNode;
+    if (this.options.format) {
+        this.indentate = indentate;
+        this.tagEndChar = ">\n";
+        this.newLine = "\n";
+    } else {
+        this.indentate = () => "";
+        this.tagEndChar = ">";
+        this.newLine = "";
     }
 
-    parse(jObj) {
-        return this.j2x(jObj, 0).val;
+    if (this.options.supressEmptyNode) {
+        this.buildTextNode = buildEmptyTextNode;
+        this.buildObjNode = buildEmptyObjNode;
+    } else {
+        this.buildTextNode = buildTextValNode;
+        this.buildObjNode = buildObjectNode;
     }
 
-    j2x(jObj, level) {
-        let attrStr = "";
-        let val = "";
-        for (let key of Object.keys(jObj)) {
-            if (!isExist(jObj[key])) {
-                // supress undefined node
-            }
-            else if (typeof jObj[key] !== "object") {//premitive type
-                const attr = this.isAttribute(key);
-                if (attr) {
-                    attrStr += " " + attr + "=\"" + this.options.attrValueProcessor("" + jObj[key]) + "\"";
-                } else if (this.isCDATA(key)) {
-                    if (jObj[this.options.textNodeName]) {
-                        val += this.replaceCDATAstr(jObj[this.options.textNodeName], jObj[key]);
-                    } else {
-                        val += this.replaceCDATAstr("", jObj[key]);
-                    }
-                } else {//tag value
-                    if (key === this.options.textNodeName) {
-                        if (jObj[this.options.cdataTagName]) {
-                            //value will added while processing cdata
-                        } else {
-                            val += this.options.tagValueProcessor("" + jObj[key]);
-                        }
-                    } else {
-                        val += this.buildTextNode(jObj[key], key, "", level);
-                    }
+    this.buildTextValNode = buildTextValNode;
+    this.buildObjectNode = buildObjectNode;
+}
+
+parse(jObj);
+{
+    return this.j2x(jObj, 0).val;
+}
+
+j2x(jObj, level);
+{
+    let attrStr = "";
+    let val = "";
+    for (let key of Object.keys(jObj)) {
+        if (!isExist(jObj[key])) {
+            // supress undefined node
+        }
+        else if (typeof jObj[key] !== "object") {//premitive type
+            const attr = this.isAttribute(key);
+            if (attr) {
+                attrStr += " " + attr + "=\"" + this.options.attrValueProcessor("" + jObj[key]) + "\"";
+            } else if (this.isCDATA(key)) {
+                if (jObj[this.options.textNodeName]) {
+                    val += this.replaceCDATAstr(jObj[this.options.textNodeName], jObj[key]);
+                } else {
+                    val += this.replaceCDATAstr("", jObj[key]);
                 }
-            } else if (Array.isArray(jObj[key])) {//repeated nodes
-                if (this.isCDATA(key)) {
-                    if (jObj[this.options.textNodeName]) {
-                        val += this.replaceCDATAarr(jObj[this.options.textNodeName], jObj[key]);
+            } else {//tag value
+                if (key === this.options.textNodeName) {
+                    if (jObj[this.options.cdataTagName]) {
+                        //value will added while processing cdata
                     } else {
-                        val += this.replaceCDATAarr("", jObj[key]);
-                    }
-                } else {//nested nodes
-                    for (let item of jObj[key]) {
-                        if (!isExist(item)) {
-                            // supress undefined node
-                        }
-                        else if (typeof item === "object") {
-                            const result = this.j2x(item, level + 1);
-                            val += this.buildObjNode(result.val, key, result.attrStr, level);
-                        } else {
-                            val += this.buildTextNode(item, key, "", level);
-                        }
-                    }
-                }
-            } else {
-                if (this.options.attrNodeName && key === this.options.attrNodeName) {
-                    for (let attrKey of Object.keys(jObj[key])) {
-                        attrStr += " " + attrKey + "=\"" + this.options.tagValueProcessor("" + jObj[key][attrKey]) + "\"";
+                        val += this.options.tagValueProcessor("" + jObj[key]);
                     }
                 } else {
-                    const result = this.j2x(jObj[key], level + 1);
-                    val += this.buildObjNode(result.val, key, result.attrStr, level);
+                    val += this.buildTextNode(jObj[key], key, "", level);
                 }
             }
+        } else if (Array.isArray(jObj[key])) {//repeated nodes
+            if (this.isCDATA(key)) {
+                if (jObj[this.options.textNodeName]) {
+                    val += this.replaceCDATAarr(jObj[this.options.textNodeName], jObj[key]);
+                } else {
+                    val += this.replaceCDATAarr("", jObj[key]);
+                }
+            } else {//nested nodes
+                for (let item of jObj[key]) {
+                    if (!isExist(item)) {
+                        // supress undefined node
+                    }
+                    else if (typeof item === "object") {
+                        const result = this.j2x(item, level + 1);
+                        val += this.buildObjNode(result.val, key, result.attrStr, level);
+                    } else {
+                        val += this.buildTextNode(item, key, "", level);
+                    }
+                }
+            }
+        } else {
+            if (this.options.attrNodeName && key === this.options.attrNodeName) {
+                for (let attrKey of Object.keys(jObj[key])) {
+                    attrStr += " " + attrKey + "=\"" + this.options.tagValueProcessor("" + jObj[key][attrKey]) + "\"";
+                }
+            } else {
+                const result = this.j2x(jObj[key], level + 1);
+                val += this.buildObjNode(result.val, key, result.attrStr, level);
+            }
         }
-        return {attrStr: attrStr, val: val};
     }
+    return {attrStr: attrStr, val: val};
+}
 }
 
 function replaceCDATAstr(str, cdata) {

@@ -1,25 +1,14 @@
-const util = require("./util");
+const {buildOptions, getAllMatches, doesMatch} = require("./util");
 
 const defaultOptions = {
     allowBooleanAttributes: false         //A tag can have attributes without any value
 };
 
-const buildOptions = (options) => {
-    if (!options) {
-        options = {};
-    }
-    const props = ["allowBooleanAttributes"];
-    for (let i of props) {
-        if (options[props[i]] === undefined) {
-            options[props[i]] = defaultOptions[props[i]];
-        }
-    }
-    return options;
-};
+const props = ["allowBooleanAttributes"];
 
 //const tagsPattern = new RegExp("<\\/?([\\w:\\-_\.]+)\\s*\/?>","g");
-const validate = (xmlData, options) => {
-    options = buildOptions(options);
+exports.validate = function(xmlData, options) {
+    options = buildOptions(options,defaultOptions,props);
 
     //xmlData = xmlData.replace(/(\r\n|\n|\r)/gm,"");//make it single line
     //xmlData = xmlData.replace(/(^\s*<\?xml.*?\?>)/g,"");//Remove XML starting tag
@@ -251,7 +240,7 @@ function validateAttributeString(attrStr, options) {
 
     //if(attrStr.trim().length === 0) return true; //empty string
 
-    const matches = util.getAllMatches(attrStr, validAttrStrRegxp);
+    const matches = getAllMatches(attrStr, validAttrStrRegxp);
     const attrNames = [];
 
     for (let match of matches) {
@@ -283,16 +272,16 @@ function validateAttributeString(attrStr, options) {
 const validAttrRegxp = /^[_a-zA-Z][\w\-.:]*$/;
 
 function validateAttrName(attrName) {
-    return util.doesMatch(attrName, validAttrRegxp);
+    return doesMatch(attrName, validAttrRegxp);
 }
 
 //const startsWithXML = new RegExp("^[Xx][Mm][Ll]");
 const startsWith = /^([a-zA-Z]|_)[\w.\-_:]*/;
 
 function validateTagName(tagname) {
-    /*if(util.doesMatch(tagname,startsWithXML)) return false;
+    /*if(doesMatch(tagname,startsWithXML)) return false;
     else*/
-    return !util.doesNotMatch(tagname, startsWith);
+    return !doesNotMatch(tagname, startsWith);
 }
 
 module.exports = {validate};

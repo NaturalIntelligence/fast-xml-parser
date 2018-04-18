@@ -1,6 +1,6 @@
 {
   "name": "fast-xml-parser",
-  "version": "3.3.6",
+  "version": "3.3.8",
   "description": "Validate XML or Parse XML to JS/JSON very fast without C/C++ based libraries",
   "browser": "./parser.browser.js",
   "main": "./parser.node.js",
@@ -91,5 +91,6 @@
   },
   "dependencies": {
     "nimnjs": "^1.2.2"
-  }
+  },
+  "typings": "src/parser.d.ts"
 }

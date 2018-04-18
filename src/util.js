@@ -35,7 +35,24 @@ const getValue = (v) => isExist(v) ? v : "";
 
 // const fakeCall = function(a) {return a;};
 // const fakeCallNoReturn = function() {};
+const buildOptions = function(options,defaultOptions,props) {
+    var newOptions = {};
+    if (!options) {
+        options = {};
+    }
+
+    for (let i = 0; i < props.length; i++) {
+        if ( options[props[i]] !== undefined) {
+            newOptions[props[i]] = options[props[i]];
+        }else{
+            newOptions[props[i]] = defaultOptions[props[i]];
+        }
+    }
+    return newOptions;
+};
+
 module.exports = {
+    buildOptions,
     getValue,
     merge,
     isEmptyObject,
