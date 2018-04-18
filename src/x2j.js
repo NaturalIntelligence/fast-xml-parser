@@ -27,11 +27,26 @@ const defaultOptions = {
 };
 
 exports.defaultOptions = defaultOptions;
-const props = ["attributeNamePrefix", "attrNodeName", "textNodeName", "ignoreAttributes", "ignoreNameSpace", "allowBooleanAttributes", "parseNodeValue", "parseAttributeValue", "arrayMode", "trimValues", "cdataTagName", "cdataPositionChar", "tagValueProcessor", "attrValueProcessor"];
+const props = [
+    "attributeNamePrefix",
+    "attrNodeName",
+    "textNodeName",
+    "ignoreAttributes",
+    "ignoreNameSpace",
+    "allowBooleanAttributes",
+    "parseNodeValue",
+    "parseAttributeValue",
+    "arrayMode",
+    "trimValues",
+    "cdataTagName",
+    "cdataPositionChar",
+    "tagValueProcessor",
+    "attrValueProcessor"
+];
 
 const getTraversalObj = function(xmlData, options) {
     //options = buildOptions(options);
-    options = buildOptions(options,defaultOptions,props);
+    options = buildOptions(options, defaultOptions, props);
     //xmlData = xmlData.replace(/\r?\n/g, " ");//make it single line
     xmlData = xmlData.replace(/<!--[\s\S]*?-->/g, "");//Remove  comments
 

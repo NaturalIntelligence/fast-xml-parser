@@ -1,4 +1,4 @@
-const {buildOptions, getAllMatches, doesMatch} = require("./util");
+const {buildOptions, getAllMatches, doesMatch, doesNotMatch} = require("./util");
 
 const defaultOptions = {
     allowBooleanAttributes: false         //A tag can have attributes without any value
@@ -7,8 +7,8 @@ const defaultOptions = {
 const props = ["allowBooleanAttributes"];
 
 //const tagsPattern = new RegExp("<\\/?([\\w:\\-_\.]+)\\s*\/?>","g");
-exports.validate = function(xmlData, options) {
-    options = buildOptions(options,defaultOptions,props);
+const validate = function(xmlData, options) {
+    options = buildOptions(options, defaultOptions, props);
 
     //xmlData = xmlData.replace(/(\r\n|\n|\r)/gm,"");//make it single line
     //xmlData = xmlData.replace(/(^\s*<\?xml.*?\?>)/g,"");//Remove XML starting tag

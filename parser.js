@@ -97,7 +97,8 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
 var _require = __webpack_require__(/*! ./util */ "./src/util.js"),
-    isExist = _require.isExist;
+    isExist = _require.isExist,
+    buildOptions = _require.buildOptions;
 
 var defaultOptions = {
   attributeNamePrefix: "@_",
@@ -116,6 +117,7 @@ var defaultOptions = {
     return a;
   }
 };
+var props = ["attributeNamePrefix", "attrNodeName", "textNodeName", "ignoreAttributes", "cdataTagName", "cdataPositionChar", "format", "indentBy", "supressEmptyNode", "tagValueProcessor", "attrValueProcessor"];
 
 var Parser =
 /*#__PURE__*/
@@ -123,7 +125,7 @@ function () {
   function Parser(options) {
     _classCallCheck(this, Parser);
 
-    this.options = Object.assign({}, defaultOptions, options);
+    this.options = buildOptions(options, defaultOptions, props);
 
     if (this.options.ignoreAttributes || this.options.attrNodeName) {
       this.isAttribute = function ()
@@ -139,10 +141,11 @@ function () {
     if (this.options.cdataTagName) {
       this.isCDATA = isCDATA;
     } else {
-      this.isCDATA = function ()
-      /*a*/
-      {
-        return false;
+      this.isCDATA = function () {
+        return (
+          /*a*/
+          false
+        );
       };
     }
 
@@ -230,14 +233,14 @@ function () {
 
             try {
               for (var _iterator = jObj[key][Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-                var _item = _step.value;
+                var item = _step.value;
 
-                if (!isExist(_item)) {// supress undefined node
-                } else if (_typeof(_item) === "object") {
-                  var result = this.j2x(_item, level + 1);
+                if (!isExist(item)) {// supress undefined node
+                } else if (_typeof(item) === "object") {
+                  var result = this.j2x(item, level + 1);
                   val += this.buildObjNode(result.val, key, result.attrStr, level);
                 } else {
-                  val += this.buildTextNode(_item, key, "", level);
+                  val += this.buildTextNode(item, key, "", level);
                 }
               }
             } catch (err) {
@@ -372,15 +375,18 @@ module.exports = {
 
 
 var _require = __webpack_require__(/*! ./util */ "./src/util.js"),
+    buildOptions = _require.buildOptions,
     isEmptyObject = _require.isEmptyObject,
     isExist = _require.isExist,
     merge = _require.merge;
 
-var xmlToNodeobj = __webpack_require__(/*! ./x2j */ "./src/x2j.js"); //TODO: do it later
+var _require2 = __webpack_require__(/*! ./x2j */ "./src/x2j.js"),
+    defaultOptions = _require2.defaultOptions,
+    props = _require2.props; //TODO: do it later
 
 
 var convertToJsonString = function convertToJsonString(node, options) {
-  options = Object.assign({}, xmlToNodeobj.defaultOptions, options);
+  options = buildOptions(options, defaultOptions, props);
   options.indentBy = options.indentBy || "";
   return _cToJsonStr(node, options, 0);
 };
@@ -560,8 +566,8 @@ var _e = function _e(node, e_schema, options) {
 
           try {
             for (var _iterator = node[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-              var _item = _step.value;
-              var r = getValue(_item.val, itemSchema);
+              var item = _step.value;
+              var r = getValue(item.val, itemSchema);
               str = processValue(str, r);
             }
           } catch (err) {
@@ -585,11 +591,11 @@ var _e = function _e(node, e_schema, options) {
 
           try {
             for (var _iterator2 = node[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-              var _item3 = _step2.value;
+              var _item = _step2.value;
 
-              var _r2 = _e(_item3, itemSchema, options);
+              var _r = _e(_item, itemSchema, options);
 
-              str = processValue(str, _r2);
+              str = processValue(str, _r);
             }
           } catch (err) {
             _didIteratorError2 = true;
@@ -624,17 +630,17 @@ var _e = function _e(node, e_schema, options) {
           //a property defined in schema can be present either in attrsMap or children tags
           //options.textNodeName will not present in both maps, take it's value from val
           //options.attrNodeName will be present in attrsMap
-          var _r3 = void 0;
+          var _r2 = void 0;
 
           if (!options.ignoreAttributes && node.attrsMap && node.attrsMap[key]) {
-            _r3 = _e(node.attrsMap[key], e_schema[key], options);
+            _r2 = _e(node.attrsMap[key], e_schema[key], options);
           } else if (key === options.textNodeName) {
-            _r3 = _e(node.val, e_schema[key], options);
+            _r2 = _e(node.val, e_schema[key], options);
           } else {
-            _r3 = _e(node.child[key], e_schema[key], options);
+            _r2 = _e(node.child[key], e_schema[key], options);
           }
 
-          str = processValue(str, _r3);
+          str = processValue(str, _r2);
         }
       }
 
@@ -688,10 +694,14 @@ var hasData = function hasData(jObj) {
 };
 
 var _require = __webpack_require__(/*! ./x2j */ "./src/x2j.js"),
-    defaultOptions = _require.defaultOptions;
+    defaultOptions = _require.defaultOptions,
+    props = _require.props;
+
+var _require2 = __webpack_require__(/*! ./util */ "./src/util.js"),
+    buildOptions = _require2.buildOptions;
 
 var convertToNimn = function convertToNimn(node, e_schema, options) {
-  options = Object.assign({}, defaultOptions, options);
+  options = buildOptions(options, defaultOptions, props);
   return _e(node, e_schema, options);
 };
 
@@ -725,7 +735,8 @@ var _require4 = __webpack_require__(/*! ./j2x */ "./src/j2x.js"),
     isAttribute = _require4.isAttribute;
 
 var _require5 = __webpack_require__(/*! ./x2j */ "./src/x2j.js"),
-    defaultOptions = _require5.defaultOptions;
+    defaultOptions = _require5.defaultOptions,
+    props = _require5.props;
 
 var _require6 = __webpack_require__(/*! ./n2j */ "./src/n2j.js"),
     convertToJson = _require6.convertToJson;
@@ -733,12 +744,15 @@ var _require6 = __webpack_require__(/*! ./n2j */ "./src/n2j.js"),
 var _require7 = __webpack_require__(/*! ./n2j-str */ "./src/n2j-str.js"),
     convertToJsonString = _require7.convertToJsonString;
 
+var _require8 = __webpack_require__(/*! ./util */ "./src/util.js"),
+    buildOptions = _require8.buildOptions;
+
 var parseToNimn = function parseToNimn(xmlData, schema, options) {
   return convertToNimn(getTraversalObj(xmlData, options), schema, options);
 };
 
 var parse = function parse(xmlData, options) {
-  options = Object.assign({}, defaultOptions, options);
+  options = buildOptions(options, defaultOptions, props);
   return convertToJson(getTraversalObj(xmlData, options), options);
 };
 
@@ -827,7 +841,26 @@ var getValue = function getValue(v) {
 // const fakeCallNoReturn = function() {};
 
 
+var buildOptions = function buildOptions(options, defaultOptions, props) {
+  var newOptions = {};
+
+  if (!options) {
+    options = {};
+  }
+
+  for (var i = 0; i < props.length; i++) {
+    if (options[props[i]] !== undefined) {
+      newOptions[props[i]] = options[props[i]];
+    } else {
+      newOptions[props[i]] = defaultOptions[props[i]];
+    }
+  }
+
+  return newOptions;
+};
+
 module.exports = {
+  buildOptions: buildOptions,
   getValue: getValue,
   merge: merge,
   isEmptyObject: isEmptyObject,
@@ -849,34 +882,20 @@ module.exports = {
 "use strict";
 
 
-var util = __webpack_require__(/*! ./util */ "./src/util.js");
+var _require = __webpack_require__(/*! ./util */ "./src/util.js"),
+    buildOptions = _require.buildOptions,
+    getAllMatches = _require.getAllMatches,
+    doesMatch = _require.doesMatch,
+    doesNotMatch = _require.doesNotMatch;
 
 var defaultOptions = {
   allowBooleanAttributes: false //A tag can have attributes without any value
 
 };
-
-var buildOptions = function buildOptions(options) {
-  if (!options) {
-    options = {};
-  }
-
-  var props = ["allowBooleanAttributes"];
-
-  for (var _i = 0; _i < props.length; _i++) {
-    var i = props[_i];
-
-    if (options[props[i]] === undefined) {
-      options[props[i]] = defaultOptions[props[i]];
-    }
-  }
-
-  return options;
-}; //const tagsPattern = new RegExp("<\\/?([\\w:\\-_\.]+)\\s*\/?>","g");
-
+var props = ["allowBooleanAttributes"]; //const tagsPattern = new RegExp("<\\/?([\\w:\\-_\.]+)\\s*\/?>","g");
 
 var validate = function validate(xmlData, options) {
-  options = buildOptions(options); //xmlData = xmlData.replace(/(\r\n|\n|\r)/gm,"");//make it single line
+  options = buildOptions(options, defaultOptions, props); //xmlData = xmlData.replace(/(\r\n|\n|\r)/gm,"");//make it single line
   //xmlData = xmlData.replace(/(^\s*<\?xml.*?\?>)/g,"");//Remove XML starting tag
   //xmlData = xmlData.replace(/(<!DOCTYPE[\s\w\"\.\/\-\:]+(\[.*\])*\s*>)/g,"");//Remove DOCTYPE
 
@@ -1159,7 +1178,7 @@ var validAttrStrRegxp = new RegExp("(\\s*)([^\\s=]+)(\\s*=)?(\\s*(['\"])(([\\s\\
 function validateAttributeString(attrStr, options) {
   //console.log("start:"+attrStr+":end");
   //if(attrStr.trim().length === 0) return true; //empty string
-  var matches = util.getAllMatches(attrStr, validAttrStrRegxp);
+  var matches = getAllMatches(attrStr, validAttrStrRegxp);
   var attrNames = [];
   var _iteratorNormalCompletion = true;
   var _didIteratorError = false;
@@ -1167,23 +1186,23 @@ function validateAttributeString(attrStr, options) {
 
   try {
     for (var _iterator = matches[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-      var _match = _step.value;
+      var match = _step.value;
 
       //console.log(matches[i]);
-      if (_match[1].length === 0) {
+      if (match[1].length === 0) {
         //nospace before attribute name: a="sd"b="saf"
         return {
           err: {
             code: "InvalidAttr",
-            msg: "attribute " + _match[2] + " has no space in starting."
+            msg: "attribute " + match[2] + " has no space in starting."
           }
         };
-      } else if (_match[3] === undefined && !options.allowBooleanAttributes) {
+      } else if (match[3] === undefined && !options.allowBooleanAttributes) {
         //independent attribute: ab
         return {
           err: {
             code: "InvalidAttr",
-            msg: "boolean attribute " + _match[2] + " is not allowed."
+            msg: "boolean attribute " + match[2] + " is not allowed."
           }
         };
       }
@@ -1192,7 +1211,7 @@ function validateAttributeString(attrStr, options) {
               } */
 
 
-      var attrName = _match[2];
+      var attrName = match[2];
 
       if (!validateAttrName(attrName)) {
         return {
@@ -1236,16 +1255,16 @@ function validateAttributeString(attrStr, options) {
 var validAttrRegxp = /^[_a-zA-Z][\w\-.:]*$/;
 
 function validateAttrName(attrName) {
-  return util.doesMatch(attrName, validAttrRegxp);
+  return doesMatch(attrName, validAttrRegxp);
 } //const startsWithXML = new RegExp("^[Xx][Mm][Ll]");
 
 
 var startsWith = /^([a-zA-Z]|_)[\w.\-_:]*/;
 
 function validateTagName(tagname) {
-  /*if(util.doesMatch(tagname,startsWithXML)) return false;
+  /*if(doesMatch(tagname,startsWithXML)) return false;
   else*/
-  return !util.doesNotMatch(tagname, startsWith);
+  return !doesNotMatch(tagname, startsWith);
 }
 
 module.exports = {
@@ -1264,10 +1283,14 @@ module.exports = {
 "use strict";
 
 
-var util = __webpack_require__(/*! ./util */ "./src/util.js");
+var _require = __webpack_require__(/*! ./util */ "./src/util.js"),
+    buildOptions = _require.buildOptions,
+    getValue = _require.getValue,
+    isExist = _require.isExist,
+    getAllMatches = _require.getAllMatches;
 
-var _require = __webpack_require__(/*! ./xml-node */ "./src/xml-node.js"),
-    XmlNode = _require.XmlNode;
+var _require2 = __webpack_require__(/*! ./xml-node */ "./src/xml-node.js"),
+    XmlNode = _require2.XmlNode;
 
 var TagType = {
   "OPENING": 1,
@@ -1302,10 +1325,12 @@ var defaultOptions = {
   } //decodeStrict: false,
 
 };
+exports.defaultOptions = defaultOptions;
+var props = ["attributeNamePrefix", "attrNodeName", "textNodeName", "ignoreAttributes", "ignoreNameSpace", "allowBooleanAttributes", "parseNodeValue", "parseAttributeValue", "arrayMode", "trimValues", "cdataTagName", "cdataPositionChar", "tagValueProcessor", "attrValueProcessor"];
 
 var getTraversalObj = function getTraversalObj(xmlData, options) {
   //options = buildOptions(options);
-  options = Object.assign({}, defaultOptions, options); //xmlData = xmlData.replace(/\r?\n/g, " ");//make it single line
+  options = buildOptions(options, defaultOptions, props); //xmlData = xmlData.replace(/\r?\n/g, " ");//make it single line
 
   xmlData = xmlData.replace(/<!--[\s\S]*?-->/g, ""); //Remove  comments
 
@@ -1321,7 +1346,7 @@ var getTraversalObj = function getTraversalObj(xmlData, options) {
     if (tagType === TagType.CLOSING) {
       //add parsed data to parent node
       if (currentNode.parent && tag[14]) {
-        currentNode.parent.val = util.getValue(currentNode.parent.val) + "" + processTagValue(tag[14], options);
+        currentNode.parent.val = getValue(currentNode.parent.val) + "" + processTagValue(tag[14], options);
       }
 
       currentNode = currentNode.parent;
@@ -1332,7 +1357,7 @@ var getTraversalObj = function getTraversalObj(xmlData, options) {
         childNode.attrsMap = buildAttributesMap(tag[8], options);
         currentNode.addChild(childNode); //for backtracking
 
-        currentNode.val = util.getValue(currentNode.val) + options.cdataPositionChar; //add rest value to parent node
+        currentNode.val = getValue(currentNode.val) + options.cdataPositionChar; //add rest value to parent node
 
         if (tag[14]) {
           currentNode.val += processTagValue(tag[14], options);
@@ -1422,7 +1447,7 @@ function parseValue(val, shouldParse) {
     return val;
   }
 
-  if (util.isExist(val)) {
+  if (isExist(val)) {
     return val;
   }
 
@@ -1437,7 +1462,7 @@ function buildAttributesMap(attrStr, options) {
   if (!options.ignoreAttributes && typeof attrStr === "string") {
     attrStr = attrStr.replace(/\r?\n/g, " "); //attrStr = attrStr || attrStr.trim();
 
-    var matches = util.getAllMatches(attrStr, attrsRegx);
+    var matches = getAllMatches(attrStr, attrsRegx);
     var attrs = {};
     var _iteratorNormalCompletion = true;
     var _didIteratorError = false;
@@ -1445,17 +1470,17 @@ function buildAttributesMap(attrStr, options) {
 
     try {
       for (var _iterator = matches[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-        var _match = _step.value;
-        var attrName = resolveNameSpace(_match[1], options);
+        var match = _step.value;
+        var attrName = resolveNameSpace(match[1], options);
 
         if (attrName.length) {
-          if (_match[4] !== undefined) {
+          if (match[4] !== undefined) {
             if (options.trimValues) {
-              _match[4] = _match[4].trim();
+              match[4] = match[4].trim();
             }
 
-            _match[4] = options.attrValueProcessor(_match[4]);
-            attrs[options.attributeNamePrefix + attrName] = parseValue(_match[4], options.parseAttributeValue);
+            match[4] = options.attrValueProcessor(match[4]);
+            attrs[options.attributeNamePrefix + attrName] = parseValue(match[4], options.parseAttributeValue);
           } else if (options.allowBooleanAttributes) {
             attrs[options.attributeNamePrefix + attrName] = true;
           }
@@ -1491,6 +1516,7 @@ function buildAttributesMap(attrStr, options) {
 }
 
 module.exports = {
+  props: props,
   defaultOptions: defaultOptions,
   getTraversalObj: getTraversalObj
 };

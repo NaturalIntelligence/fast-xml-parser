@@ -5,7 +5,7 @@ const {defaultOptions, props} = require("./x2j");
 
 //TODO: do it later
 const convertToJsonString = function(node, options) {
-    options = buildOptions(options,defaultOptions,props);
+    options = buildOptions(options, defaultOptions, props);
 
     options.indentBy = options.indentBy || "";
     return _cToJsonStr(node, options, 0);
