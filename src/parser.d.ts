@@ -31,7 +31,7 @@ type J2xOptions = {
 };
 type J2xOptionsOptional = Partial<J2xOptions>;
 
-type ESchema = string | Array | object;
+type ESchema = string | object | Array<string|object>;
 
 type ValidationError = {
   err: { code: string; msg: string };
