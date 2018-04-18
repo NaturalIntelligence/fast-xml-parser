@@ -1,3 +1,5 @@
+3.3.9 / 2018-04-18
+  * fix #74 : TS2314 TypeScript compiler error
 3.3.8 / 2018-04-17
   * fix #73 : IE doesn't support Object.assign
 3.3.7 / 2018-04-14
