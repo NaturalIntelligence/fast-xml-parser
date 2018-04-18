@@ -14,7 +14,7 @@ const builder = new xml2js.Builder();
 
 const fs = require("fs");
 const path = require("path");
-const fileNamePath = path.join(__dirname, "../spec/assets/test.json");//1.5k
+const fileNamePath = path.join(__dirname, "../test/assets/test.json");//1.5k
 const jsonData = JSON.parse(fs.readFileSync(fileNamePath).toString());
 //xmlData=`<root>${xmlData.repeat(1000)}</root>`;
 
@@ -42,7 +42,7 @@ suite
     .on("error", function(e) {
         console.log("Error in Suite: ", e);
     })
-    .on("abort", function(e) {
+    .on("abort", function(/*e*/) {
         console.log("Aborting Suite: " + this.name);
     })
     //.on('cycle',function(event){

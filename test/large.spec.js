@@ -1,15 +1,15 @@
-"use strict";
-
-const validator = require("../src/validator");
+const fs = require("fs");
+const path = require("path");
+const {validate} = require("../parser");
 
 describe("XMLParser", function() {
     it("should validate big XML file", function() {
-        const fs = require("fs");
-        const path = require("path");
+        this.slow(60000);
+        this.timeout(180000);
         const fileNamePath = path.join(__dirname, "assets/large.xml");
         const svgData = fs.readFileSync(fileNamePath).toString();
 
-        const result = validator.validate(svgData);
-        expect(result).toBe(true);
+        const result = validate(svgData);
+        expect(result).equal(true);
     });
 });

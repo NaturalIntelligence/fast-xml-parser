@@ -1,7 +1,4 @@
-"use strict";
-const char = function(a) {
-    return String.fromCharCode(a);
-};
+const char = (a) => String.fromCharCode(a);
 
 const chars = {
     nilChar: char(254),
@@ -28,7 +25,7 @@ const charsArr = [
     chars.arrStart
 ];
 
-const _e = function(node, e_schema, options) {
+const _e = (node, e_schema, options) => {
     if (typeof e_schema === "string") {//premitive
         if (node && node[0] && node[0].val !== undefined) {
             return getValue(node[0].val, e_schema);
@@ -44,28 +41,24 @@ const _e = function(node, e_schema, options) {
                 str += chars.arrStart;
                 const itemSchema = e_schema[0];
                 //var itemSchemaType = itemSchema;
-                const arr_len = node.length;
-
                 if (typeof itemSchema === "string") {
-                    for (let arr_i = 0; arr_i < arr_len; arr_i++) {
-                        const r = getValue(node[arr_i].val, itemSchema);
+                    for (let item of node) {
+                        const r = getValue(item.val, itemSchema);
                         str = processValue(str, r);
                     }
                 } else {
-                    for (let arr_i = 0; arr_i < arr_len; arr_i++) {
-                        const r = _e(node[arr_i], itemSchema, options);
+                    for (let item of node) {
+                        const r = _e(item, itemSchema, options);
                         str = processValue(str, r);
                     }
                 }
                 str += chars.arrayEnd;//indicates that next item is not array item
             } else {//object
                 str += chars.objStart;
-                const keys = Object.keys(e_schema);
                 if (Array.isArray(node)) {
                     node = node[0];
                 }
-                for (let i in keys) {
-                    const key = keys[i];
+                for (let key of Object.keys(e_schema)) {
                     //a property defined in schema can be present either in attrsMap or children tags
                     //options.textNodeName will not present in both maps, take it's value from val
                     //options.attrNodeName will be present in attrsMap
@@ -87,7 +80,7 @@ const _e = function(node, e_schema, options) {
     }
 };
 
-const getValue = function(a/*, type*/) {
+const getValue = (a/*, type*/) => {
     switch (a) {
         case undefined:
             return chars.missingPremitive;
@@ -100,18 +93,18 @@ const getValue = function(a/*, type*/) {
     }
 };
 
-const processValue = function(str, r) {
+const processValue = (str, r) => {
     if (!isAppChar(r[0]) && !isAppChar(str[str.length - 1])) {
         str += chars.boundryChar;
     }
     return str + r;
 };
 
-const isAppChar = function(ch) {
+const isAppChar = (ch) => {
     return charsArr.indexOf(ch) !== -1;
 };
 
-function hasData(jObj) {
+const hasData = (jObj) => {
     if (jObj === undefined) {
         return chars.missingChar;
     } else if (jObj === null) {
@@ -121,14 +114,13 @@ function hasData(jObj) {
     } else {
         return true;
     }
-}
+};
 
-const x2j = require("./x2j");
-const buildOptions = require("./util").buildOptions;
-
-const convert2nimn = function(node, e_schema, options) {
-    options = buildOptions(options,x2j.defaultOptions,x2j.props);
+const {defaultOptions, props} = require("./x2j");
+const {buildOptions} = require("./util");
+const convertToNimn = (node, e_schema, options) => {
+    options = buildOptions(options, defaultOptions, props);
     return _e(node, e_schema, options);
 };
 
-exports.convert2nimn = convert2nimn;
+module.exports = {convertToNimn};

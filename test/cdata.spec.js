@@ -1,7 +1,4 @@
-"use strict";
-
-const parser = require("../src/parser");
-const validator = require("../src/validator");
+const {parse, validate} = require("../parser");
 
 describe("XMLParser", function() {
     it("should parse tag having CDATA", function() {
@@ -23,26 +20,26 @@ describe("XMLParser", function() {
                         122233344550,
                         122233344551
                     ],
-                    "name":  [
+                    "name": [
                         `<some>Jack</some>Jack`,
                         `<some>Mohan</some>`
                     ],
                     "blank": "",
-                    "regx":  "^[ ].*$"
+                    "regx": "^[ ].*$"
                 }
             }
         };
 
-        let result = parser.parse(xmlData, {
+        let result = parse(xmlData, {
             ignoreAttributes: false
         });
 
         //console.log(JSON.stringify(result,null,4));
 
-        expect(result).toEqual(expected);
+        expect(result).eql(expected);
 
-        result = validator.validate(xmlData);
-        expect(result).toBe(true);
+        result = validate(xmlData);
+        expect(result).equal(true);
     });
 
     it("should parse tag having CDATA 2", function() {
@@ -56,27 +53,27 @@ describe("XMLParser", function() {
             "sql-queries": {
                 "sql-query": [
                     {
-                        "@_id":  "testquery",
+                        "@_id": "testquery",
                         "#text": "select * from search_urls"
                     }, {
-                        "@_id":  "searchinfo",
+                        "@_id": "searchinfo",
                         "#text": "select * from search_urls where search_urls=?"
                     }, {
-                        "@_id":  "searchurls",
+                        "@_id": "searchurls",
                         "#text": "select search_url from search_urls "
                     }
                 ]
             }
         };
 
-        let result = parser.parse(xmlData, {
+        let result = parse(xmlData, {
             ignoreAttributes: false
         });
 
-        expect(result).toEqual(expected);
+        expect(result).eql(expected);
 
-        result = validator.validate(xmlData);
-        expect(result).toBe(true);
+        result = validate(xmlData);
+        expect(result).equal(true);
     });
 
     it("should parse tag having whitespaces before / after CDATA", function() {
@@ -96,15 +93,15 @@ describe("XMLParser", function() {
             }
         };
 
-        let result = parser.parse(xmlData, {
+        let result = parse(xmlData, {
             ignoreAttributes: false
         });
 
         //console.log(JSON.stringify(result,null,4));
-        expect(result).toEqual(expected);
+        expect(result).eql(expected);
 
-        result = validator.validate(xmlData);
-        expect(result).toBe(true);
+        result = validate(xmlData);
+        expect(result).equal(true);
     });
 
     it("should ignore comment", function() {
@@ -116,14 +113,14 @@ describe("XMLParser", function() {
             }
         };
 
-        let result = parser.parse(xmlData, {
+        let result = parse(xmlData, {
             ignoreAttributes: false
         });
 
-        expect(result).toEqual(expected);
+        expect(result).eql(expected);
 
-        result = validator.validate(xmlData);
-        expect(result).toBe(true);
+        result = validate(xmlData);
+        expect(result).equal(true);
     });
 
     it("should ignore multiline comments", function() {
@@ -135,14 +132,14 @@ describe("XMLParser", function() {
             }
         };
 
-        let result = parser.parse(xmlData, {
+        let result = parse(xmlData, {
             ignoreAttributes: false
         });
 
-        expect(result).toEqual(expected);
+        expect(result).eql(expected);
 
-        result = validator.validate(xmlData);
-        expect(result).toBe(true);
+        result = validate(xmlData);
+        expect(result).equal(true);
     });
 
     it("should parse tag having text before / after CDATA", function() {
@@ -162,12 +159,12 @@ describe("XMLParser", function() {
             }
         };
 
-        const result = parser.parse(xmlData, {
+        const result = parse(xmlData, {
             ignoreAttributes: false
         });
 
         //console.log(JSON.stringify(result,null,4));
-        expect(result).toEqual(expected);
+        expect(result).eql(expected);
     });
 
     it("should not parse tag value if having CDATA", function() {
@@ -187,12 +184,12 @@ describe("XMLParser", function() {
             }
         };
 
-        const result = parser.parse(xmlData, {
+        const result = parse(xmlData, {
             ignoreAttributes: false
         });
 
         //console.log(JSON.stringify(result,null,4));
-        expect(result).toEqual(expected);
+        expect(result).eql(expected);
     });
 
     it("should parse CDATA as separate tag", function() {
@@ -210,23 +207,23 @@ describe("XMLParser", function() {
                 },
                 "b": "text",
                 "c": {
-                    "#text":   "\\cafter",
+                    "#text": "\\cafter",
                     "__cdata": "text"
                 },
                 "d": {
-                    "#text":   "23\\c24",
+                    "#text": "23\\c24",
                     "__cdata": ""
                 }
             }
         };
 
-        const result = parser.parse(xmlData, {
+        const result = parse(xmlData, {
             ignoreAttributes: false,
-            cdataTagName:     "__cdata"
+            cdataTagName: "__cdata"
         });
 
         //console.log(JSON.stringify(result,null,4));
-        expect(result).toEqual(expected);
+        expect(result).eql(expected);
     });
 
     it("should parse CDATA as separate tag without preserving cdata position", function() {
@@ -244,24 +241,24 @@ describe("XMLParser", function() {
                 },
                 "b": "text",
                 "c": {
-                    "#text":   "after",
+                    "#text": "after",
                     "__cdata": "text"
                 },
                 "d": {
-                    "#text":   "2324",
+                    "#text": "2324",
                     "__cdata": ""
                 }
             }
         };
 
-        const result = parser.parse(xmlData, {
-            ignoreAttributes:  false,
-            cdataTagName:      "__cdata",
+        const result = parse(xmlData, {
+            ignoreAttributes: false,
+            cdataTagName: "__cdata",
             cdataPositionChar: ""
         });
 
         //console.log(JSON.stringify(result,null,4));
-        expect(result).toEqual(expected);
+        expect(result).eql(expected);
     });
 
     it("should validate XML with repeated multiline CDATA and comments", function() {
@@ -272,12 +269,12 @@ describe("XMLParser", function() {
 
         const expected = {
             "ns:root": {
-                "ptag":         [
+                "ptag": [
                     {
                         "nestedtag": "nesteddata",
-                        "@_attr":    "val",
+                        "@_attr": "val",
                         "@_boolean": true,
-                        "#text":     "some dataafter"
+                        "#text": "some dataafter"
                     },
                     "before text\n        <nestedtag>\n            nested cdata 1\n        </nestedtag>\n    middle\n        <nestedtag>\n            nested cdata 2\n        </nestedtag>\n    after\n        <nestedtag>\n            nested cdata 3\n        </nestedtag>\n    end"
                 ],
@@ -285,11 +282,11 @@ describe("XMLParser", function() {
             }
         };
 
-        const result = parser.parse(xmlData, {
-            ignoreAttributes:       false,
+        const result = parse(xmlData, {
+            ignoreAttributes: false,
             allowBooleanAttributes: true
         });
         //console.log(JSON.stringify(result,null,4));
-        expect(result).toEqual(expected);
+        expect(result).eql(expected);
     });
 });

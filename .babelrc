@@ -13,5 +13,5 @@
       }
     ]
   ],
-  "compact": true
+  "sourceMaps": true
 }

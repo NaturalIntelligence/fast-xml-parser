@@ -84,7 +84,7 @@ var tObj = fastXmlParser.getTraversalObj(xmlData,options);
 var jsonObj = fastXmlParser.convertToJson(tObj,options);
 
 //construct schema manually or with the help of schema builder
-var nimndata = fastXmlParser.convertTonimn(tObj,schema,options);
+var nimndata = fastXmlParser.convertToNimn(tObj,schema,options);
 
 ```
 * NIMN (निम्न) data is the schema aware compressed form of data. It reduces JSON up to 50% or more of original data by removing field information. Check [specification](https://github.com/nimndata/spec) for more detail.

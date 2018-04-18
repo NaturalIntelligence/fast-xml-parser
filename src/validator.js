@@ -1,6 +1,4 @@
-"use strict";
-
-const util = require("./util");
+const {buildOptions, getAllMatches, doesMatch, doesNotMatch} = require("./util");
 
 const defaultOptions = {
     allowBooleanAttributes: false         //A tag can have attributes without any value
@@ -9,8 +7,8 @@ const defaultOptions = {
 const props = ["allowBooleanAttributes"];
 
 //const tagsPattern = new RegExp("<\\/?([\\w:\\-_\.]+)\\s*\/?>","g");
-exports.validate = function(xmlData, options) {
-    options = util.buildOptions(options,defaultOptions,props);
+const validate = function(xmlData, options) {
+    options = buildOptions(options, defaultOptions, props);
 
     //xmlData = xmlData.replace(/(\r\n|\n|\r)/gm,"");//make it single line
     //xmlData = xmlData.replace(/(^\s*<\?xml.*?\?>)/g,"");//Remove XML starting tag
@@ -22,7 +20,6 @@ exports.validate = function(xmlData, options) {
 
         if (xmlData[i] === "<") {//starting of tag
             //read until you reach to '>' avoiding any '>' in attribute value
-
             i++;
             if (xmlData[i] === "?") {
                 i = readPI(xmlData, ++i);
@@ -132,14 +129,14 @@ exports.validate = function(xmlData, options) {
  * @param {*} i
  */
 function readPI(xmlData, i) {
-    var start = i;
+    const start = i;
     for (; i < xmlData.length; i++) {
-        if (xmlData[i] == "?" || xmlData[i] == " ") {//tagname
-            var tagname = xmlData.substr(start, i - start);
-            if (i > 5 && tagname === "xml") {
+        if (xmlData[i] === "?" || xmlData[i] === " ") { //tagName
+            const tagName = xmlData.substr(start, i - start);
+            if (i > 5 && tagName === "xml") {
                 return {err: {code: "InvalidXml", msg: "XML declaration allowed only at the start of the document."}};
-            } else if (xmlData[i] == "?" && xmlData[i + 1] == ">") {
-                //check if valid attribut string
+            } else if (xmlData[i] === "?" && xmlData[i + 1] === ">") {
+                //check if valid attribute string
                 i++;
                 break;
             } else {
@@ -196,8 +193,8 @@ function readCommentAndCDATA(xmlData, i) {
     return i;
 }
 
-var doubleQuote = "\"";
-var singleQuote = "'";
+const doubleQuote = "\"";
+const singleQuote = "'";
 
 /**
  * Keep reading xmlData until '<' is found outside the attribute value.
@@ -243,21 +240,21 @@ function validateAttributeString(attrStr, options) {
 
     //if(attrStr.trim().length === 0) return true; //empty string
 
-    const matches = util.getAllMatches(attrStr, validAttrStrRegxp);
+    const matches = getAllMatches(attrStr, validAttrStrRegxp);
     const attrNames = [];
 
-    for (let i = 0; i < matches.length; i++) {
+    for (let match of matches) {
         //console.log(matches[i]);
 
-        if (matches[i][1].length === 0) {//nospace before attribute name: a="sd"b="saf"
-            return {err: {code: "InvalidAttr", msg: "attribute " + matches[i][2] + " has no space in starting."}};
-        } else if (matches[i][3] === undefined && !options.allowBooleanAttributes) {//independent attribute: ab
-            return {err: {code: "InvalidAttr", msg: "boolean attribute " + matches[i][2] + " is not allowed."}};
+        if (match[1].length === 0) {//nospace before attribute name: a="sd"b="saf"
+            return {err: {code: "InvalidAttr", msg: "attribute " + match[2] + " has no space in starting."}};
+        } else if (match[3] === undefined && !options.allowBooleanAttributes) {//independent attribute: ab
+            return {err: {code: "InvalidAttr", msg: "boolean attribute " + match[2] + " is not allowed."}};
         }
         /* else if(matches[i][6] === undefined){//attribute without value: ab=
                     return { err: { code:"InvalidAttr",msg:"attribute " + matches[i][2] + " has no value assigned."}};
                 } */
-        const attrName = matches[i][2];
+        const attrName = match[2];
         if (!validateAttrName(attrName)) {
             return {err: {code: "InvalidAttr", msg: "attribute " + attrName + " is an invalid name."}};
         }
@@ -275,16 +272,16 @@ function validateAttributeString(attrStr, options) {
 const validAttrRegxp = /^[_a-zA-Z][\w\-.:]*$/;
 
 function validateAttrName(attrName) {
-    return util.doesMatch(attrName, validAttrRegxp);
+    return doesMatch(attrName, validAttrRegxp);
 }
 
 //const startsWithXML = new RegExp("^[Xx][Mm][Ll]");
 const startsWith = /^([a-zA-Z]|_)[\w.\-_:]*/;
 
 function validateTagName(tagname) {
-    /*if(util.doesMatch(tagname,startsWithXML)) return false;
+    /*if(doesMatch(tagname,startsWithXML)) return false;
     else*/
-    return !util.doesNotMatch(tagname, startsWith);
+    return !doesNotMatch(tagname, startsWith);
 }
 
-
+module.exports = {validate};

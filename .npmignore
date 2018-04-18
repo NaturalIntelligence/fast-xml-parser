@@ -1,10 +1,11 @@
-# Unrelevant files and folders
+# Special files
+.*
+# Test Files
 benchmark
 coverage
-spec
-!src/read.js
 static
-.*
 index.html
-webpack*
-lib
+test
+# Source
+src
+*.config.js

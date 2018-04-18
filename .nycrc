@@ -1,0 +1,6 @@
+{
+	"exclude": [
+		"test/**/*.js"
+	],
+	"sourceMap": true
+}

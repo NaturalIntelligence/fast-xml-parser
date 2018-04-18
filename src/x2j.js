@@ -1,8 +1,5 @@
-"use strict";
-
-const util = require("./util");
-const buildOptions = require("./util").buildOptions;
-const xmlNode = require("./xmlNode");
+const {buildOptions, getValue, isExist, getAllMatches} = require("./util");
+const {XmlNode} = require("./xml-node");
 const TagType = {"OPENING": 1, "CLOSING": 2, "SELF": 3, "CDATA": 4};
 
 //const tagsRegx = new RegExp("<(\\/?[\\w:\\-\._]+)([^>]*)>(\\s*"+cdataRegx+")*([^<]+)?","g");
@@ -11,35 +8,49 @@ const TagType = {"OPENING": 1, "CLOSING": 2, "SELF": 3, "CDATA": 4};
 //treat cdata as a tag
 
 const defaultOptions = {
-    attributeNamePrefix:    "@_",
-    attrNodeName:           false,
-    textNodeName:           "#text",
-    ignoreAttributes:       true,
-    ignoreNameSpace:        false,
+    attributeNamePrefix: "@_",
+    attrNodeName: false,
+    textNodeName: "#text",
+    ignoreAttributes: true,
+    ignoreNameSpace: false,
     allowBooleanAttributes: false,         //a tag can have attributes without any value
     //ignoreRootElement : false,
-    parseNodeValue:         true,
-    parseAttributeValue:    false,
-    arrayMode:              false,
-    trimValues:             true,                                //Trim string values of tag and attributes
-    cdataTagName:           false,
-    cdataPositionChar:      "\\c",
-    tagValueProcessor: function(a) {return a},
-    attrValueProcessor: function(a) {return a}
+    parseNodeValue: true,
+    parseAttributeValue: false,
+    arrayMode: false,
+    trimValues: true,                                //Trim string values of tag and attributes
+    cdataTagName: false,
+    cdataPositionChar: "\\c",
+    tagValueProcessor: (a) => a,
+    attrValueProcessor: (a) => a
     //decodeStrict: false,
 };
 
 exports.defaultOptions = defaultOptions;
-
-const props = ["attributeNamePrefix", "attrNodeName", "textNodeName", "ignoreAttributes", "ignoreNameSpace", "allowBooleanAttributes", "parseNodeValue", "parseAttributeValue", "arrayMode", "trimValues", "cdataTagName", "cdataPositionChar", "tagValueProcessor", "attrValueProcessor"];
-exports.props = props;
+const props = [
+    "attributeNamePrefix",
+    "attrNodeName",
+    "textNodeName",
+    "ignoreAttributes",
+    "ignoreNameSpace",
+    "allowBooleanAttributes",
+    "parseNodeValue",
+    "parseAttributeValue",
+    "arrayMode",
+    "trimValues",
+    "cdataTagName",
+    "cdataPositionChar",
+    "tagValueProcessor",
+    "attrValueProcessor"
+];
 
 const getTraversalObj = function(xmlData, options) {
-    options = buildOptions(options,defaultOptions,props);
+    //options = buildOptions(options);
+    options = buildOptions(options, defaultOptions, props);
     //xmlData = xmlData.replace(/\r?\n/g, " ");//make it single line
     xmlData = xmlData.replace(/<!--[\s\S]*?-->/g, "");//Remove  comments
 
-    const xmlObj = new xmlNode("!xml");
+    const xmlObj = new XmlNode("!xml");
     let currentNode = xmlObj;
 
     const tagsRegx = /<((!\[CDATA\[([\s\S]*?)(]]>))|(([\w:\-._]*:)?([\w:\-._]+))([^>]*)>|((\/)(([\w:\-._]*:)?([\w:\-._]+))>))([^<]*)/g;
@@ -51,18 +62,18 @@ const getTraversalObj = function(xmlData, options) {
         if (tagType === TagType.CLOSING) {
             //add parsed data to parent node
             if (currentNode.parent && tag[14]) {
-                currentNode.parent.val = util.getValue(currentNode.parent.val) + "" + processTagValue(tag[14], options);
+                currentNode.parent.val = getValue(currentNode.parent.val) + "" + processTagValue(tag[14], options);
             }
 
             currentNode = currentNode.parent;
         } else if (tagType === TagType.CDATA) {
             if (options.cdataTagName) {
                 //add cdata node
-                const childNode = new xmlNode(options.cdataTagName, currentNode, tag[3]);
+                const childNode = new XmlNode(options.cdataTagName, currentNode, tag[3]);
                 childNode.attrsMap = buildAttributesMap(tag[8], options);
                 currentNode.addChild(childNode);
                 //for backtracking
-                currentNode.val = util.getValue(currentNode.val) + options.cdataPositionChar;
+                currentNode.val = getValue(currentNode.val) + options.cdataPositionChar;
                 //add rest value to parent node
                 if (tag[14]) {
                     currentNode.val += processTagValue(tag[14], options);
@@ -71,14 +82,14 @@ const getTraversalObj = function(xmlData, options) {
                 currentNode.val = (currentNode.val || "") + (tag[3] || "") + processTagValue(tag[14], options);
             }
         } else if (tagType === TagType.SELF) {
-            const childNode = new xmlNode(options.ignoreNameSpace ? tag[7] : tag[5], currentNode, "");
+            const childNode = new XmlNode(options.ignoreNameSpace ? tag[7] : tag[5], currentNode, "");
             if (tag[8] && tag[8].length > 1) {
                 tag[8] = tag[8].substr(0, tag[8].length - 1);
             }
             childNode.attrsMap = buildAttributesMap(tag[8], options);
             currentNode.addChild(childNode);
         } else {//TagType.OPENING
-            const childNode = new xmlNode(options.ignoreNameSpace ? tag[7] : tag[5], currentNode, processTagValue(tag[14], options));
+            const childNode = new XmlNode(options.ignoreNameSpace ? tag[7] : tag[5], currentNode, processTagValue(tag[14], options));
             childNode.attrsMap = buildAttributesMap(tag[8], options);
             currentNode.addChild(childNode);
             currentNode = childNode;
@@ -135,19 +146,17 @@ function parseValue(val, shouldParse) {
             val = val === "true" ? true : val === "false" ? false : val;
         } else {
             if (val.indexOf(".") !== -1) {
-                val = Number.parseFloat(val);
+                val = parseFloat(val);
             } else {
-                val = Number.parseInt(val, 10);
+                val = parseInt(val, 10);
             }
         }
         return val;
-    } else {
-        if (util.isExist(val)) {
-            return val;
-        } else {
-            return "";
-        }
     }
+    if (isExist(val)) {
+        return val;
+    }
+    return "";
 }
 
 //TODO: change regex to capture NS
@@ -159,18 +168,17 @@ function buildAttributesMap(attrStr, options) {
         attrStr = attrStr.replace(/\r?\n/g, " ");
         //attrStr = attrStr || attrStr.trim();
 
-        const matches = util.getAllMatches(attrStr, attrsRegx);
-        const len = matches.length; //don't make it inline
+        const matches = getAllMatches(attrStr, attrsRegx);
         const attrs = {};
-        for (let i = 0; i < len; i++) {
-            const attrName = resolveNameSpace(matches[i][1], options);
+        for (let match of matches) {
+            const attrName = resolveNameSpace(match[1], options);
             if (attrName.length) {
-                if (matches[i][4] !== undefined) {
+                if (match[4] !== undefined) {
                     if (options.trimValues) {
-                        matches[i][4] = matches[i][4].trim();
+                        match[4] = match[4].trim();
                     }
-                    matches[i][4] = options.attrValueProcessor(matches[i][4]);
-                    attrs[options.attributeNamePrefix + attrName] = parseValue(matches[i][4], options.parseAttributeValue);
+                    match[4] = options.attrValueProcessor(match[4]);
+                    attrs[options.attributeNamePrefix + attrName] = parseValue(match[4], options.parseAttributeValue);
                 } else if (options.allowBooleanAttributes) {
                     attrs[options.attributeNamePrefix + attrName] = true;
                 }
@@ -189,4 +197,8 @@ function buildAttributesMap(attrStr, options) {
     }
 }
 
-exports.getTraversalObj = getTraversalObj;
+module.exports = {
+    props,
+    defaultOptions,
+    getTraversalObj
+};

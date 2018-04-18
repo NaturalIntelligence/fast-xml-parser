@@ -1,33 +1,30 @@
-"use strict";
-
-const parser = require("../src/parser");
+const parser = require("../parser");
 const he = require("he");
 
 describe("XMLParser", function() {
-
     it("should parse all values as string, int, boolean or float", function() {
         const xmlData = `<rootNode><tag>value</tag><boolean>true</boolean><intTag>045</intTag><floatTag>65.34</floatTag></rootNode>`;
         const expected = {
             "rootNode": {
-                "tag":      "value",
-                "boolean":  true,
-                "intTag":   45,
+                "tag": "value",
+                "boolean": true,
+                "intTag": 45,
                 "floatTag": 65.34
             }
         };
 
         const result = parser.parse(xmlData);
         //console.log(JSON.stringify(result,null,4));
-        expect(result).toEqual(expected);
+        expect(result).eql(expected);
     });
 
     it("should not parse values to primitive type", function() {
         const xmlData = `<rootNode><tag>value</tag><boolean>true</boolean><intTag>045</intTag><floatTag>65.34</floatTag></rootNode>`;
         const expected = {
             "rootNode": {
-                "tag":      "value",
-                "boolean":  "true",
-                "intTag":   "045",
+                "tag": "value",
+                "boolean": "true",
+                "intTag": "045",
                 "floatTag": "65.34"
             }
         };
@@ -35,7 +32,7 @@ describe("XMLParser", function() {
         const result = parser.parse(xmlData, {
             parseNodeValue: false
         });
-        expect(result).toEqual(expected);
+        expect(result).eql(expected);
     });
 
     it("should parse number values of attributes as number", function() {
@@ -43,27 +40,27 @@ describe("XMLParser", function() {
         const expected = {
             "rootNode": {
                 "tag": {
-                    "#text":   "value",
-                    "@_int":   45,
+                    "#text": "value",
+                    "@_int": 45,
                     "@_float": 65.34
                 }
             }
         };
 
         const result = parser.parse(xmlData, {
-            ignoreAttributes:    false,
+            ignoreAttributes: false,
             parseAttributeValue: true
         });
 
-        expect(result).toEqual(expected);
+        expect(result).eql(expected);
     });
 
     it("should parse number values as number if flag is set", function() {
         const xmlData = `<rootNode><tag>value</tag><intTag>045</intTag><intTag>0</intTag><floatTag>65.34</floatTag></rootNode>`;
         const expected = {
             "rootNode": {
-                "tag":      "value",
-                "intTag":   [45, 0],
+                "tag": "value",
+                "intTag": [45, 0],
                 "floatTag": 65.34
             }
         };
@@ -71,21 +68,21 @@ describe("XMLParser", function() {
         const result = parser.parse(xmlData, {
             parseNodeValue: true
         });
-        expect(result).toEqual(expected);
+        expect(result).eql(expected);
     });
 
     it("should skip tag arguments", function() {
         const xmlData = `<rootNode><tag ns:arg='value'>value</tag><intTag ns:arg='value' ns:arg2='value2' >45</intTag><floatTag>65.34</floatTag></rootNode>`;
         const expected = {
             "rootNode": {
-                "tag":      "value",
-                "intTag":   45,
+                "tag": "value",
+                "intTag": 45,
                 "floatTag": 65.34
             }
         };
 
         const result = parser.parse(xmlData);
-        expect(result).toEqual(expected);
+        expect(result).eql(expected);
     });
 
     it("should ignore namespace and text node attributes", function() {
@@ -100,17 +97,17 @@ describe("XMLParser", function() {
 
         const expected = {
             "node": {
-                "tag":         {
+                "tag": {
                     "@_arg": "value",
                     "#text": "value"
                 },
-                "intTag":      {
-                    "@_arg":  "value",
+                "intTag": {
+                    "@_arg": "value",
                     "@_arg2": "value2",
-                    "#text":  45
+                    "#text": 45
                 },
-                "floatTag":    65.34,
-                "nsTag":       {
+                "floatTag": 65.34,
+                "nsTag": {
                     "@_attr": "tns"
                     //"#text": ""
                 },
@@ -119,11 +116,11 @@ describe("XMLParser", function() {
         };
 
         const result = parser.parse(xmlData, {
-            ignoreNameSpace:  true,
+            ignoreNameSpace: true,
             ignoreAttributes: false
         });
 
-        expect(result).toEqual(expected);
+        expect(result).eql(expected);
     });
 
     it("should parse empty text Node", function() {
@@ -135,7 +132,7 @@ describe("XMLParser", function() {
         };
 
         const result = parser.parse(xmlData);
-        expect(result).toEqual(expected);
+        expect(result).eql(expected);
     });
 
     it("should parse self closing tags", function() {
@@ -151,7 +148,7 @@ describe("XMLParser", function() {
         const result = parser.parse(xmlData, {
             ignoreAttributes: false
         });
-        expect(result).toEqual(expected);
+        expect(result).eql(expected);
     });
 
     it("should parse single self closing tag", function() {
@@ -166,7 +163,7 @@ describe("XMLParser", function() {
         const result = parser.parse(xmlData, {
             ignoreAttributes: false
         });
-        expect(result).toEqual(expected);
+        expect(result).eql(expected);
     });
 
     it("should parse repeated nodes in array", function() {
@@ -183,7 +180,7 @@ describe("XMLParser", function() {
         };
 
         const result = parser.parse(xmlData);
-        expect(result).toEqual(expected);
+        expect(result).eql(expected);
     });
 
     it("should parse nested nodes in nested properties", function() {
@@ -204,7 +201,7 @@ describe("XMLParser", function() {
         };
 
         const result = parser.parse(xmlData);
-        expect(result).toEqual(expected);
+        expect(result).eql(expected);
     });
 
     it("should parse non-text nodes with value for repeated nodes", function() {
@@ -227,24 +224,24 @@ describe("XMLParser", function() {
                     {
                         "@_attr1": "some val",
                         "@_attr2": "another val",
-                        "tag":     [
+                        "tag": [
                             "value",
                             {
                                 "@_attr1": "val",
                                 "@_attr2": "234",
-                                "#text":   45
+                                "#text": 45
                             },
                             65.34
                         ]
                     }, {
                         "@_attr1": "some val",
                         "@_attr2": "another val",
-                        "tag":     [
+                        "tag": [
                             "value",
                             {
                                 "@_attr1": "val",
                                 "@_attr2": "234",
-                                "#text":   45
+                                "#text": 45
                             },
                             65.34
                         ]
@@ -256,7 +253,7 @@ describe("XMLParser", function() {
         const result = parser.parse(xmlData, {
             ignoreAttributes: false
         });
-        expect(result).toEqual(expected);
+        expect(result).eql(expected);
     });
 
     it("should preserve node value", function() {
@@ -264,16 +261,16 @@ describe("XMLParser", function() {
         const expected = {
             "rootNode": {
                 "@_attr1": " some val ",
-                "@_name":  "another val",
-                "#text":   " some val "
+                "@_name": "another val",
+                "#text": " some val "
             }
         };
 
         const result = parser.parse(xmlData, {
             ignoreAttributes: false,
-            trimValues:       false
+            trimValues: false
         });
-        expect(result).toEqual(expected);
+        expect(result).eql(expected);
     });
 
     it("should parse with attributes and value when there is single node", function() {
@@ -282,14 +279,14 @@ describe("XMLParser", function() {
             "rootNode": {
                 "@_attr1": "some val",
                 "@_attr2": "another val",
-                "#text":   "val"
+                "#text": "val"
             }
         };
 
         const result = parser.parse(xmlData, {
             ignoreAttributes: false
         });
-        expect(result).toEqual(expected);
+        expect(result).eql(expected);
     });
 
     it("should parse different tags", function() {
@@ -302,7 +299,7 @@ describe("XMLParser", function() {
         const result = parser.parse(xmlData, {
             ignoreAttributes: false
         });
-        expect(result).toEqual(expected);
+        expect(result).eql(expected);
     });
 
     it("should not parse text value with tag", function() {
@@ -311,17 +308,17 @@ describe("XMLParser", function() {
             "score": {
                 "c1": {
                     "message": 23,
-                    "_text":   "7129"
+                    "_text": "7129"
                 }
             }
         };
 
         const result = parser.parse(xmlData, {
-            textNodeName:     "_text",
+            textNodeName: "_text",
             ignoreAttributes: false
         });
 
-        expect(result).toEqual(expected);
+        expect(result).eql(expected);
     });
 
     it("should parse nested elements with attributes", function() {
@@ -339,12 +336,12 @@ describe("XMLParser", function() {
                     "@_date": "2017-05-03",
                     "@_type": "A",
                     "@_name": "Meeting 'A'",
-                    "Event":  {
+                    "Event": {
                         "@_time": "00:05:00",
-                        "@_ID":   "574",
+                        "@_ID": "574",
                         "@_Name": "Some Event Name",
-                        "User":   {
-                            "@_ID":  "1",
+                        "User": {
+                            "@_ID": "1",
                             "#text": "Bob"
                         }
                     }
@@ -353,11 +350,11 @@ describe("XMLParser", function() {
         };
 
         const result = parser.parse(xmlData, {
-            ignoreAttributes:      false,
+            ignoreAttributes: false,
             ignoreNonTextNodeAttr: false
         });
 
-        expect(result).toEqual(expected);
+        expect(result).eql(expected);
     });
 
     it("should parse nested elements with attributes wrapped in object", function() {
@@ -372,20 +369,20 @@ describe("XMLParser", function() {
         const expected = {
             "root": {
                 "Meet": {
-                    "$":     {
+                    "$": {
                         "nsattr": "attr",
-                        "date":   "2017-05-03",
-                        "type":   "A",
-                        "name":   "Meeting 'A'"
+                        "date": "2017-05-03",
+                        "type": "A",
+                        "name": "Meeting 'A'"
                     },
                     "Event": {
-                        "$":    {
+                        "$": {
                             "time": "00:05:00",
-                            "ID":   "574",
+                            "ID": "574",
                             "Name": "Some Event Name"
                         },
                         "User": {
-                            "$":     {
+                            "$": {
                                 "ID": "1"
                             },
                             "#text": "Bob"
@@ -397,13 +394,13 @@ describe("XMLParser", function() {
 
         const result = parser.parse(xmlData, {
             attributeNamePrefix: "",
-            attrNodeName:        "$",
-            ignoreNameSpace:     true,
-            ignoreAttributes:    false
+            attrNodeName: "$",
+            ignoreNameSpace: true,
+            ignoreAttributes: false
         });
 
         //console.log(JSON.stringify(result,null,4));
-        expect(result).toEqual(expected);
+        expect(result).eql(expected);
     });
 
     it("should parse all type of nodes", function() {
@@ -414,14 +411,14 @@ describe("XMLParser", function() {
 
         const expected = {
             "any_name": {
-                "@attr":  "https://example.com/somepath",
+                "@attr": "https://example.com/somepath",
                 "person": [
                     {
-                        "@id":         "101",
-                        "phone":       [122233344550, 122233344551],
-                        "name":        "Jack",
-                        "age":         33,
-                        "emptyNode":   "",
+                        "@id": "101",
+                        "phone": [122233344550, 122233344551],
+                        "name": "Jack",
+                        "age": 33,
+                        "emptyNode": "",
                         "booleanNode": [false, true],
                         "selfclosing": [
                             "",
@@ -429,46 +426,46 @@ describe("XMLParser", function() {
                                 "@with": "value"
                             }
                         ],
-                        "married":     {
+                        "married": {
                             "@firstTime": "No",
-                            "@attr":      "val 2",
-                            "#_text":     "Yes"
+                            "@attr": "val 2",
+                            "#_text": "Yes"
                         },
-                        "birthday":    "Wed, 28 Mar 1979 12:13:14 +0300",
-                        "address":     [
+                        "birthday": "Wed, 28 Mar 1979 12:13:14 +0300",
+                        "address": [
                             {
-                                "city":       "New York",
-                                "street":     "Park Ave",
+                                "city": "New York",
+                                "street": "Park Ave",
                                 "buildingNo": 1,
-                                "flatNo":     1
+                                "flatNo": 1
                             }, {
-                                "city":       "Boston",
-                                "street":     "Centre St",
+                                "city": "Boston",
+                                "street": "Centre St",
                                 "buildingNo": 33,
-                                "flatNo":     24
+                                "flatNo": 24
                             }
                         ]
                     }, {
-                        "@id":      "102",
-                        "phone":    [122233344553, 122233344554],
-                        "name":     "Boris",
-                        "age":      34,
-                        "married":  {
+                        "@id": "102",
+                        "phone": [122233344553, 122233344554],
+                        "name": "Boris",
+                        "age": 34,
+                        "married": {
                             "@firstTime": "Yes",
-                            "#_text":     "Yes"
+                            "#_text": "Yes"
                         },
                         "birthday": "Mon, 31 Aug 1970 02:03:04 +0300",
-                        "address":  [
+                        "address": [
                             {
-                                "city":       "Moscow",
-                                "street":     "Kahovka",
+                                "city": "Moscow",
+                                "street": "Kahovka",
                                 "buildingNo": 1,
-                                "flatNo":     2
+                                "flatNo": 2
                             }, {
-                                "city":       "Tula",
-                                "street":     "Lenina",
+                                "city": "Tula",
+                                "street": "Lenina",
                                 "buildingNo": 3,
-                                "flatNo":     78
+                                "flatNo": 78
                             }
                         ]
                     }
@@ -477,13 +474,13 @@ describe("XMLParser", function() {
         };
 
         const result = parser.parse(xmlData, {
-            ignoreAttributes:      false,
+            ignoreAttributes: false,
             ignoreNonTextNodeAttr: false,
-            attributeNamePrefix:   "@",
-            textNodeName:          "#_text"
+            attributeNamePrefix: "@",
+            textNodeName: "#_text"
         });
         //console.log(JSON.stringify(result,null,4));
-        expect(result).toEqual(expected);
+        expect(result).eql(expected);
     });
 
     /* it("should parse nodes as arrays", function () {
@@ -557,7 +554,7 @@ describe("XMLParser", function() {
         textNodeName: "#_text",
         arrayMode: true
       });
-      expect(result).toEqual(expected);
+      expect(result).eql(expected);
     }); */
 
     it("should skip namespace", function() {
@@ -579,9 +576,9 @@ describe("XMLParser", function() {
             "Envelope": {
                 "Header": {
                     "applicationID": "dashboardweb",
-                    "providerID":    "abc"
+                    "providerID": "abc"
                 },
-                "Body":   {
+                "Body": {
                     "getOffers": {
                         "customerId": {
                             "msisdn": 123456789
@@ -592,7 +589,7 @@ describe("XMLParser", function() {
         };
 
         const result = parser.parse(xmlData, {ignoreNameSpace: true});
-        expect(result).toEqual(expected);
+        expect(result).eql(expected);
     });
 
     it("should not trim tag value if not allowed ", function() {
@@ -602,10 +599,10 @@ describe("XMLParser", function() {
         };
         const result = parser.parse(xmlData, {
             parseNodeValue: false,
-            trimValues:     false
+            trimValues: false
         });
         //console.log(JSON.stringify(result,null,4));
-        expect(result).toEqual(expected);
+        expect(result).eql(expected);
     });
 
     it("should not trim tag value but not parse if not allowed ", function() {
@@ -617,7 +614,7 @@ describe("XMLParser", function() {
             parseNodeValue: false
         });
         //console.log(JSON.stringify(result,null,4));
-        expect(result).toEqual(expected);
+        expect(result).eql(expected);
     });
 
     it("should not decode HTML entities by default", function() {
@@ -629,7 +626,7 @@ describe("XMLParser", function() {
             parseNodeValue: false
         });
         //console.log(JSON.stringify(result,null,4));
-        expect(result).toEqual(expected);
+        expect(result).eql(expected);
     });
 
     it("should decode HTML entities if allowed", function() {
@@ -639,11 +636,10 @@ describe("XMLParser", function() {
         };
         const result = parser.parse(xmlData, {
             parseNodeValue: false,
-            decodeHTMLchar: true,
-            tagValueProcessor : a => he.decode(a)
+            tagValueProcessor: (a) => he.decode(a)
         });
         //console.log(JSON.stringify(result,null,4));
-        expect(result).toEqual(expected);
+        expect(result).eql(expected);
     });
 
     it("should validate XML with DOCTYPE", function() {
@@ -665,6 +661,6 @@ describe("XMLParser", function() {
             //trimValues: false
         });
         //console.log(JSON.stringify(result,null,4));
-        expect(result).toEqual(expected);
+        expect(result).eql(expected);
     });
 });
