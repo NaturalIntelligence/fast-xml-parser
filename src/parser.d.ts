@@ -59,6 +59,6 @@ export function validate(
 // export j2xParser ???
 export function parseToNimn(
   xmlData: string,
-  schema,
+  schema: any,
   options: Partial<X2jOptions>
 ): any;
