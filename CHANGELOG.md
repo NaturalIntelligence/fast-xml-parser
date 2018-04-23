@@ -1,3 +1,7 @@
+3.3.10 / 2018-04-23
+  * fix #77 : parse even if closing tag has space before '>'
+  * include all css & js lib in demo app
+  * remove babel dependencies until needed
 3.3.9 / 2018-04-18
   * fix #74 : TS2314 TypeScript compiler error
 3.3.8 / 2018-04-17
