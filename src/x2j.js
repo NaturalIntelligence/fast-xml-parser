@@ -42,7 +42,7 @@ const getTraversalObj = function(xmlData, options) {
     const xmlObj = new xmlNode("!xml");
     let currentNode = xmlObj;
 
-    const tagsRegx = /<((!\[CDATA\[([\s\S]*?)(]]>))|(([\w:\-._]*:)?([\w:\-._]+))([^>]*)>|((\/)(([\w:\-._]*:)?([\w:\-._]+))>))([^<]*)/g;
+    const tagsRegx = /<((!\[CDATA\[([\s\S]*?)(]]>))|(([\w:\-._]*:)?([\w:\-._]+))([^>]*)>|((\/)(([\w:\-._]*:)?([\w:\-._]+))\s*>))([^<]*)/g;
     let tag = tagsRegx.exec(xmlData);
     let nextTag = tagsRegx.exec(xmlData);
     while (tag) {

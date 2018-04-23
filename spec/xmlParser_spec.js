@@ -646,7 +646,7 @@ describe("XMLParser", function() {
         expect(result).toEqual(expected);
     });
 
-    it("should validate XML with DOCTYPE", function() {
+    it("should parse XML with DOCTYPE", function() {
         const xmlData = "<?xml version=\"1.0\" standalone=\"yes\" ?>" +
                         "<!--open the DOCTYPE declaration -" +
                         "  the open square bracket indicates an internal DTD-->" +
@@ -664,6 +664,29 @@ describe("XMLParser", function() {
             //parseNodeValue: false,
             //trimValues: false
         });
+        //console.log(JSON.stringify(result,null,4));
+        expect(result).toEqual(expected);
+    });
+
+    //Issue #77
+    it("should parse node with space in closing node", function() {
+        const xmlData = "<?xml version='1.0'?>"
+        + "<any_name>"
+        + "    <person>"
+        + "        <name1>Jack 1</name1 >"
+        + "        <name2>Jack 2</name2>"
+        + "    </person>"
+        + "</any_name>";
+
+        const expected = {
+            "any_name": {
+                "person": {
+                    "name1": "Jack 1",
+                    "name2": "Jack 2"
+                }
+            }
+        };
+        const result = parser.parse(xmlData);
         //console.log(JSON.stringify(result,null,4));
         expect(result).toEqual(expected);
     });
