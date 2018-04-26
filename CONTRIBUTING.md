@@ -29,3 +29,7 @@ Changes need to do be done by owner
 * Release in github and publish to npm
 
 Note that publishing changes or accepting any PR may take time. So please keep patience.
+
+### Guidelines for first time contributors
+
+* https://github.com/Roshanjossey/first-contributions
