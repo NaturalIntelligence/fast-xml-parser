@@ -65,15 +65,15 @@
   "license": "MIT",
   "devDependencies": {
     "benchmark": "^2.1.4",
+    "browserify": "^16.1.1",
     "eslint": "^4.18.1",
+    "he": "~1.1.1",
     "http-server": "^0.11.1",
     "istanbul": "^0.4.5",
     "jasmine": "^3.0.0",
     "portfinder": "^1.0.13",
     "xml2js": "^0.4.19",
-    "browserify": "^16.1.1",
-    "he": "~1.1.1",
-    "zombie": "^5.0.8"
+    "zombie": "^6.1.1"
   },
   "dependencies": {
     "nimnjs": "^1.2.2"
