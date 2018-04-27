@@ -73,7 +73,7 @@
     "jasmine": "^3.0.0",
     "portfinder": "^1.0.13",
     "xml2js": "^0.4.19",
-    "zombie": "^6.1.1"
+    "zombie": "^5.0.8"
   },
   "dependencies": {
     "nimnjs": "^1.2.2"
