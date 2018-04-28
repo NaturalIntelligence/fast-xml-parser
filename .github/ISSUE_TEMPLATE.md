@@ -33,4 +33,4 @@ Please include expected output data here
 - [ ] Yes
 - [ ] No
 
-[Bookmark](https://github.com/NaturalIntelligence/fast-xml-parser/stargazers) this repository for further updates?
+[Bookmark](https://github.com/NaturalIntelligence/fast-xml-parser/stargazers) this repository for further updates.
