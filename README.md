@@ -216,17 +216,8 @@ This project exists thanks to [all](graphs/contributors) the people who contribu
 ![Amit Gupta](https://avatars1.githubusercontent.com/u/7692328?s=100&v=4)
 [![Vohmyanin Sergey Vasilevich](https://avatars3.githubusercontent.com/u/783335?s=100&v=4)](https://github.com/Delagen)
 								     
-### Collaborators
-[![Andrew Udvare](https://avatars1.githubusercontent.com/u/724848?s=60&v=4)](https://github.com/Tatsh)
-[![Alfonso Muñoz-Pomer Fuentes](https://avatars2.githubusercontent.com/u/4425744?s=60&v=4)](https://github.com/alfonsomunozpomer)
-[![jess](https://avatars2.githubusercontent.com/u/7316730?s=60&v=4)](https://github.com/monkeywithacupcake)
-[![Steve Reichenbach](https://avatars0.githubusercontent.com/u/5768289?s=60&v=4)](https://github.com/EyesOnlyNet)
-[![Abby Armada](https://avatars3.githubusercontent.com/u/4226336?s=60&v=4)](https://github.com/abbyarmada)
-[![Jérémy Benoist](https://avatars1.githubusercontent.com/u/62333?s=60&v=4)](https://github.com/j0k3r)
-[![Harold Putman](https://avatars1.githubusercontent.com/u/4070255?s=60&v=4)](https://github.com/HaroldPutman)
-[![Benjamin Bock](https://avatars0.githubusercontent.com/u/4932?s=60&v=4)](https://github.com/bb)
-
-
+### All Contributors
+<a href="graphs/contributors"><img src="https://opencollective.com/fast-xml-parser/contributors.svg?width=890&button=false" /></a>
 
 ## Backers
 
