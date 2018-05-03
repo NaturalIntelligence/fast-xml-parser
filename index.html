@@ -19,11 +19,11 @@
     </head>
     <body>
     <body role="document" style="background-color: #2c3e50;">
-        
+
         <div class="container">
             <a href="https://github.com/NaturalIntelligence/fast-xml-parser"><img class="bring-up" style="position: absolute; top: 0; left: 0; border: 0;" src="https://camo.githubusercontent.com/121cd7cbdc3e4855075ea8b558508b91ac463ac2/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f6c6566745f677265656e5f3030373230302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_left_green_007200.png"></a>
             <h1 style="color:white;">Fast XML Parser</h1>
-            
+
             <div class="row">
                 <div class="col-md-6">
                     <div class="form-group">
@@ -76,10 +76,12 @@
                     <div class="row">
                         <div class="col-md-8" style=" color: white;">
                             <input type="checkbox" id="attrNodeName"> Group all the attributes as properties of given name.  <br>
-                            <input type="checkbox" id="ignoreAttributes" checked="true"> Ignore attributes from parsing <br>
+                            <input type="checkbox" id="ignoreAttributes" checked="true"> Ignore attributes from parsing. <br>
                             <input type="checkbox" id="ignoreNameSpace"> Remove namespace string from tag and attribute names. <br>
                             <input type="checkbox" id="parseNodeValue" checked="true"> Parse the value of text node to float or integer.<br>
                             <input type="checkbox" id="ParseAttributeValue"> Parse the value of an attribute to float or integer.<br>
+                            <input type ="checkbox" id="allowBooleanAttributes"> A tag can have attributes without any value. <br>
+                            <input type ="checkbox" id="trimValues" checked="true" > Trim string values of an attribute or node.<br>
                             Set TagName to parse CDATA as separate property <input type="text" id="cdataTagName" style=" color: black;" ><br>
                             <button id="submit" class="btn btn-primary" type="button">Parse to JSON</button>
                         </div>
@@ -115,7 +117,7 @@
 
             $('#validate').on('click', function() {
                 $('#result').empty();
-                
+
                 try{
                     parser.validate($('#txtXml').val());
                     $('#result').text("Valid XML");
@@ -133,7 +135,8 @@
                     ignoreNameSpace : $("#ignoreNameSpace").prop("checked"),
                     parseNodeValue : $("#parseNodeValue").prop("checked"),
                     parseAttributeValue : $("#parseAttributeValue").prop("checked"),
-                    trimValues: true,                                //Trim string values of tag and attributes 
+                    allowBooleanAttributes: $("#allowBooleanAttributes").prop("checked"),
+                    trimValues: $('#trimValues').prop("checked"), //Trim string values of tag and attributes
                     decodeHTMLchar: false,
                     cdataTagName: $("#cdataTagName").val() === "" ? false : $("#cdataTagName").val(),
                     cdataPositionChar: "\\c"
