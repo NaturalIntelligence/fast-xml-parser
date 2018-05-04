@@ -33,3 +33,4 @@ Note that publishing changes or accepting any PR may take time. So please keep p
 ### Guidelines for first time contributors
 
 * https://github.com/Roshanjossey/first-contributions
+* **Don't stretch**. If you complete an issue in long time, there is a possibility that other developers finish their part and you face code conflicts which may increase code complexity for you. So it is always good to complete an issue ASAP. 
