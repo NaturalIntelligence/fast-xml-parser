@@ -125,6 +125,9 @@
                     $('#result').text(e);
                 }
             });
+            
+            optionsLogic();
+            $('#ignoreAttributes').on('change', function (){optionsLogic();});
 
             function buildParsingConfig(){
                 var config = {
@@ -144,6 +147,20 @@
                 };
 
                 return config;
+            }
+            
+            function optionsLogic(){
+                var ignoreAttr = $('#ignoreAttributes').prop('checked');
+                if(ignoreAttr){
+                    $('#attrNodeName').prop('checked', !ignoreAttr);
+                    $('#ParseAttributeValue').prop('checked', !ignoreAttr);
+                    $('#allowBooleanAttributes').prop('checked', !ignoreAttr);
+                }
+                $('#attrNodeName').attr('disabled', ignoreAttr);
+                $('#ParseAttributeValue').attr('disabled', ignoreAttr);
+                $('#allowBooleanAttributes').attr('disabled', ignoreAttr);
+
+                return;
             }
         });
     </script>
