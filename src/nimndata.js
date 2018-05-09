@@ -4,16 +4,19 @@ const char = function(a) {
 };
 
 const chars = {
-    nilChar: char(254),
-    missingChar: char(200),
-    nilPremitive: char(176),
-    missingPremitive: char(201),
-    emptyChar: char(177),
-    emptyValue: char(178),
-    boundryChar: char(186),
-    arrayEnd: char(197),
+    nilChar : char(176),
+    missingChar : char(201),
+    nilPremitive : char(175),
+    missingPremitive : char(200),
+
+    emptyChar : char(178),
+    emptyValue:  char(177),//empty Premitive
+    
+    boundryChar : char(179),
+    
     objStart: char(198),
-    arrStart: char(199)
+    arrStart: char(204),
+    arrayEnd: char(185),
 };
 
 const charsArr = [
@@ -23,6 +26,7 @@ const charsArr = [
     chars.missingPremitive,
     chars.boundryChar,
     chars.emptyChar,
+    chars.emptyValue,
     chars.arrayEnd,
     chars.objStart,
     chars.arrStart
