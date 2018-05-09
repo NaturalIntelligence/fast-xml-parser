@@ -82,8 +82,9 @@ Parser.prototype.j2x = function(jObj, level) {
         const key = keys[i];
         if (typeof jObj[key] === "undefined") {
             // supress undefined node
-        }
-        else if (typeof jObj[key] !== "object") {//premitive type
+        }else if (jObj[key] === null) {
+            val += this.indentate(level) + "<" + key + "/" + this.tagEndChar;
+        }else if (typeof jObj[key] !== "object") {//premitive type
             const attr = this.isAttribute(key);
             if (attr) {
                 attrStr += " " + attr + "=\"" +  this.options.attrValueProcessor("" + jObj[key]) + "\"";
@@ -117,8 +118,9 @@ Parser.prototype.j2x = function(jObj, level) {
                     const item = jObj[key][j];
                     if (typeof item === "undefined") {
                         // supress undefined node
-                    }
-                    else if (typeof item === "object") {
+                    }else if(item === null){
+                        val += this.indentate(level) + "<" + key + "/" + this.tagEndChar;
+                    }else if (typeof item === "object") {
                         const result = this.j2x(item, level + 1);
                         val += this.buildObjNode(result.val, key, result.attrStr, level);
                     } else {
@@ -126,7 +128,7 @@ Parser.prototype.j2x = function(jObj, level) {
                     }
                 }
             }
-        } else {
+        } else {//nested node
             if (this.options.attrNodeName && key === this.options.attrNodeName) {
                 const Ks = Object.keys(jObj[key]);
                 const L = Ks.length;

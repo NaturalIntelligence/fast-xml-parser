@@ -258,6 +258,17 @@ describe("XMLParser", function() {
         expect(result).toEqual(expected);
     });
 
+    it("should parse null values to self closing tag", function() {
+        const jObj = {
+            a: null
+        };
+        const parser = new Parser();
+        const result = parser.parse(jObj);
+        //console.log(result);
+        const expected = `<a/>`;
+        expect(result).toEqual(expected);
+    });
+
     it("should supress empty node to self closing node when parsing to XML", function() {
         const jObj = {
             a: {
