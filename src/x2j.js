@@ -4,6 +4,7 @@ const util = require("./util");
 const buildOptions = require("./util").buildOptions;
 const xmlNode = require("./xmlNode");
 const TagType = {"OPENING": 1, "CLOSING": 2, "SELF": 3, "CDATA": 4};
+let regx = "<((!\\[CDATA\\[([\\s\\S]*?)(]]>))|(([\\w:\\-._]*:)?([\\w:\\-._]+))([^>]*)>|((\\/)(([\\w:\\-._]*:)?([\\w:\\-._]+))\\s*>))([^<]*)";
 
 //const tagsRegx = new RegExp("<(\\/?[\\w:\\-\._]+)([^>]*)>(\\s*"+cdataRegx+")*([^<]+)?","g");
 //const tagsRegx = new RegExp("<(\\/?)((\\w*:)?([\\w:\\-\._]+))([^>]*)>([^<]*)("+cdataRegx+"([^<]*))*([^<]+)?","g");
@@ -24,6 +25,7 @@ const defaultOptions = {
     trimValues:             true,                                //Trim string values of tag and attributes
     cdataTagName:           false,
     cdataPositionChar:      "\\c",
+    localeRange:            "",
     tagValueProcessor: function(a) {return a},
     attrValueProcessor: function(a) {return a}
     //decodeStrict: false,
@@ -31,7 +33,7 @@ const defaultOptions = {
 
 exports.defaultOptions = defaultOptions;
 
-const props = ["attributeNamePrefix", "attrNodeName", "textNodeName", "ignoreAttributes", "ignoreNameSpace", "allowBooleanAttributes", "parseNodeValue", "parseAttributeValue", "arrayMode", "trimValues", "cdataTagName", "cdataPositionChar", "tagValueProcessor", "attrValueProcessor"];
+const props = ["attributeNamePrefix", "attrNodeName", "textNodeName", "ignoreAttributes", "ignoreNameSpace", "allowBooleanAttributes", "parseNodeValue", "parseAttributeValue", "arrayMode", "trimValues", "cdataTagName", "cdataPositionChar", "localeRange", "tagValueProcessor", "attrValueProcessor"];
 exports.props = props;
 
 const getTraversalObj = function(xmlData, options) {
@@ -42,7 +44,8 @@ const getTraversalObj = function(xmlData, options) {
     const xmlObj = new xmlNode("!xml");
     let currentNode = xmlObj;
 
-    const tagsRegx = /<((!\[CDATA\[([\s\S]*?)(]]>))|(([\w:\-._]*:)?([\w:\-._]+))([^>]*)>|((\/)(([\w:\-._]*:)?([\w:\-._]+))\s*>))([^<]*)/g;
+    regx = regx.replace(/\[\\w/g, "[" + options.localeRange + "\\w");
+    const tagsRegx = new RegExp(regx, "g");
     let tag = tagsRegx.exec(xmlData);
     let nextTag = tagsRegx.exec(xmlData);
     while (tag) {
