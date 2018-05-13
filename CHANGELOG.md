@@ -1,3 +1,12 @@
+3.10.0 / 2018-05-13
+  * Added support of cyrillic characters in parsing XML to JSON
+3.9.11 / 2018-05-09
+  * fix https://github.com/NaturalIntelligence/fast-xml-parser/issues/80 fix nimn chars
+  * update package information
+  * fix https://github.com/NaturalIntelligence/fast-xml-parser/issues/86: json 2 xml parser : property with null value should be parsed to self closing tag.
+  * update online demo
+  * revert zombiejs to old version to support old version of node
+  * update dependencies
 3.3.10 / 2018-04-23
   * fix #77 : parse even if closing tag has space before '>'
   * include all css & js lib in demo app
