@@ -72,6 +72,7 @@ var options = {
     trimValues: true,
     cdataTagName: "__cdata", //default is 'false'
     cdataPositionChar: "\\c",
+    localeRange: "", //To support non english character in tag/attribute values.
     attrValueProcessor: a => he.decode(a, {isAttributeValue: true}),//default is a=>a
     tagValueProcessor : a => he.decode(a) //default is a=>a
 };
@@ -103,6 +104,7 @@ var nimndata = fastXmlParser.convertTonimn(tObj,schema,options);
 * **decodeHTMLchar** : This options has been removed from 3.3.4. Instead, use tagValueProcessor, and attrValueProcessor. See above example.
 * **cdataTagName** : If specified, parser parse CDATA as nested tag instead of adding it's value to parent tag.
 * **cdataPositionChar** : It'll help to covert JSON back to XML without losing CDATA position.
+* **localeRange**: Parser will accept non-English character in tag or attribute name. Check #87 for more detail. Eg `localeRange: "a-zA-Zа-яёА-ЯЁ"`
 * **tagValueProcessor** : Process tag value during transformation. Like HTML decoding, word capitalization, etc. Applicable in case of string only.
 * **attrValueProcessor** : Process attribute value during transformation. Like HTML decoding, word capitalization, etc. Applicable in case of string only.
 
