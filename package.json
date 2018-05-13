@@ -40,7 +40,8 @@
     "js2xml",
     "json2xml",
     "nimn",
-    "xml2nimn"
+    "xml2nimn",
+    "locale"
   ],
   "author": "Amit Gupta (https://github.com/amitguptagwl)",
   "contributors": [
