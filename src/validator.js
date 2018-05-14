@@ -22,8 +22,8 @@ exports.validate = function(xmlData, options) {
     if (xmlData[0] === "\ufeff") {
       xmlData = xmlData.substr(1);
     }
-    const regxAttrName = new RegExp("^[_\\w][\\w\\-.:]*$".replace(/_\\w/g, "_" + options.localeRange));
-    const regxTagName = new RegExp("^([\\w]|_)[\\w.\\-_:]*".replace(/\(\[\\w/g, "([" + options.localeRange));
+    const regxAttrName = new RegExp("^[_w][\\w\\-.:]*$".replace("_w", "_" + options.localeRange));
+    const regxTagName = new RegExp("^([w]|_)[\\w.\\-_:]*".replace("([w", "([" + options.localeRange));
     for (let i = 0; i < xmlData.length; i++) {
 
         if (xmlData[i] === "<") {//starting of tag
