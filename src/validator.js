@@ -22,8 +22,8 @@ exports.validate = function(xmlData, options) {
     if (xmlData[0] === "\ufeff") {
       xmlData = xmlData.substr(1);
     }
-    const regxAttrName = "^[_\\w][\\w\\-.:]*$".replace(/_\\w/g, "_" + options.localeRange);
-    const regxTagName = "^([\\w]|_)[\\w.\\-_:]*".replace(/\(\[\\w/g, "([" + options.localeRange);
+    const regxAttrName = new RegExp("^[_\\w][\\w\\-.:]*$".replace(/_\\w/g, "_" + options.localeRange));
+    const regxTagName = new RegExp("^([\\w]|_)[\\w.\\-_:]*".replace(/\(\[\\w/g, "([" + options.localeRange));
     for (let i = 0; i < xmlData.length; i++) {
 
         if (xmlData[i] === "<") {//starting of tag
@@ -281,8 +281,8 @@ function validateAttributeString(attrStr, options, regxAttrName) {
 // const validAttrRegxp = /^[_a-zA-Z][\w\-.:]*$/;
 
 function validateAttrName(attrName, regxAttrName) {
-    const validAttrRegxp = new RegExp(regxAttrName);
-    return util.doesMatch(attrName, validAttrRegxp);
+    // const validAttrRegxp = new RegExp(regxAttrName);
+    return util.doesMatch(attrName, regxAttrName);
 }
 
 //const startsWithXML = new RegExp("^[Xx][Mm][Ll]");
@@ -291,6 +291,5 @@ function validateAttrName(attrName, regxAttrName) {
 function validateTagName(tagname, regxTagName) {
     /*if(util.doesMatch(tagname,startsWithXML)) return false;
     else*/
-    const startsWith = new RegExp(regxTagName);
-    return !util.doesNotMatch(tagname, startsWith);
+    return !util.doesNotMatch(tagname, regxTagName);
 }
