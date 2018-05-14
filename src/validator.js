@@ -3,10 +3,11 @@
 const util = require("./util");
 
 const defaultOptions = {
-    allowBooleanAttributes: false         //A tag can have attributes without any value
+    allowBooleanAttributes: false,         //A tag can have attributes without any value
+    localeRange:  "a-zA-Z"
 };
 
-const props = ["allowBooleanAttributes"];
+const props = ["allowBooleanAttributes", "localeRange"];
 
 //const tagsPattern = new RegExp("<\\/?([\\w:\\-_\.]+)\\s*\/?>","g");
 exports.validate = function(xmlData, options) {
@@ -18,6 +19,8 @@ exports.validate = function(xmlData, options) {
 
     const tags = [];
     let tagFound = false;
+    const regxAttrName = "^[_\\w][\\w\\-.:]*$".replace(/_\\w/g, "_" + options.localeRange);
+    const regxTagName = "^([\\w]|_)[\\w.\\-_:]*".replace(/\(\[\\w/g, "([" + options.localeRange);
     for (let i = 0; i < xmlData.length; i++) {
 
         if (xmlData[i] === "<") {//starting of tag
@@ -54,7 +57,7 @@ exports.validate = function(xmlData, options) {
                     tagName = tagName.substring(0, tagName.length - 1);
                     continue;
                 }
-                if (!validateTagName(tagName)) {
+                if (!validateTagName(tagName, regxTagName)) {
                     return {err: {code: "InvalidTag", msg: "Tag " + tagName + " is an invalid name."}};
                 }
 
@@ -67,7 +70,7 @@ exports.validate = function(xmlData, options) {
 
                 if (attrStr[attrStr.length - 1] === "/") {//self closing tag
                     attrStr = attrStr.substring(0, attrStr.length - 1);
-                    const isValid = validateAttributeString(attrStr, options);
+                    const isValid = validateAttributeString(attrStr, options, regxAttrName);
                     if (isValid === true) {
                         tagFound = true;
                         continue;
@@ -84,7 +87,7 @@ exports.validate = function(xmlData, options) {
                         }
                     }
                 } else {
-                    const isValid = validateAttributeString(attrStr, options);
+                    const isValid = validateAttributeString(attrStr, options, regxAttrName);
                     if (isValid !== true) {
                         return isValid;
                     }
@@ -238,7 +241,7 @@ const validAttrStrRegxp = new RegExp("(\\s*)([^\\s=]+)(\\s*=)?(\\s*(['\"])(([\\s
 
 //attr, ="sd", a="amit's", a="sd"b="saf", ab  cd=""
 
-function validateAttributeString(attrStr, options) {
+function validateAttributeString(attrStr, options, regxAttrName) {
     //console.log("start:"+attrStr+":end");
 
     //if(attrStr.trim().length === 0) return true; //empty string
@@ -258,7 +261,7 @@ function validateAttributeString(attrStr, options) {
                     return { err: { code:"InvalidAttr",msg:"attribute " + matches[i][2] + " has no value assigned."}};
                 } */
         const attrName = matches[i][2];
-        if (!validateAttrName(attrName)) {
+        if (!validateAttrName(attrName, regxAttrName)) {
             return {err: {code: "InvalidAttr", msg: "attribute " + attrName + " is an invalid name."}};
         }
         if (!attrNames.hasOwnProperty(attrName)) {//check for duplicate attribute.
@@ -272,19 +275,19 @@ function validateAttributeString(attrStr, options) {
 
 }
 
-const validAttrRegxp = /^[_a-zA-Z][\w\-.:]*$/;
+// const validAttrRegxp = /^[_a-zA-Z][\w\-.:]*$/;
 
-function validateAttrName(attrName) {
+function validateAttrName(attrName, regxAttrName) {
+    const validAttrRegxp = new RegExp(regxAttrName);
     return util.doesMatch(attrName, validAttrRegxp);
 }
 
 //const startsWithXML = new RegExp("^[Xx][Mm][Ll]");
-const startsWith = /^([a-zA-Z]|_)[\w.\-_:]*/;
+//  startsWith = /^([a-zA-Z]|_)[\w.\-_:]*/;
 
-function validateTagName(tagname) {
+function validateTagName(tagname, regxTagName) {
     /*if(util.doesMatch(tagname,startsWithXML)) return false;
     else*/
+    const startsWith = new RegExp(regxTagName);
     return !util.doesNotMatch(tagname, startsWith);
 }
-
-
