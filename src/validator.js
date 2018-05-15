@@ -19,14 +19,14 @@ exports.validate = function(xmlData, options) {
 
     const tags = [];
     let tagFound = false;
-    if (xmlData[0] === "\ufeff") {
+    if (xmlData[0] === "\ufeff") {  // check for byte order mark (BOM)
       xmlData = xmlData.substr(1);
     }
     const regxAttrName = new RegExp("^[_w][\\w\\-.:]*$".replace("_w", "_" + options.localeRange));
     const regxTagName = new RegExp("^([w]|_)[\\w.\\-_:]*".replace("([w", "([" + options.localeRange));
     for (let i = 0; i < xmlData.length; i++) {
 
-        if (xmlData[i] === "<") {//starting of tag
+        if (xmlData[i] === "<") { //starting of tag
             //read until you reach to '>' avoiding any '>' in attribute value
 
             i++;
