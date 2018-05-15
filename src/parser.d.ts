@@ -11,6 +11,7 @@ type X2jOptions = {
   trimValues: boolean;
   cdataTagName: false | string;
   cdataPositionChar: string;
+  localeRange:  string;
   tagValueProcessor: (tagValue: string) => string;
   attrValueProcessor: (attrValue: string) => string;
 };

@@ -64,9 +64,9 @@ exports.getValue = function(v) {
 exports.buildOptions = function(options,defaultOptions,props) {
     var newOptions = {};
     if (!options) {
-        options = {};
+        return defaultOptions; //if there are not options
     }
-    
+
     for (let i = 0; i < props.length; i++) {
         if ( options[props[i]] !== undefined) {
             newOptions[props[i]] = options[props[i]];
