@@ -1,3 +1,8 @@
+3.11.0 / 2018-05-20
+  * return defaultOptions if there are not options in buildOptions function 
+  * added localeRange declaration in parser.d.ts
+  * Added support of cyrillic characters in validator XML
+  * fixed bug in validator work when XML data with byte order marker
 3.10.0 / 2018-05-13
   * Added support of cyrillic characters in parsing XML to JSON
 3.9.11 / 2018-05-09
