@@ -210,6 +210,13 @@ C/C++ based libraries are no doubt faster than this library but they don't run i
 - [fastify-xml-body-parser](https://github.com/NaturalIntelligence/fastify-xml-body-parser/) : Fastify plugin / module to parse XML payload / body into JS object using fast-xml-parser.
 - [Grapes](https://github.com/amitguptagwl/grapes) : Flexible Regular expression engine (for java) which can be applied on char stream. (under development)
 
+## Users
+List of applications and projects using Faxt XML Parser. (Raise an issue to submit yours)
+
+<a href="https://github.com/NaturalIntelligence/imglab" title="imglab" ><img src="https://github.com/NaturalIntelligence/imglab/blob/master/img/imglab_logo.png?raw=true" width="100px" ></a> 
+<a href="https://github.com/NaturalIntelligence/Stubmatic" title="stubmatic" ><img src="https://camo.githubusercontent.com/ff711425dc2286cd215637b7114eb43e571f001d/68747470733a2f2f6e61747572616c696e74656c6c6967656e63652e6769746875622e696f2f537475626d617469632f696d672f737475626d617469635f6c6f676f2e706e673f7261773d74727565" width="100px" ></a>
+<a href="https://github.com/muneem4node/muneem" title="Muneem" ><img src="https://github.com/muneem4node/muneem/raw/master/static/muneem.png?raw=true" width="100px" ></a>
+
 ## Contributors
 
 This project exists thanks to [all](graphs/contributors) the people who contribute. [[Contribute](CONTRIBUTING.md)].
