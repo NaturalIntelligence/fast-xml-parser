@@ -1,3 +1,5 @@
+3.11.1 / 2018-06-05
+  * fix #93: read the text after self closing tag
 3.11.0 / 2018-05-20
   * return defaultOptions if there are not options in buildOptions function 
   * added localeRange declaration in parser.d.ts

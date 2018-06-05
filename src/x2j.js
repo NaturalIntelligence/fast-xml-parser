@@ -74,6 +74,10 @@ const getTraversalObj = function(xmlData, options) {
                 currentNode.val = (currentNode.val || "") + (tag[3] || "") + processTagValue(tag[14], options);
             }
         } else if (tagType === TagType.SELF) {
+            if (currentNode && tag[14]) {
+                currentNode.val = util.getValue(currentNode.val) + "" + processTagValue(tag[14], options);
+            }
+
             const childNode = new xmlNode(options.ignoreNameSpace ? tag[7] : tag[5], currentNode, "");
             if (tag[8] && tag[8].length > 1) {
                 tag[8] = tag[8].substr(0, tag[8].length - 1);

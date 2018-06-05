@@ -1,6 +1,6 @@
 {
   "name": "fast-xml-parser",
-  "version": "3.11.0",
+  "version": "3.11.1",
   "description": "Validate XML or Parse XML to JS/JSON very fast without C/C++ based libraries",
   "main": "./src/parser.js",
   "scripts": {
@@ -41,7 +41,8 @@
     "json2xml",
     "nimn",
     "xml2nimn",
-    "locale"
+    "locale",
+    "html"
   ],
   "author": "Amit Gupta (https://github.com/amitguptagwl)",
   "contributors": [

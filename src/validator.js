@@ -76,7 +76,7 @@ exports.validate = function(xmlData, options) {
                     const isValid = validateAttributeString(attrStr, options, regxAttrName);
                     if (isValid === true) {
                         tagFound = true;
-                        continue;
+                        //continue; //text may presents after self closing tag
                     } else {
                         return isValid;
                     }

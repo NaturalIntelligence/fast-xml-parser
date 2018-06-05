@@ -1,6 +1,7 @@
 "use strict";
 
 const parser = require("../src/parser");
+const validator = require("../src/validator");
 const he = require("he");
 
 describe("XMLParser", function() {
@@ -687,6 +688,34 @@ describe("XMLParser", function() {
             }
         };
         const result = parser.parse(xmlData);
+        //console.log(JSON.stringify(result,null,4));
+        expect(result).toEqual(expected);
+    });
+
+    it("should parse node with text before, after and between of subtags", function() {
+        const xmlData = "<?xml version='1.0'?>"
+        + "<tag>before"
+        + "    <subtag>subtag text</subtag>"
+        + "    middle"
+        + "    <self />"
+        + "    after self"
+        + "    <subtag2>subtag text</subtag2>"
+        + "    after"
+        + "</tag>";
+
+        const expected = {
+            "tag": {
+                "#text": "before        middle        after self        after",
+                "subtag": "subtag text",
+                "self": "",
+                "subtag2": "subtag text"
+            }
+        };
+
+        var result = validator.validate(xmlData);
+        expect(result).toBe(true);
+
+        result = parser.parse(xmlData,{trimValues:false});
         //console.log(JSON.stringify(result,null,4));
         expect(result).toEqual(expected);
     });
