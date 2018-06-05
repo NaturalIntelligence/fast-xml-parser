@@ -23,6 +23,7 @@ Validate XML, Parse XML to JS/JSON and vice versa, or parse XML to Nimn rapidly 
 
 
 
+
 > This project is looking for **contributors**. If you have a feature you'd like to see implemented or a bug you'd liked fixed, the best and fastest way to make that happen is to implement it and submit a PR. Basic knowledge of JS is sufficient. Feel free to ask for any guidance.
 
 ### Main Features
@@ -224,11 +225,12 @@ List of applications and projects using Faxt XML Parser. (Raise an issue to subm
 
 This project exists thanks to [all](graphs/contributors) the people who contribute. [[Contribute](CONTRIBUTING.md)].
 <!-- <a href="graphs/contributors"><img src="https://opencollective.com/fast-xml-parser/contributors.svg?width=890&button=false" /></a> -->
+<!-- 
 ### Lead Maintainers
 ![Amit Gupta](https://avatars1.githubusercontent.com/u/7692328?s=100&v=4)
 [![Vohmyanin Sergey Vasilevich](https://avatars3.githubusercontent.com/u/783335?s=100&v=4)](https://github.com/Delagen)
 								     
-### All Contributors
+### All Contributors -->
 <a href="graphs/contributors"><img src="https://opencollective.com/fast-xml-parser/contributors.svg?width=890&button=false" /></a>
 
 ## Backers
