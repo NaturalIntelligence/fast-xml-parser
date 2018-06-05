@@ -20,14 +20,134 @@
     <body>
     <body role="document" style="background-color: #2c3e50;">
 
-        <div class="container">
-            <a href="https://github.com/NaturalIntelligence/fast-xml-parser"><img class="bring-up" style="position: absolute; top: 0; left: 0; border: 0;" src="https://camo.githubusercontent.com/121cd7cbdc3e4855075ea8b558508b91ac463ac2/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f6c6566745f677265656e5f3030373230302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_left_green_007200.png"></a>
-            <h1 style="color:white;">Fast XML Parser</h1>
+        <div class="container-fluid">
+            <a href="https://github.com/NaturalIntelligence/fast-xml-parser"><img class="bring-up" style="position: absolute; top: 0; left: 0; border: 0; z-index: 1" src="https://camo.githubusercontent.com/121cd7cbdc3e4855075ea8b558508b91ac463ac2/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f6c6566745f677265656e5f3030373230302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_left_green_007200.png"></a>
+            <h1 style="color:white;" class="text-center">Fast XML Parser</h1>
+            <p></p>>
+            <div class="row" style="height: calc(100vh - 100px);">
+                <div class="col-md-4" >
+                    <span class="float-right" style="color: white"> <span id="lengthxml" style="margin:5px">0</span> bytes</span>
+                    <textarea id="txtXml" name="xml" style="width: 100%; height: 100%" class="form-control" placeholder="Paste XML to parse in JS/JSON"></textarea>
+                </div>
+                <div class="col-md-4" style=" color: white;">
+                        <div style="border: 1px dashed grey; margin: 5px; padding: 5px;">
+                            <input type="checkbox" id="attrNodeName"> Group all the attributes  <br>
+                            <input type="checkbox" id="ignoreAttributes" checked="true"> Ignore attributes <br>
+                            <input type="checkbox" id="ignoreNameSpace"> Remove namespace string from tag and attribute names. <br>
+                            <input type="checkbox" id="parseNodeValue" checked="true"> Parse text-node's value to float / integer / boolean.<br>
+                            <input type="checkbox" id="ParseAttributeValue"> Parse attribute's value to float / integer / boolean.<br>
+                            <input type ="checkbox" id="allowBooleanAttributes"> Allow Boolean Attributes <br>
+                            <input type ="checkbox" id="trimValues" checked="true" > Trim<br>
+                            <span class="clearfix">TagName to parse CDATA as separate property <input type="text" id="cdataTagName" style=" color: black; float:right;" ><br></span>
+                            <span class="clearfix">Locale range <input type="text" id="localeRange" style=" color: black; float:right;" placeholder="Try with your mother tongue"><br></span>
+                            <div class="text-center" style="margin: 15px">
+                                <button id="toJson" class="btn btn-primary" type="button">Parse to JSON >> </button>
+                                <button id="toNimn" class="btn btn-primary" type="button">Parse to Nimn >> </button>
+                            </div>
+                        </div>
+                        <div style="border: 1px dashed grey; margin: 5px; padding: 5px;">
+                            <input type="checkbox" id="allowBooleanAttributes_v"> Allow Boolean Attributes<br>
+                            <span class="clearfix">Locale range <input type="text" id="localeRange_v" style=" color: black; float:right;" placeholder="Try with your mother tongue"><br></span>
+                            <div class="text-center" style="margin: 15px">
+                                <button id="validate" class="btn btn-primary" type="button">Validate XML >> </button>
+                            </div>
+                            
+                        </div>
+                </div>
+                <div class="col-md-4">
+                        <span class="float-right" style="color: white"><span id="lengthoutput" style="margin:5px">0</span> bytes</span>
+                    <textarea id="result" style="width: 100%; height: 100%" class="form-control" placeholder="Output"></textarea>
+                </div>
+            </div>
+        </div>
+        <script src="https://cdn.rawgit.com/nimndata/nimnjs-schema-builder/5a452c40/dist/nimn-schema-builder.js"></script>
+    <script>
+        $( document ).ready(function() {
+            //var parser = require("parser");
+            
+            $('#txtXml').on('input', function(){
+                updateLength();
+            });
 
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <textarea id="txtXml" name="xml" rows="15" class="form-control" placeholder="Paste XML to parse in JS/JSON">
+            $('#toJson').on('click', function() {
+                $('#result').empty();
+                var result = parser.parse($('#txtXml').val(),buildParsingConfig());
+                updateOutputLength(JSON.stringify(result));
+                $('#result').text(JSON.stringify(result,null,4));
+            });
+
+            $('#toNimn').on('click', function() {
+                $('#result').empty();
+
+                var jsonData = parser.parse($('#txtXml').val(),buildParsingConfig());
+                var schema = nimnSchemaBuilder.build(jsonData);
+                var result = parser.parseToNimn($('#txtXml').val(), schema, buildParsingConfig());
+                updateOutputLength(result);
+                $('#result').text(result);
+            });
+
+            $('#validate').on('click', function() {
+                $('#result').empty();
+                var config = {
+                    allowBooleanAttributes: $("#allowBooleanAttributes_v").prop("checked"),
+                    localeRange : $("#localeRange_v").val() === "" ? "a-zA-Z" : $("#cdataTagName").val(),
+                };
+                var val = parser.validate($('#txtXml').val(), config);
+                if(val === true){
+                    $('#result').text("Valid XML");
+                }else{
+                    $('#result').text(JSON.stringify(val,null,4));
+                }
+            });
+            
+            optionsLogic();
+            $('#ignoreAttributes').on('change', function (){optionsLogic();});
+
+            function buildParsingConfig(){
+                var config = {
+                    attributeNamePrefix : "",
+                    attrNodeName: $("#attrNodeName").prop("checked") ? "@" : false,
+                    textNodeName : "#text",
+                    ignoreAttributes : $("#ignoreAttributes").prop("checked"),
+                    ignoreNameSpace : $("#ignoreNameSpace").prop("checked"),
+                    parseNodeValue : $("#parseNodeValue").prop("checked"),
+                    parseAttributeValue : $("#parseAttributeValue").prop("checked"),
+                    allowBooleanAttributes: $("#allowBooleanAttributes").prop("checked"),
+                    trimValues: $('#trimValues').prop("checked"), //Trim string values of tag and attributes
+                    decodeHTMLchar: false,
+                    cdataTagName: $("#cdataTagName").val() === "" ? false : $("#cdataTagName").val(),
+                    cdataPositionChar: "\\c",
+                    localeRange : $("#localeRange_v").val(),
+                    //arrayMode : $("#arrayMode").prop("checked")
+                };
+
+                return config;
+            }
+            
+            function optionsLogic(){
+                var ignoreAttr = $('#ignoreAttributes').prop('checked');
+                if(ignoreAttr){
+                    $('#attrNodeName').prop('checked', !ignoreAttr);
+                    $('#ParseAttributeValue').prop('checked', !ignoreAttr);
+                    $('#allowBooleanAttributes').prop('checked', !ignoreAttr);
+                }
+                $('#attrNodeName').attr('disabled', ignoreAttr);
+                $('#ParseAttributeValue').attr('disabled', ignoreAttr);
+                $('#allowBooleanAttributes').attr('disabled', ignoreAttr);
+
+                return;
+            }
+
+            function updateLength(){
+                var xmlData = $('#txtXml').val();
+                $("#lengthxml")[0].innerText = xmlData.replace(/>\s*</g, "><").length;
+            }
+
+            function updateOutputLength(data){
+                $("#lengthoutput")[0].innerText = data.length;
+            }
+
+            $('#txtXml').text(`
 <?xml version="1.0"?>
 <any_name>
     <person>
@@ -70,94 +190,8 @@
             <flatNo>78</flatNo>
         </address>
     </person>
-</any_name>
-                        </textarea>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-8" style=" color: white;">
-                            <input type="checkbox" id="attrNodeName"> Group all the attributes as properties of given name.  <br>
-                            <input type="checkbox" id="ignoreAttributes" checked="true"> Ignore attributes from parsing. <br>
-                            <input type="checkbox" id="ignoreNameSpace"> Remove namespace string from tag and attribute names. <br>
-                            <input type="checkbox" id="parseNodeValue" checked="true"> Parse the value of text node to float or integer.<br>
-                            <input type="checkbox" id="ParseAttributeValue"> Parse the value of an attribute to float or integer.<br>
-                            <input type ="checkbox" id="allowBooleanAttributes"> A tag can have attributes without any value. <br>
-                            <input type ="checkbox" id="trimValues" checked="true" > Trim string values of an attribute or node.<br>
-                            Set TagName to parse CDATA as separate property <input type="text" id="cdataTagName" style=" color: black;" ><br>
-                            <button id="submit" class="btn btn-primary" type="button">Parse to JSON</button>
-                        </div>
-                        <div class="col-md-4">
-                            <button id="validate" class="btn btn-primary" type="button">Validate XML</button>
-                        </div>
-                    </div>
-
-                </div>
-                <div class="col-md-6">
-                    <textarea id="result" rows="30" class="form-control" placeholder="Output"></textarea>
-                </div>
-            </div>
-        </div>
-    <script>
-        $( document ).ready(function() {
-            //var parser = require("parser");
-            
-            $('#submit').on('click', function() {
-                $('#result').empty();
-
-                var jsonData = parser.parse($('#txtXml').val(),buildParsingConfig());
-                $('#result').text(JSON.stringify(jsonData,null,4));
-            });
-
-            $('#validate').on('click', function() {
-                $('#result').empty();
-
-                try{
-                    var val = parser.validate($('#txtXml').val());
-                    if(val === true){
-                        $('#result').text("Valid XML");
-                    }else{
-                        $('#result').text(JSON.stringify(val,null,4));
-                    }
-                }catch(e){
-                    $('#result').text(e);
-                }
-            });
-            
-            optionsLogic();
-            $('#ignoreAttributes').on('change', function (){optionsLogic();});
-
-            function buildParsingConfig(){
-                var config = {
-                    attributeNamePrefix : "",
-                    attrNodeName: $("#attrNodeName").prop("checked") ? "@" : false,
-                    textNodeName : "#text",
-                    ignoreAttributes : $("#ignoreAttributes").prop("checked"),
-                    ignoreNameSpace : $("#ignoreNameSpace").prop("checked"),
-                    parseNodeValue : $("#parseNodeValue").prop("checked"),
-                    parseAttributeValue : $("#parseAttributeValue").prop("checked"),
-                    allowBooleanAttributes: $("#allowBooleanAttributes").prop("checked"),
-                    trimValues: $('#trimValues').prop("checked"), //Trim string values of tag and attributes
-                    decodeHTMLchar: false,
-                    cdataTagName: $("#cdataTagName").val() === "" ? false : $("#cdataTagName").val(),
-                    cdataPositionChar: "\\c"
-                    //arrayMode : $("#arrayMode").prop("checked")
-                };
-
-                return config;
-            }
-            
-            function optionsLogic(){
-                var ignoreAttr = $('#ignoreAttributes').prop('checked');
-                if(ignoreAttr){
-                    $('#attrNodeName').prop('checked', !ignoreAttr);
-                    $('#ParseAttributeValue').prop('checked', !ignoreAttr);
-                    $('#allowBooleanAttributes').prop('checked', !ignoreAttr);
-                }
-                $('#attrNodeName').attr('disabled', ignoreAttr);
-                $('#ParseAttributeValue').attr('disabled', ignoreAttr);
-                $('#allowBooleanAttributes').attr('disabled', ignoreAttr);
-
-                return;
-            }
+</any_name>`);
+            updateLength();
         });
     </script>
 
