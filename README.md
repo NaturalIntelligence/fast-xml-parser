@@ -22,6 +22,9 @@ Validate XML, Parse XML to JS/JSON and vice versa, or parse XML to Nimn rapidly 
 <a href="https://liberapay.com/amitgupta/donate"><img alt="Donate using Liberapay" src="https://liberapay.com/assets/widgets/donate.svg"></a>
 
 
+
+> This project is looking for **contributors**. If you have a feature you'd like to see implemented or a bug you'd liked fixed, the best and fastest way to make that happen is to implement it and submit a PR. Basic knowledge of HTML, CSS and JS is sufficient to start with. Feel free to ask for any guidance.
+
 ### Main Features
 
 <img align="right" src="static/img/fxp_logo.png" width="180px" alt="FXP logo"/> 
