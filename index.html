@@ -99,15 +99,7 @@
     <script>
         $( document ).ready(function() {
             //var parser = require("parser");
-            setTimeout(function(){
-                $.dialog({
-                    title: '',
-                    content: '<p style="color:black">If you like my work, plz give me a '
-                    + '<a href="https://github.com/NaturalIntelligence/fast-xml-parser/stargazers"><i class="fa fa2x fa-star animated infinite tada"></i></a>'
-                    + '.</p>'
-
-                });
-            }, 5000)
+            
             $('#submit').on('click', function() {
                 $('#result').empty();
 
@@ -119,8 +111,12 @@
                 $('#result').empty();
 
                 try{
-                    parser.validate($('#txtXml').val());
-                    $('#result').text("Valid XML");
+                    var val = parser.validate($('#txtXml').val());
+                    if(val === true){
+                        $('#result').text("Valid XML");
+                    }else{
+                        $('#result').text(JSON.stringify(val,null,4));
+                    }
                 }catch(e){
                     $('#result').text(e);
                 }
