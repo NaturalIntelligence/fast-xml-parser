@@ -1,6 +1,8 @@
 # [fast-xml-parser](https://www.npmjs.com/package/fast-xml-parser)
 Validate XML, Parse XML to JS/JSON and vice versa, or parse XML to Nimn rapidly without C/C++ based libraries and no callback
 
+> This project is looking for **contributors**. If you have a feature you'd like to see implemented or a bug you'd liked fixed, the best and fastest way to make that happen is to implement it and submit a PR. Basic knowledge of JS is sufficient. Feel free to ask for any guidance.
+
  
 [![Backers on Open Collective](https://opencollective.com/fast-xml-parser/backers/badge.svg)](#backers) [![Sponsors on Open Collective](https://opencollective.com/fast-xml-parser/sponsors/badge.svg)](#sponsors) [![Known Vulnerabilities](https://snyk.io/test/github/naturalintelligence/fast-xml-parser/badge.svg)](https://snyk.io/test/github/naturalintelligence/fast-xml-parser) 
 [![NPM quality][quality-image]][quality-url]
@@ -19,12 +21,6 @@ Validate XML, Parse XML to JS/JSON and vice versa, or parse XML to Nimn rapidly 
 </a>
 <a href="https://www.patreon.com/bePatron?u=9531404" data-patreon-widget-type="become-patron-button"><img src="https://c5.patreon.com/external/logo/become_a_patron_button.png" alt="Become a Patron!" width="200" /></a>
 <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=KQJAX48SPUKNC"> <img src="https://www.paypalobjects.com/webstatic/en_US/btn/btn_donate_92x26.png" alt="Stubmatic donate button"/></a>
-<a href="https://liberapay.com/amitgupta/donate"><img alt="Donate using Liberapay" src="https://liberapay.com/assets/widgets/donate.svg"></a>
-
-
-
-
-> This project is looking for **contributors**. If you have a feature you'd like to see implemented or a bug you'd liked fixed, the best and fastest way to make that happen is to implement it and submit a PR. Basic knowledge of JS is sufficient. Feel free to ask for any guidance.
 
 ### Main Features
 
@@ -57,13 +53,16 @@ To use it from **CLI** Install it globally with `-g` option.
 
 To use it on a **webpage** include it from [parser.js](https://github.com/NaturalIntelligence/fast-xml-parser/blob/master/lib/parser.js) or directly from [CDN](https://cdnjs.com/libraries/fast-xml-parser)
 
-### XML to JSON or XML to Nimn
+### XML to JSON 
+
+
 ```js
-var fastXmlParser = require('fast-xml-parser');
-var jsonObj = fastXmlParser.parse(xmlData);
-//construct schema manually or with the help of schema builder
-var nimndata = fastXmlParser.parseToNimn(xmlData,schema);
-//or
+var jsonObj = parser.parse(xmlData [,options] );
+```
+
+```js
+var parser = require('fast-xml-parser');
+
 var options = {
     attributeNamePrefix : "@_",
     attrNodeName: "attr", //default is 'false'
@@ -88,14 +87,25 @@ if(fastXmlParser.validate(xmlData)=== true){//optional
 var tObj = fastXmlParser.getTraversalObj(xmlData,options);
 var jsonObj = fastXmlParser.convertToJson(tObj,options);
 
+```
+
+### XML to Nimn
+```js
+var nimnData = parser.parse(xmlData, schema [,options] );
+
+
+//Intermediate obj
+var tObj = fastXmlParser.getTraversalObj(xmlData,options);
+var jsonObj = fastXmlParser.convertToJson(tObj,options);
+
 //construct schema manually or with the help of schema builder
 var nimndata = fastXmlParser.convertTonimn(tObj,schema,options);
-
 ```
-* NIMN (निम्न) data is the schema aware compressed form of data. It reduces JSON up to 50% or more of original data by removing field information. Check [specification](https://github.com/nimndata/spec) for more detail.
+* [NIMN (निम्न)](https://github.com/nimndata/spec) reduces size of the data by 80%.
 * Check [nimnjs](https://github.com/nimndata/nimnjs-node) to know more about schema, json to nimndata and reverse transformation.
 
-**OPTIONS** :
+<details>
+	<summary>OPTIONS :</summary>
 
 * **attributeNamePrefix** : prepend given string to attribute name for identification
 * **attrNodeName**: (Valid name) Group all the attributes as properties of given name.  
@@ -112,6 +122,7 @@ var nimndata = fastXmlParser.convertTonimn(tObj,schema,options);
 * **tagValueProcessor** : Process tag value during transformation. Like HTML decoding, word capitalization, etc. Applicable in case of string only.
 * **attrValueProcessor** : Process attribute value during transformation. Like HTML decoding, word capitalization, etc. Applicable in case of string only.
 
+</details>
 To use from command line
 ```bash
 $xml2js [-ns|-a|-c|-v|-V] <filename> [-o outputfile.json]
@@ -154,7 +165,9 @@ var parser = new Parser(defaultOptions);
 var xml = parser.parse(json_or_js_obj);
 
 ```
-**OPTIONS** :
+
+<details>
+	<summary>OPTIONS :</summary>
 
 With the correct options, you can get the almost original XML without losing any information.
 
@@ -169,6 +182,7 @@ With the correct options, you can get the almost original XML without losing any
 * **supressEmptyNode** : If set to `true`, tags with no value (text or nested tags) are written as self closing tags. 
 * **tagValueProcessor** : Process tag value during transformation. Like HTML encoding, word capitalization, etc. Applicable in case of string only.
 * **attrValueProcessor** : Process attribute value during transformation. Like HTML encoding, word capitalization, etc. Applicable in case of string only.
+</details>
 
 ## Comparision
 We've compared various libraries which transforms XML to JS. Most of them either are dependent on C/C++ libraries, or slow, or don't do reverse transformation. 
