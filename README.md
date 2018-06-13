@@ -123,7 +123,9 @@ var nimndata = fastXmlParser.convertTonimn(tObj,schema,options);
 * **attrValueProcessor** : Process attribute value during transformation. Like HTML decoding, word capitalization, etc. Applicable in case of string only.
 
 </details>
-To use from command line
+
+
+To use from **command line**
 ```bash
 $xml2js [-ns|-a|-c|-v|-V] <filename> [-o outputfile.json]
 $cat xmlfile.xml | xml2js [-ns|-a|-c|-v|-V] [-o outputfile.json]
@@ -184,13 +186,18 @@ With the correct options, you can get the almost original XML without losing any
 * **attrValueProcessor** : Process attribute value during transformation. Like HTML encoding, word capitalization, etc. Applicable in case of string only.
 </details>
 
-## Comparision
+## Benchmark
 We've compared various libraries which transforms XML to JS. Most of them either are dependent on C/C++ libraries, or slow, or don't do reverse transformation. 
 
 *Why not C/C++ based libraries?*
 C/C++ based libraries are no doubt faster than this library but they don't run in browser, and a user need to install extra supporting libraries on their computer.
 
-### Benchmark report
+#### XML to JSON
+
+![npm_xml2json_compare](static/img/fxpv3-vs-xml2jsv0419_chart.png)
+
+<details>
+	<summary>report</summary>
 
 | file size | fxp 3.0 validator (rps) | fxp 3.0 parser (rps) | xml2js 0.4.19 (rps) |
 | ---------- | ----------------------- | ------------------- | ------------------- |
@@ -203,19 +210,22 @@ C/C++ based libraries are no doubt faster than this library but they don't run i
 | 98m | 0.08473858148 | 0.2600104004 | -1 |
 
 * -1 indicates error or incorrect output.
+</details>
 
-![npm_xml2json_compare](static/img/fxpv3-vs-xml2jsv0419_chart.png)
 
-![npm_xml2json_compare](static/img/fxp-validatorv3.png)
+#### JSON to XML
 
-#### Benchmark for JSON to XML
+![npm_xml2json_compare](static/img/j2x.png)
+
+<details>
+	<summary>report</summary>
 
 | file size | fxp 3.2 js to xml | xml2js 0.4.19 builder |
 |------------|-----------------|-----------------|
 | 1.3k | 160148.9801 | 10384.99401|
 | 1.1m | 173.6374831 | 8.611884025|
 
-![npm_xml2json_compare](static/img/j2x.png)
+</details>
 
 ### Worth to mention
 
