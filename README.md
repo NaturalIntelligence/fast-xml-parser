@@ -62,6 +62,7 @@ var jsonObj = parser.parse(xmlData [,options] );
 
 ```js
 var parser = require('fast-xml-parser');
+var he = require('he');
 
 var options = {
     attributeNamePrefix : "@_",
@@ -88,6 +89,7 @@ var tObj = fastXmlParser.getTraversalObj(xmlData,options);
 var jsonObj = fastXmlParser.convertToJson(tObj,options);
 
 ```
+#### Note: [he](https://www.npmjs.com/package/he) library is used in this example
 
 ### XML to Nimn
 ```js
