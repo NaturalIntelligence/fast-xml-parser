@@ -3,14 +3,14 @@ Validate XML, Parse XML to JS/JSON and vice versa, or parse XML to Nimn rapidly 
 
 > This project is looking for **contributors**. If you have a feature you'd like to see implemented or a bug you'd liked fixed, the best and fastest way to make that happen is to implement it and submit a PR. Basic knowledge of JS is sufficient. Feel free to ask for any guidance.
 
- 
-[![Backers on Open Collective](https://opencollective.com/fast-xml-parser/backers/badge.svg)](#backers) [![Sponsors on Open Collective](https://opencollective.com/fast-xml-parser/sponsors/badge.svg)](#sponsors) [![Known Vulnerabilities](https://snyk.io/test/github/naturalintelligence/fast-xml-parser/badge.svg)](https://snyk.io/test/github/naturalintelligence/fast-xml-parser) 
+
+[![Backers on Open Collective](https://opencollective.com/fast-xml-parser/backers/badge.svg)](#backers) [![Sponsors on Open Collective](https://opencollective.com/fast-xml-parser/sponsors/badge.svg)](#sponsors) [![Known Vulnerabilities](https://snyk.io/test/github/naturalintelligence/fast-xml-parser/badge.svg)](https://snyk.io/test/github/naturalintelligence/fast-xml-parser)
 [![NPM quality][quality-image]][quality-url]
-[![Travis ci Build Status](https://travis-ci.org/NaturalIntelligence/fast-xml-parser.svg?branch=master)](https://travis-ci.org/NaturalIntelligence/fast-xml-parser) 
-[![Coverage Status](https://coveralls.io/repos/github/NaturalIntelligence/fast-xml-parser/badge.svg?branch=master)](https://coveralls.io/github/NaturalIntelligence/fast-xml-parser?branch=master) 
+[![Travis ci Build Status](https://travis-ci.org/NaturalIntelligence/fast-xml-parser.svg?branch=master)](https://travis-ci.org/NaturalIntelligence/fast-xml-parser)
+[![Coverage Status](https://coveralls.io/repos/github/NaturalIntelligence/fast-xml-parser/badge.svg?branch=master)](https://coveralls.io/github/NaturalIntelligence/fast-xml-parser?branch=master)
 [<img src="https://img.shields.io/badge/Try-me-blue.svg?colorA=FFA500&colorB=0000FF" alt="Try me"/>](https://naturalintelligence.github.io/fast-xml-parser/)
 [![bitHound Dev Dependencies](https://www.bithound.io/github/NaturalIntelligence/fast-xml-parser/badges/devDependencies.svg)](https://www.bithound.io/github/NaturalIntelligence/fast-xml-parser/master/dependencies/npm)
-[![bitHound Overall Score](https://www.bithound.io/github/NaturalIntelligence/fast-xml-parser/badges/score.svg)](https://www.bithound.io/github/NaturalIntelligence/fast-xml-parser) 
+[![bitHound Overall Score](https://www.bithound.io/github/NaturalIntelligence/fast-xml-parser/badges/score.svg)](https://www.bithound.io/github/NaturalIntelligence/fast-xml-parser)
 [![NPM total downloads](https://img.shields.io/npm/dt/fast-xml-parser.svg)](https://npm.im/fast-xml-parser)
 
 [quality-image]: http://npm.packagequality.com/shield/fast-xml-parser.svg?style=flat-square
@@ -24,7 +24,7 @@ Validate XML, Parse XML to JS/JSON and vice versa, or parse XML to Nimn rapidly 
 
 ### Main Features
 
-<img align="right" src="static/img/fxp_logo.png" width="180px" alt="FXP logo"/> 
+<img align="right" src="static/img/fxp_logo.png" width="180px" alt="FXP logo"/>
 
 * Validate XML data syntactically
 * Transform XML to JSON or Nimn
@@ -53,7 +53,7 @@ To use it from **CLI** Install it globally with `-g` option.
 
 To use it on a **webpage** include it from [parser.js](https://github.com/NaturalIntelligence/fast-xml-parser/blob/master/lib/parser.js) or directly from [CDN](https://cdnjs.com/libraries/fast-xml-parser)
 
-### XML to JSON 
+### XML to JSON
 
 
 ```js
@@ -110,9 +110,9 @@ var nimndata = fastXmlParser.convertTonimn(tObj,schema,options);
 	<summary>OPTIONS :</summary>
 
 * **attributeNamePrefix** : prepend given string to attribute name for identification
-* **attrNodeName**: (Valid name) Group all the attributes as properties of given name.  
+* **attrNodeName**: (Valid name) Group all the attributes as properties of given name.
 * **ignoreAttributes** : Ignore attributes to be parsed.
-* **ignoreNameSpace** : Remove namespace string from tag and attribute names. 
+* **ignoreNameSpace** : Remove namespace string from tag and attribute names.
 * **allowBooleanAttributes** : a tag can have attributes without any value
 * **parseNodeValue** : Parse the value of text node to float, integer, or boolean.
 * **parseAttributeValue** : Parse the value of an attribute to float, integer, or boolean.
@@ -159,7 +159,7 @@ var defaultOptions = {
     ignoreAttributes : true,
     cdataTagName: "__cdata", //default is false
     cdataPositionChar: "\\c",
-    format: false, 
+    format: false,
     indentBy: "  ",
     supressEmptyNode: false,
     tagValueProcessor: a=> he.encode(a, { useNamedReferences: true}),// default is a=>a
@@ -176,20 +176,20 @@ var xml = parser.parse(json_or_js_obj);
 With the correct options, you can get the almost original XML without losing any information.
 
 * **attributeNamePrefix** : Identify attributes with this prefix otherwise treat them as a tag.
-* **attrNodeName**: Identify attributes when they are grouped under single property.  
+* **attrNodeName**: Identify attributes when they are grouped under single property.
 * **ignoreAttributes** : Don't check for attributes. Treats everything as tag.
 * **encodeHTMLchar** : This option has been removed from 3.3.4. Use tagValueProcessor, and attrValueProcessor instead. See above example.
 * **cdataTagName** : If specified, parse matching tag as CDATA
 * **cdataPositionChar** : Identify the position where CDATA tag should be placed. If it is blank then CDATA will be added in the last of tag's value.
 * **format** : If set to true, then format the XML output.
-* **indentBy** : indent by this char `when` format is set to `true` 
-* **supressEmptyNode** : If set to `true`, tags with no value (text or nested tags) are written as self closing tags. 
+* **indentBy** : indent by this char `when` format is set to `true`
+* **supressEmptyNode** : If set to `true`, tags with no value (text or nested tags) are written as self closing tags.
 * **tagValueProcessor** : Process tag value during transformation. Like HTML encoding, word capitalization, etc. Applicable in case of string only.
 * **attrValueProcessor** : Process attribute value during transformation. Like HTML encoding, word capitalization, etc. Applicable in case of string only.
 </details>
 
 ## Benchmark
-We've compared various libraries which transforms XML to JS. Most of them either are dependent on C/C++ libraries, or slow, or don't do reverse transformation. 
+We've compared various libraries which transforms XML to JS. Most of them either are dependent on C/C++ libraries, or slow, or don't do reverse transformation.
 
 *Why not C/C++ based libraries?*
 C/C++ based libraries are no doubt faster than this library but they don't run in browser, and a user need to install extra supporting libraries on their computer.
@@ -251,11 +251,11 @@ List of applications and projects using Fast XML Parser. (Raise an issue to subm
 
 This project exists thanks to [all](graphs/contributors) the people who contribute. [[Contribute](CONTRIBUTING.md)].
 <!-- <a href="graphs/contributors"><img src="https://opencollective.com/fast-xml-parser/contributors.svg?width=890&button=false" /></a> -->
-<!-- 
+<!--
 ### Lead Maintainers
 ![Amit Gupta](https://avatars1.githubusercontent.com/u/7692328?s=100&v=4)
 [![Vohmyanin Sergey Vasilevich](https://avatars3.githubusercontent.com/u/783335?s=100&v=4)](https://github.com/Delagen)
-								     
+
 ### All Contributors -->
 <a href="graphs/contributors"><img src="https://opencollective.com/fast-xml-parser/contributors.svg?width=890&button=false" /></a>
 
@@ -280,5 +280,3 @@ Support this project by becoming a sponsor. Your logo will show up here with a l
 <a href="https://opencollective.com/fast-xml-parser/sponsor/7/website" target="_blank"><img src="https://opencollective.com/fast-xml-parser/sponsor/7/avatar.svg"></a>
 <a href="https://opencollective.com/fast-xml-parser/sponsor/8/website" target="_blank"><img src="https://opencollective.com/fast-xml-parser/sponsor/8/avatar.svg"></a>
 <a href="https://opencollective.com/fast-xml-parser/sponsor/9/website" target="_blank"><img src="https://opencollective.com/fast-xml-parser/sponsor/9/avatar.svg"></a>
-
-
