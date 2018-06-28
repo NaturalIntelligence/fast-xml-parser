@@ -138,16 +138,19 @@ function resolveNameSpace(tagname, options) {
 
 function parseValue(val, shouldParse) {
     if (shouldParse && typeof val === "string") {
+        let parsed;
         if (val.trim() === "" || isNaN(val)) {
-            val = val === "true" ? true : val === "false" ? false : val;
+            parsed = val === "true" ? true : val === "false" ? false : val;
         } else {
             if (val.indexOf(".") !== -1) {
-                val = Number.parseFloat(val);
+                parsed = Number.parseFloat(val);
+                parsed = String(parsed) === val ? parsed : val;
             } else {
-                val = Number.parseInt(val, 10);
+                parsed = Number.parseInt(val, 10);
+                parsed = String(parsed) === val ? parsed : val;
             }
         }
-        return val;
+        return parsed;
     } else {
         if (util.isExist(val)) {
             return val;
