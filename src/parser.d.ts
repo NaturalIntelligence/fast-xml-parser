@@ -57,7 +57,10 @@ export function validate(
   xmlData: string,
   options?: { allowBooleanAttributes?: boolean }
 ): true | ValidationError;
-// export j2xParser ???
+export class j2xParser {
+  constructor(options: J2xOptionsOptional);
+  parse(options: any);
+}
 export function parseToNimn(
   xmlData: string,
   schema: any,
