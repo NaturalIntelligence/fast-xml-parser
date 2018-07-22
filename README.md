@@ -1,7 +1,7 @@
 # [fast-xml-parser](https://www.npmjs.com/package/fast-xml-parser)
 Validate XML, Parse XML to JS/JSON and vice versa, or parse XML to Nimn rapidly without C/C++ based libraries and no callback
 
-> This project is looking for **contributors**. If you have a feature you'd like to see implemented or a bug you'd liked fixed, the best and fastest way to make that happen is to implement it and submit a PR. Basic knowledge of JS is sufficient. Feel free to ask for any guidance.
+> This project welcomes **contributors**. If you have a feature you'd like to see implemented or a bug you'd liked fixed, the best and fastest way to make that happen is to implement it and submit a PR. Basic knowledge of JS is sufficient. Feel free to ask for any guidance.
 
 
 [![Backers on Open Collective](https://opencollective.com/fast-xml-parser/backers/badge.svg)](#backers) [![Sponsors on Open Collective](https://opencollective.com/fast-xml-parser/sponsors/badge.svg)](#sponsors) [![Known Vulnerabilities](https://snyk.io/test/github/naturalintelligence/fast-xml-parser/badge.svg)](https://snyk.io/test/github/naturalintelligence/fast-xml-parser)
@@ -126,8 +126,9 @@ var nimndata = fastXmlParser.convertTonimn(tObj,schema,options);
 
 </details>
 
+<details>
+	<summary>To use from <b>command line</b></summary>
 
-To use from **command line**
 ```bash
 $xml2js [-ns|-a|-c|-v|-V] <filename> [-o outputfile.json]
 $cat xmlfile.xml | xml2js [-ns|-a|-c|-v|-V] [-o outputfile.json]
@@ -138,14 +139,18 @@ $cat xmlfile.xml | xml2js [-ns|-a|-c|-v|-V] [-o outputfile.json]
 * -c : To ignore value conversion (i.e. "-3" will not be converted to number -3)
 * -v : validate before parsing
 * -V : only validate
+</details>
 
-To use it **on webpage**
+
+<details>
+	<summary>To use it <b>on webpage</b></summary>
 
 ```js
 var result = parser.validate(xmlData);
 if(result !== true) console.log(result.err);
 var jsonObj = parser.parse(xmlData);
 ```
+</details>
 
 ### JSON / JS Object to XML
 
@@ -189,10 +194,6 @@ With the correct options, you can get the almost original XML without losing any
 </details>
 
 ## Benchmark
-We've compared various libraries which transforms XML to JS. Most of them either are dependent on C/C++ libraries, or slow, or don't do reverse transformation.
-
-*Why not C/C++ based libraries?*
-C/C++ based libraries are no doubt faster than this library but they don't run in browser, and a user need to install extra supporting libraries on their computer.
 
 #### XML to JSON
 
@@ -234,37 +235,34 @@ C/C++ based libraries are no doubt faster than this library but they don't run i
 - **[निम्न (NIMN)](https://github.com/nimndata/spec)** : Schema aware object compression. 60% more compressed than JSON. 40% more compressed than msgpack.
 - **[imglab](https://github.com/NaturalIntelligence/imglab)** : Web based tool to label images for object. So that they can be used to train dlib or other object detectors. You can integrate 3rd party libraries for fast labeling.
 - **[अनुमार्गक (anumargak)](https://github.com/NaturalIntelligence/anumargak)** : The fastest router for node web servers.
-
-- [fast-lorem-ipsum](https://github.com/amitguptagwl/fast-lorem-ipsum) : Generate lorem ipsum words, sentences, paragraph very quickly.
 - [stubmatic](https://github.com/NaturalIntelligence/Stubmatic) : A stub server to mock behaviour of HTTP(s) / REST / SOAP services. You can also mock msgpack, and nimn format in easy way.
-- [fastify-xml-body-parser](https://github.com/NaturalIntelligence/fastify-xml-body-parser/) : Fastify plugin / module to parse XML payload / body into JS object using fast-xml-parser.
-- [Grapes](https://github.com/amitguptagwl/grapes) : Flexible Regular expression engine (for java) which can be applied on char stream. (under development)
+- [मुनीम (Muneem)](https://github.com/muneem4node/muneem) : A webframework made for all team members.
+
 
 ## Users
 List of applications and projects using Fast XML Parser. (Raise an issue to submit yours)
 
-<a href="https://github.com/NaturalIntelligence/imglab" title="imglab" ><img src="https://github.com/NaturalIntelligence/imglab/blob/master/img/imglab_logo.png?raw=true" width="100px" ></a>
-<a href="https://github.com/NaturalIntelligence/Stubmatic" title="stubmatic" ><img src="https://camo.githubusercontent.com/ff711425dc2286cd215637b7114eb43e571f001d/68747470733a2f2f6e61747572616c696e74656c6c6967656e63652e6769746875622e696f2f537475626d617469632f696d672f737475626d617469635f6c6f676f2e706e673f7261773d74727565" width="100px" ></a>
-<a href="https://github.com/muneem4node/muneem" title="Muneem" ><img src="https://github.com/muneem4node/muneem/raw/master/static/muneem.png?raw=true" width="100px" ></a>
-<a href="https://github.com/renovatebot/renovate" title="renovate" ><img src="https://avatars1.githubusercontent.com/u/38656520" width="100px" ></a>
-<a href="https://github.com/dolanmiu/docx" title="docx" > **DOCX** </a>
-<a href="https://github.com/camunda" title="camunda BPM" > <img src="https://avatars3.githubusercontent.com/u/2443838" width="100px" ></a>
-<a href="https://github.com/AnyChart" title="AnyChart" > <img src="https://avatars0.githubusercontent.com/u/703373" width="100px" ></a>
-<a href="https://github.com/magda-io" title="magda-io" > <img src="https://avatars0.githubusercontent.com/u/40348684" width="100px" ></a>
-<a href="https://github.com/geistinteractive" title="Geist Interactive" > <img src="https://avatars0.githubusercontent.com/u/11617965" width="100px" ></a>
-<a href="https://www.tourstream.eu/" title="tourstream" > <img src="https://avatars1.githubusercontent.com/u/23242088" width="100px" ></a>
-<a href="https://www.atomist.com/" title="Atomist" > <img src="https://avatars3.githubusercontent.com/u/19392" width="100px" ></a>
-<a href="http://www.opuscapita.com/" title="OpusCapita" > <img src="https://avatars1.githubusercontent.com/u/23256480" width="100px" ></a>
-<a href="https://nevatrip.ru/" title="nevatrip" > <img src="https://avatars2.githubusercontent.com/u/35730984" width="100px" ></a>
-<a href="http://eosnavigator.com/" title="nevatrip" > <img src="https://avatars1.githubusercontent.com/u/40260563" width="100px" ></a>
-<a href="http://pds.nasa.gov/" title="NASA-PDS" > <img src="https://avatars2.githubusercontent.com/u/26313833" width="100px" ></a>
-<a href="http://qgis.org/" title="QGIS" > <img src="https://avatars2.githubusercontent.com/u/483444" width="100px" ></a>
-<a href="http://www.craft.ai/" title="craft ai" > <img src="https://avatars1.githubusercontent.com/u/12046764" width="100px" ></a>
-<a href="http://brownspace.org/" title="Brown Space Engineering" > <img src="https://avatars2.githubusercontent.com/u/5504507" width="100px" ></a>
-<a href="http://www.appcelerator.com/" title="Team Appcelerator" > <img src="https://avatars1.githubusercontent.com/u/82188" width="100px" ></a>
-<a href="http://orange-opensource.github.io/" title="Open Source by Orange" > <img src="https://avatars3.githubusercontent.com/u/1506386" width="100px" ></a>
-<a href="http://www.ybrain.com/" title="YBRAIN Inc." > <img src="https://avatars2.githubusercontent.com/u/38232440" width="100px" ></a>
-<a href="http://99bitcoins.com/" title="99 bitcoins" > <img src="https://avatars0.githubusercontent.com/u/9527779" width="100px" ></a>
+<a href="https://github.com/NaturalIntelligence/imglab" title="imglab" ><img src="https://github.com/NaturalIntelligence/imglab/blob/master/img/imglab_logo.png?raw=true" width="80px" ></a>
+<a href="https://github.com/NaturalIntelligence/Stubmatic" title="stubmatic" ><img src="https://camo.githubusercontent.com/ff711425dc2286cd215637b7114eb43e571f001d/68747470733a2f2f6e61747572616c696e74656c6c6967656e63652e6769746875622e696f2f537475626d617469632f696d672f737475626d617469635f6c6f676f2e706e673f7261773d74727565" width="80px" ></a>
+<a href="https://github.com/muneem4node/muneem" title="Muneem" ><img src="https://github.com/muneem4node/muneem/raw/master/static/muneem.png?raw=true" width="80px" ></a>
+<a href="https://github.com/renovatebot/renovate" title="renovate" ><img src="https://avatars1.githubusercontent.com/u/38656520" width="80px" ></a>
+<a href="https://github.com/camunda" title="camunda BPM" > <img src="https://avatars3.githubusercontent.com/u/2443838" width="80px" ></a>
+<a href="https://github.com/AnyChart" title="AnyChart" > <img src="https://avatars0.githubusercontent.com/u/703373" width="80px" ></a>
+<a href="https://github.com/magda-io" title="magda-io" > <img src="https://avatars0.githubusercontent.com/u/40348684" width="80px" ></a>
+<a href="https://github.com/geistinteractive" title="Geist Interactive" > <img src="https://avatars0.githubusercontent.com/u/11617965" width="80px" ></a>
+<a href="https://www.tourstream.eu/" title="tourstream" > <img src="https://avatars1.githubusercontent.com/u/23242088" width="80px" ></a>
+<a href="https://www.atomist.com/" title="Atomist" > <img src="https://avatars3.githubusercontent.com/u/19392" width="80px" ></a>
+<a href="http://www.opuscapita.com/" title="OpusCapita" > <img src="https://avatars1.githubusercontent.com/u/23256480" width="80px" ></a>
+<a href="https://nevatrip.ru/" title="nevatrip" > <img src="https://avatars2.githubusercontent.com/u/35730984" width="80px" ></a>
+<a href="http://eosnavigator.com/" title="nevatrip" > <img src="https://avatars1.githubusercontent.com/u/40260563" width="80px" ></a>
+<a href="http://pds.nasa.gov/" title="NASA-PDS" > <img src="https://avatars2.githubusercontent.com/u/26313833" width="80px" ></a>
+<a href="http://qgis.org/" title="QGIS" > <img src="https://avatars2.githubusercontent.com/u/483444" width="80px" ></a>
+<a href="http://www.craft.ai/" title="craft ai" > <img src="https://avatars1.githubusercontent.com/u/12046764" width="80px" ></a>
+<a href="http://brownspace.org/" title="Brown Space Engineering" > <img src="https://avatars2.githubusercontent.com/u/5504507" width="80px" ></a>
+<a href="http://www.appcelerator.com/" title="Team Appcelerator" > <img src="https://avatars1.githubusercontent.com/u/82188" width="80px" ></a>
+<a href="http://orange-opensource.github.io/" title="Open Source by Orange" > <img src="https://avatars3.githubusercontent.com/u/1506386" width="80px" ></a>
+<a href="http://www.ybrain.com/" title="YBRAIN Inc." > <img src="https://avatars2.githubusercontent.com/u/38232440" width="80px" ></a>
+<a href="http://99bitcoins.com/" title="99 bitcoins" > <img src="https://avatars0.githubusercontent.com/u/9527779" width="80px" ></a>
 
 
 
