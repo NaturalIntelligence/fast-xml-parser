@@ -246,6 +246,29 @@ List of applications and projects using Fast XML Parser. (Raise an issue to subm
 <a href="https://github.com/NaturalIntelligence/imglab" title="imglab" ><img src="https://github.com/NaturalIntelligence/imglab/blob/master/img/imglab_logo.png?raw=true" width="100px" ></a>
 <a href="https://github.com/NaturalIntelligence/Stubmatic" title="stubmatic" ><img src="https://camo.githubusercontent.com/ff711425dc2286cd215637b7114eb43e571f001d/68747470733a2f2f6e61747572616c696e74656c6c6967656e63652e6769746875622e696f2f537475626d617469632f696d672f737475626d617469635f6c6f676f2e706e673f7261773d74727565" width="100px" ></a>
 <a href="https://github.com/muneem4node/muneem" title="Muneem" ><img src="https://github.com/muneem4node/muneem/raw/master/static/muneem.png?raw=true" width="100px" ></a>
+<a href="https://github.com/renovatebot/renovate" title="renovate" ><img src="https://avatars1.githubusercontent.com/u/38656520" width="100px" ></a>
+<a href="https://github.com/dolanmiu/docx" title="docx" > **DOCX** </a>
+<a href="https://github.com/camunda" title="camunda BPM" > <img src="https://avatars3.githubusercontent.com/u/2443838" width="100px" ></a>
+<a href="https://github.com/AnyChart" title="AnyChart" > <img src="https://avatars0.githubusercontent.com/u/703373" width="100px" ></a>
+<a href="https://github.com/magda-io" title="magda-io" > <img src="https://avatars0.githubusercontent.com/u/40348684" width="100px" ></a>
+<a href="https://github.com/geistinteractive" title="Geist Interactive" > <img src="https://avatars0.githubusercontent.com/u/11617965" width="100px" ></a>
+<a href="https://www.tourstream.eu/" title="tourstream" > <img src="https://avatars1.githubusercontent.com/u/23242088" width="100px" ></a>
+<a href="https://www.atomist.com/" title="Atomist" > <img src="https://avatars3.githubusercontent.com/u/19392" width="100px" ></a>
+<a href="http://www.opuscapita.com/" title="OpusCapita" > <img src="https://avatars1.githubusercontent.com/u/23256480" width="100px" ></a>
+<a href="https://nevatrip.ru/" title="nevatrip" > <img src="https://avatars2.githubusercontent.com/u/35730984" width="100px" ></a>
+<a href="http://eosnavigator.com/" title="nevatrip" > <img src="https://avatars1.githubusercontent.com/u/40260563" width="100px" ></a>
+<a href="http://pds.nasa.gov/" title="NASA-PDS" > <img src="https://avatars2.githubusercontent.com/u/26313833" width="100px" ></a>
+<a href="http://qgis.org/" title="QGIS" > <img src="https://avatars2.githubusercontent.com/u/483444" width="100px" ></a>
+<a href="http://www.craft.ai/" title="craft ai" > <img src="https://avatars1.githubusercontent.com/u/12046764" width="100px" ></a>
+<a href="http://brownspace.org/" title="Brown Space Engineering" > <img src="https://avatars2.githubusercontent.com/u/5504507" width="100px" ></a>
+<a href="http://www.appcelerator.com/" title="Team Appcelerator" > <img src="https://avatars1.githubusercontent.com/u/82188" width="100px" ></a>
+<a href="http://orange-opensource.github.io/" title="Open Source by Orange" > <img src="https://avatars3.githubusercontent.com/u/1506386" width="100px" ></a>
+<a href="http://www.ybrain.com/" title="YBRAIN Inc." > <img src="https://avatars2.githubusercontent.com/u/38232440" width="100px" ></a>
+<a href="http://99bitcoins.com/" title="99 bitcoins" > <img src="https://avatars0.githubusercontent.com/u/9527779" width="100px" ></a>
+
+
+
+
 
 ## Contributors
 
