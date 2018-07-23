@@ -1,3 +1,9 @@
+3.11.2 / 2018-07-23
+  * Update Demo for more options
+  * Update license information
+  * Update readme for formatting, users, and spelling mistakes
+  * Add missing typescript definition for j2xParser
+  * refactoring: change filenames
 3.11.1 / 2018-06-05
   * fix #93: read the text after self closing tag
 3.11.0 / 2018-05-20
