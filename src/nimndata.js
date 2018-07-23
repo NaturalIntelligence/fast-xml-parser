@@ -127,7 +127,7 @@ function hasData(jObj) {
     }
 }
 
-const x2j = require("./x2j");
+const x2j = require("./xmlstr2xmlnode");
 const buildOptions = require("./util").buildOptions;
 
 const convert2nimn = function(node, e_schema, options) {
