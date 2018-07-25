@@ -59,7 +59,7 @@ export function validate(
 ): true | ValidationError;
 export class j2xParser {
   constructor(options: J2xOptionsOptional);
-  parse(options: any);
+  parse(options: any): any;
 }
 export function parseToNimn(
   xmlData: string,
