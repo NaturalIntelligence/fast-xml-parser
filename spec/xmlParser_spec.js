@@ -6,18 +6,49 @@ const he = require("he");
 
 describe("XMLParser", function() {
 
-    it("should parse all values as string, int, boolean or float", function() {
-        const xmlData = `<rootNode><tag>value</tag><boolean>true</boolean><intTag>045</intTag><floatTag>65.34</floatTag></rootNode>`;
+    it("should parse all values as string, int, boolean, float, hexadecimal", function() {
+        const xmlData = `<rootNode>
+        <tag>value</tag>
+        <boolean>true</boolean>
+        <intTag>045</intTag>
+        <floatTag>65.34</floatTag>
+        <hexadecimal>0x15</hexadecimal>
+        </rootNode>`;
         const expected = {
             "rootNode": {
                 "tag":      "value",
                 "boolean":  true,
                 "intTag":   45,
-                "floatTag": 65.34
+                "floatTag": 65.34,
+                "hexadecimal" : 21
             }
         };
 
         const result = parser.parse(xmlData);
+        //console.log(JSON.stringify(result,null,4));
+        expect(result).toEqual(expected);
+    });
+
+
+    it("should parse only true numbers", function() {
+        const xmlData = `<rootNode>
+        <tag>value</tag>
+        <boolean>true</boolean>
+        <intTag>045</intTag>
+        <floatTag>65.34</floatTag>
+        </rootNode>`;
+        const expected = {
+            "rootNode": {
+                "tag":      "value",
+                "boolean":  true,
+                "intTag":   "045",
+                "floatTag": 65.34
+            }
+        };
+
+        const result = parser.parse(xmlData, {
+            parseTrueNumberOnly : true
+        });
         //console.log(JSON.stringify(result,null,4));
         expect(result).toEqual(expected);
     });

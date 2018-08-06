@@ -35,7 +35,7 @@ Validate XML, Parse XML to JS/JSON and vice versa, or parse XML to Nimn rapidly 
 * Various options are available to customize the transformation
     * You can parse CDATA as separate property.
     * You can prefix attributes or group them to separate property. Or can ignore them from result completely.
-    * You can parse tag's or attribute's value to primitive type: string, integer, float, or boolean. And can optionally decode for HTML char.
+    * You can parse tag's or attribute's value to primitive type: string, integer, float, hexadecimal, or boolean. And can optionally decode for HTML char.
     * You can remove namespace from tag or attribute name while parsing
     * It supports boolean attributes, if configured.
 
@@ -77,6 +77,7 @@ var options = {
     cdataTagName: "__cdata", //default is 'false'
     cdataPositionChar: "\\c",
     localeRange: "", //To support non english character in tag/attribute values.
+    parseTrueNumberOnly: false,
     attrValueProcessor: a => he.decode(a, {isAttributeValue: true}),//default is a=>a
     tagValueProcessor : a => he.decode(a) //default is a=>a
 };
@@ -121,6 +122,7 @@ var nimndata = fastXmlParser.convertTonimn(tObj,schema,options);
 * **cdataTagName** : If specified, parser parse CDATA as nested tag instead of adding it's value to parent tag.
 * **cdataPositionChar** : It'll help to covert JSON back to XML without losing CDATA position.
 * **localeRange**: Parser will accept non-English character in tag or attribute name. Check #87 for more detail. Eg `localeRange: "a-zA-Zа-яёА-ЯЁ"`
+* **parseTrueNumberOnly**: if true then values like "+123", or "0123" will not be parsed as number.
 * **tagValueProcessor** : Process tag value during transformation. Like HTML decoding, word capitalization, etc. Applicable in case of string only.
 * **attrValueProcessor** : Process attribute value during transformation. Like HTML decoding, word capitalization, etc. Applicable in case of string only.
 
@@ -234,7 +236,7 @@ With the correct options, you can get the almost original XML without losing any
 
 - **[निम्न (NIMN)](https://github.com/nimndata/spec)** : Save up to 85% network bandwidth and storage space.
 - **[imglab](https://github.com/NaturalIntelligence/imglab)** : Speedup and simplify image labeling / annotation process online. Supports multiple formats, one click annotation, easy interface and much more.
-- **[अनुमार्गक (anumargak)](https://github.com/NaturalIntelligence/anumargak)** : The fastest router for node js web frameworks.
+- **[अनुमार्गक (anumargak)](https://github.com/NaturalIntelligence/anumargak)** : The fastest and simple router for node js web frameworks.
 - [stubmatic](https://github.com/NaturalIntelligence/Stubmatic) : A stub server to mock behaviour of HTTP(s) / REST / SOAP services. You can also mock binary formats.
 - [मुनीम (Muneem)](https://github.com/muneem4node/muneem) : A webframework made for all team members.
 - [शब्दावली (shabdawali)](https://github.com/amitguptagwl/shabdawali) : Amazing human like typing effects beyond your imagination.
