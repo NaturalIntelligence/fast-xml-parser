@@ -168,7 +168,7 @@ function replaceCDATAarr(str, cdata) {
 function buildObjectNode(val, key, attrStr, level) {
     return this.indentate(level)
            + "<" + key + attrStr
-           + this.tagEndChar
+           + ">"
            + val
            //+ this.newLine
            + this.indentate(level)
