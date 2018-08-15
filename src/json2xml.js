@@ -166,13 +166,23 @@ function replaceCDATAarr(str, cdata) {
 }
 
 function buildObjectNode(val, key, attrStr, level) {
+  if (attrStr) {
     return this.indentate(level)
-           + "<" + key + attrStr
-           + ">"
-           + val
-           //+ this.newLine
-           + this.indentate(level)
-           + "</" + key + this.tagEndChar;
+          + "<" + key + attrStr
+          + ">"
+          + val
+          //+ this.newLine
+          // + this.indentate(level)
+          + "</" + key + this.tagEndChar;
+  } else {
+    return this.indentate(level)
+          + "<" + key + attrStr
+          + this.tagEndChar
+          + val
+          //+ this.newLine
+          + this.indentate(level)
+          + "</" + key + this.tagEndChar;
+  }
 }
 
 function buildEmptyObjNode(val, key, attrStr, level) {
