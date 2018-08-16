@@ -107,16 +107,11 @@ Parser.prototype.j2x = function(jObj, level) {
             }
         } else if (Array.isArray(jObj[key])) {//repeated nodes
             if (this.isCDATA(key)) {
+              val += this.indentate(level)
                 if (jObj[this.options.textNodeName]) {
-                  if (this.options.format) {
-                    val += this.indentate(level)
-                  }
                   val += this.replaceCDATAarr(jObj[this.options.textNodeName], jObj[key]);
-                  if (this.options.format) {
-                    val += "\n"
-                  }
                 } else {
-                    val += this.replaceCDATAarr("", jObj[key]);
+                  val += this.replaceCDATAarr("", jObj[key]);
                 }
             } else {//nested nodes
                 const arrLen = jObj[key].length;
@@ -153,19 +148,22 @@ Parser.prototype.j2x = function(jObj, level) {
 function replaceCDATAstr(str, cdata) {
     str = this.options.tagValueProcessor("" + str);
     if (this.options.cdataPositionChar === "" || str === "") {
-        return str + "<![CDATA[" + cdata + "]]>";
+        return str + "<![CDATA[" + cdata + "]]" + this.tagEndChar;
     } else {
-        return str.replace(this.options.cdataPositionChar, "<![CDATA[" + cdata + "]]>");
+        return str.replace(this.options.cdataPositionChar, "<![CDATA[" + cdata + "]]" + this.tagEndChar);
     }
 }
 
 function replaceCDATAarr(str, cdata) {
     str = this.options.tagValueProcessor("" + str);
     if (this.options.cdataPositionChar === "" || str === "") {
-        return str + "<![CDATA[" + cdata.join("]]><![CDATA[") + "]]>";
+        return str + "<![CDATA[" + cdata.join("]]><![CDATA[") + "]]" + this.tagEndChar;
     } else {
         for (let v in cdata) {
             str = str.replace(this.options.cdataPositionChar, "<![CDATA[" + cdata[v] + "]]>");
+        }
+        if (this.options.format) {
+          str += "\n"
         }
         return str;
     }
