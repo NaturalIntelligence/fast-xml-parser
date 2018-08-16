@@ -324,7 +324,13 @@ describe("XMLParser", function() {
                 "__cdata": [
                     "this text is > from CDATA",
                     "this is another text"
-                ]
+                ],
+                element: {
+                    subelement: {
+                      "#text": "foo",
+                      "@": {"staticMessage": "bar"}
+                    }
+                },
             }
         };
         const parser = new Parser({
@@ -341,7 +347,11 @@ describe("XMLParser", function() {
     <k>34</k>
     <g>35 g&gt;</g>
   </tag>
-text<![CDATA[this text is > from CDATA]]>value&gt;<![CDATA[this is another text]]></a>
+  text<![CDATA[this text is > from CDATA]]>value&gt;<![CDATA[this is another text]]>
+  <element>
+    <subelement staticMessage="bar">foo</subelement>
+  </element>
+</a>
 `;
         //console.log(result);
         //console.log(expected);
