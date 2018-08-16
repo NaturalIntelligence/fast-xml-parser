@@ -107,10 +107,11 @@ Parser.prototype.j2x = function(jObj, level) {
             }
         } else if (Array.isArray(jObj[key])) {//repeated nodes
             if (this.isCDATA(key)) {
+              val += this.indentate(level)
                 if (jObj[this.options.textNodeName]) {
-                    val += this.replaceCDATAarr(jObj[this.options.textNodeName], jObj[key]);
+                  val += this.replaceCDATAarr(jObj[this.options.textNodeName], jObj[key]);
                 } else {
-                    val += this.replaceCDATAarr("", jObj[key]);
+                  val += this.replaceCDATAarr("", jObj[key]);
                 }
             } else {//nested nodes
                 const arrLen = jObj[key].length;
@@ -147,32 +148,42 @@ Parser.prototype.j2x = function(jObj, level) {
 function replaceCDATAstr(str, cdata) {
     str = this.options.tagValueProcessor("" + str);
     if (this.options.cdataPositionChar === "" || str === "") {
-        return str + "<![CDATA[" + cdata + "]]>";
+        return str + "<![CDATA[" + cdata + "]]" + this.tagEndChar;
     } else {
-        return str.replace(this.options.cdataPositionChar, "<![CDATA[" + cdata + "]]>");
+        return str.replace(this.options.cdataPositionChar, "<![CDATA[" + cdata + "]]" + this.tagEndChar);
     }
 }
 
 function replaceCDATAarr(str, cdata) {
     str = this.options.tagValueProcessor("" + str);
     if (this.options.cdataPositionChar === "" || str === "") {
-        return str + "<![CDATA[" + cdata.join("]]><![CDATA[") + "]]>";
+        return str + "<![CDATA[" + cdata.join("]]><![CDATA[") + "]]" + this.tagEndChar;
     } else {
         for (let v in cdata) {
             str = str.replace(this.options.cdataPositionChar, "<![CDATA[" + cdata[v] + "]]>");
         }
-        return str;
+        return str + this.newLine;
     }
 }
 
 function buildObjectNode(val, key, attrStr, level) {
+  if (attrStr && !val.includes('<')) {
     return this.indentate(level)
-           + "<" + key + attrStr
-           + this.tagEndChar
-           + val
-           //+ this.newLine
-           + this.indentate(level)
-           + "</" + key + this.tagEndChar;
+          + "<" + key + attrStr
+          + ">"
+          + val
+          //+ this.newLine
+          // + this.indentate(level)
+          + "</" + key + this.tagEndChar;
+  } else {
+    return this.indentate(level)
+          + "<" + key + attrStr
+          + this.tagEndChar
+          + val
+          //+ this.newLine
+          + this.indentate(level)
+          + "</" + key + this.tagEndChar;
+  }
 }
 
 function buildEmptyObjNode(val, key, attrStr, level) {
