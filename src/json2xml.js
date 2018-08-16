@@ -162,7 +162,7 @@ function replaceCDATAarr(str, cdata) {
         for (let v in cdata) {
             str = str.replace(this.options.cdataPositionChar, "<![CDATA[" + cdata[v] + "]]>");
         }
-        return str + this.options.newLine;
+        return str + this.newLine;
     }
 }
 
