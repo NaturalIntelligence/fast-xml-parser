@@ -67,6 +67,7 @@ function Parser(options) {
     this.buildTextValNode = buildTextValNode;
     this.buildObjectNode = buildObjectNode;
 
+    this.buildCdataStringNode = buildCdataStringNode
 }
 
 Parser.prototype.parse = function(jObj) {
@@ -89,11 +90,7 @@ Parser.prototype.j2x = function(jObj, level) {
             if (attr) {
                 attrStr += " " + attr + "=\"" +  this.options.attrValueProcessor("" + jObj[key]) + "\"";
             } else if (this.isCDATA(key)) {
-                if (jObj[this.options.textNodeName]) {
-                    val += this.replaceCDATAstr(jObj[this.options.textNodeName], jObj[key]);
-                } else {
-                    val += this.replaceCDATAstr("", jObj[key]);
-                }
+                this.buildCdataStringNode(jObj, key, val)
             } else {//tag value
                 if (key === this.options.textNodeName) {
                     if (jObj[this.options.cdataTagName]) {
@@ -108,11 +105,7 @@ Parser.prototype.j2x = function(jObj, level) {
         } else if (Array.isArray(jObj[key])) {//repeated nodes
             if (this.isCDATA(key)) {
               val += this.indentate(level)
-                if (jObj[this.options.textNodeName]) {
-                  val += this.replaceCDATAarr(jObj[this.options.textNodeName], jObj[key]);
-                } else {
-                  val += this.replaceCDATAarr("", jObj[key]);
-                }
+                this.buildCdataStringNode(jObj, key, val)
             } else {//nested nodes
                 const arrLen = jObj[key].length;
                 for (let j = 0; j < arrLen; j++) {
@@ -226,6 +219,13 @@ function isCDATA(name) {
     return name === this.options.cdataTagName;
 }
 
+function buildCdataStringNode (jObj, key, val) {
+  if (jObj[this.options.textNodeName]) {
+      val += this.replaceCDATAstr(jObj[this.options.textNodeName], jObj[key]);
+  } else {
+      val += this.replaceCDATAstr("", jObj[key]);
+  }
+}
 //formatting
 //indentation
 //\n after each closing or self closing tag
