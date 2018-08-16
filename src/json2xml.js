@@ -166,7 +166,7 @@ function replaceCDATAarr(str, cdata) {
 }
 
 function buildObjectNode(val, key, attrStr, level) {
-  if (attrStr) {
+  if (attrStr && !val.includes('<')) {
     return this.indentate(level)
           + "<" + key + attrStr
           + ">"
