@@ -108,7 +108,13 @@ Parser.prototype.j2x = function(jObj, level) {
         } else if (Array.isArray(jObj[key])) {//repeated nodes
             if (this.isCDATA(key)) {
                 if (jObj[this.options.textNodeName]) {
-                    val += this.replaceCDATAarr(jObj[this.options.textNodeName], jObj[key]);
+                  if (this.options.format) {
+                    val += this.indentate(level)
+                  }
+                  val += this.replaceCDATAarr(jObj[this.options.textNodeName], jObj[key]);
+                  if (this.options.format) {
+                    val += "\n"
+                  }
                 } else {
                     val += this.replaceCDATAarr("", jObj[key]);
                 }
