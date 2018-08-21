@@ -1,17 +1,24 @@
 {
   "presets": [
-    "@babel/preset-env"
+    [
+      "@babel/preset-env",
+      {
+        "forceAllTransforms": true,
+        "loose": true,
+        "modules": false
+      }
+    ]
   ],
   "plugins": [
     [
       "@babel/plugin-transform-runtime",
       {
         "helpers": false,
-        "polyfill": false,
         "regenerator": true,
-        "moduleName": "@babel/runtime"
+        "useESModules": true
       }
     ]
   ],
+  "sourceMaps": true,
   "compact": true
 }

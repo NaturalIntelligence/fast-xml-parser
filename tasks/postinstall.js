@@ -1,9 +1,6 @@
 //Display message after instalation
 
-
-
-
-var package = require(require('path').resolve('./package.json'));
+var package = require('../package.json');
 
 const stars = '\x1B[1m***\x1B[0m';
 const yellow = "\033[1;33m";
