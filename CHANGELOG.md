@@ -1,4 +1,8 @@
 3.12.0 / 2018-08-06
+  * Fix formatting for JSON to XML output
+  * Migrate to webpack
+  * fix cli
+3.12.0 / 2018-08-06
   * Support hexadecimal values
   * Support true number parsing 
 3.11.2 / 2018-07-23
