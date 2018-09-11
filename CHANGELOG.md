@@ -1,7 +1,9 @@
-3.12.1 / 2018-08-06
+3.12.3 / 2018-08-06
+  * Fix CLI issue raised in last PR
+3.12.2 / 2018-09-11
   * Fix formatting for JSON to XML output
-  * Migrate to webpack
-  * fix cli
+  * Migrate to webpack (PR merged)
+  * fix cli (PR merged)
 3.12.0 / 2018-08-06
   * Support hexadecimal values
   * Support true number parsing 
