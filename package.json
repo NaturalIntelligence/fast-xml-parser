@@ -6,8 +6,7 @@
   "files": [
     "./cli.js",
     "./lib/parser.js",
-    "./src/parser.js",
-    "./src/read.js"
+    "./src/*.js"
   ],
   "scripts": {
     "test": "jasmine spec/*spec.js",
