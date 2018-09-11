@@ -3,7 +3,7 @@
 /*eslint-disable no-console*/
 const fs = require("fs");
 const path = require("path");
-const parser = require("./lib/parser");
+const parser = require("./src/parser");
 const readToEnd = require("./src/read").readToEnd;
 
 if (process.argv[2] === "--help" || process.argv[2] === "-h") {
@@ -50,14 +50,14 @@ if (process.argv[2] === "--help" || process.argv[2] === "-h") {
     const callback = function(xmlData) {
         let output = "";
         if (validate) {
-            const result = parser.validate(xmlData);
+            const result = parser.validate(xmlData.toString());
             if (result === true) {
                 output = JSON.stringify(parser.parse(xmlData, options), null, 4);
             } else {
                 output = result;
             }
         } else if (validateOnly) {
-            output = parser.validate(xmlData);
+            output = parser.validate(xmlData.toString());
         } else {
             output = JSON.stringify(parser.parse(xmlData, options), null, 4);
         }
