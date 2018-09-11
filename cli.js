@@ -50,14 +50,14 @@ if (process.argv[2] === "--help" || process.argv[2] === "-h") {
     const callback = function(xmlData) {
         let output = "";
         if (validate) {
-            const result = parser.validate(xmlData.toString());
+            const result = parser.validate(xmlData);
             if (result === true) {
                 output = JSON.stringify(parser.parse(xmlData, options), null, 4);
             } else {
                 output = result;
             }
         } else if (validateOnly) {
-            output = parser.validate(xmlData.toString());
+            output = parser.validate(xmlData);
         } else {
             output = JSON.stringify(parser.parse(xmlData, options), null, 4);
         }
@@ -74,14 +74,14 @@ if (process.argv[2] === "--help" || process.argv[2] === "-h") {
                 if (err) {
                     throw err;
                 }
-                callback(data);
+                callback(data.toString());
             });
         } else {
             fs.readFile(fileName, function(err, data) {
                 if (err) {
                     throw err;
                 }
-                callback(data);
+                callback(data.toString());
             });
         }
     }
