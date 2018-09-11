@@ -1,4 +1,4 @@
-3.12.0 / 2018-08-06
+3.12.1 / 2018-08-06
   * Fix formatting for JSON to XML output
   * Migrate to webpack
   * fix cli

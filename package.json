@@ -4,7 +4,9 @@
   "description": "Validate XML or Parse XML to JS/JSON very fast without C/C++ based libraries",
   "main": "./src/parser.js",
   "files": [
-    "./lib/parser.js"
+    "./cli.js",
+    "./lib/parser.js",
+    "./src/*.js"
   ],
   "scripts": {
     "test": "jasmine spec/*spec.js",

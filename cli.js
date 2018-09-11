@@ -3,7 +3,7 @@
 /*eslint-disable no-console*/
 const fs = require("fs");
 const path = require("path");
-const parser = require("./lib/parser");
+const parser = require("./src/parser");
 const readToEnd = require("./src/read").readToEnd;
 
 if (process.argv[2] === "--help" || process.argv[2] === "-h") {
@@ -74,14 +74,14 @@ if (process.argv[2] === "--help" || process.argv[2] === "-h") {
                 if (err) {
                     throw err;
                 }
-                callback(data);
+                callback(data.toString());
             });
         } else {
             fs.readFile(fileName, function(err, data) {
                 if (err) {
                     throw err;
                 }
-                callback(data);
+                callback(data.toString());
             });
         }
     }
