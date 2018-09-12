@@ -1,14 +1,8 @@
 {
   "name": "fast-xml-parser",
-  "version": "3.12.4",
+  "version": "3.12.5",
   "description": "Validate XML or Parse XML to JS/JSON very fast without C/C++ based libraries",
   "main": "./src/parser.js",
-  "files": [
-    "./cli.js",
-    "./lib/parser.js",
-    "./src/*.js",
-    "./tasks/*.js"
-  ],
   "scripts": {
     "test": "jasmine spec/*spec.js",
     "perf": "node ./benchmark/perfTest3.js",
