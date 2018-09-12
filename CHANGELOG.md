@@ -1,4 +1,6 @@
-3.12.3 / 2018-08-06
+3.12.4 / 2018-09-12
+  * Fix: include tasks in npm package
+3.12.3 / 2018-09-12
   * Fix CLI issue raised in last PR
 3.12.2 / 2018-09-11
   * Fix formatting for JSON to XML output
