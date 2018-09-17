@@ -1,10 +1,8 @@
 //Display message after instalation
 
-var package = require('../package.json');
-
 const stars = '\x1B[1m***\x1B[0m';
 const yellow = "\033[1;33m";
-const light_green = "\033[1;32m";
+//const light_green = "\033[1;32m";
 const light_blue = "\033[1;34m";
 const NC="\033[0m"; // No Color
 
