@@ -12,6 +12,7 @@ const defaultOptions = {
     format: false,
     indentBy: "  ",
     supressEmptyNode: false,
+    inlineEmptyNode: false,
     tagValueProcessor: function(a) {return a},
     attrValueProcessor: function(a) {return a}
 };
@@ -26,6 +27,7 @@ const props = [
     "format",
     "indentBy",
     "supressEmptyNode",
+    "inlineEmptyNode",
     "tagValueProcessor",
     "attrValueProcessor"
 ]
@@ -45,6 +47,7 @@ function Parser(options) {
     }
     this.replaceCDATAstr = replaceCDATAstr;
     this.replaceCDATAarr = replaceCDATAarr;
+    this.inlineEmptyNode = !!this.options.inlineEmptyNode;
 
     if (this.options.format) {
         this.indentate = indentate;
@@ -176,13 +179,17 @@ function buildObjectNode(val, key, attrStr, level) {
           // + this.indentate(level)
           + "</" + key + this.tagEndChar;
   } else {
-    return this.indentate(level)
-          + "<" + key + attrStr
-          + this.tagEndChar
-          + val
-          //+ this.newLine
-          + this.indentate(level)
-          + "</" + key + this.tagEndChar;
+    if(val.length === 0 && this.inlineEmptyNode) {
+        return `${this.indentate(level)}<${key + attrStr}></${key}${this.tagEndChar}`;
+    } else {
+        return this.indentate(level)
+            + "<" + key + attrStr
+            + this.tagEndChar
+            + val
+            //+ this.newLine
+            + this.indentate(level)
+            + "</" + key + this.tagEndChar;
+    }
   }
 }
 
@@ -199,7 +206,12 @@ function buildEmptyObjNode(val, key, attrStr, level) {
 }
 
 function buildTextValNode(val, key, attrStr, level) {
-    return this.indentate(level) + "<" + key + attrStr + ">" + this.options.tagValueProcessor("" + val) + "</" + key + this.tagEndChar;
+    const tagValue = this.options.tagValueProcessor("" + val);
+    if(tagValue.length === 0 && this.inlineEmptyNode) {
+        return `${this.indentate(level)}<${key + attrStr}></${key}${this.tagEndChar}`;
+    } else {
+        return this.indentate(level) + "<" + key + attrStr + ">" + tagValue + "</" + key + this.tagEndChar;
+    }
 }
 
 function buildEmptyTextNode(val, key, attrStr, level) {
