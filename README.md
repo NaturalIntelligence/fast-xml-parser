@@ -51,7 +51,7 @@ To use it from **CLI** Install it globally with `-g` option.
 
 `$npm install fast-xml-parser -g`
 
-To use it on a **webpage** include it from [parser.js](https://github.com/NaturalIntelligence/fast-xml-parser/blob/master/lib/parser.js) or directly from [CDN](https://cdnjs.com/libraries/fast-xml-parser)
+To use it on a **webpage** include it from a [CDN](https://cdnjs.com/libraries/fast-xml-parser)
 
 ### XML to JSON
 
@@ -81,13 +81,14 @@ var options = {
     attrValueProcessor: a => he.decode(a, {isAttributeValue: true}),//default is a=>a
     tagValueProcessor : a => he.decode(a) //default is a=>a
 };
-if(fastXmlParser.validate(xmlData)=== true){//optional
-	var jsonObj = fastXmlParser.parse(xmlData,options);
+
+if( parser.validate(xmlData) === true) { //optional (it'll return an object in case it's not valid)
+    var jsonObj = parser.parse(xmlData,options);
 }
 
-//Intermediate obj
-var tObj = fastXmlParser.getTraversalObj(xmlData,options);
-var jsonObj = fastXmlParser.convertToJson(tObj,options);
+// Intermediate obj
+var tObj = parser.getTraversalObj(xmlData,options);
+var jsonObj = parser.convertToJson(tObj,options);
 
 ```
 #### Note: [he](https://www.npmjs.com/package/he) library is used in this example
@@ -98,11 +99,11 @@ var nimnData = parser.parse(xmlData, schema [,options] );
 
 
 //Intermediate obj
-var tObj = fastXmlParser.getTraversalObj(xmlData,options);
-var jsonObj = fastXmlParser.convertToJson(tObj,options);
+var tObj = parser.getTraversalObj(xmlData,options);
+var jsonObj = parser.convertToJson(tObj,options);
 
 //construct schema manually or with the help of schema builder
-var nimndata = fastXmlParser.convertTonimn(tObj,schema,options);
+var nimndata = parser.convertTonimn(tObj,schema,options);
 ```
 * [NIMN (निम्न)](https://github.com/nimndata/spec) reduces size of the data by 80%.
 * Check [nimnjs](https://github.com/nimndata/nimnjs-node) to know more about schema, json to nimndata and reverse transformation.
@@ -149,7 +150,7 @@ $cat xmlfile.xml | xml2js [-ns|-a|-c|-v|-V] [-o outputfile.json]
 
 ```js
 var result = parser.validate(xmlData);
-if(result !== true) console.log(result.err);
+if (result !== true) console.log(result.err);
 var jsonObj = parser.parse(xmlData);
 ```
 </details>
@@ -174,7 +175,6 @@ var defaultOptions = {
 };
 var parser = new Parser(defaultOptions);
 var xml = parser.parse(json_or_js_obj);
-
 ```
 
 <details>
