@@ -267,6 +267,10 @@ List of applications and projects using Fast XML Parser. (Raise an issue to subm
 <a href="http://orange-opensource.github.io/" title="Open Source by Orange" > <img src="https://avatars3.githubusercontent.com/u/1506386" width="80px" ></a>
 <a href="http://www.ybrain.com/" title="YBRAIN Inc." > <img src="https://avatars2.githubusercontent.com/u/38232440" width="80px" ></a>
 <a href="http://99bitcoins.com/" title="99 bitcoins" > <img src="https://avatars0.githubusercontent.com/u/9527779" width="80px" ></a>
+<a href="https://www.ft.com/" title="Financial Times" > <img src="https://avatars2.githubusercontent.com/u/3502508" width="80px" ></a>
+<a href="https://opendatakit.org" title="Open Data Kit" > <img src="https://avatars0.githubusercontent.com/u/6222985" width="80px" ></a>
+<a href="https://ridibooks.com" title="RIDI Books" > <img src="https://avatars1.githubusercontent.com/u/24955411" width="80px" ></a>
+<a href="http://signalk.org" title="Signal K" > <img src="https://avatars1.githubusercontent.com/u/7126740" width="80px" ></a>
 
 
 
