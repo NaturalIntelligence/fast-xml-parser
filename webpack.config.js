@@ -10,7 +10,7 @@ module.exports = [
             path: __dirname,
             filename: "./lib/parser.js",
             library: "parser",
-            libraryTarget: "var"
+            libraryTarget: "umd"
         },
         module: {
             rules: [
