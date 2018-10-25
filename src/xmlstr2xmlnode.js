@@ -143,11 +143,11 @@ function parseValue(val, shouldParse, parseTrueNumberOnly) {
             parsed = val === "true" ? true : val === "false" ? false : val;
         } else {
             if(val.indexOf("0x") !== -1){//support hexa decimal
-                parsed = Number.parseInt(val,16);
+                parsed = parseInt(val,16);
             } else if (val.indexOf(".") !== -1) {
-                parsed = Number.parseFloat(val);
+                parsed = parseFloat(val);
             } else {
-                parsed = Number.parseInt(val, 10);
+                parsed = parseInt(val, 10);
             }
             if(parseTrueNumberOnly){
                 parsed = String(parsed) === val ? parsed : val;
