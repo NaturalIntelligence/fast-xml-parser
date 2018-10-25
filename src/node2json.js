@@ -23,8 +23,8 @@ const convertToJson =function(node, options) {
         var tagname = keys[index];
         if (node.child[tagname] && node.child[tagname].length > 1) {
             jObj[tagname] = [];
-            for (var tag in node.child[tagname]) {
-                jObj[tagname].push( convertToJson(node.child[tagname][tag], options) );
+            for (var tag of node.child[tagname]) {
+                jObj[tagname].push( convertToJson(tag, options) );
             }
         } else {
             jObj[tagname] = convertToJson(node.child[tagname][0], options);
