@@ -10,7 +10,7 @@
     "bundle": "webpack",
     "coverage": "istanbul cover -x \"cli.js\" -x \"spec/*spec.js\" jasmine spec/*spec.js;",
     "coverage:check": "istanbul check-coverage --branch 90 --statement 90",
-    "postinstall": "webpack && node tasks/postinstall.js"
+    "postinstall": "node tasks/postinstall.js"
   },
   "bin": {
     "xml2js": "./cli.js"
