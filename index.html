@@ -70,33 +70,33 @@
             });
 
             $('#toJson').on('click', function() {
-                $('#result').empty();
+                $('#result').val('');
                 var result = parser.parse($('#txtXml').val(),buildParsingConfig());
                 updateOutputLength(JSON.stringify(result));
-                $('#result').text(JSON.stringify(result,null,4));
+                $('#result').val(JSON.stringify(result,null,4));
             });
 
             $('#toNimn').on('click', function() {
-                $('#result').empty();
+                $('#result').val('');
 
                 var jsonData = parser.parse($('#txtXml').val(),buildParsingConfig());
                 var schema = nimnSchemaBuilder.build(jsonData);
                 var result = parser.parseToNimn($('#txtXml').val(), schema, buildParsingConfig());
                 updateOutputLength(result);
-                $('#result').text(result);
+                $('#result').val(result);
             });
 
             $('#validate').on('click', function() {
-                $('#result').empty();
+                $('#result').val('');
                 var config = {
                     allowBooleanAttributes: $("#allowBooleanAttributes_v").prop("checked"),
                     localeRange : $("#localeRange_v").val() === "" ? "a-zA-Z" : $("#cdataTagName").val(),
                 };
                 var val = parser.validate($('#txtXml').val(), config);
                 if(val === true){
-                    $('#result').text("Valid XML");
+                    $('#result').val("Valid XML");
                 }else{
-                    $('#result').text(JSON.stringify(val,null,4));
+                    $('#result').val(JSON.stringify(val,null,4));
                 }
             });
             
@@ -147,8 +147,7 @@
                 $("#lengthoutput")[0].innerText = data.length;
             }
 
-            $('#txtXml').text(`
-<?xml version="1.0"?>
+            $('#txtXml').val(`<?xml version="1.0"?>
 <any_name>
     <person>
         <phone>+122233344550</phone>
