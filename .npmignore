@@ -8,3 +8,4 @@ static
 index.html
 webpack*
 lib
+temp*
