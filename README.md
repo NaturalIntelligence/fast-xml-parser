@@ -3,7 +3,7 @@ Validate XML, Parse XML to JS/JSON and vice versa, or parse XML to Nimn rapidly 
 
 > This project welcomes **contributors**. If you have a feature you'd like to see implemented or a bug you'd liked fixed, the best and fastest way to make that happen is to implement it and submit a PR. Basic knowledge of JS is sufficient. Feel free to ask for any guidance.
 
-> If you want to join this project as collaborator / maintainer please let me know, the only condition is to be polite with the users.
+### Join this project as collaborator / maintainer.
 
 
 [![Backers on Open Collective](https://opencollective.com/fast-xml-parser/backers/badge.svg)](#backers) [![Sponsors on Open Collective](https://opencollective.com/fast-xml-parser/sponsors/badge.svg)](#sponsors) [![Known Vulnerabilities](https://snyk.io/test/github/naturalintelligence/fast-xml-parser/badge.svg)](https://snyk.io/test/github/naturalintelligence/fast-xml-parser)
@@ -92,21 +92,6 @@ var jsonObj = parser.convertToJson(tObj,options);
 
 ```
 #### Note: [he](https://www.npmjs.com/package/he) library is used in this example
-
-### XML to Nimn
-```js
-var nimnData = parser.parse(xmlData, schema [,options] );
-
-
-//Intermediate obj
-var tObj = parser.getTraversalObj(xmlData,options);
-var jsonObj = parser.convertToJson(tObj,options);
-
-//construct schema manually or with the help of schema builder
-var nimndata = parser.convertTonimn(tObj,schema,options);
-```
-* [NIMN (निम्न)](https://github.com/nimndata/spec) reduces size of the data by 80%.
-* Check [nimnjs](https://github.com/nimndata/nimnjs-node) to know more about schema, json to nimndata and reverse transformation.
 
 <details>
 	<summary>OPTIONS :</summary>
@@ -234,8 +219,8 @@ With the correct options, you can get the almost original XML without losing any
 
 ### Worth to mention
 
-- **[निम्न (NIMN)](https://github.com/nimndata/spec)** : Save up to 85% network bandwidth and storage space.
-- **[imglab](https://github.com/NaturalIntelligence/imglab)** : Speedup and simplify image labeling / annotation process online. Supports multiple formats, one click annotation, easy interface and much more.
+- **[BigBit standard)](https://github.com/amitguptagwl/bigbit)** : A standard which defines some numeric data format to store a number of any size in less space without precision loss.
+- **[imglab](https://github.com/NaturalIntelligence/imglab)** : Speedup and simplify image labeling / annotation. Supports multiple formats, one click annotation, easy interface and much more. There are more than 800 users annotate apprx 20k images every month.
 - **[अनुमार्गक (anumargak)](https://github.com/NaturalIntelligence/anumargak)** : The fastest and simple router for node js web frameworks.
 - [stubmatic](https://github.com/NaturalIntelligence/Stubmatic) : A stub server to mock behaviour of HTTP(s) / REST / SOAP services. You can also mock binary formats.
 - [मुनीम (Muneem)](https://github.com/muneem4node/muneem) : A webframework made for all team members.

@@ -1,3 +1,5 @@
+3.12.6 / 2018-11-10
+  * Fix #126: check for type
 3.12.4 / 2018-09-12
   * Fix: include tasks in npm package
 3.12.3 / 2018-09-12
