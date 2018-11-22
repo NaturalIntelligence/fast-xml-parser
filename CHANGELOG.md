@@ -1,3 +1,5 @@
+3.12.8 / 2018-11-22
+  * fix #128 : use 'attrValueProcessor' to process attribute value in json2xml parser
 3.12.6 / 2018-11-10
   * Fix #126: check for type
 3.12.4 / 2018-09-12

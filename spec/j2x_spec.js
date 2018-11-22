@@ -250,7 +250,7 @@ describe("XMLParser", function() {
                                       attrNodeName:   "@",
                                       encodeHTMLchar: true,
                                       tagValueProcessor: a=> he.encode(a, { useNamedReferences: true}),
-                                      attrValueProcessor: a=> he.encode(a, {isAttributeValue: isAttribute, useNamedReferences: true})
+                                      attrValueProcessor: a=> he.encode(a, {isAttributeValue: true, useNamedReferences: true})
                                   });
         const result = parser.parse(jObj);
         //console.log(result);
@@ -301,7 +301,7 @@ describe("XMLParser", function() {
                                       encodeHTMLchar:   true,
                                       supressEmptyNode: true,
                                       tagValueProcessor: a=> he.encode(a, { useNamedReferences: true}),
-                                      attrValueProcessor: a=> he.encode(a, {isAttributeValue: isAttribute, useNamedReferences: true})
+                                      attrValueProcessor: a=> he.encode(a, {isAttributeValue: true, useNamedReferences: true})
                                   });
         const result = parser.parse(jObj);
         //console.log(result);
@@ -339,7 +339,7 @@ describe("XMLParser", function() {
                                       encodeHTMLchar: true,
                                       format:         true,
                                       tagValueProcessor: a=> he.encode(a, { useNamedReferences: true}),
-                                      attrValueProcessor: a=> he.encode(a, {isAttributeValue: isAttribute, useNamedReferences: true})
+                                      attrValueProcessor: a=> he.encode(a, {isAttributeValue: true, useNamedReferences: true})
                                   });
         const result = parser.parse(jObj);
         const expected = `<a b="val&gt;1" c="val&lt;2">
