@@ -361,13 +361,13 @@ describe("XMLParser", function() {
         const result = validator.validate(xmlData).err;
         expect(result).toEqual(expected);
     });
-    
+
     it("should validate XML PIs", function () {
         var xmlData = '<?xml version="1.0"?>'
         +'<?mso-contentType?>'
         +'<h1></h1>'
         +'<?mso-contentType something="val"?>';
-        
+
         var result = validator.validate(xmlData);
         expect(result).toBe(true);
     });
@@ -379,11 +379,24 @@ describe("XMLParser", function() {
         +'<?mso-contentType something="val"?>';
 
         var expected = { code: 'InvalidChar', msg: 'char " is not expected .' }
-        
+
         var result = validator.validate(xmlData).err;
         expect(result).toEqual(expected);
     });
 
+    it('should validate xml with a "length" attribute', function() {
+        const xmlData = '<name length="1"></name>';
+
+        var result = validator.validate(xmlData);
+        expect(result).toEqual(true);
+    });
+
+    it("should not validate xml with repeated attributes", function() {
+        const xmlData = '<name length="bar" length="baz"></name>';
+
+        var expected = { code: 'InvalidAttr', msg: 'attribute length is repeated.' }
+
+        var result = validator.validate(xmlData).err;
+        expect(result).toEqual(expected);
+    });
 });
-
-

@@ -250,7 +250,7 @@ function validateAttributeString(attrStr, options, regxAttrName) {
     //if(attrStr.trim().length === 0) return true; //empty string
 
     const matches = util.getAllMatches(attrStr, validAttrStrRegxp);
-    const attrNames = [];
+    const attrNames = {};
 
     for (let i = 0; i < matches.length; i++) {
         //console.log(matches[i]);
