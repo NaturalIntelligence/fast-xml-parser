@@ -1,3 +1,5 @@
+3.12.9 / 2018-11-23
+  * fix #129 : validator should not fail when an atrribute name is 'length'
 3.12.8 / 2018-11-22
   * fix #128 : use 'attrValueProcessor' to process attribute value in json2xml parser
 3.12.6 / 2018-11-10
