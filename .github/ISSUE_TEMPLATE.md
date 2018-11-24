@@ -15,7 +15,7 @@
 
 <!-- Please provide following data to avoid long communication and fast resolution. --> 
 ### Input
-Please include your sample code or steps to reproduce here
+<!-- Please include your sample code or steps to reproduce here -->
 
 ### Code
 ```js
@@ -23,10 +23,10 @@ Include the code being used for parsing
 ```
 
 ### Output
-Please include output data or error here
+<!-- Please include output data or error here -->
 
 ### expected data
-Please include expected output data here
+<!-- Please include expected output data here -->
 
 **Would you like to work on this issue?**
 <!-- choose one by changing [ ] to [x] -->
