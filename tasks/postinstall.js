@@ -14,11 +14,11 @@ console.log('');
 console.log('                 Please consider donating to our open collective');
 console.log('                      to help us maintain this package.');
 console.log('');
-console.log(light_blue + '                https://opencollective.com/fast-xml-parser/donate' + NC);
+console.log(light_blue + '   https://opencollective.com/fast-xml-parser/donate' + NC);
 console.log('                                      or');
-console.log( light_blue + '                   https://www.patreon.com/bePatron?u=9531404' + NC);
+console.log( light_blue + '  https://www.patreon.com/bePatron?u=9531404' + NC);
 console.log('                                      or');
-console.log( light_blue + '   https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=KQJAX48SPUKNC' + NC);
+console.log( light_blue + '  https://www.paypal.me/amitkumarguptagwl' + NC);
 console.log('');
 console.log('                                     ' + stars);
 
