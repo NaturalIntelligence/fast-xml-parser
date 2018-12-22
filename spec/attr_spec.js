@@ -100,12 +100,19 @@ describe("XMLParser", function() {
     });
 
     it("should parse Boolean Attributes", function() {
-        const xmlData = `<element id="7" str="" data/>`;
+        const xmlData = `<element id="7" str="" data><selfclosing/><selfclosing /><selfclosingwith attr/></element>`;
         const expected = {
             "element": {
-                "id":   7,
-                "str":  "",
-                "data": true
+                "id": 7,
+                "str": "",
+                "data": true,
+                "selfclosing": [
+                    "",
+                    ""
+                ],
+                "selfclosingwith": {
+                    "attr": true
+                }
             }
         };
 

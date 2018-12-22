@@ -79,7 +79,7 @@ const getTraversalObj = function(xmlData, options) {
             }
 
             const childNode = new xmlNode(options.ignoreNameSpace ? tag[7] : tag[5], currentNode, "");
-            if (tag[8] && tag[8].length > 1) {
+            if (tag[8] && tag[8].length > 0) {
                 tag[8] = tag[8].substr(0, tag[8].length - 1);
             }
             childNode.attrsMap = buildAttributesMap(tag[8], options);
