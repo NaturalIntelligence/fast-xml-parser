@@ -256,7 +256,8 @@ List of applications and projects using Fast XML Parser. (Raise an issue to subm
 <a href="https://opendatakit.org" title="Open Data Kit" > <img src="https://avatars0.githubusercontent.com/u/6222985" width="80px" ></a>
 <a href="https://ridibooks.com" title="RIDI Books" > <img src="https://avatars1.githubusercontent.com/u/24955411" width="80px" ></a>
 <a href="http://signalk.org" title="Signal K" > <img src="https://avatars1.githubusercontent.com/u/7126740" width="80px" ></a>
-
+<a href="http://brain.js.org/" title="brain.js" > <img src="https://avatars2.githubusercontent.com/u/23732838" width="80px" ></a>
+<a href="https://skygear.io/" title="Skegear" > <img src="https://avatars1.githubusercontent.com/u/15025887" width="80px" ></a>
 
 
 
