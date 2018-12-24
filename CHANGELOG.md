@@ -1,3 +1,5 @@
+3.12.11 / 2018-12-24
+  * fix #132: "/" should not be parsed as boolean attr in case of self closing tags
 3.12.9 / 2018-11-23
   * fix #129 : validator should not fail when an atrribute name is 'length'
 3.12.8 / 2018-11-22

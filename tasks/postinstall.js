@@ -7,12 +7,10 @@ const light_blue = "\033[1;34m";
 const NC="\033[0m"; // No Color
 
 console.log(yellow+"              Donating to an open source project is more affordable"+NC);
-
 console.log('');
 console.log('                  ' + stars + ' Thank you for using fast-xml-parser! ' + stars);
 console.log('');
-console.log('                 Please consider donating to our open collective');
-console.log('                      to help us maintain this package.');
+console.log('                 Please consider donating to help us maintain this package.');
 console.log('');
 console.log(light_blue + '   https://opencollective.com/fast-xml-parser/donate' + NC);
 console.log('                                      or');
@@ -20,8 +18,6 @@ console.log( light_blue + '  https://www.patreon.com/bePatron?u=9531404' + NC);
 console.log('                                      or');
 console.log( light_blue + '  https://www.paypal.me/amitkumarguptagwl' + NC);
 console.log('');
-console.log('                                     ' + stars);
-
 console.log('');
 console.log('');
 process.exit(0);
