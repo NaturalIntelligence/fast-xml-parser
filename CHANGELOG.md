@@ -1,3 +1,5 @@
+3.12.12 / 2019-01-11
+  * fix : IE parseInt, parseFloat error
 3.12.11 / 2018-12-24
   * fix #132: "/" should not be parsed as boolean attr in case of self closing tags
 3.12.9 / 2018-11-23

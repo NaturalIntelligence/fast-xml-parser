@@ -9,7 +9,13 @@ let regx = "<((!\\[CDATA\\[([\\s\\S]*?)(]]>))|(([\\w:\\-._]*:)?([\\w:\\-._]+))([
 //const tagsRegx = new RegExp("<(\\/?[\\w:\\-\._]+)([^>]*)>(\\s*"+cdataRegx+")*([^<]+)?","g");
 //const tagsRegx = new RegExp("<(\\/?)((\\w*:)?([\\w:\\-\._]+))([^>]*)>([^<]*)("+cdataRegx+"([^<]*))*([^<]+)?","g");
 
-//treat cdata as a tag
+//polyfill
+if (!Number.parseInt && window.parseInt) {
+    Number.parseInt = window.parseInt
+ }
+ if (!Number.parseFloat && window.parseFloat) {
+    Number.parseFloat= window.parseFloat
+ }
 
 const defaultOptions = {
     attributeNamePrefix:    "@_",

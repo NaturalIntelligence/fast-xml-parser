@@ -1,6 +1,6 @@
 {
   "name": "fast-xml-parser",
-  "version": "3.12.11",
+  "version": "3.12.12",
   "description": "Validate XML or Parse XML to JS/JSON very fast without C/C++ based libraries",
   "main": "./src/parser.js",
   "scripts": {
