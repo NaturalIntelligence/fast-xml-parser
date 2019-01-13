@@ -21,7 +21,7 @@ const convertToJson =function(node, options) {
     const keys = Object.keys(node.child);
     for (let index = 0; index < keys.length; index++) {
         var tagname = keys[index];
-        if (node.child[tagname] && node.child[tagname].length > 1) {
+        if (options.arrayMode || node.child[tagname] && node.child[tagname].length > 1) {
             jObj[tagname] = [];
             for (var tag in node.child[tagname]) {
                 jObj[tagname].push( convertToJson(node.child[tagname][tag], options) );
