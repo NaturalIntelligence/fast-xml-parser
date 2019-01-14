@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 // Copyright 2013 Timothy J Fontaine <tjfontaine@gmail.com>
 //
@@ -36,57 +36,57 @@ http.get('http://nodejs.org', function(response) {
 
 */
 
-let stream = require("stream");
-const util = require("util");
+let stream = require('stream');
+const util = require('util');
 
 if (!stream.Transform) {
-    stream = require("readable-stream");
+  stream = require('readable-stream');
 }
 
 function ReadToEnd(opts) {
-    if (!(this instanceof ReadToEnd)) {
-        return new ReadToEnd(opts);
-    }
+  if (!(this instanceof ReadToEnd)) {
+    return new ReadToEnd(opts);
+  }
 
-    stream.Transform.call(this, opts);
+  stream.Transform.call(this, opts);
 
-    this._rte_encoding = opts.encoding || "utf8";
+  this._rte_encoding = opts.encoding || 'utf8';
 
-    this._buff = "";
+  this._buff = '';
 }
 
 module.exports = ReadToEnd;
 util.inherits(ReadToEnd, stream.Transform);
 
 ReadToEnd.prototype._transform = function(chunk, encoding, done) {
-    this._buff += chunk.toString(this._rte_encoding);
-    this.push(chunk);
-    done();
+  this._buff += chunk.toString(this._rte_encoding);
+  this.push(chunk);
+  done();
 };
 
 ReadToEnd.prototype._flush = function(done) {
-    this.emit("complete", undefined, this._buff);
-    done();
+  this.emit('complete', undefined, this._buff);
+  done();
 };
 
 ReadToEnd.readToEnd = function(stream, options, cb) {
-    if (!cb) {
-        cb = options;
-        options = {};
-    }
+  if (!cb) {
+    cb = options;
+    options = {};
+  }
 
-    const dest = new ReadToEnd(options);
+  const dest = new ReadToEnd(options);
 
-    stream.pipe(dest);
+  stream.pipe(dest);
 
-    stream.on("error", function(err) {
-        stream.unpipe(dest);
-        cb(err);
-    });
+  stream.on('error', function(err) {
+    stream.unpipe(dest);
+    cb(err);
+  });
 
-    dest.on("complete", cb);
+  dest.on('complete', cb);
 
-    dest.resume();
+  dest.resume();
 
-    return dest;
+  return dest;
 };
