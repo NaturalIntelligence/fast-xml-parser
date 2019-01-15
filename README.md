@@ -258,6 +258,10 @@ List of applications and projects using Fast XML Parser. (Raise an issue to subm
 <a href="http://signalk.org" title="Signal K" > <img src="https://avatars1.githubusercontent.com/u/7126740" width="80px" ></a>
 <a href="http://brain.js.org/" title="brain.js" > <img src="https://avatars2.githubusercontent.com/u/23732838" width="80px" ></a>
 <a href="https://skygear.io/" title="Skegear" > <img src="https://avatars1.githubusercontent.com/u/15025887" width="80px" ></a>
+<a href=" https://www.mindpointgroup.com" title="mindpointgroup" > <img src="https://avatars1.githubusercontent.com/u/6413533" width="80px" ></a>
+<a href="http://www.acuantcorp.com/" title="Acuant Inc" > <img src="https://avatars3.githubusercontent.com/u/11580319?s=200&v=4" width="80px" ></a>
+<a href="https://www.wazuh.com/" title="wazuh" > <img src="https://avatars2.githubusercontent.com/u/13752566" width="80px" ></a>
+
 
 
 
