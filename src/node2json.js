@@ -26,6 +26,9 @@ const convertToJson =function(node, options) {
             for (var tag in node.child[tagname]) {
                 jObj[tagname].push( convertToJson(node.child[tagname][tag], options) );
             }
+        }
+        else if (options.arrayMode && node.child[tagname]){
+            jObj[tagname] = [convertToJson(node.child[tagname][0], options)];
         } else {
             jObj[tagname] = convertToJson(node.child[tagname][0], options);
         }
