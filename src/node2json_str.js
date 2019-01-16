@@ -20,7 +20,7 @@ const _cToJsonStr = function(node, options,level) {
     
     for (let index = 0; index < keys.length; index++) {
         var tagname = keys[index];
-        if (options.arrayMode || node.child[tagname] && node.child[tagname].length > 1) {
+        if (node.child[tagname] && node.child[tagname].length > 1) {
             jObj  += "\"" + tagname + "\" : [ ";
             for (var tag in node.child[tagname]) {
                 jObj += _cToJsonStr(node.child[tagname][tag], options) + " , ";
