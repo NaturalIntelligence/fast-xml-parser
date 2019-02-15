@@ -1,6 +1,7 @@
+
 <!-- ## Important 
 
-1. If have some **questions**, please read the README or check `spec` folder for examples. Stackoverflow is also a good place to discuss technical questions as you get support from many people there. 
+1. If have some **questions**, please read the README or check `spec` folder for examples. **Stackoverflow** is also a good place to discuss technical questions as you get support from many people there. 
 2. If you're reporting a **vulnerability** or a **security bug**, please don't expose it to the public until it is discussed with maintainer. It'll be deleted immediately. Please contact directly. You can find my contact detail in github profile.
 
 -->
@@ -8,6 +9,7 @@
 <!-- If you are raising a **bug** please ensure to fill below checklist; -->
 ### Checklist
 <!-- choose one by changing [ ] to [x] -->
+* [ ] Have you asked your question on Stackoverflow or similar forum?
 * [ ] Are you running the latest version?
 * [ ] Have you included sample input, output, error, and expected output? 
 * [ ] Have you checked if you are using correct configuration?
