@@ -3,7 +3,7 @@
 
 1. If have some **questions**, please read the README or check `spec` folder for examples. **Stackoverflow** is also a good place to discuss technical questions as you get support from many people there. 
 2. If you're reporting a **vulnerability** or a **security bug**, please don't expose it to the public until it is discussed with maintainer. It'll be deleted immediately. Please contact directly. You can find my contact detail in github profile.
-
+3. Your issue may be ignored if you remove the checklist from this issue without any reason.
 -->
 
 <!-- If you are raising a **bug** please ensure to fill below checklist; -->
