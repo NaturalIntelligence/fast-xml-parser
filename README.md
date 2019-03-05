@@ -261,7 +261,7 @@ List of applications and projects using Fast XML Parser. (Raise an issue to subm
 <a href=" https://www.mindpointgroup.com" title="mindpointgroup" > <img src="https://avatars1.githubusercontent.com/u/6413533" width="80px" ></a>
 <a href="http://www.acuantcorp.com/" title="Acuant Inc" > <img src="https://avatars3.githubusercontent.com/u/11580319?s=200&v=4" width="80px" ></a>
 <a href="https://www.wazuh.com/" title="wazuh" > <img src="https://avatars2.githubusercontent.com/u/13752566" width="80px" ></a>
-
+<a href="https://orbs.com/" title="ORBS The Hybrid Blockchain" > <img src="https://avatars1.githubusercontent.com/u/33665977" width="80px" ></a>
 
 
 
