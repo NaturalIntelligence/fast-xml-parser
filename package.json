@@ -1,6 +1,6 @@
 {
   "name": "fast-xml-parser",
-  "version": "3.12.13",
+  "version": "3.12.14",
   "description": "Validate XML or Parse XML to JS/JSON very fast without C/C++ based libraries",
   "main": "./src/parser.js",
   "scripts": {
@@ -10,7 +10,7 @@
     "bundle": "webpack && webpack --config webpack-prod.config.js",
     "coverage": "istanbul cover -x \"cli.js\" -x \"spec/*spec.js\" jasmine spec/*spec.js;",
     "coverage:check": "istanbul check-coverage --branch 90 --statement 90",
-    "postinstall": "node tasks/postinstall.js",
+    "postinstall": "node tasks/postinstall.js || exit 0",
     "prettier": "prettier --write src/**/*.js"
   },
   "bin": {
