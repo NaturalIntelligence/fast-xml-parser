@@ -86,10 +86,10 @@ const getTraversalObj = function(xmlData, options) {
       if (currentNode.parent && tag[14]) {
         currentNode.parent.val = util.getValue(currentNode.parent.val) + '' + processTagValue(tag[14], options);
       }
-      if (options.stopNodes && options.stopNodes.includes(currentNode.tagname)) {
+      if (options.stopNodes.length && options.stopNodes.includes(currentNode.tagname)) {
         currentNode.child = []
         if (currentNode.attrsMap == undefined) { currentNode.attrsMap = {}}
-        currentNode.val = xmlData.substr(currentNode.startIndex, tag.index - currentNode.startIndex)
+        currentNode.val = xmlData.substr(currentNode.startIndex + 1, tag.index - currentNode.startIndex - 1)
       }
       currentNode = currentNode.parent;
     } else if (tagType === TagType.CDATA) {
@@ -125,7 +125,7 @@ const getTraversalObj = function(xmlData, options) {
         currentNode,
         processTagValue(tag[14], options)
       );
-      if (options.stopNodes && options.stopNodes.includes(childNode.tagname)) {
+      if (options.stopNodes.length && options.stopNodes.includes(childNode.tagname)) {
         childNode.startIndex=tag.index + tag[1].length
       }
       childNode.attrsMap = buildAttributesMap(tag[8], options);
