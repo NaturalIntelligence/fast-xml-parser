@@ -55,7 +55,33 @@ describe("XMLParser", function() {
         expect(result).toBe(true);
     });
 
-    it("2. stop node has nothing in it", function() {
+  it("1c. have two stopNodes, one within the other", function() {
+    const xmlData = `<issue><title>test 1</title><fix1 lang="en"><p>p 1</p><fix2><p>p 2</p><div class="show">div 2</div></fix2><div class="show">div 1</div></fix1></issue>`;
+    const expected = {
+      "issue": {
+        "title": "test 1",
+        "fix1": {
+          "#text": "<p>p 1</p><fix2><p>p 2</p><div class=\"show\">div 2</div></fix2><div class=\"show\">div 1</div>",
+          "lang": "en"
+        }
+      }
+    };
+
+    let result = parser.parse(xmlData, {
+      attributeNamePrefix: "",
+      ignoreAttributes:    false,
+      parseAttributeValue: true,
+      stopNodes: ["fix1", "fix2"]
+    });
+
+    //console.log(JSON.stringify(result,null,4));
+    expect(result).toEqual(expected);
+
+    result = validator.validate(xmlData);
+    expect(result).toBe(true);
+  });
+
+    it("2a. stop node has nothing in it", function() {
         const xmlData = `<issue><title>test 1</title><fix1></fix1></issue>`;
         const expected = {
             "issue": {
@@ -77,6 +103,29 @@ describe("XMLParser", function() {
         result = validator.validate(xmlData);
         expect(result).toBe(true);
     });
+
+  it("2b. stop node is self-closing", function() {
+    const xmlData = `<issue><title>test 1</title><fix1/></issue>`;
+    const expected = {
+      "issue": {
+        "title": "test 1",
+        "fix1": ""
+      }
+    };
+
+    let result = parser.parse(xmlData, {
+      attributeNamePrefix: "",
+      ignoreAttributes:    false,
+      parseAttributeValue: true,
+      stopNodes: ["fix1", "fix2"]
+    });
+
+    //console.log(JSON.stringify(result,null,4));
+    expect(result).toEqual(expected);
+
+    result = validator.validate(xmlData);
+    expect(result).toBe(true);
+  });
 
     it("4. cdata", function() {
         const xmlData = `<?xml version='1.0'?>
