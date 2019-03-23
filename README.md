@@ -20,7 +20,7 @@ Validate XML, Parse XML to JS/JSON and vice versa, or parse XML to Nimn rapidly 
   <img src="https://opencollective.com/fast-xml-parser/donate/button@2x.png?color=blue" width=200 />
 </a>
 <a href="https://www.patreon.com/bePatron?u=9531404" data-patreon-widget-type="become-patron-button"><img src="https://c5.patreon.com/external/logo/become_a_patron_button.png" alt="Become a Patron!" width="200" /></a>
-<a href="https://www.paypal.me/amitkumarguptagwl"> <img src="https://funcards.github.io/match-it/static/img/support_paypal.svg" alt="Stubmatic donate button" width="200"/></a>
+<a href="https://www.paypal.me/amitkumarguptagwl"> <img src="static/img/support_paypal.svg" alt="Stubmatic donate button" width="200"/></a>
 
 ### Main Features
 
