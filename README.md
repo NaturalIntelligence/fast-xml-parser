@@ -111,6 +111,7 @@ var jsonObj = parser.convertToJson(tObj,options);
 * **parseTrueNumberOnly**: if true then values like "+123", or "0123" will not be parsed as number.
 * **tagValueProcessor** : Process tag value during transformation. Like HTML decoding, word capitalization, etc. Applicable in case of string only.
 * **attrValueProcessor** : Process attribute value during transformation. Like HTML decoding, word capitalization, etc. Applicable in case of string only.
+* **stopNodes** : an array of tag names which are not required to be parsed. Instead their values are parsed as string.
 
 </details>
 
@@ -262,8 +263,12 @@ List of applications and projects using Fast XML Parser. (Raise an issue to subm
 <a href="http://www.acuantcorp.com/" title="Acuant Inc" > <img src="https://avatars3.githubusercontent.com/u/11580319?s=200&v=4" width="80px" ></a>
 <a href="https://www.wazuh.com/" title="wazuh" > <img src="https://avatars2.githubusercontent.com/u/13752566" width="80px" ></a>
 <a href="https://orbs.com/" title="ORBS The Hybrid Blockchain" > <img src="https://avatars1.githubusercontent.com/u/33665977" width="80px" ></a>
-
-
+<a href="https://texlab.netlify.com/" title="latex-lsp" > <img src="https://avatars1.githubusercontent.com/u/48360002" width="80px" ></a>
+<a href="https://frontside.io/" title="The Frontside " > <img src="https://avatars1.githubusercontent.com/u/223096" width="80px" ></a>
+<a href="https://www.hustunique.com/" title="UniqueStudio" > <img src="https://avatars1.githubusercontent.com/u/4847684" width="80px" ></a>
+<a href="http://www.openforis.org/" title="Open Foris" > <img src="https://avatars2.githubusercontent.com/u/1212750" width="80px" ></a>
+<a href="#" title="NHS Connect" > <img src="https://avatars3.githubusercontent.com/u/20316669" width="80px" ></a>
+<a href="https://tradle.io/" title="Tradle" > <img src="https://avatars2.githubusercontent.com/u/9482126" width="80px" ></a>
 
 
 ## Contributors

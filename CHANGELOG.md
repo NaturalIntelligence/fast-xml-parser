@@ -1,3 +1,8 @@
+3.12.16 / 2019-03-23
+  * Support a new option "stopNodes". (#150)
+
+Accept the list of tags which are not required to be parsed. Instead, all the nested tag and data will be assigned as string.
+  * Don't show post-install message
 3.12.12 / 2019-01-11
   * fix : IE parseInt, parseFloat error
 3.12.11 / 2018-12-24
