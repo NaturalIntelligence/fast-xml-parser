@@ -39,6 +39,7 @@ const defaultOptions = {
   attrValueProcessor: function(a) {
     return a;
   },
+  stopNodes: []
   //decodeStrict: false,
 };
 
@@ -61,6 +62,7 @@ const props = [
   'tagValueProcessor',
   'attrValueProcessor',
   'parseTrueNumberOnly',
+  'stopNodes'
 ];
 exports.props = props;
 
@@ -84,7 +86,11 @@ const getTraversalObj = function(xmlData, options) {
       if (currentNode.parent && tag[14]) {
         currentNode.parent.val = util.getValue(currentNode.parent.val) + '' + processTagValue(tag[14], options);
       }
-
+      if (options.stopNodes.length && options.stopNodes.includes(currentNode.tagname)) {
+        currentNode.child = []
+        if (currentNode.attrsMap == undefined) { currentNode.attrsMap = {}}
+        currentNode.val = xmlData.substr(currentNode.startIndex + 1, tag.index - currentNode.startIndex - 1)
+      }
       currentNode = currentNode.parent;
     } else if (tagType === TagType.CDATA) {
       if (options.cdataTagName) {
@@ -119,6 +125,9 @@ const getTraversalObj = function(xmlData, options) {
         currentNode,
         processTagValue(tag[14], options)
       );
+      if (options.stopNodes.length && options.stopNodes.includes(childNode.tagname)) {
+        childNode.startIndex=tag.index + tag[1].length
+      }
       childNode.attrsMap = buildAttributesMap(tag[8], options);
       currentNode.addChild(childNode);
       currentNode = childNode;
