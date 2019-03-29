@@ -36,7 +36,7 @@ const props = [
 
 function Parser(options) {
   this.options = buildOptions(options, defaultOptions, props);
-  if (this.options.ignoreAttributes || this.options.attrNodeName) {
+  if (this.options.ignoreAttributes && this.options.attrNodeName) {
     this.isAttribute = function(/*a*/) {
       return false;
     };
@@ -148,7 +148,8 @@ Parser.prototype.j2x = function(jObj, level) {
         const Ks = Object.keys(jObj[key]);
         const L = Ks.length;
         for (let j = 0; j < L; j++) {
-          attrStr += ' ' + Ks[j] + '="' + this.options.attrValueProcessor('' + jObj[key][Ks[j]]) + '"';
+          const attr = this.isAttribute(Ks[j]);
+          attrStr += ' ' + attr + '="' + this.options.attrValueProcessor('' + jObj[key][Ks[j]]) + '"';
         }
       } else {
         const result = this.j2x(jObj[key], level + 1);
