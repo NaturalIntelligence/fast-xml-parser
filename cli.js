@@ -59,6 +59,7 @@ if (process.argv[2] === '--help' || process.argv[2] === '-h') {
       }
     } else if (validateOnly) {
       output = parser.validate(xmlData);
+      process.exitCode = output === true ? 0 : 1;
     } else {
       output = JSON.stringify(parser.parse(xmlData, options), null, 4);
     }
