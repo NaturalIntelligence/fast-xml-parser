@@ -32,6 +32,7 @@ const props = [
   'supressEmptyNode',
   'tagValueProcessor',
   'attrValueProcessor',
+  'resembleXml'
 ];
 
 function Parser(options) {
@@ -79,8 +80,39 @@ function Parser(options) {
 }
 
 Parser.prototype.parse = function(jObj) {
-  return this.j2x(jObj, 0).val;
+  if (this.options.resembleXml) {
+    return this.j2xBasic(jObj)
+  } else {
+    return this.j2x(jObj, 0).val;
+  }
 };
+
+Parser.prototype.j2xBasic = function(jObj) {
+  let tag = jObj.nodeName;
+  if ("nameSpace" in jObj) { tag = jObj.nameSpace + ":" + tag}
+  tag = this.options.tagValueProcessor(tag)
+  let val = '<' + tag
+  if ((jObj.attr != null) && (Object.keys(jObj.attr).length > 0)) {
+    Object.keys(jObj.attr).forEach(attr => {
+      val += " " + attr + "=\"" + this.options.attrValueProcessor('' + jObj.attr[attr]) + "\"";
+    })
+  }
+  if (((jObj.children == null) || (jObj.children.length == 0)) && (jObj.val == "")) {
+    val += "/>"
+    return val;
+  }
+  val += ">"
+  if ((jObj.val != null) && (jObj.val != "")) {
+    val += jObj.val
+  }
+  if (jObj.children != null) {
+    jObj.children.forEach(c => {
+      val += this.j2xBasic(c)
+    })
+  }
+  val += "</" + tag + ">"
+  return val;
+}
 
 Parser.prototype.j2x = function(jObj, level) {
   let attrStr = '';

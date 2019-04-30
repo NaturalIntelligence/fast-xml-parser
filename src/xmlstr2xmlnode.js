@@ -3,6 +3,7 @@
 const util = require('./util');
 const buildOptions = require('./util').buildOptions;
 const xmlNode = require('./xmlNode');
+const xmlNodeBasic = require('./xmlNodeBasic');
 const TagType = {OPENING: 1, CLOSING: 2, SELF: 3, CDATA: 4};
 let regx =
   '<((!\\[CDATA\\[([\\s\\S]*?)(]]>))|(([\\w:\\-._]*:)?([\\w:\\-._]+))([^>]*)>|((\\/)(([\\w:\\-._]*:)?([\\w:\\-._]+))\\s*>))([^<]*)';
@@ -39,7 +40,8 @@ const defaultOptions = {
   attrValueProcessor: function(a) {
     return a;
   },
-  stopNodes: []
+  stopNodes: [],
+  resembleXml: false
   //decodeStrict: false,
 };
 
@@ -62,7 +64,8 @@ const props = [
   'tagValueProcessor',
   'attrValueProcessor',
   'parseTrueNumberOnly',
-  'stopNodes'
+  'stopNodes',
+  'resembleXml'
 ];
 exports.props = props;
 
@@ -71,7 +74,7 @@ const getTraversalObj = function(xmlData, options) {
   //xmlData = xmlData.replace(/\r?\n/g, " ");//make it single line
   xmlData = xmlData.replace(/<!--[\s\S]*?-->/g, ''); //Remove  comments
 
-  const xmlObj = new xmlNode('!xml');
+  const xmlObj = (options.resembleXml == false)? new xmlNode('!xml') : new xmlNodeBasic('!xml');
   let currentNode = xmlObj;
 
   regx = regx.replace(/\[\\w/g, '[' + options.localeRange + '\\w');
@@ -95,7 +98,9 @@ const getTraversalObj = function(xmlData, options) {
     } else if (tagType === TagType.CDATA) {
       if (options.cdataTagName) {
         //add cdata node
-        const childNode = new xmlNode(options.cdataTagName, currentNode, tag[3]);
+        const childNode = (options.resembleXml == false)?
+                          new xmlNode(options.cdataTagName, currentNode, tag[3]) :
+                          new xmlNodeBasic(options.cdataTagName, currentNode, tag[3]);
         childNode.attrsMap = buildAttributesMap(tag[8], options);
         currentNode.addChild(childNode);
         //for backtracking
@@ -112,7 +117,9 @@ const getTraversalObj = function(xmlData, options) {
         currentNode.val = util.getValue(currentNode.val) + '' + processTagValue(tag[14], options);
       }
 
-      const childNode = new xmlNode(options.ignoreNameSpace ? tag[7] : tag[5], currentNode, '');
+      const childNode = (options.resembleXml == false)?
+                      new xmlNode(options.ignoreNameSpace ? tag[7] : tag[5], currentNode, '') :
+                      new xmlNodeBasic(options.ignoreNameSpace ? tag[7] : tag[5], currentNode, '');
       if (tag[8] && tag[8].length > 0) {
         tag[8] = tag[8].substr(0, tag[8].length - 1);
       }
@@ -120,7 +127,11 @@ const getTraversalObj = function(xmlData, options) {
       currentNode.addChild(childNode);
     } else {
       //TagType.OPENING
-      const childNode = new xmlNode(
+      const childNode = (options.resembleXml == false)? new xmlNode(
+        options.ignoreNameSpace ? tag[7] : tag[5],
+        currentNode,
+        processTagValue(tag[14], options)
+      ) : new xmlNodeBasic (
         options.ignoreNameSpace ? tag[7] : tag[5],
         currentNode,
         processTagValue(tag[14], options)
