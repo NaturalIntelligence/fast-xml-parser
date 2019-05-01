@@ -18,6 +18,7 @@ const defaultOptions = {
   attrValueProcessor: function(a) {
     return a;
   },
+  resembleXml: false
 };
 
 const props = [
@@ -89,7 +90,7 @@ Parser.prototype.parse = function(jObj) {
 
 Parser.prototype.j2xBasic = function(jObj) {
   let tag = jObj.nodeName;
-  if ("nameSpace" in jObj) { tag = jObj.nameSpace + ":" + tag}
+  if ("namespace" in jObj) { tag = jObj.namespace + ":" + tag}
   tag = this.options.tagValueProcessor(tag)
   let val = '<' + tag
   if ((jObj.attr != null) && (Object.keys(jObj.attr).length > 0)) {
