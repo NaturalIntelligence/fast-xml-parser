@@ -19,7 +19,7 @@ const copyObj = function (source, options) {
       })
     }
   }
-  if (source.val != "") {
+  if (source.val !== "") {
     target.val = source.val
   }
   if  (source.child.length > 0) {
