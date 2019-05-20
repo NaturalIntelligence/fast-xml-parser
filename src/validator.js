@@ -48,7 +48,16 @@ exports.validate = function(xmlData, options) {
         }
         //read tagname
         let tagName = '';
-        for (; i < xmlData.length && xmlData[i] !== '>' && xmlData[i] !== ' ' && xmlData[i] !== '\t'; i++) {
+        for (
+          ;
+          i < xmlData.length &&
+          xmlData[i] !== '>' &&
+          xmlData[i] !== ' ' &&
+          xmlData[i] !== '\t' &&
+          xmlData[i] !== '\n' &&
+          xmlData[i] !== '\r';
+          i++
+        ) {
           tagName += xmlData[i];
         }
         tagName = tagName.trim();
