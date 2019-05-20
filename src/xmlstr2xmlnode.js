@@ -10,14 +10,6 @@ let regx =
 //const tagsRegx = new RegExp("<(\\/?[\\w:\\-\._]+)([^>]*)>(\\s*"+cdataRegx+")*([^<]+)?","g");
 //const tagsRegx = new RegExp("<(\\/?)((\\w*:)?([\\w:\\-\._]+))([^>]*)>([^<]*)("+cdataRegx+"([^<]*))*([^<]+)?","g");
 
-//polyfill
-if (!Number.parseInt && window.parseInt) {
-  Number.parseInt = window.parseInt;
-}
-if (!Number.parseFloat && window.parseFloat) {
-  Number.parseFloat = window.parseFloat;
-}
-
 const defaultOptions = {
   attributeNamePrefix: '@_',
   attrNodeName: false,
@@ -186,11 +178,11 @@ function parseValue(val, shouldParse, parseTrueNumberOnly) {
     } else {
       if (val.indexOf('0x') !== -1) {
         //support hexa decimal
-        parsed = Number.parseInt(val, 16);
+        parsed = parseInt(val, 16);
       } else if (val.indexOf('.') !== -1) {
-        parsed = Number.parseFloat(val);
+        parsed = parseFloat(val);
       } else {
-        parsed = Number.parseInt(val, 10);
+        parsed = parseInt(val, 10);
       }
       if (parseTrueNumberOnly) {
         parsed = String(parsed) === val ? parsed : val;
