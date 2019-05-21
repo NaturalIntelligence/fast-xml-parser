@@ -399,4 +399,16 @@ describe("XMLParser", function() {
         var result = validator.validate(xmlData).err;
         expect(result).toEqual(expected);
     });
+
+    it('should validate xml with a tag attribute splitted on more lines', () => {
+        const xmlData = `
+    <name
+    attribute1="attribute1"
+    attribute2="attribute2"
+    />
+            `;
+    
+        var result = validator.validate(xmlData);
+        expect(result).toEqual(true);
+      });
 });
