@@ -89,5 +89,10 @@
     "configstore": "^4.0.0",
     "nimnjs": "^1.3.2"
   },
-  "typings": "src/parser.d.ts"
+  "typings": "src/parser.d.ts",
+  "files": [
+    "BACKERS.md",
+    "cli.js",
+    "src/"
+  ]
 }
