@@ -5,6 +5,7 @@
   "main": "./src/parser.js",
   "scripts": {
     "test": "jasmine spec/*spec.js",
+    "unit": "jasmine",
     "perf": "node ./benchmark/perfTest3.js",
     "lint": "eslint src/*.js spec/*.js",
     "bundle": "webpack && webpack --config webpack-prod.config.js",
