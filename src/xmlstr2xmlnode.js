@@ -4,8 +4,10 @@ const util = require('./util');
 const buildOptions = require('./util').buildOptions;
 const xmlNode = require('./xmlNode');
 const TagType = {OPENING: 1, CLOSING: 2, SELF: 3, CDATA: 4};
-let regx =
-  '<((!\\[CDATA\\[([\\s\\S]*?)(]]>))|(([\\w:\\-._]*:)?([\\w:\\-._]+))([^>]*)>|((\\/)(([\\w:\\-._]*:)?([\\w:\\-._]+))\\s*>))([^<]*)';
+const attrstr_regex = '((\\s*[\\w\\-._:]+(=((\'([^\']*)\')|("([^"]*)")))?)*)\\s*';
+let regx = '<((!\\[CDATA\\[([\\s\\S]*?)(]]>))|(([\\w:\\-._]*:)?([\\w:\\-._]+))'+attrstr_regex+'(\\/)?>|((\\/)(([\\w:\\-._]*:)?([\\w:\\-._]+))\\s*>))([^<]*)';
+  //'<((!\\[CDATA\\[([\\s\\S]*?)(]]>))|(([\\w:\\-._]*:)?([\\w:\\-._]+))([^>]*)>|((\\/)(([\\w:\\-._]*:)?([\\w:\\-._]+))\\s*>))([^<]*)';
+  
 
 //const tagsRegx = new RegExp("<(\\/?[\\w:\\-\._]+)([^>]*)>(\\s*"+cdataRegx+")*([^<]+)?","g");
 //const tagsRegx = new RegExp("<(\\/?)((\\w*:)?([\\w:\\-\._]+))([^>]*)>([^<]*)("+cdataRegx+"([^<]*))*([^<]+)?","g");
@@ -79,12 +81,14 @@ const getTraversalObj = function(xmlData, options) {
   let tag = tagsRegx.exec(xmlData);
   let nextTag = tagsRegx.exec(xmlData);
   while (tag) {
+    //console.log(tag)
     const tagType = checkForTagType(tag);
+    //console.log(tagType)
 
     if (tagType === TagType.CLOSING) {
       //add parsed data to parent node
-      if (currentNode.parent && tag[14]) {
-        currentNode.parent.val = util.getValue(currentNode.parent.val) + '' + processTagValue(tag[14], options);
+      if (currentNode.parent && tag[22]) {
+        currentNode.parent.val = util.getValue(currentNode.parent.val) + '' + processTagValue(tag[22], options);
       }
       if (options.stopNodes.length && options.stopNodes.includes(currentNode.tagname)) {
         currentNode.child = []
@@ -101,21 +105,21 @@ const getTraversalObj = function(xmlData, options) {
         //for backtracking
         currentNode.val = util.getValue(currentNode.val) + options.cdataPositionChar;
         //add rest value to parent node
-        if (tag[14]) {
-          currentNode.val += processTagValue(tag[14], options);
+        if (tag[22]) {
+          currentNode.val += processTagValue(tag[22], options);
         }
       } else {
-        currentNode.val = (currentNode.val || '') + (tag[3] || '') + processTagValue(tag[14], options);
+        currentNode.val = (currentNode.val || '') + (tag[3] || '') + processTagValue(tag[22], options);
       }
     } else if (tagType === TagType.SELF) {
-      if (currentNode && tag[14]) {
-        currentNode.val = util.getValue(currentNode.val) + '' + processTagValue(tag[14], options);
+      if (currentNode && tag[22]) {
+        currentNode.val = util.getValue(currentNode.val) + '' + processTagValue(tag[22], options);
       }
 
       const childNode = new xmlNode(options.ignoreNameSpace ? tag[7] : tag[5], currentNode, '');
-      if (tag[8] && tag[8].length > 0) {
+      /* if (tag[8] && tag[8].length > 0) {
         tag[8] = tag[8].substr(0, tag[8].length - 1);
-      }
+      } */
       childNode.attrsMap = buildAttributesMap(tag[8], options);
       currentNode.addChild(childNode);
     } else {
@@ -123,7 +127,7 @@ const getTraversalObj = function(xmlData, options) {
       const childNode = new xmlNode(
         options.ignoreNameSpace ? tag[7] : tag[5],
         currentNode,
-        processTagValue(tag[14], options)
+        processTagValue(tag[22], options)
       );
       if (options.stopNodes.length && options.stopNodes.includes(childNode.tagname)) {
         childNode.startIndex=tag.index + tag[1].length
@@ -155,9 +159,9 @@ function processTagValue(val, options) {
 function checkForTagType(match) {
   if (match[4] === ']]>') {
     return TagType.CDATA;
-  } else if (match[10] === '/') {
+  } else if (match[18] === '/') {
     return TagType.CLOSING;
-  } else if (typeof match[8] !== 'undefined' && match[8].substr(match[8].length - 1) === '/') {
+  } else if (match[16] === '/') {
     return TagType.SELF;
   } else {
     return TagType.OPENING;
