@@ -7,7 +7,7 @@ const TagType = {OPENING: 1, CLOSING: 2, SELF: 3, CDATA: 4};
 const attrstr_regex = '((\\s*[\\w\\-._:]+(=((\'([^\']*)\')|("([^"]*)")))?)*)\\s*';
 let regx = '<((!\\[CDATA\\[([\\s\\S]*?)(]]>))|(([\\w:\\-._]*:)?([\\w:\\-._]+))'+attrstr_regex+'(\\/)?>|((\\/)(([\\w:\\-._]*:)?([\\w:\\-._]+))\\s*>))([^<]*)';
   //'<((!\\[CDATA\\[([\\s\\S]*?)(]]>))|(([\\w:\\-._]*:)?([\\w:\\-._]+))([^>]*)>|((\\/)(([\\w:\\-._]*:)?([\\w:\\-._]+))\\s*>))([^<]*)';
-  
+
 
 //const tagsRegx = new RegExp("<(\\/?[\\w:\\-\._]+)([^>]*)>(\\s*"+cdataRegx+")*([^<]+)?","g");
 //const tagsRegx = new RegExp("<(\\/?)((\\w*:)?([\\w:\\-\._]+))([^>]*)>([^<]*)("+cdataRegx+"([^<]*))*([^<]+)?","g");
@@ -24,6 +24,8 @@ const defaultOptions = {
   attributeNamePrefix: '@_',
   attrNodeName: false,
   textNodeName: '#text',
+  appendIndexInNodes: false,
+  indexInNodesName: '#index',
   ignoreAttributes: true,
   ignoreNameSpace: false,
   allowBooleanAttributes: false, //a tag can have attributes without any value
@@ -51,6 +53,8 @@ const props = [
   'attributeNamePrefix',
   'attrNodeName',
   'textNodeName',
+  'appendIndexInNodes',
+  'indexInNodesName',
   'ignoreAttributes',
   'ignoreNameSpace',
   'allowBooleanAttributes',
@@ -133,6 +137,18 @@ const getTraversalObj = function(xmlData, options) {
         childNode.startIndex=tag.index + tag[1].length
       }
       childNode.attrsMap = buildAttributesMap(tag[8], options);
+      if (options.appendIndexInNodes) {
+          if (currentNode.attrsMap === undefined) { currentNode.attrsMap = {}}
+          if (childNode.attrsMap === undefined) { childNode.attrsMap = {}}
+          const childCount = currentNode.attrsMap.childCount;
+          if (childCount !== undefined) {
+            childNode.attrsMap[options.indexInNodesName] = childCount;
+          } else {
+            childNode.attrsMap[options.indexInNodesName] = 0;
+            currentNode.attrsMap.childCount = 0;
+          }
+        currentNode.attrsMap.childCount++;
+      }
       currentNode.addChild(childNode);
       currentNode = childNode;
     }

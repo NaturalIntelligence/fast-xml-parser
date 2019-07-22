@@ -750,4 +750,165 @@ describe("XMLParser", function() {
         //console.log(JSON.stringify(result,null,4));
         expect(result).toEqual(expected);
     });
+
+    it("should add index and childCount to single node", function() {
+        const xmlData = `<rootNode><tag int='045' float='65.34'>value</tag></rootNode>`;
+        const expected = {
+            "childCount": 1,
+            "rootNode": {
+                "#index": 0,
+                "childCount": 1,
+                "tag": {
+                    "#index": 0,
+                    "#text":   "value",
+                    "@_int":   45,
+                    "@_float": 65.34
+                }
+            }
+        };
+
+        const result = parser.parse(xmlData, {
+            ignoreAttributes:    false,
+            parseAttributeValue: true,
+            appendIndexInNodes:  true
+        });
+
+        expect(result).toEqual(expected);
+    });
+
+    it("should add index and childCount to array", function() {
+        const xmlData = `<rootNode>
+        <tag>value</tag>
+        <tag>45</tag>
+        <tag>65.34</tag>
+        </rootNode>`;
+
+        const expected = {
+              "childCount": 1,
+              "rootNode": {
+                  "#index": 0,
+                  "childCount": 3,
+                  "tag": [
+                      {
+                          "#text": "value",
+                          "#index": 0
+                      },
+                      {
+                          "#text": 45,
+                          "#index": 1
+                      },
+                      {
+                          "#text": 65.34,
+                          "#index": 2
+                      }
+                  ]
+              }
+          };
+        const result = parser.parse(xmlData,{ appendIndexInNodes: true });
+        // console.log(result);
+        // console.log(JSON.stringify(result,null,4));
+        expect(result).toEqual(expected);
+    });
+
+    it("should add index and childCount to array and keep attributes", function() {
+        const xmlData = `<rootNode>
+        <tag name="Gabriel">value</tag>
+        <tag country="Argentina">45</tag>
+        <tag some="thing">65.34</tag>
+        </rootNode>`;
+
+        const expected = {
+            "childCount": 1,
+            "rootNode": {
+                "#index": 0,
+                "childCount": 3,
+                "tag": [
+                    {
+                        "#text": "value",
+                        "@_name": "Gabriel",
+                        "#index": 0
+                    },
+                    {
+                        "#text": 45,
+                        "@_country": "Argentina",
+                        "#index": 1
+                    },
+                    {
+                        "#text": 65.34,
+                        "@_some": "thing",
+                        "#index": 2
+                    }
+                ]
+            }
+        };
+        const result = parser.parse(xmlData,{ ignoreAttributes: false, appendIndexInNodes: true });
+        // console.log(JSON.stringify(result,null,4));
+        expect(result).toEqual(expected);
+    });
+
+    it("should add index and childCount to array and ignore attributes", function() {
+        const xmlData = `<rootNode>
+        <tag name="Gabriel">value</tag>
+        <tag country="Argentina">45</tag>
+        <tag some="thing">65.34</tag>
+        </rootNode>`;
+
+        const expected = {
+            "childCount": 1,
+            "rootNode": {
+                "#index": 0,
+                "childCount": 3,
+                "tag": [
+                    {
+                        "#text": "value",
+                        "#index": 0
+                    },
+                    {
+                        "#text": 45,
+                        "#index": 1
+                    },
+                    {
+                        "#text": 65.34,
+                        "#index": 2
+                    }
+                ]
+            }
+        };
+        const result = parser.parse(xmlData,{ ignoreAttributes: true, appendIndexInNodes: true });
+        // console.log(JSON.stringify(result,null,4));
+        expect(result).toEqual(expected);
+    });
+
+    it("should add index and childCount to array in right order", function() {
+        const xmlData = `<rootNode>
+        <tag>value</tag>
+        <label>45</label>
+        <tag>65.34</tag>
+        </rootNode>`;
+
+        const expected = {
+            "childCount": 1,
+            "rootNode": {
+                "#index": 0,
+                "childCount": 3,
+                "tag": [
+                    {
+                        "#text": "value",
+                        "#index": 0
+                    },
+                    {
+                        "#text": 65.34,
+                        "#index": 2
+                    }
+                ],
+                "label": {
+                    "#text": 45,
+                  "#index": 1
+                },
+            }
+        };
+        const result = parser.parse(xmlData,{ ignoreAttributes: false, appendIndexInNodes: true });
+        // console.log(JSON.stringify(result,null,4));
+        expect(result).toEqual(expected);
+    });
 });
