@@ -125,6 +125,7 @@ const getTraversalObj = function(xmlData, options) {
         tag[8] = tag[8].substr(0, tag[8].length - 1);
       } */
       childNode.attrsMap = buildAttributesMap(tag[8], options);
+      processAppendIndexInNodes(currentNode, childNode, options);
       currentNode.addChild(childNode);
     } else {
       //TagType.OPENING
@@ -137,18 +138,7 @@ const getTraversalObj = function(xmlData, options) {
         childNode.startIndex=tag.index + tag[1].length
       }
       childNode.attrsMap = buildAttributesMap(tag[8], options);
-      if (options.appendIndexInNodes) {
-          if (currentNode.attrsMap === undefined) { currentNode.attrsMap = {}}
-          if (childNode.attrsMap === undefined) { childNode.attrsMap = {}}
-          const childCount = currentNode.attrsMap.childCount;
-          if (childCount !== undefined) {
-            childNode.attrsMap[options.indexInNodesName] = childCount;
-          } else {
-            childNode.attrsMap[options.indexInNodesName] = 0;
-            currentNode.attrsMap.childCount = 0;
-          }
-        currentNode.attrsMap.childCount++;
-      }
+      processAppendIndexInNodes(currentNode, childNode, options);
       currentNode.addChild(childNode);
       currentNode = childNode;
     }
@@ -159,6 +149,21 @@ const getTraversalObj = function(xmlData, options) {
 
   return xmlObj;
 };
+
+function processAppendIndexInNodes(currentNode, childNode, options) {
+  if (options.appendIndexInNodes) {
+    if (currentNode.attrsMap === undefined) { currentNode.attrsMap = {}}
+    if (childNode.attrsMap === undefined) { childNode.attrsMap = {}}
+    const childCount = currentNode.attrsMap.childCount;
+    if (childCount !== undefined) {
+      childNode.attrsMap[options.indexInNodesName] = childCount;
+    } else {
+      childNode.attrsMap[options.indexInNodesName] = 0;
+      currentNode.attrsMap.childCount = 0;
+    }
+    currentNode.attrsMap.childCount++;
+  }
+}
 
 function processTagValue(val, options) {
   if (val) {
