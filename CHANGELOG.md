@@ -1,3 +1,5 @@
+3.12.18 / 2019-07-27
+  * remove configstore dependency
 3.12.17 / 2019-07-14
   * Fix #167: '>' in attribute value
 3.12.16 / 2019-03-23
