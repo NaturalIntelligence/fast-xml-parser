@@ -272,6 +272,9 @@ List of applications and projects using Fast XML Parser. (Raise an issue to subm
 <a href="http://www.anl.gov/" title="Argonne National Laboratory" > <img src="https://avatars0.githubusercontent.com/u/10468712" width="80px" ></a>
 <a href="https://simpleicons.org/" title="Simple Icons" > <img src="https://avatars2.githubusercontent.com/u/29872746" width="80px" ></a>
 <a href="https://vmware.com/" title="vmware" > <img src="https://avatars0.githubusercontent.com/u/473334" width="80px" ></a>
+<a href="https://opensource.microsoft.com/" title="microsoft" > <img src="https://avatars0.githubusercontent.com/u/6154722" width="80px" ></a>
+<a href="https://github.com/notable/notable" title="notable" > <img src="https://avatars3.githubusercontent.com/u/46467536" width="80px" ></a>
+<a href="http://ibm.github.io/" title="notable" > <img src="https://avatars2.githubusercontent.com/u/1459110" width="80px" ></a>
 
 ## Contributors
 
