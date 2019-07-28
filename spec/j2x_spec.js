@@ -249,7 +249,7 @@ describe("XMLParser", function() {
                                       cdataTagName:   "__cdata",
                                       attrNodeName:   "@",
                                       encodeHTMLchar: true,
-                                      tagValueProcessor: a=> he.encode(a, { useNamedReferences: true}),
+                                      tagValueProcessor: a=> { a= ''+ a; return he.encode(a, { useNamedReferences: true}) },
                                       attrValueProcessor: a=> he.encode(a, {isAttributeValue: true, useNamedReferences: true})
                                   });
         const result = parser.parse(jObj);
@@ -300,7 +300,7 @@ describe("XMLParser", function() {
                                       attrNodeName:     "@",
                                       encodeHTMLchar:   true,
                                       supressEmptyNode: true,
-                                      tagValueProcessor: a=> he.encode(a, { useNamedReferences: true}),
+                                      tagValueProcessor: a=> { a= ''+ a; return he.encode(a, { useNamedReferences: true}) },
                                       attrValueProcessor: a=> he.encode(a, {isAttributeValue: true, useNamedReferences: true})
                                   });
         const result = parser.parse(jObj);
@@ -338,7 +338,7 @@ describe("XMLParser", function() {
                                       attrNodeName:   "@",
                                       encodeHTMLchar: true,
                                       format:         true,
-                                      tagValueProcessor: a=> he.encode(a, { useNamedReferences: true}),
+                                      tagValueProcessor: a=> { a= ''+ a; return he.encode(a, { useNamedReferences: true}) },
                                       attrValueProcessor: a=> he.encode(a, {isAttributeValue: true, useNamedReferences: true})
                                   });
         const result = parser.parse(jObj);
@@ -392,6 +392,44 @@ describe("XMLParser", function() {
         });
         const result = parser.parse(jObj);
         const expected = '<root><element aaa="aaa" bbb="bbb">1</element><element2 aaa="aaa2" bbb="bbb2"><subelement aaa="sub_aaa"/></element2><date>test</date></root>';
+        //console.log(result);
+        //console.log(expected);
+        expect(result).toEqual(expected);
+    });
+
+    it("should pars to XML from js object with date object", function() {
+        const dateVar = new Date();
+        const jObj = {
+            root: {
+                element:  {
+                    "date" : dateVar
+                },
+                element2: {
+                    $:          {
+                        aaa: "aaa2",
+                        bbb: "bbb2"
+                    },
+                    subelement: {$: {aaa: "sub_aaa"}}
+                },
+                date: dateVar
+            }
+        };
+        const parser = new Parser({
+            attributeNamePrefix: "",
+            attrNodeName:        "$",
+            textNodeName:        "_",
+            ignoreAttributes:    false,
+            cdataTagName:        "$cdata",
+            cdataPositionChar:   "\\c",
+            format:              false,
+            indentBy:            "\t",
+            supressEmptyNode:    true,
+            tagValueProcessor: function(a) {
+                return a;
+            },
+        });
+        const result = parser.parse(jObj);
+        const expected = '<root><element><date>'+dateVar.toString()+'</date></element><element2 aaa="aaa2" bbb="bbb2"><subelement aaa="sub_aaa"/></element2><date>'+dateVar.toString()+'</date></root>';
         //console.log(result);
         //console.log(expected);
         expect(result).toEqual(expected);

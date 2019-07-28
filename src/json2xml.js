@@ -93,6 +93,8 @@ Parser.prototype.j2x = function(jObj, level) {
       // supress undefined node
     } else if (jObj[key] === null) {
       val += this.indentate(level) + '<' + key + '/' + this.tagEndChar;
+    } else if (jObj[key] instanceof Date) {
+      val += this.buildTextNode(jObj[key], key, '', level);
     } else if (typeof jObj[key] !== 'object') {
       //premitive type
       const attr = this.isAttribute(key);
@@ -228,7 +230,7 @@ function buildTextValNode(val, key, attrStr, level) {
     key +
     attrStr +
     '>' +
-    this.options.tagValueProcessor('' + val) +
+    this.options.tagValueProcessor(val) +
     '</' +
     key +
     this.tagEndChar
