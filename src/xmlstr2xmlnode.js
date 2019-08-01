@@ -25,7 +25,7 @@ const defaultOptions = {
   attrNodeName: false,
   textNodeName: '#text',
   appendIndexInNodes: false,
-  indexInNodesName: '#index',
+  indexInNodesName: 'indexPos',
   ignoreAttributes: true,
   ignoreNameSpace: false,
   allowBooleanAttributes: false, //a tag can have attributes without any value
