@@ -132,39 +132,6 @@ describe("XMLParser", function() {
         expect(result).toBe(true);
     });
 
-    it("should parse an attribute with '>' ", function() {
-        const xmlData = `<element id="7>" str="" data><selfclosing/><selfclosing /><selfclosingwith attr/></element>`;
-        const expected = {
-            "element": {
-                "id": '7>',
-                "str": "",
-                "data": true,
-                "selfclosing": [
-                    "",
-                    ""
-                ],
-                "selfclosingwith": {
-                    "attr": true
-                }
-            }
-        };
-
-        let result = parser.parse(xmlData, {
-            attributeNamePrefix:    "",
-            ignoreAttributes:       false,
-            parseAttributeValue:    true,
-            allowBooleanAttributes: true
-        });
-
-        //console.log(JSON.stringify(result,null,4));
-        expect(result).toEqual(expected);
-
-        result = validator.validate(xmlData, {
-            allowBooleanAttributes: true
-        });
-        expect(result).toBe(true);
-    });
-
     it("should not remove xmlns when namespaces are not set to be ignored", function() {
         const xmlData = `<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"></project>`;
         const expected = {
