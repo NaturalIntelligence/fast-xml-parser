@@ -1,5 +1,7 @@
+3.12.20 / 2019-08-16
+  * Revert:  Fix #167: '>' in attribute value as it is causing high performance degrade.
 3.12.19 / 2019-07-28
-  * Fix js to xml parser should work for date values. (broken: `tagValueProcessor` will receive the original value instead of string always)
+  * Fix js to xml parser should work for date values. (broken: `tagValueProcessor` will receive the original value instead of string always) (breaking change)
 3.12.18 / 2019-07-27
   * remove configstore dependency
 3.12.17 / 2019-07-14
