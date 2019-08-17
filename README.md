@@ -130,7 +130,8 @@ var options = {
     localeRange: "", //To support non english character in tag/attribute values.
     parseTrueNumberOnly: false,
     attrValueProcessor: a => he.decode(a, {isAttributeValue: true}),//default is a=>a
-    tagValueProcessor : a => he.decode(a) //default is a=>a
+    tagValueProcessor : a => he.decode(a), //default is a=>a
+    stopNodes: ["parse-me-as-string"]
 };
 
 if( parser.validate(xmlData) === true) { //optional (it'll return an object in case it's not valid)
