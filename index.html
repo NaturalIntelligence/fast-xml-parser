@@ -22,8 +22,9 @@
 
         <div class="container-fluid">
             <a href="https://github.com/NaturalIntelligence/fast-xml-parser"><img class="bring-up" style="position: absolute; top: 0; left: 0; border: 0; z-index: 1" src="https://camo.githubusercontent.com/121cd7cbdc3e4855075ea8b558508b91ac463ac2/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f6c6566745f677265656e5f3030373230302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_left_green_007200.png"></a>
-            <h1 style="color:white;" class="text-center">Fast XML Parser</h1>
-            <p></p>>
+            <h1 style="color:white;" class="text-center">Fast XML Parser <a class="github-button" href="https://github.com/NaturalIntelligence/fast-xml-parser" data-show-count="true" aria-label="Star NaturalIntelligence/fast-xml-parser on GitHub">Star</a></h1>
+            <p style="color:white;" class="text-center">The fastest parser for browsers <!-- Place this tag where you want the button to render. -->
+                </p>
             <div class="row" style="height: calc(100vh - 100px);">
                 <div class="col-md-4" >
                     <span class="float-right" style="color: white"> <span id="lengthxml" style="margin:5px">0</span> bytes</span>
@@ -43,6 +44,7 @@
                             <div class="text-center" style="margin: 15px">
                                 <button id="toJson" class="btn btn-primary" type="button">Parse to JSON >> </button>
                                 <button id="toNimn" class="btn btn-primary" type="button">Parse to Nimn >> </button>
+                                <button id="toXml" class="btn btn-primary" type="button"> << Parse to XML</button>
                             </div>
                         </div>
                         <div style="border: 1px dashed grey; margin: 5px; padding: 5px;">
@@ -76,6 +78,12 @@
                 $('#result').val(JSON.stringify(result,null,4));
             });
 
+            $('#toXml').on('click', function() {
+                $('#txtXml').val('');
+                var result = buildJ2XParser().parse(JSON.parse( $('#result').val() ));
+                $('#txtXml').val('<?xml version="1.0"?>\n'+result);
+            });
+
             $('#toNimn').on('click', function() {
                 $('#result').val('');
 
@@ -105,7 +113,7 @@
 
             function buildParsingConfig(){
                 var config = {
-                    attributeNamePrefix : "",
+                    attributeNamePrefix : "@_",
                     attrNodeName: $("#attrNodeName").prop("checked") ? "@" : false,
                     textNodeName : "#text",
                     ignoreAttributes : $("#ignoreAttributes").prop("checked"),
@@ -122,6 +130,22 @@
                 };
 
                 return config;
+            }
+
+            function buildJ2XParser(){
+                var defaultOptions = {
+                    attributeNamePrefix : "@_",
+                    attrNodeName: $("#attrNodeName").prop("checked") ? "@" : false,
+                    textNodeName : "#text",
+                    ignoreAttributes : $("#ignoreAttributes").prop("checked"),
+                    cdataTagName: $("#cdataTagName").val() === "" ? false : $("#cdataTagName").val(),
+                    cdataPositionChar: "\\c",
+                    format: true,
+                    indentBy: "  ",
+                    supressEmptyNode: false,
+                }
+
+                return new parser.j2xParser(defaultOptions);
             }
             
             function optionsLogic(){
@@ -193,6 +217,6 @@
             updateLength();
         });
     </script>
-
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
     </body>
 </html>
