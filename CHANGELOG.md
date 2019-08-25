@@ -1,52 +1,69 @@
 3.12.20 / 2019-08-16
   * Revert:  Fix #167: '>' in attribute value as it is causing high performance degrade.
+  
 3.12.19 / 2019-07-28
   * Fix js to xml parser should work for date values. (broken: `tagValueProcessor` will receive the original value instead of string always) (breaking change)
+  
 3.12.18 / 2019-07-27
   * remove configstore dependency
+  
 3.12.17 / 2019-07-14
   * Fix #167: '>' in attribute value
+  
 3.12.16 / 2019-03-23
   * Support a new option "stopNodes". (#150)
-
 Accept the list of tags which are not required to be parsed. Instead, all the nested tag and data will be assigned as string.
   * Don't show post-install message
+  
 3.12.12 / 2019-01-11
   * fix : IE parseInt, parseFloat error
+  
 3.12.11 / 2018-12-24
   * fix #132: "/" should not be parsed as boolean attr in case of self closing tags
+  
 3.12.9 / 2018-11-23
   * fix #129 : validator should not fail when an atrribute name is 'length'
+  
 3.12.8 / 2018-11-22
   * fix #128 : use 'attrValueProcessor' to process attribute value in json2xml parser
+  
 3.12.6 / 2018-11-10
   * Fix #126: check for type
+  
 3.12.4 / 2018-09-12
   * Fix: include tasks in npm package
+  
 3.12.3 / 2018-09-12
   * Fix CLI issue raised in last PR
+  
 3.12.2 / 2018-09-11
   * Fix formatting for JSON to XML output
   * Migrate to webpack (PR merged)
   * fix cli (PR merged)
+  
 3.12.0 / 2018-08-06
   * Support hexadecimal values
   * Support true number parsing 
+  
 3.11.2 / 2018-07-23
   * Update Demo for more options
   * Update license information
   * Update readme for formatting, users, and spelling mistakes
   * Add missing typescript definition for j2xParser
   * refactoring: change filenames
+  
 3.11.1 / 2018-06-05
   * fix #93: read the text after self closing tag
+  
 3.11.0 / 2018-05-20
   * return defaultOptions if there are not options in buildOptions function 
   * added localeRange declaration in parser.d.ts
   * Added support of cyrillic characters in validator XML
   * fixed bug in validator work when XML data with byte order marker
+  
 3.10.0 / 2018-05-13
   * Added support of cyrillic characters in parsing XML to JSON
+  
 3.9.11 / 2018-05-09
   * fix https://github.com/NaturalIntelligence/fast-xml-parser/issues/80 fix nimn chars
   * update package information
@@ -54,14 +71,18 @@ Accept the list of tags which are not required to be parsed. Instead, all the ne
   * update online demo
   * revert zombiejs to old version to support old version of node
   * update dependencies
+  
 3.3.10 / 2018-04-23
   * fix #77 : parse even if closing tag has space before '>'
   * include all css & js lib in demo app
   * remove babel dependencies until needed
+  
 3.3.9 / 2018-04-18
   * fix #74 : TS2314 TypeScript compiler error
+  
 3.3.8 / 2018-04-17
   * fix #73 : IE doesn't support Object.assign
+  
 3.3.7 / 2018-04-14
   * fix: use let insted of const in for loop of validator
   * Merge pull request
@@ -71,15 +92,19 @@ Accept the list of tags which are not required to be parsed. Instead, all the ne
   * Merge pull request
     https://github.com/NaturalIntelligence/fast-xml-parser/issues/70 from bb/patch-1
     fix some typos in readme
+    
 3.3.6 / 2018-03-21
   * change arrow functions to full notation for IE compatibility
+  
 3.3.5 / 2018-03-15
   * fix https://github.com/NaturalIntelligence/fast-xml-parser/issues/67 : attrNodeName invalid behavior
   * fix: remove decodeHTML char condition
+  
 3.3.4 / 2018-03-14
   * remove dependency on "he" package
   * refactor code to separate methods in separate files.
   * draft code for transforming XML to json string. It is not officially documented due to performance issue.
+  
 3.3.0 / 2018-03-05
   * use common default options for XML parsing for consistency. And add `parseToNimn` method.
   * update nexttodo
@@ -100,18 +125,23 @@ Accept the list of tags which are not required to be parsed. Instead, all the ne
     This reverts commit d47aa7181075d82db4fee97fd8ea32b056fe3f46.
   * Merge pull request: https://github.com/NaturalIntelligence/fast-xml-parser/issues/63 from HaroldPutman/suppress-undefined
     Keep undefined nodes out of the XML output :     This is useful when you are deleting nodes from the JSON and rewriting XML.
+    
 3.2.4 / 2018-03-01
   * fix #59 fix in validator when open quote presents in attribute value
   * Create nexttodo.md
   * exclude static from bitHound tests
   * add package lock
+  
 3.2.3 / 2018-02-28
   * Merge pull request from  Delagen/master: fix namespaces can contain the same characters as xml names
+  
 3.2.2 / 2018-02-22
   * fix: attribute xmlns should not be removed if ignoreNameSpace is false
   * create CONTRIBUTING.md
+  
 3.2.1 / 2018-02-17
   * fix: empty attribute should be parsed
+  
 3.2.0 / 2018-02-16
   * Merge pull request : Dev to Master
   * Update README and version
@@ -131,8 +161,10 @@ Accept the list of tags which are not required to be parsed. Instead, all the ne
   * small refactoring
   * Merge pull request: Update cli.js to let user validate XML file or data
   * Add option for rendering CDATA as separate property
+  
 3.0.1 / 2018-02-09
   * fix CRLF: replace it with single space in attributes value only.
+  
 3.0.0 / 2018-02-08
   * change online tool with new changes
   * update info about new options
