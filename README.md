@@ -25,6 +25,7 @@ List of some applications/projects using Fast XML Parser. (Raise an issue to sub
 <a href="https://www.atomist.com/" title="Atomist" > <img src="https://avatars3.githubusercontent.com/u/19392" width="80px" ></a>
 <a href="http://www.opuscapita.com/" title="OpusCapita" > <img src="https://avatars1.githubusercontent.com/u/23256480" width="80px" ></a>
 <a href="https://nevatrip.ru/" title="nevatrip" > <img src="https://avatars2.githubusercontent.com/u/35730984" width="80px" ></a>
+<a href="http://www.smartbear.com" title="SmartBear Software" > <img src="https://avatars2.githubusercontent.com/u/1644671" width="80px" ></a>
 <a href="http://eosnavigator.com/" title="nevatrip" > <img src="https://avatars1.githubusercontent.com/u/40260563" width="80px" ></a>
 <a href="http://pds.nasa.gov/" title="NASA-PDS" > <img src="https://avatars2.githubusercontent.com/u/26313833" width="80px" ></a>
 <a href="http://qgis.org/" title="QGIS" > <img src="https://avatars2.githubusercontent.com/u/483444" width="80px" ></a>
@@ -39,18 +40,23 @@ List of some applications/projects using Fast XML Parser. (Raise an issue to sub
 <a href="http://signalk.org" title="Signal K" > <img src="https://avatars1.githubusercontent.com/u/7126740" width="80px" ></a>
 <a href="http://brain.js.org/" title="brain.js" > <img src="https://avatars2.githubusercontent.com/u/23732838" width="80px" ></a>
 <a href="https://skygear.io/" title="Skegear" > <img src="https://avatars1.githubusercontent.com/u/15025887" width="80px" ></a>
+<a href="https://npmjs.com/" title="npm" > <img src="https://avatars0.githubusercontent.com/u/6078720" width="80px" ></a>
 <a href=" https://www.mindpointgroup.com" title="mindpointgroup" > <img src="https://avatars1.githubusercontent.com/u/6413533" width="80px" ></a>
 <a href="http://www.acuantcorp.com/" title="Acuant Inc" > <img src="https://avatars3.githubusercontent.com/u/11580319?s=200&v=4" width="80px" ></a>
 <a href="https://www.wazuh.com/" title="wazuh" > <img src="https://avatars2.githubusercontent.com/u/13752566" width="80px" ></a>
 <a href="https://orbs.com/" title="ORBS The Hybrid Blockchain" > <img src="https://avatars1.githubusercontent.com/u/33665977" width="80px" ></a>
 <a href="https://texlab.netlify.com/" title="latex-lsp" > <img src="https://avatars1.githubusercontent.com/u/48360002" width="80px" ></a>
 <a href="https://frontside.io/" title="The Frontside " > <img src="https://avatars1.githubusercontent.com/u/223096" width="80px" ></a>
+<a href="https://creditsense.com.au/" title="Credit Sense Australia " > <img src="https://avatars0.githubusercontent.com/u/46947118" width="80px" ></a>
 <a href="https://www.hustunique.com/" title="UniqueStudio" > <img src="https://avatars1.githubusercontent.com/u/4847684" width="80px" ></a>
 <a href="http://www.openforis.org/" title="Open Foris" > <img src="https://avatars2.githubusercontent.com/u/1212750" width="80px" ></a>
 <a href="#" title="NHS Connect" > <img src="https://avatars3.githubusercontent.com/u/20316669" width="80px" ></a>
 <a href="https://tradle.io/" title="Tradle" > <img src="https://avatars2.githubusercontent.com/u/9482126" width="80px" ></a>
 <a href="http://www.anl.gov/" title="Argonne National Laboratory" > <img src="https://avatars0.githubusercontent.com/u/10468712" width="80px" ></a>
 <a href="https://simpleicons.org/" title="Simple Icons" > <img src="https://avatars2.githubusercontent.com/u/29872746" width="80px" ></a>
+<a href="https://stoplight.io/" title="Stoplight" > <img src="https://avatars1.githubusercontent.com/u/10767217" width="80px" ></a>
+<a href="http://www.fda.gov/" title="Food and Drug Administration " > <img src="https://avatars2.githubusercontent.com/u/6471964" width="80px" ></a>
+<a href="http://www.magento.com/" title="Magento" > <img src="https://avatars2.githubusercontent.com/u/168457" width="80px" ></a>
 
 
 
