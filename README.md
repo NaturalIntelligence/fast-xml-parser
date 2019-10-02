@@ -96,8 +96,6 @@ List of some applications/projects using Fast XML Parser. (Raise an issue to sub
     * You can remove namespace from tag or attribute name while parsing
     * It supports boolean attributes, if configured.
 
-
-
 ## How to use
 
 To use it in **NPM package**  install it first
@@ -149,6 +147,16 @@ var tObj = parser.getTraversalObj(xmlData,options);
 var jsonObj = parser.convertToJson(tObj,options);
 
 ```
+You can pass `true` or validation option as 3rd parameter to validate along with parsing which is same as above example.
+
+```js
+try{
+  var jsonObj = parser.parse(xmlData,options, true);
+}catch(error){
+  console.log(error.message)
+}
+```
+
 #### Note: [he](https://www.npmjs.com/package/he) library is used in this example
 
 <details>

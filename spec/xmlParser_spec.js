@@ -750,4 +750,33 @@ describe("XMLParser", function() {
         //console.log(JSON.stringify(result,null,4));
         expect(result).toEqual(expected);
     });
+
+    it("should validate before parsing", function() {
+        const xmlData = "<?xml version='1.0'?>"
+        + "<tag>"
+        + "    <subtag2>subtag text</subtag2>"
+        + "</tag";
+
+        expect(() => {
+            parser.parse(xmlData,{trimValues:true}, true);
+        }).toThrowError(`closing tag "tag" don't have proper closing.`)
+
+    });
+
+    it("should validate with options before parsing", function() {
+        const xmlData = "<?xml version='1.0'?>"
+        + "<tag foo>"
+        + "    <subtag2>subtag text</subtag2>"
+        + "</tag>";
+
+        const expected = {
+            "tag": {
+                "subtag2": "subtag text"
+            }
+        };
+
+        let result = parser.parse(xmlData,{trimValues:true}, { allowBooleanAttributes: true });
+        //console.log(JSON.stringify(result,null,4));
+        expect(result).toEqual(expected);
+    });
 });

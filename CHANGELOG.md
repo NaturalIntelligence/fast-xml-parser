@@ -1,3 +1,6 @@
+3.12.22 / 2019-10-02
+  * inbuilt  optional validation with XML parser
+
 3.12.21 / 2019-10-02
   * Fix validator for unclosed XMLs
   * move nimnjs dependency to dev dependency
