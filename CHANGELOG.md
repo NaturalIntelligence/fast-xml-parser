@@ -1,4 +1,5 @@
-3.12.22 / 2019-10-02
+3.13.0 / 2019-10-02
+  * pass tag/attr name to tag/attr value processor
   * inbuilt  optional validation with XML parser
 
 3.12.21 / 2019-10-02
