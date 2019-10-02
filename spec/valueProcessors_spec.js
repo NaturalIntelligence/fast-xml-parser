@@ -158,7 +158,7 @@ describe("XMLParser", function() {
         expect(result).toEqual(expected);
     });
 
-    fit("attribute parser should be called with  atrribute name and value", function() {
+    it("attribute parser should be called with  atrribute name and value", function() {
         const xmlData = `<element id="7" data="foo bar" bug="foo n bar"/>`;
         const expected = {
             "element": {
