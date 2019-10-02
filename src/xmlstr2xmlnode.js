@@ -33,10 +33,10 @@ const defaultOptions = {
   cdataTagName: false,
   cdataPositionChar: '\\c',
   localeRange: '',
-  tagValueProcessor: function(a) {
+  tagValueProcessor: function(a, tagName) {
     return a;
   },
-  attrValueProcessor: function(a) {
+  attrValueProcessor: function(a, attrName) {
     return a;
   },
   stopNodes: []
@@ -84,7 +84,7 @@ const getTraversalObj = function(xmlData, options) {
     if (tagType === TagType.CLOSING) {
       //add parsed data to parent node
       if (currentNode.parent && tag[14]) {
-        currentNode.parent.val = util.getValue(currentNode.parent.val) + '' + processTagValue(tag[14], options);
+        currentNode.parent.val = util.getValue(currentNode.parent.val) + '' + processTagValue(tag, options, currentNode.parent.tagname);
       }
       if (options.stopNodes.length && options.stopNodes.includes(currentNode.tagname)) {
         currentNode.child = []
@@ -102,14 +102,14 @@ const getTraversalObj = function(xmlData, options) {
         currentNode.val = util.getValue(currentNode.val) + options.cdataPositionChar;
         //add rest value to parent node
         if (tag[14]) {
-          currentNode.val += processTagValue(tag[14], options);
+          currentNode.val += processTagValue(tag, options);
         }
       } else {
-        currentNode.val = (currentNode.val || '') + (tag[3] || '') + processTagValue(tag[14], options);
+        currentNode.val = (currentNode.val || '') + (tag[3] || '') + processTagValue(tag, options);
       }
     } else if (tagType === TagType.SELF) {
       if (currentNode && tag[14]) {
-        currentNode.val = util.getValue(currentNode.val) + '' + processTagValue(tag[14], options);
+        currentNode.val = util.getValue(currentNode.val) + '' + processTagValue(tag, options);
       }
 
       const childNode = new xmlNode(options.ignoreNameSpace ? tag[7] : tag[5], currentNode, '');
@@ -123,7 +123,7 @@ const getTraversalObj = function(xmlData, options) {
       const childNode = new xmlNode(
         options.ignoreNameSpace ? tag[7] : tag[5],
         currentNode,
-        processTagValue(tag[14], options)
+        processTagValue(tag, options)
       );
       if (options.stopNodes.length && options.stopNodes.includes(childNode.tagname)) {
         childNode.startIndex=tag.index + tag[1].length
@@ -140,12 +140,14 @@ const getTraversalObj = function(xmlData, options) {
   return xmlObj;
 };
 
-function processTagValue(val, options) {
+function processTagValue(parsedTags, options, parentTagName) {
+  const tagName = parsedTags[7] || parentTagName;
+  let val = parsedTags[14];
   if (val) {
     if (options.trimValues) {
       val = val.trim();
     }
-    val = options.tagValueProcessor(val);
+    val = options.tagValueProcessor(val, tagName);
     val = parseValue(val, options.parseNodeValue, options.parseTrueNumberOnly);
   }
 

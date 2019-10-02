@@ -13,8 +13,8 @@ type X2jOptions = {
   cdataPositionChar: string;
   localeRange:  string;
   parseTrueNumberOnly: boolean;
-  tagValueProcessor: (tagValue: string) => string;
-  attrValueProcessor: (attrValue: string) => string;
+  tagValueProcessor: (tagValue: string, tagName: string) => string;
+  attrValueProcessor: (attrValue: string, attrName: string) => string;
 };
 type X2jOptionsOptional = Partial<X2jOptions>;
 type validationOptions = {

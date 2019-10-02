@@ -2,7 +2,6 @@
 
 const parser = require("../src/parser");
 const validator = require("../src/validator");
-const he = require("he");
 
 describe("XMLParser", function() {
 
@@ -663,20 +662,6 @@ describe("XMLParser", function() {
         };
         const result = parser.parse(xmlData, {
             parseNodeValue: false
-        });
-        //console.log(JSON.stringify(result,null,4));
-        expect(result).toEqual(expected);
-    });
-
-    it("should decode HTML entities if allowed", function() {
-        const xmlData = "<rootNode>       foo&ampbar&apos;        </rootNode>";
-        const expected = {
-            "rootNode": "foo&bar'"
-        };
-        const result = parser.parse(xmlData, {
-            parseNodeValue: false,
-            decodeHTMLchar: true,
-            tagValueProcessor : a => he.decode(a)
         });
         //console.log(JSON.stringify(result,null,4));
         expect(result).toEqual(expected);
