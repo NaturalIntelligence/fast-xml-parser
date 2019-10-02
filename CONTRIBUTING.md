@@ -30,7 +30,8 @@ Changes need to do be done by owner
 * Increase the version number
 * Update the change log & README if required
 * Generate the browser bundle
-* Release in github and publish to npm
+* npm audit
+* [Release](https://github.com/NaturalIntelligence/fast-xml-parser/releases) in github and publish to npm
 
 Note that publishing changes or accepting any PR may take time. So please keep patience.
 
