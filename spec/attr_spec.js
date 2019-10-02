@@ -74,31 +74,6 @@ describe("XMLParser", function() {
         expect(result).toBe(true);
     });
 
-    it("should decode HTML entities / char", function() {
-        const xmlData = `<element id="7" data="foo\r\nbar" bug="foo&ampbar&apos;"/>`;
-        const expected = {
-            "element": {
-                "id":   7,
-                "data": "foo bar",
-                "bug":  "foo&ampbar'"
-            }
-        };
-
-        let result = parser.parse(xmlData, {
-            attributeNamePrefix: "",
-            ignoreAttributes:    false,
-            parseAttributeValue: true,
-            decodeHTMLchar:      true,
-            attrValueProcessor: a => he.decode(a, {isAttributeValue: true})
-        });
-
-        //console.log(JSON.stringify(result,null,4));
-        expect(result).toEqual(expected);
-
-        result = validator.validate(xmlData);
-        expect(result).toBe(true);
-    });
-
     it("should parse Boolean Attributes", function() {
         const xmlData = `<element id="7" str="" data><selfclosing/><selfclosing /><selfclosingwith attr/></element>`;
         const expected = {

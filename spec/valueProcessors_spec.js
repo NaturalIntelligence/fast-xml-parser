@@ -20,6 +20,31 @@ describe("XMLParser", function() {
         expect(result).toEqual(expected);
     });
 
+    it("should decode HTML entities / char", function() {
+        const xmlData = `<element id="7" data="foo\r\nbar" bug="foo&ampbar&apos;"/>`;
+        const expected = {
+            "element": {
+                "id":   7,
+                "data": "foo bar",
+                "bug":  "foo&ampbar'"
+            }
+        };
+
+        let result = parser.parse(xmlData, {
+            attributeNamePrefix: "",
+            ignoreAttributes:    false,
+            parseAttributeValue: true,
+            decodeHTMLchar:      true,
+            attrValueProcessor: a => he.decode(a, {isAttributeValue: true})
+        });
+
+        //console.log(JSON.stringify(result,null,4));
+        expect(result).toEqual(expected);
+
+        result = validator.validate(xmlData);
+        expect(result).toBe(true);
+    });
+
     it("tag value processor should be called with value and tag name", function() {
         const xmlData = `<?xml version='1.0'?>
         <any_name>
@@ -131,5 +156,48 @@ describe("XMLParser", function() {
         });
         //console.log(JSON.stringify(result,null,4));
         expect(result).toEqual(expected);
+    });
+
+    fit("attribute parser should be called with  atrribute name and value", function() {
+        const xmlData = `<element id="7" data="foo bar" bug="foo n bar"/>`;
+        const expected = {
+            "element": {
+                "id":   7,
+                "data": "foo bar",
+                "bug":  "foo n bar"
+            }
+        };
+
+        const resultMap = {}
+
+        let result = parser.parse(xmlData, {
+            attributeNamePrefix: "",
+            ignoreAttributes:    false,
+            parseAttributeValue: true,
+            decodeHTMLchar:      true,
+            attrValueProcessor: (val, attrName) => {
+                if(resultMap[attrName]){
+                    resultMap[attrName].push(val)
+                }else{
+                    resultMap[attrName] = [val];
+                }
+                return val;
+            }
+        });
+
+        //console.log(JSON.stringify(resultMap,null,4));
+        expect(result).toEqual(expected);
+
+        expect(resultMap).toEqual({
+            "id": [
+                "7"
+            ],
+            "data": [
+                "foo bar"
+            ],
+            "bug": [
+                "foo n bar"
+            ]
+        });
     });
 });

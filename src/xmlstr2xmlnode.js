@@ -227,7 +227,7 @@ function buildAttributesMap(attrStr, options) {
           if (options.trimValues) {
             matches[i][4] = matches[i][4].trim();
           }
-          matches[i][4] = options.attrValueProcessor(matches[i][4]);
+          matches[i][4] = options.attrValueProcessor(matches[i][4], attrName);
           attrs[options.attributeNamePrefix + attrName] = parseValue(
             matches[i][4],
             options.parseAttributeValue,
