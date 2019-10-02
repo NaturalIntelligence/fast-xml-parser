@@ -37,12 +37,16 @@ exports.isEmptyObject = function(obj) {
  * @param {*} target
  * @param {*} a
  */
-exports.merge = function(target, a) {
+exports.merge = function(target, a, arrayMode) {
   if (a) {
     const keys = Object.keys(a); // will return an array of own properties
     const len = keys.length; //don't make it inline
     for (let i = 0; i < len; i++) {
-      target[keys[i]] = a[keys[i]];
+      if(arrayMode === 'strict'){
+        target[keys[i]] = [ a[keys[i]] ];
+      }else{
+        target[keys[i]] = a[keys[i]];
+      }
     }
   }
 };
