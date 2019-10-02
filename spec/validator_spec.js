@@ -89,7 +89,7 @@ describe("XMLParser", function() {
         expect(result).toEqual(expected);
 
         xmlData = "<rootNode></rootnode 123>";
-        expected = {code: "InvalidTag", msg: "closing tag rootnode can't have attributes or invalid starting."};
+        expected = {code: "InvalidTag", msg: "closing tag \"rootnode\" can't have attributes or invalid starting."};
         result = validator.validate(xmlData).err;
         //console.log(JSON.stringify(result,null,4));
         expect(result).toEqual(expected);
@@ -410,5 +410,18 @@ describe("XMLParser", function() {
     
         var result = validator.validate(xmlData);
         expect(result).toEqual(true);
+      });
+
+      it('should validate xml not properly closed', () => {
+        const xmlData = `
+    <name
+    attribute1="attribute1"
+    attribute2="attribute2"
+    ></name
+            `;
+    
+        const expected = {code: "InvalidTag", msg: "closing tag \"name\" don't have proper closing."};
+        var result = validator.validate(xmlData).err;
+        expect(result).toEqual(expected);
       });
 });

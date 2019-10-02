@@ -74,7 +74,7 @@ exports.validate = function(xmlData, options) {
 
         const result = readAttributeStr(xmlData, i);
         if (result === false) {
-          return {err: {code: 'InvalidAttr', msg: 'Attributes for ' + tagName + ' have open quote'}};
+          return {err: {code: 'InvalidAttr', msg: 'Attributes for "' + tagName + '" have open quote.'}};
         }
         let attrStr = result.value;
         i = result.index;
@@ -90,9 +90,13 @@ exports.validate = function(xmlData, options) {
             return isValid;
           }
         } else if (closingTag) {
-          if (attrStr.trim().length > 0) {
+          if(!result.tagClosed){
             return {
-              err: {code: 'InvalidTag', msg: 'closing tag ' + tagName + " can't have attributes or invalid starting."},
+              err: {code: 'InvalidTag', msg: 'closing tag "' + tagName + "\" don't have proper closing."},
+            };
+          }else if (attrStr.trim().length > 0) {
+            return {
+              err: {code: 'InvalidTag', msg: 'closing tag "' + tagName + "\" can't have attributes or invalid starting."},
             };
           } else {
             const otg = tags.pop();
@@ -235,6 +239,7 @@ var singleQuote = "'";
 function readAttributeStr(xmlData, i) {
   let attrStr = '';
   let startChar = '';
+  let tagClosed = false;
   for (; i < xmlData.length; i++) {
     if (xmlData[i] === doubleQuote || xmlData[i] === singleQuote) {
       if (startChar === '') {
@@ -247,6 +252,7 @@ function readAttributeStr(xmlData, i) {
       }
     } else if (xmlData[i] === '>') {
       if (startChar === '') {
+        tagClosed = true;
         break;
       }
     }
@@ -256,7 +262,7 @@ function readAttributeStr(xmlData, i) {
     return false;
   }
 
-  return {value: attrStr, index: i};
+  return {value: attrStr, index: i, tagClosed: tagClosed};
 }
 
 /**

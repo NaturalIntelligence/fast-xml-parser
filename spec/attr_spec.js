@@ -214,7 +214,7 @@ describe("XMLParser", function() {
         const expected = {
             "err": {
                 "code": "InvalidTag",
-                "msg":  "closing tag issue can't have attributes or invalid starting."
+                "msg":  "closing tag \"issue\" can't have attributes or invalid starting."
             }
         };
         const result = validator.validate(xmlData);
@@ -253,7 +253,7 @@ describe("XMLParser", function() {
         const expected = {
             "err": {
                 "code": "InvalidAttr",
-                "msg":  "Attributes for rootNode have open quote"
+                "msg":  "Attributes for \"rootNode\" have open quote."
             }
         };
         const result = validator.validate(xmlData);
