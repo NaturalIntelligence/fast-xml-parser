@@ -36,13 +36,15 @@ describe("XMLParser", function() {
         <boolean>true</boolean>
         <intTag>045</intTag>
         <floatTag>65.34</floatTag>
+        <long>420926189200190257681175017717</long>
         </rootNode>`;
         const expected = {
             "rootNode": {
                 "tag":      "value",
                 "boolean":  true,
                 "intTag":   "045",
-                "floatTag": 65.34
+                "floatTag": 65.34,
+                "long": "420926189200190257681175017717"
             }
         };
 
@@ -71,13 +73,15 @@ describe("XMLParser", function() {
     });
 
     it("should parse number values of attributes as number", function() {
-        const xmlData = `<rootNode><tag int='045' float='65.34'>value</tag></rootNode>`;
+        const xmlData = `<rootNode><tag int='045' intNegative='-045' float='65.34' floatNegative='-65.34'>value</tag></rootNode>`;
         const expected = {
             "rootNode": {
                 "tag": {
                     "#text":   "value",
                     "@_int":   45,
-                    "@_float": 65.34
+                    "@_intNegative":   -45,
+                    "@_float": 65.34,
+                    "@_floatNegative": -65.34
                 }
             }
         };
