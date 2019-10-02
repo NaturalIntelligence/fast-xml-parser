@@ -1,3 +1,8 @@
+3.12.21 / 2019-10-02
+  * Fix validator for unclosed XMLs
+  * move nimnjs dependency to dev dependency
+  * update dependencies
+  
 3.12.20 / 2019-08-16
   * Revert:  Fix #167: '>' in attribute value as it is causing high performance degrade.
   
