@@ -133,8 +133,8 @@ var options = {
     cdataPositionChar: "\\c",
     localeRange: "", //To support non english character in tag/attribute values.
     parseTrueNumberOnly: false,
-    attrValueProcessor: a => he.decode(a, {isAttributeValue: true}),//default is a=>a
-    tagValueProcessor : a => he.decode(a), //default is a=>a
+    attrValueProcessor: (val, attrName) => he.decode(val, {isAttributeValue: true}),//default is a=>a
+    tagValueProcessor : (val, tagName) => he.decode(val), //default is a=>a
     stopNodes: ["parse-me-as-string"]
 };
 
