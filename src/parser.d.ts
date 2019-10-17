@@ -7,7 +7,7 @@ type X2jOptions = {
   allowBooleanAttributes: boolean;
   parseNodeValue: boolean;
   parseAttributeValue: boolean;
-  arrayMode: boolean;
+  arrayMode: boolean | 'strict';
   trimValues: boolean;
   cdataTagName: false | string;
   cdataPositionChar: string;
