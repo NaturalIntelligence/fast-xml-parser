@@ -1,3 +1,6 @@
+3.14.0 / 2019-10-25
+  * arrayMode for XML to JS obj parsing
+
 3.13.0 / 2019-10-02
   * pass tag/attr name to tag/attr value processor
   * inbuilt  optional validation with XML parser

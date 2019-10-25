@@ -133,6 +133,7 @@ var options = {
     cdataPositionChar: "\\c",
     localeRange: "", //To support non english character in tag/attribute values.
     parseTrueNumberOnly: false,
+    arrayMode: false, //"strict"
     attrValueProcessor: (val, attrName) => he.decode(val, {isAttributeValue: true}),//default is a=>a
     tagValueProcessor : (val, tagName) => he.decode(val), //default is a=>a
     stopNodes: ["parse-me-as-string"]
@@ -175,6 +176,7 @@ try{
 * **cdataPositionChar** : It'll help to covert JSON back to XML without losing CDATA position.
 * **localeRange**: Parser will accept non-English character in tag or attribute name. Check #87 for more detail. Eg `localeRange: "a-zA-Zа-яёА-ЯЁ"`
 * **parseTrueNumberOnly**: if true then values like "+123", or "0123" will not be parsed as number.
+* **arrayMode** : When `false`, a tag with single occurence is parsed as an object but as an array in case of multiple occurences. When `true`, a tag will be parsed as an array always excluding leaf nodes. When `strict`, all the tags will be parsed as array only.
 * **tagValueProcessor** : Process tag value during transformation. Like HTML decoding, word capitalization, etc. Applicable in case of string only.
 * **attrValueProcessor** : Process attribute value during transformation. Like HTML decoding, word capitalization, etc. Applicable in case of string only.
 * **stopNodes** : an array of tag names which are not required to be parsed. Instead their values are parsed as string.
@@ -289,11 +291,11 @@ With the correct options, you can get the almost original XML without losing any
 
 ### Worth to mention
 
-- **[BigBit standard)](https://github.com/amitguptagwl/bigbit)** : A standard to reprent any number in the universe in comparitively less space and without precision loss. A standard to save space to represent any text string in comparision of UTF encoding.
-- **[imglab](https://github.com/NaturalIntelligence/imglab)** : Speedup and simplify image labeling / annotation. Supports multiple formats, one click annotation, easy interface and much more. There are more than 20k images are annotated every month.
+- **[BigBit standard)](https://github.com/amitguptagwl/bigbit)** : A standard to represent any number in the universe in comparitively less space and without precision loss. A standard to save memory to represent any text string in comparision of UTF encodings.
+- **[imglab](https://github.com/NaturalIntelligence/imglab)** : Speedup and simplify image labeling / annotation. Supports multiple formats, one click annotation, easy interface and much more. There are more than half million images are being annotated every month using this tool.
+- [stubmatic](https://github.com/NaturalIntelligence/Stubmatic) : Create fake webservices, DynamoDB or S3 servers, Manage fake/mock stub data, Or fake any HTTP(s) call.
 - **[अनुमार्गक (anumargak)](https://github.com/NaturalIntelligence/anumargak)** : The fastest and simple router for node js web frameworks with many unique features.
-- [stubmatic](https://github.com/NaturalIntelligence/Stubmatic) : A stub server to mock behaviour of HTTP(s) / REST / SOAP services, incuding DynamoDB calls. You can also mock binary formats.
-- [मुनीम (Muneem)](https://github.com/muneem4node/muneem) : A webframework made for all team members. Faster tha fastify, express, koa, hapi and others.
+- [मुनीम (Muneem)](https://github.com/muneem4node/muneem) : A webframework made for all team members. Fast and Featured.
 - [शब्दावली (shabdawali)](https://github.com/amitguptagwl/shabdawali) : Amazing human like typing effects beyond your imagination.
 
 
