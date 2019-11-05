@@ -162,7 +162,8 @@ describe("XMLParser", function() {
         const expected = {
             "err": {
                 "code": "InvalidAttr",
-                "msg":  "attribute 35entity is an invalid name."
+                "msg":  "attribute 35entity is an invalid name.",
+                "line": 1
             }
         };
         const result = validator.validate(xmlData);
@@ -175,7 +176,8 @@ describe("XMLParser", function() {
         const expected = {
             "err": {
                 "code": "InvalidAttr",
-                "msg":  "attribute enti+ty is an invalid name."
+                "msg":  "attribute enti+ty is an invalid name.",
+                "line": 1
             }
         };
 
@@ -189,7 +191,8 @@ describe("XMLParser", function() {
         const expected = {
             "err": {
                 "code": "InvalidTag",
-                "msg":  "closing tag \"issue\" can't have attributes or invalid starting."
+                "msg":  "closing tag \"issue\" can't have attributes or invalid starting.",
+                "line": 1
             }
         };
         const result = validator.validate(xmlData);
@@ -202,7 +205,8 @@ describe("XMLParser", function() {
         const expected = {
             "err": {
                 "code": "InvalidAttr",
-                "msg":  "attribute '' has no space in starting."
+                "msg":  "attribute '' has no space in starting.",
+                "line": 1
             }
         };
         const result = validator.validate(xmlData);
@@ -228,7 +232,8 @@ describe("XMLParser", function() {
         const expected = {
             "err": {
                 "code": "InvalidAttr",
-                "msg":  "Attributes for \"rootNode\" have open quote."
+                "msg":  "Attributes for \"rootNode\" have open quote.",
+                "line": 1
             }
         };
         const result = validator.validate(xmlData);
@@ -240,7 +245,8 @@ describe("XMLParser", function() {
         const expected = {
             "err": {
                 "code": "InvalidAttr",
-                "msg":  "attribute abc is repeated."
+                "msg":  "attribute abc is repeated.",
+                "line": 1
             }
         };
         const result = validator.validate(xmlData);
@@ -253,7 +259,8 @@ describe("XMLParser", function() {
         const expected = {
             "err": {
                 "code": "InvalidAttr",
-                "msg":  "attribute bc has no space in starting."
+                "msg": "attribute bc has no space in starting.",
+                "line": 1
             }
         };
         const result = validator.validate(xmlData);
@@ -265,7 +272,8 @@ describe("XMLParser", function() {
         const expected = {
             "err": {
                 "code": "InvalidAttr",
-                "msg":  "boolean attribute ab is not allowed."
+                "msg":  "boolean attribute ab is not allowed.",
+                "line": 1
             }
         };
         const result = validator.validate(xmlData);
@@ -278,7 +286,8 @@ describe("XMLParser", function() {
             "err": {
                 "code": "InvalidAttr",
                 // "msg": "attribute 123 is an invalid name."
-                "msg":  "boolean attribute 123 is not allowed."
+                "msg":  "boolean attribute 123 is not allowed.",
+                "line": 1
             }
         };
         const result = validator.validate(xmlData);
@@ -291,8 +300,9 @@ describe("XMLParser", function() {
         const expected = {
             "err": {
                 "code": "InvalidAttr",
-               // "msg": "attribute 123 is an invalid name."
-                "msg": "boolean attribute 123 is not allowed."
+                // "msg": "attribute 123 is an invalid name."
+                "msg":  "boolean attribute 123 is not allowed.",
+                "line": 1
             }
         };
         const result = validator.validate(xmlData);

@@ -69,12 +69,23 @@ exports.validate = function(xmlData, options) {
           continue;
         }
         if (!validateTagName(tagName, regxTagName)) {
-          return {err: {code: 'InvalidTag', msg: 'Tag ' + tagName + ' is an invalid name.'}};
+          return {
+            err: {
+              code: 'InvalidTag', msg: 'Tag ' + tagName + ' is an invalid name.',
+              line: getLineNumberForPosition(xmlData, i),
+            },
+          };
         }
 
         const result = readAttributeStr(xmlData, i);
         if (result === false) {
-          return {err: {code: 'InvalidAttr', msg: 'Attributes for "' + tagName + '" have open quote.'}};
+          return {
+            err: {
+              code: 'InvalidAttr',
+              msg: 'Attributes for "' + tagName + '" have open quote.',
+              line: getLineNumberForPosition(xmlData, i),
+            },
+          };
         }
         let attrStr = result.value;
         i = result.index;
@@ -87,28 +98,47 @@ exports.validate = function(xmlData, options) {
             tagFound = true;
             //continue; //text may presents after self closing tag
           } else {
+            //the result from the nested function returns the error line within the attribute
+            //in order to get the 'true' error line, we need to add the line # from the current position
+            isValid.err.line = isValid.err.line + getLineNumberForPosition(xmlData, i);
+
             return isValid;
           }
         } else if (closingTag) {
-          if(!result.tagClosed){
+          if (!result.tagClosed) {
             return {
-              err: {code: 'InvalidTag', msg: 'closing tag "' + tagName + "\" don't have proper closing."},
+              err: {
+                code: 'InvalidTag',
+                msg: 'closing tag "' + tagName + '" don\'t have proper closing.',
+                line: getLineNumberForPosition(xmlData, i),
+              },
             };
-          }else if (attrStr.trim().length > 0) {
+          } else if (attrStr.trim().length > 0) {
             return {
-              err: {code: 'InvalidTag', msg: 'closing tag "' + tagName + "\" can't have attributes or invalid starting."},
+              err: {
+                code: 'InvalidTag',
+                msg: 'closing tag "' + tagName + '" can\'t have attributes or invalid starting.',
+                line: getLineNumberForPosition(xmlData, i),
+              },
             };
           } else {
             const otg = tags.pop();
             if (tagName !== otg) {
               return {
-                err: {code: 'InvalidTag', msg: 'closing tag ' + otg + ' is expected inplace of ' + tagName + '.'},
+                err: {
+                  code: 'InvalidTag',
+                  msg: 'closing tag ' + otg + ' is expected inplace of ' + tagName + '.',
+                  line: getLineNumberForPosition(xmlData, i),
+                },
               };
             }
           }
         } else {
           const isValid = validateAttributeString(attrStr, options, regxAttrName);
           if (isValid !== true) {
+            //the result from the nested function returns the error line within the attribute
+            //in order to get the 'true' error line, we need to add the line # from the current position
+            isValid.err.line = isValid.err.line + getLineNumberForPosition(xmlData, i);
             return isValid;
           }
           tags.push(tagName);
@@ -137,15 +167,25 @@ exports.validate = function(xmlData, options) {
       if (xmlData[i] === ' ' || xmlData[i] === '\t' || xmlData[i] === '\n' || xmlData[i] === '\r') {
         continue;
       }
-      return {err: {code: 'InvalidChar', msg: 'char ' + xmlData[i] + ' is not expected .'}};
+      return {
+        err: {
+          code: 'InvalidChar',
+          msg: 'char ' + xmlData[i] + ' is not expected .',
+          line: getLineNumberForPosition(xmlData, i),
+        }
+      };
     }
   }
 
   if (!tagFound) {
-    return {err: {code: 'InvalidXml', msg: 'Start tag expected.'}};
+    return { err: { code: 'InvalidXml', msg: 'Start tag expected.', line: 1 } };
   } else if (tags.length > 0) {
     return {
-      err: {code: 'InvalidXml', msg: 'Invalid ' + JSON.stringify(tags, null, 4).replace(/\r?\n/g, '') + ' found.'},
+      err: {
+        code: 'InvalidXml',
+        msg: 'Invalid ' + JSON.stringify(tags, null, 4).replace(/\r?\n/g, '') + ' found.',
+        line: 1,
+      }
     };
   }
 
@@ -164,7 +204,13 @@ function readPI(xmlData, i) {
       //tagname
       var tagname = xmlData.substr(start, i - start);
       if (i > 5 && tagname === 'xml') {
-        return {err: {code: 'InvalidXml', msg: 'XML declaration allowed only at the start of the document.'}};
+        return {
+          err: {
+            code: 'InvalidXml',
+            msg: 'XML declaration allowed only at the start of the document.',
+            line: getLineNumberForPosition(xmlData, i),
+          },
+        };
       } else if (xmlData[i] == '?' && xmlData[i + 1] == '>') {
         //check if valid attribut string
         i++;
@@ -280,28 +326,34 @@ function validateAttributeString(attrStr, options, regxAttrName) {
   const matches = util.getAllMatches(attrStr, validAttrStrRegxp);
   const attrNames = {};
 
+  let lineOffset = 0;
   for (let i = 0; i < matches.length; i++) {
     //console.log(matches[i]);
 
+    var spaces = matches[i][1];
+    if (spaces === '\r' || spaces === '\n') {
+      lineOffset++;
+    }
+
     if (matches[i][1].length === 0) {
       //nospace before attribute name: a="sd"b="saf"
-      return {err: {code: 'InvalidAttr', msg: 'attribute ' + matches[i][2] + ' has no space in starting.'}};
+      return {err: {code: 'InvalidAttr', msg: 'attribute ' + matches[i][2] + ' has no space in starting.', line: lineOffset}};
     } else if (matches[i][3] === undefined && !options.allowBooleanAttributes) {
       //independent attribute: ab
-      return {err: {code: 'InvalidAttr', msg: 'boolean attribute ' + matches[i][2] + ' is not allowed.'}};
+      return {err: {code: 'InvalidAttr', msg: 'boolean attribute ' + matches[i][2] + ' is not allowed.', line: lineOffset}};
     }
     /* else if(matches[i][6] === undefined){//attribute without value: ab=
                     return { err: { code:"InvalidAttr",msg:"attribute " + matches[i][2] + " has no value assigned."}};
                 } */
     const attrName = matches[i][2];
     if (!validateAttrName(attrName, regxAttrName)) {
-      return {err: {code: 'InvalidAttr', msg: 'attribute ' + attrName + ' is an invalid name.'}};
+      return {err: {code: 'InvalidAttr', msg: 'attribute ' + attrName + ' is an invalid name.', line: lineOffset}};
     }
     if (!attrNames.hasOwnProperty(attrName)) {
       //check for duplicate attribute.
       attrNames[attrName] = 1;
     } else {
-      return {err: {code: 'InvalidAttr', msg: 'attribute ' + attrName + ' is repeated.'}};
+      return {err: {code: 'InvalidAttr', msg: 'attribute ' + attrName + ' is repeated.', line: lineOffset}};
     }
   }
 
@@ -322,4 +374,11 @@ function validateTagName(tagname, regxTagName) {
   /*if(util.doesMatch(tagname,startsWithXML)) return false;
     else*/
   return !util.doesNotMatch(tagname, regxTagName);
+}
+
+//this function returns the line number for the character at the given index
+function getLineNumberForPosition(xmlData, index) {
+  var lines = xmlData.substring(0, index).split(/\r?\n/);
+
+  return lines.length;
 }
