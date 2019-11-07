@@ -66,7 +66,7 @@ exports.validate = function(xmlData, options) {
         if (tagName[tagName.length - 1] === '/') {
           //self closing tag without attributes
           tagName = tagName.substring(0, tagName.length - 1);
-          continue;
+          i--;
         }
         if (!validateTagName(tagName, regxTagName)) {
           return {err: {code: 'InvalidTag', msg: 'Tag ' + tagName + ' is an invalid name.'}};
