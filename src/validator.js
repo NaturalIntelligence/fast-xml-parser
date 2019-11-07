@@ -4,10 +4,9 @@ const util = require('./util');
 
 const defaultOptions = {
   allowBooleanAttributes: false, //A tag can have attributes without any value
-  localeRange: 'a-zA-Z',
 };
 
-const props = ['allowBooleanAttributes', 'localeRange'];
+const props = ['allowBooleanAttributes'];
 
 //const tagsPattern = new RegExp("<\\/?([\\w:\\-_\.]+)\\s*\/?>","g");
 exports.validate = function (xmlData, options) {
@@ -16,12 +15,6 @@ exports.validate = function (xmlData, options) {
   //xmlData = xmlData.replace(/(\r\n|\n|\r)/gm,"");//make it single line
   //xmlData = xmlData.replace(/(^\s*<\?xml.*?\?>)/g,"");//Remove XML starting tag
   //xmlData = xmlData.replace(/(<!DOCTYPE[\s\w\"\.\/\-\:]+(\[.*\])*\s*>)/g,"");//Remove DOCTYPE
-  const localRangeRegex = new RegExp(`[${options.localeRange}]`);
-
-  if (localRangeRegex.test("<#$'\"\\\/:0")) {
-    return getErrorObject('InvalidOptions', 'Invalid localeRange', 1);
-  }
-
   const tags = [];
   let tagFound = false;
 
@@ -32,8 +25,6 @@ exports.validate = function (xmlData, options) {
     // check for byte order mark (BOM)
     xmlData = xmlData.substr(1);
   }
-  const regxAttrName = new RegExp(`^[${options.localeRange}_][${options.localeRange}0-9\\-\\.:]*$`);
-  const regxTagName = new RegExp(`^([${options.localeRange}_])[${options.localeRange}0-9\\.\\-_:]*$`);
   for (let i = 0; i < xmlData.length; i++) {
     if (xmlData[i] === '<') {
       //starting of tag
@@ -78,7 +69,7 @@ exports.validate = function (xmlData, options) {
           //continue;
           i--;
         }
-        if (!validateTagName(tagName, regxTagName)) {
+        if (!validateTagName(tagName)) {
           let msg;
           if(tagName.trim().length === 0) {
             msg = "There is an unnecessary space between tag name and backward slash '</ ..'.";
@@ -98,7 +89,7 @@ exports.validate = function (xmlData, options) {
         if (attrStr[attrStr.length - 1] === '/') {
           //self closing tag
           attrStr = attrStr.substring(0, attrStr.length - 1);
-          const isValid = validateAttributeString(attrStr, options, regxAttrName);
+          const isValid = validateAttributeString(attrStr, options);
           if (isValid === true) {
             tagFound = true;
             //continue; //text may presents after self closing tag
@@ -126,7 +117,7 @@ exports.validate = function (xmlData, options) {
             }
           }
         } else {
-          const isValid = validateAttributeString(attrStr, options, regxAttrName);
+          const isValid = validateAttributeString(attrStr, options);
           if (isValid !== true) {
             //the result from the nested function returns the position of the error within the attribute
             //in order to get the 'true' error line, we need to calculate the position where the attribute begins (i - attrStr.length) and then add the position within the attribute
@@ -298,7 +289,7 @@ const validAttrStrRegxp = new RegExp('(\\s*)([^\\s=]+)(\\s*=)?(\\s*([\'"])(([\\s
 
 //attr, ="sd", a="amit's", a="sd"b="saf", ab  cd=""
 
-function validateAttributeString(attrStr, options, regxAttrName) {
+function validateAttributeString(attrStr, options) {
   //console.log("start:"+attrStr+":end");
 
   //if(attrStr.trim().length === 0) return true; //empty string
@@ -318,7 +309,7 @@ function validateAttributeString(attrStr, options, regxAttrName) {
                     return { err: { code:"InvalidAttr",msg:"attribute " + matches[i][2] + " has no value assigned."}};
                 } */
     const attrName = matches[i][2];
-    if (!validateAttrName(attrName, regxAttrName)) {
+    if (!validateAttrName(attrName)) {
       return getErrorObject('InvalidAttr', `Attribute '${attrName}' is an invalid name.`, getPositionFromMatch(attrStr, matches[i][0]));
     }
     if (!attrNames.hasOwnProperty(attrName)) {
@@ -342,19 +333,18 @@ function getErrorObject(code, message, lineNumber) {
   };
 }
 
-function validateAttrName(attrName, regxAttrName) {
-  // const validAttrRegxp = new RegExp(regxAttrName);
-  return util.doesMatch(attrName, regxAttrName);
+function validateAttrName(attrName) {
+  return util.isName(attrName);
 }
 
 //const startsWithXML = new RegExp("^[Xx][Mm][Ll]");
 //  startsWith = /^([a-zA-Z]|_)[\w.\-_:]*/;
 
-function validateTagName(tagname, regxTagName) {
+function validateTagName(tagname) {
   /*if(util.doesMatch(tagname,startsWithXML)) return false;
     else*/
   //return !tagname.toLowerCase().startsWith("xml") || !util.doesNotMatch(tagname, regxTagName);
-  return !util.doesNotMatch(tagname, regxTagName);
+  return util.isName(tagname);
 }
 
 //this function returns the line number for the character at the given index
