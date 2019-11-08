@@ -323,6 +323,18 @@ describe("XMLParser", function() {
         expect(result).toBe(true);
     });
 
+    it("should fail for XML with ! which is not a comment, DOCTYPE or CDATA", function () {
+        const xmlData = "<test><!bla></!bla></test>";
+        const expected = {
+            "code": "InvalidTag",
+            "msg": "Tag !bla is an invalid name."
+        };
+
+        const result = validator.validate(xmlData).err;
+        //console.log(JSON.stringify(result,null,4));
+        expect(result).toEqual(expected);
+    });
+
     it("should not validate XML when prolog doesn't start from 1st char", function() {
         const xmlData = "  <?xml version=\"1.0\" standalone=\"yes\" ?><foo>Hello World.</foo>";
         const expected = {
