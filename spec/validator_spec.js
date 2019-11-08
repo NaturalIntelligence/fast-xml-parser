@@ -42,7 +42,7 @@ describe("XMLParser", function() {
 
     it("should return false for non xml text", function() {
         const xmlData = "rootNode";
-        const expected = {code: "InvalidChar", msg: "char r is not expected ."};
+        const expected = {code: "InvalidChar", msg: "char r is not expected."};
 
         const result = validator.validate(xmlData).err;
         //console.log(JSON.stringify(result,null,4));
@@ -390,7 +390,7 @@ describe("XMLParser", function() {
         +'<h1></h1>'
         +'<?mso-contentType something="val"?>';
 
-        var expected = { code: 'InvalidChar', msg: 'char " is not expected .' }
+        var expected = { code: 'InvalidChar', msg: 'char " is not expected.' }
 
         var result = validator.validate(xmlData).err;
         expect(result).toEqual(expected);

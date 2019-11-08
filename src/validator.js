@@ -137,7 +137,7 @@ exports.validate = function(xmlData, options) {
       if (xmlData[i] === ' ' || xmlData[i] === '\t' || xmlData[i] === '\n' || xmlData[i] === '\r') {
         continue;
       }
-      return {err: {code: 'InvalidChar', msg: 'char ' + xmlData[i] + ' is not expected .'}};
+      return {err: {code: 'InvalidChar', msg: 'char ' + xmlData[i] + ' is not expected.'}};
     }
   }
 
