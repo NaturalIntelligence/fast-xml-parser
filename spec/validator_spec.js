@@ -332,7 +332,8 @@ describe("XMLParser", function() {
         const xmlData = "<test><!bla></!bla></test>";
         const expected = {
             "code": "InvalidTag",
-            "msg": "Tag !bla is an invalid name."
+            "msg": "Tag !bla is an invalid name.",
+            "line" : 1
         };
 
         const result = validator.validate(xmlData).err;
