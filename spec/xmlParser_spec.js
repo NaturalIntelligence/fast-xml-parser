@@ -34,7 +34,7 @@ describe("XMLParser", function() {
         <tag>value</tag>
         <boolean>true</boolean>
         <intTag>045</intTag>
-        <floatTag>65.34</floatTag>
+        <floatTag>65.340</floatTag>
         <long>420926189200190257681175017717</long>
         </rootNode>`;
         const expected = {
