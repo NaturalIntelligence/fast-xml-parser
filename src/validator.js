@@ -16,6 +16,11 @@ exports.validate = function(xmlData, options) {
   //xmlData = xmlData.replace(/(\r\n|\n|\r)/gm,"");//make it single line
   //xmlData = xmlData.replace(/(^\s*<\?xml.*?\?>)/g,"");//Remove XML starting tag
   //xmlData = xmlData.replace(/(<!DOCTYPE[\s\w\"\.\/\-\:]+(\[.*\])*\s*>)/g,"");//Remove DOCTYPE
+  const localRangeRegex = new RegExp(`[${options.localeRange}]`);
+
+  if(localRangeRegex.test("<#$'\"\\\/:0")){
+    return {err: {code: 'InvalidOptions', msg: 'Invalid localeRange'} }
+  }
 
   const tags = [];
   let tagFound = false;

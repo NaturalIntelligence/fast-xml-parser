@@ -40,6 +40,18 @@ describe("XMLParser", function() {
         expect(result).toEqual(expected);
     });
 
+    it("should not validate invalid starting tag for following characters", function() {
+        const xmlData = "<rootNode#@aa></rootNode#@aa>";
+        const expected = {
+            "code": "InvalidTag",
+            "msg":  "Tag rootNode#@aa is an invalid name."
+        };
+
+        const result = validator.validate(xmlData).err;
+        //console.log(JSON.stringify(result,null,4));
+        expect(result).toEqual(expected);
+    });
+
     it("should return false for non xml text", function() {
         const xmlData = "rootNode";
         const expected = {code: "InvalidChar", msg: "char r is not expected."};
