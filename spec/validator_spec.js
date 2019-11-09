@@ -50,17 +50,24 @@ describe("XMLParser", function() {
     });
 
     it("should validate self closing tags", function() {
-        const xmlData = "<rootNode><validtag1  /><validtag2/><validtag3  with='attrib'/></rootNode>";
+        const xmlData = "<rootNode><validtag1  /><validtag2/><validtag3  with='attrib'/><validtag4 />text<validtag5/>text</rootNode>";
         const result = validator.validate(xmlData);
         expect(result).toBe(true);
     });
 
-    it("should not validate self closing tags", function() {
-        const xmlData = "<rootNode><validtag1/><invalid tag/><validtag3  with='attrib'/></rootNode>";
-        const expected = {code: "InvalidAttr", msg: "boolean attribute tag is not allowed."};
+    it("should not consider these as self closing tags", function() {
+        let xmlData = "<rootNode><validtag1/><invalid tag/><validtag3  with='attrib'/></rootNode>";
+        let expected = {code: "InvalidAttr", msg: "boolean attribute tag is not allowed."};
 
-        const result = validator.validate(xmlData).err;
+        let result = validator.validate(xmlData).err;
         //console.log(JSON.stringify(result,null,4));
+        expect(result).toEqual(expected);
+
+
+        xmlData = "<rootNode><notSelfClosing/ ></rootNode>";
+        expected = {code: "InvalidAttr", msg: "attribute / has no space in starting."};
+
+        result = validator.validate(xmlData).err;
         expect(result).toEqual(expected);
     });
 
@@ -165,9 +172,28 @@ describe("XMLParser", function() {
 
     it("should not validate xml with comment in a open tag", function() {
         const xmlData = "<rootNode<!-- <tag> -- -->><tag>1</tag><tag>val</tag></rootNode>";
-        const expected = {code: "InvalidAttr", msg: "boolean attribute <tag is not allowed."};
+        const expected = {code: "InvalidTag", msg: "Tag rootNode<!-- is an invalid name."};
         const result = validator.validate(xmlData).err;
         //console.log(JSON.stringify(result,null,4));
+        expect(result).toEqual(expected);
+    });
+
+    it("should not validate xml with comment in a open tag", function() {
+        const xmlData = "<rootNode <!-- <tag> -- --> ><tag>1</tag><tag>val</tag></rootNode>";
+        const expected = {code: "InvalidAttr", msg: "boolean attribute <!-- is not allowed."};
+        const result = validator.validate(xmlData).err;
+        //console.log(JSON.stringify(result,null,4));
+        expect(result).toEqual(expected);
+    });
+
+    it("should correctly identify self closing tags", function() {
+        let xmlData = "<rootNode><in/valid></in/valid></rootNode>";
+        let expected = {code: "InvalidTag", msg: "Tag in/valid is an invalid name."};
+        let result = validator.validate(xmlData).err;
+        expect(result).toEqual(expected);
+        xmlData = "<rootNode><in#valid/></rootNode>";
+        expected = {code: "InvalidTag", msg: "Tag in#valid is an invalid name."};
+        result = validator.validate(xmlData).err;
         expect(result).toEqual(expected);
     });
 

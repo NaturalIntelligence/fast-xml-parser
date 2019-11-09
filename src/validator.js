@@ -23,8 +23,8 @@ exports.validate = function(xmlData, options) {
     // check for byte order mark (BOM)
     xmlData = xmlData.substr(1);
   }
-  const regxAttrName = new RegExp('^[_w][\\w\\-.:]*$'.replace('_w', '_' + options.localeRange));
-  const regxTagName = new RegExp('^([w]|_)[\\w.\\-_:]*'.replace('([w', '([' + options.localeRange));
+  const regxAttrName = new RegExp(`^[${options.localeRange}_][${options.localeRange}0-9\\-\\.:]*$`);
+  const regxTagName = new RegExp(`^([${options.localeRange}_])[${options.localeRange}0-9\\.\\-_:]*$`);
   for (let i = 0; i < xmlData.length; i++) {
     if (xmlData[i] === '<') {
       //starting of tag
@@ -66,7 +66,8 @@ exports.validate = function(xmlData, options) {
         if (tagName[tagName.length - 1] === '/') {
           //self closing tag without attributes
           tagName = tagName.substring(0, tagName.length - 1);
-          continue;
+          //continue;
+          i--;
         }
         if (!validateTagName(tagName, regxTagName)) {
           return {err: {code: 'InvalidTag', msg: 'Tag ' + tagName + ' is an invalid name.'}};
@@ -321,5 +322,6 @@ function validateAttrName(attrName, regxAttrName) {
 function validateTagName(tagname, regxTagName) {
   /*if(util.doesMatch(tagname,startsWithXML)) return false;
     else*/
+  //return !tagname.toLowerCase().startsWith("xml") || !util.doesNotMatch(tagname, regxTagName);
   return !util.doesNotMatch(tagname, regxTagName);
 }
