@@ -42,7 +42,19 @@ describe("XMLParser", function () {
         expect(result).toEqual(expected);
     });
 
-    it("should return false for non xml text", function () {
+    it("should not validate invalid starting tag for following characters", function() {
+        const xmlData = "<rootNode#@aa></rootNode#@aa>";
+        const expected = {
+            "code": "InvalidTag",
+            "msg":  "Tag rootNode#@aa is an invalid name."
+        };
+
+        const result = validator.validate(xmlData).err;
+        //console.log(JSON.stringify(result,null,4));
+        expect(result).toEqual(expected);
+    });
+
+    it("should return false for non xml text", function() {
         const xmlData = "rootNode";
         const expected = { code: "InvalidChar", msg: "char r is not expected .", line: 1 };
 
@@ -51,8 +63,8 @@ describe("XMLParser", function () {
         expect(result).toEqual(expected);
     });
 
-    it("should validate self closing tags", function () {
-        const xmlData = "<rootNode><validtag1  /><validtag2/><validtag3  with='attrib'/></rootNode>";
+    it("should validate self closing tags", function() {
+        const xmlData = "<rootNode><validtag1  /><validtag2/><validtag3  with='attrib'/><validtag4 />text<validtag5/>text</rootNode>";
         const result = validator.validate(xmlData);
         expect(result).toBe(true);
     });
@@ -61,8 +73,15 @@ describe("XMLParser", function () {
         const xmlData = "<rootNode><validtag1/><invalid tag/><validtag3  with='attrib'/></rootNode>";
         const expected = { code: "InvalidAttr", msg: "boolean attribute tag is not allowed.", line: 1 };
 
-        const result = validator.validate(xmlData).err;
+        let result = validator.validate(xmlData).err;
         //console.log(JSON.stringify(result,null,4));
+        expect(result).toEqual(expected);
+
+
+        xmlData = "<rootNode><notSelfClosing/ ></rootNode>";
+        expected = {code: "InvalidAttr", msg: "attribute / has no space in starting."};
+
+        result = validator.validate(xmlData).err;
         expect(result).toEqual(expected);
     });
 
@@ -173,7 +192,18 @@ describe("XMLParser", function () {
         expect(result).toEqual(expected);
     });
 
-    it("should not validate xml with non closing comment", function () {
+    it("should correctly identify self closing tags", function() {
+        let xmlData = "<rootNode><in/valid></in/valid></rootNode>";
+        let expected = {code: "InvalidTag", msg: "Tag in/valid is an invalid name."};
+        let result = validator.validate(xmlData).err;
+        expect(result).toEqual(expected);
+        xmlData = "<rootNode><in#valid/></rootNode>";
+        expected = {code: "InvalidTag", msg: "Tag in#valid is an invalid name."};
+        result = validator.validate(xmlData).err;
+        expect(result).toEqual(expected);
+    });
+
+    it("should not validate xml with non closing comment", function() {
         const xmlData = "<rootNode ><!-- <tag> -- <tag>1</tag><tag>val</tag></rootNode>";
         const expected = { code: "InvalidXml", msg: "Invalid [    \"rootNode\"] found.", line: 1 };
         const result = validator.validate(xmlData).err;
@@ -400,6 +430,7 @@ describe("XMLParser", function () {
             + '<?mso-contentType valid="value" invalid="?>" ?>'
             + '<h1></h1>'
             + '<?mso-contentType something="val"?>';
+
 
         var expected = { code: 'InvalidChar', msg: 'char " is not expected .', line: 1 }
 
