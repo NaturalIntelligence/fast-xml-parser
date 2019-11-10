@@ -356,7 +356,6 @@ function validateAttributeString(attrStr, options, regxAttrName) {
       //check for duplicate attribute.
       attrNames[attrName] = 1;
     } else {
-      return {err: {code: 'InvalidAttr', msg: 'attribute ' + attrName + ' is repeated.', line: lineOffset}};
       return {err: {code: 'InvalidAttr', msg: 'attribute ' + attrName + ' is repeated.', position: getPositionFromMatch(attrStr, matches[i][0])}};
     }
   }
