@@ -100,7 +100,7 @@ exports.validate = function(xmlData, options) {
           } else {
             //the result from the nested function returns the error line within the attribute
             //in order to get the 'true' error line, we need to add the line # from the current position
-            isValid.err.line = isValid.err.line + getLineNumberForPosition(xmlData, i);
+            isValid.err.line = isValid.err.line + getLineNumberForPosition(xmlData, i - attrStr.length);
 
             return isValid;
           }
@@ -138,7 +138,7 @@ exports.validate = function(xmlData, options) {
           if (isValid !== true) {
             //the result from the nested function returns the error line within the attribute
             //in order to get the 'true' error line, we need to add the line # from the current position
-            isValid.err.line = isValid.err.line + getLineNumberForPosition(xmlData, i);
+            isValid.err.line = isValid.err.line + getLineNumberForPosition(xmlData, i - attrStr.length);
             return isValid;
           }
           tags.push(tagName);
