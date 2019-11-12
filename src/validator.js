@@ -187,7 +187,7 @@ exports.validate = function(xmlData, options) {
       return {
         err: {
           code: 'InvalidChar',
-          msg: 'char ' + xmlData[i] + ' is not expected .',
+          msg: 'char ' + xmlData[i] + ' is not expected.',
           line: getLineNumberForPosition(xmlData, i),
         }
       };

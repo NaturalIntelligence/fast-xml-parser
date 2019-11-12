@@ -56,7 +56,7 @@ describe("XMLParser", function () {
 
     it("should return false for non xml text", function() {
         const xmlData = "rootNode";
-        const expected = { code: "InvalidChar", msg: "char r is not expected .", line: 1 };
+        const expected = { code: "InvalidChar", msg: "char r is not expected.", line: 1 };
 
         const result = validator.validate(xmlData).err;
         //console.log(JSON.stringify(result, null, 4));
@@ -69,9 +69,9 @@ describe("XMLParser", function () {
         expect(result).toBe(true);
     });
 
-    it("should not validate self closing tags", function () {
-        const xmlData = "<rootNode><validtag1/><invalid tag/><validtag3  with='attrib'/></rootNode>";
-        const expected = { code: "InvalidAttr", msg: "boolean attribute tag is not allowed.", line: 1 };
+    it("should not consider these as self closing tags", function() {
+        let xmlData = "<rootNode><validtag1/><invalid tag/><validtag3  with='attrib'/></rootNode>";
+        let expected = {code: "InvalidAttr", msg: "boolean attribute tag is not allowed.", line: 1};
 
         let result = validator.validate(xmlData).err;
         //console.log(JSON.stringify(result,null,4));
@@ -84,6 +84,7 @@ describe("XMLParser", function () {
         result = validator.validate(xmlData).err;
         expect(result).toEqual(expected);
     });
+
 
     it("should not validate xml string when closing tag is different", function () {
         const xmlData = "<rootNode></rootnode>";
@@ -184,9 +185,9 @@ describe("XMLParser", function () {
         expect(result).toBe(true);
     });
 
-    it("should not validate xml with comment in a open tag", function () {
+    it("should not validate xml with comment in a open tag", function() {
         const xmlData = "<rootNode<!-- <tag> -- -->><tag>1</tag><tag>val</tag></rootNode>";
-        const expected = { code: "InvalidAttr", msg: "boolean attribute <tag is not allowed.", line: 1 };
+        const expected = {code: "InvalidTag", msg: "Tag rootNode<!-- is an invalid name.", line: 1};
         const result = validator.validate(xmlData).err;
         //console.log(JSON.stringify(result,null,4));
         expect(result).toEqual(expected);
@@ -431,7 +432,7 @@ describe("XMLParser", function () {
             + '<?mso-contentType something="val"?>';
 
 
-        var expected = { code: 'InvalidChar', msg: 'char " is not expected .', line: 1 }
+        var expected = { code: 'InvalidChar', msg: 'char " is not expected.', line: 1 }
 
         var result = validator.validate(xmlData).err;
         expect(result).toEqual(expected);
