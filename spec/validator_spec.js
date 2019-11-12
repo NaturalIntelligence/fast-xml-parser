@@ -3,7 +3,6 @@
 const validator = require("../src/validator");
 
 describe("XMLParser", function () {
-/*
     it("should validate simple xml string", function () {
         let xmlData = "<rootNode></rootNode>";
 
@@ -46,7 +45,8 @@ describe("XMLParser", function () {
         const xmlData = "<rootNode#@aa></rootNode#@aa>";
         const expected = {
             "code": "InvalidTag",
-            "msg":  "Tag rootNode#@aa is an invalid name."
+            "msg":  "Tag rootNode#@aa is an invalid name.",
+            "line": 1
         };
 
         const result = validator.validate(xmlData).err;
@@ -79,7 +79,7 @@ describe("XMLParser", function () {
 
 
         xmlData = "<rootNode><notSelfClosing/ ></rootNode>";
-        expected = {code: "InvalidAttr", msg: "attribute / has no space in starting."};
+        expected = {code: "InvalidAttr", msg: "attribute / has no space in starting.", line: 1};
 
         result = validator.validate(xmlData).err;
         expect(result).toEqual(expected);
@@ -194,11 +194,11 @@ describe("XMLParser", function () {
 
     it("should correctly identify self closing tags", function() {
         let xmlData = "<rootNode><in/valid></in/valid></rootNode>";
-        let expected = {code: "InvalidTag", msg: "Tag in/valid is an invalid name."};
+        let expected = {code: "InvalidTag", msg: "Tag in/valid is an invalid name.", line: 1};
         let result = validator.validate(xmlData).err;
         expect(result).toEqual(expected);
         xmlData = "<rootNode><in#valid/></rootNode>";
-        expected = {code: "InvalidTag", msg: "Tag in#valid is an invalid name."};
+        expected = {code: "InvalidTag", msg: "Tag in#valid is an invalid name.", line: 1};
         result = validator.validate(xmlData).err;
         expect(result).toEqual(expected);
     });
@@ -238,7 +238,7 @@ describe("XMLParser", function () {
 
         const result = validator.validate(xmlData);
         expect(result).toBe(true);
-    });*/
+    });
 
     /*it("should return false when tag starts with xml or XML etc", function () {
         const xmlData = "<xmlNode  abc='123' bc='567'>val</xmlNode>";
@@ -260,7 +260,6 @@ describe("XMLParser", function () {
         expect(result).toEqual(expected);
     });*/
 
-    /*
     it("should return true for valid tag", function () {
         const xmlData = "<ns:start_tag-2.0></ns:start_tag-2.0>";
 
@@ -477,7 +476,7 @@ attribute2="attribute2"
         const expected = { code: "InvalidTag", msg: "closing tag \"name\" don't have proper closing.", line: 6 };
         var result = validator.validate(xmlData).err;
         expect(result).toEqual(expected);
-    });*/
+    });
 
     it('should detect error line when having multiple attributes', () => {
         const xmlData = `<urlset t
