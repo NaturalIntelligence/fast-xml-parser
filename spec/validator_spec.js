@@ -186,8 +186,16 @@ describe("XMLParser", function () {
     });
 
     it("should not validate xml with comment in a open tag", function() {
-        const xmlData = "<rootNode<!-- <tag> -- -->><tag>1</tag><tag>val</tag></rootNode>";
+        const xmlData = "<rootNode<!-- <tag> -- -->><tag>1</tag><tag>val</tag></rootNode>";        
         const expected = {code: "InvalidTag", msg: "Tag rootNode<!-- is an invalid name.", line: 1};
+        const result = validator.validate(xmlData).err;
+        //console.log(JSON.stringify(result,null,4));
+        expect(result).toEqual(expected);
+    });
+
+    it("should not validate xml with comment in a open tag", function() {
+        const xmlData = "<rootNode <!-- <tag> -- --> ><tag>1</tag><tag>val</tag></rootNode>";
+        const expected = {code: "InvalidAttr", msg: "boolean attribute <!-- is not allowed.", line: 1};
         const result = validator.validate(xmlData).err;
         //console.log(JSON.stringify(result,null,4));
         expect(result).toEqual(expected);
