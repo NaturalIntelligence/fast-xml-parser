@@ -105,7 +105,7 @@ exports.validate = function(xmlData, options) {
             //continue; //text may presents after self closing tag
           } else {
             //the result from the nested function returns the position of the error within the attribute
-            //in order to get the 'true' error line, we need to add the calculate the position where the attribute begins (i - attrStr.length) and then add the position within the attribute
+            //in order to get the 'true' error line, we need to calculate the position where the attribute begins (i - attrStr.length) and then add the position within the attribute
             //this gives us the absolute index in the entire xml, which we can use to find the line at last
             return {
               err: {
@@ -148,7 +148,7 @@ exports.validate = function(xmlData, options) {
           const isValid = validateAttributeString(attrStr, options, regxAttrName);
           if (isValid !== true) {
             //the result from the nested function returns the position of the error within the attribute
-            //in order to get the 'true' error line, we need to add the calculate the position where the attribute begins (i - attrStr.length) and then add the position within the attribute
+            //in order to get the 'true' error line, we need to calculate the position where the attribute begins (i - attrStr.length) and then add the position within the attribute
             //this gives us the absolute index in the entire xml, which we can use to find the line at last
             return {
               err: {
