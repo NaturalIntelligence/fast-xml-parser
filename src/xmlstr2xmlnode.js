@@ -39,7 +39,8 @@ const defaultOptions = {
   attrValueProcessor: function(a, attrName) {
     return a;
   },
-  stopNodes: []
+  stopNodes: [],
+  preserveOrder: false
   //decodeStrict: false,
 };
 
@@ -61,11 +62,39 @@ const props = [
   'tagValueProcessor',
   'attrValueProcessor',
   'parseTrueNumberOnly',
-  'stopNodes'
+  'stopNodes',
+  'preserveOrder'
 ];
 exports.props = props;
 
-const getTraversalObj = function(xmlData, options) {
+const nodeHasExtraText = (currentNode, textAfterNode) => {
+  return currentNode.parent && textAfterNode
+}
+
+const storeTextOrTextNode = (currentNode, options, tag) => {
+  if (!nodeHasExtraText(currentNode, tag[14])) {
+    return
+  }
+  
+  if (options.preserveOrder) { // if the closing tag is followed by text, we add a textNodeName node.
+    const textValue = '' + processTagValue(tag, options)
+    if (textValue) {
+      currentNode.parent.addChild(new xmlNode(options.textNodeName, currentNode.parent, textValue))
+    }
+  } else {
+    currentNode.parent.val = util.getValue(currentNode.parent.val) + '' + processTagValue(tag, options, currentNode.parent.tagname);
+  }
+}
+
+// If the current node has a value, and we open a new tag, we replace this node value by a textNodeName tag.      
+const tryStoreValueAsTextNode = (currentNode, options) => {
+  if (options.preserveOrder && currentNode.val) {
+    currentNode.addChild(new xmlNode(options.textNodeName, currentNode, currentNode.val))
+    currentNode.val = undefined
+  }
+}
+
+const getTraversalObj = function (xmlData, options) {
   options = buildOptions(options, defaultOptions, props);
   //xmlData = xmlData.replace(/\r?\n/g, " ");//make it single line
   xmlData = xmlData.replace(/<!--[\s\S]*?-->/g, ''); //Remove  comments
@@ -81,9 +110,9 @@ const getTraversalObj = function(xmlData, options) {
 
     if (tagType === TagType.CLOSING) {
       //add parsed data to parent node
-      if (currentNode.parent && tag[12]) {
-        currentNode.parent.val = util.getValue(currentNode.parent.val) + '' + processTagValue(tag, options, currentNode.parent.tagname);
-      }
+
+      storeTextOrTextNode(currentNode, options, tag)
+
       if (options.stopNodes.length && options.stopNodes.includes(currentNode.tagname)) {
         currentNode.child = []
         if (currentNode.attrsMap == undefined) { currentNode.attrsMap = {}}
@@ -106,16 +135,15 @@ const getTraversalObj = function(xmlData, options) {
         currentNode.val = (currentNode.val || '') + (tag[3] || '') + processTagValue(tag, options);
       }
     } else if (tagType === TagType.SELF) {
-      if (currentNode && tag[12]) {
-        currentNode.val = util.getValue(currentNode.val) + '' + processTagValue(tag, options);
-      }
-
       const childNode = new xmlNode(options.ignoreNameSpace ? tag[7] : tag[5], currentNode, '');
       if (tag[8] && tag[8].length > 0) {
         tag[8] = tag[8].substr(0, tag[8].length - 1);
       }
       childNode.attrsMap = buildAttributesMap(tag[8], options);
       currentNode.addChild(childNode);
+
+      storeTextOrTextNode(childNode, options, tag)
+
     } else {
       //TagType.OPENING
       const childNode = new xmlNode(
@@ -127,6 +155,9 @@ const getTraversalObj = function(xmlData, options) {
         childNode.startIndex=tag.index + tag[1].length
       }
       childNode.attrsMap = buildAttributesMap(tag[8], options);
+
+      tryStoreValueAsTextNode(currentNode, options)
+
       currentNode.addChild(childNode);
       currentNode = childNode;
     }

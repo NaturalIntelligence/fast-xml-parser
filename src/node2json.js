@@ -24,6 +24,20 @@ const convertToJson = function(node, options) {
   util.merge(jObj, node.attrsMap, options.arrayMode);
 
   const keys = Object.keys(node.child);
+
+  if (keys.length > 1 && (options.preserveOrder === true ||
+    (options.preserveOrder === "text" && keys.includes(options.textNodeName)))) {
+    const jArray = new Array(node.children)
+
+    for (let key of keys) {
+      for (var child of node.child[key]) {
+        jArray[child.indexInParent] = { [key]: convertToJson(child, options) };
+      }
+    }
+
+    return { "": jArray }
+  }
+
   for (let index = 0; index < keys.length; index++) {
     var tagname = keys[index];
     if (node.child[tagname] && node.child[tagname].length > 1) {

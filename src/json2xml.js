@@ -183,6 +183,12 @@ function replaceCDATAarr(str, cdata) {
 }
 
 function buildObjectNode(val, key, attrStr, level) {
+  // empty tag is used to specify an array of ordered tags, 
+  // only when the preserveOrder option is set.
+  if (key === "") {
+    return val
+  }
+
   if (attrStr && !val.includes('<')) {
     return (
       this.indentate(level) +

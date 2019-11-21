@@ -1,12 +1,14 @@
 'use strict';
 
 module.exports = function(tagname, parent, val) {
+  this.children = 0;
   this.tagname = tagname;
   this.parent = parent;
   this.child = {}; //child tags
   this.attrsMap = {}; //attributes map
   this.val = val; //text only
   this.addChild = function(child) {
+    child.indexInParent = this.children++
     if (Array.isArray(this.child[child.tagname])) {
       //already presents
       this.child[child.tagname].push(child);
