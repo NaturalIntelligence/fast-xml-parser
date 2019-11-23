@@ -75,7 +75,13 @@ exports.validate = function (xmlData, options) {
           i--;
         }
         if (!validateTagName(tagName, regxTagName)) {
-          return getErrorObject('InvalidTag', `Tag '${tagName}' is an invalid name.`, getLineNumberForPosition(xmlData, i));
+          let msg;
+          if(tagName.trim().length === 0) {
+            msg = "There is an unnecessary space between tag name and backward slash '</ ..'.";
+          }else{
+            msg = `Tag '${tagName}' is an invalid name.`;
+          }
+          return getErrorObject('InvalidTag', msg, getLineNumberForPosition(xmlData, i));
         }
 
         const result = readAttributeStr(xmlData, i);

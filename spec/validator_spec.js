@@ -19,7 +19,7 @@ describe("XMLParser", function () {
         const xmlData = "< rootNode></rootNode>";
         const expected = {
             "code": "InvalidTag",
-            "msg": "Tag '' is an invalid name.",
+            "msg": "There is an unnecessary space between tag name and backward slash '</ ..'.",
             "line": 1
         };
 
@@ -98,14 +98,14 @@ describe("XMLParser", function () {
     it("should not validate xml string when closing tag is invalid", function () {
         let xmlData = "<rootNode>< /rootnode>";
 
-        let expected = { code: "InvalidTag", msg: "Tag '' is an invalid name.", line: 1 };
+        let expected = { code: "InvalidTag", msg: "There is an unnecessary space between tag name and backward slash '</ ..'.", line: 1 };
 
         let result = validator.validate(xmlData).err;
         //console.log(JSON.stringify(result,null,4));
         expect(result).toEqual(expected);
 
         xmlData = "<rootNode></ rootnode>";
-        expected = { code: "InvalidTag", msg: "Tag '' is an invalid name.", line: 1 };
+        expected = { code: "InvalidTag", msg: "There is an unnecessary space between tag name and backward slash '</ ..'.", line: 1 };
         result = validator.validate(xmlData).err;
         //console.log(JSON.stringify(result,null,4));
         expect(result).toEqual(expected);
