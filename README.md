@@ -32,6 +32,9 @@ List of some applications/projects using Fast XML Parser. (Raise an issue to sub
 <a href="http://www.craft.ai/" title="craft ai" > <img src="https://avatars1.githubusercontent.com/u/12046764" width="80px" ></a>
 <a href="http://brownspace.org/" title="Brown Space Engineering" > <img src="https://avatars2.githubusercontent.com/u/5504507" width="80px" ></a>
 <a href="http://www.appcelerator.com/" title="Team Appcelerator" > <img src="https://avatars1.githubusercontent.com/u/82188" width="80px" ></a>
+<a href="https://xmllint.com/" title="XML Lint" > <img src="https://xmllint.com/assets/logo.png" width="80px" ></a>
+<a href="https://github.com/prettier" title="Prettier" > <img src="https://avatars0.githubusercontent.com/u/25822731" width="80px" ></a>
+<a href="https://github.com/dolanmiu/docx" title="docx" > <img src="https://i.imgur.com/37uBGhO.gif" width="80px" ></a>
 <a href="http://orange-opensource.github.io/" title="Open Source by Orange" > <img src="https://avatars3.githubusercontent.com/u/1506386" width="80px" ></a>
 <a href="http://www.ybrain.com/" title="YBRAIN Inc." > <img src="https://avatars2.githubusercontent.com/u/38232440" width="80px" ></a>
 <a href="http://99bitcoins.com/" title="99 bitcoins" > <img src="https://avatars0.githubusercontent.com/u/9527779" width="80px" ></a>

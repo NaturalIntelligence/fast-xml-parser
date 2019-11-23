@@ -191,6 +191,7 @@ function parseValue(val, shouldParse, parseTrueNumberOnly) {
         parsed = Number.parseInt(val, 16);
       } else if (val.indexOf('.') !== -1) {
         parsed = Number.parseFloat(val);
+        val = val.replace(/0+$/,"");
       } else {
         parsed = Number.parseInt(val, 10);
       }
