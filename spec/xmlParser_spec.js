@@ -748,7 +748,7 @@ describe("XMLParser", function() {
 
         expect(() => {
             parser.parse(xmlData,{trimValues:true}, true);
-        }).toThrowError(`closing tag "tag" don't have proper closing.`)
+        }).toThrowError(`Closing tag 'tag' doesn't have proper closing.`)
 
     });
 

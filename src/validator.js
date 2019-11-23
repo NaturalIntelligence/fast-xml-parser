@@ -75,12 +75,12 @@ exports.validate = function (xmlData, options) {
           i--;
         }
         if (!validateTagName(tagName, regxTagName)) {
-          return getErrorObject('InvalidTag', 'Tag ' + tagName + ' is an invalid name.', getLineNumberForPosition(xmlData, i));
+          return getErrorObject('InvalidTag', `Tag '${tagName}' is an invalid name.`, getLineNumberForPosition(xmlData, i));
         }
 
         const result = readAttributeStr(xmlData, i);
         if (result === false) {
-          return getErrorObject('InvalidAttr', 'Attributes for "' + tagName + '" have open quote.', getLineNumberForPosition(xmlData, i));
+          return getErrorObject('InvalidAttr', `Attributes for '${tagName}' have open quote.`, getLineNumberForPosition(xmlData, i));
         }
         let attrStr = result.value;
         i = result.index;
@@ -100,13 +100,13 @@ exports.validate = function (xmlData, options) {
           }
         } else if (closingTag) {
           if (!result.tagClosed) {
-            return getErrorObject('InvalidTag', 'closing tag "' + tagName + '" don\'t have proper closing.', getLineNumberForPosition(xmlData, i));
+            return getErrorObject('InvalidTag', `Closing tag '${tagName}' doesn't have proper closing.`, getLineNumberForPosition(xmlData, i));
           } else if (attrStr.trim().length > 0) {
-            return getErrorObject('InvalidTag', 'closing tag "' + tagName + '" can\'t have attributes or invalid starting.', getLineNumberForPosition(xmlData, i));
+            return getErrorObject('InvalidTag', `Closing tag '${tagName}' can't have attributes or invalid starting.`, getLineNumberForPosition(xmlData, i));
           } else {
             const otg = tags.pop();
             if (tagName !== otg) {
-              return getErrorObject('InvalidTag', 'closing tag ' + otg + ' is expected inplace of ' + tagName + '.', getLineNumberForPosition(xmlData, i));
+              return getErrorObject('InvalidTag', `Closing tag '${otg}' is expected inplace of '${tagName}'.`, getLineNumberForPosition(xmlData, i));
             }
           }
         } else {
@@ -143,14 +143,14 @@ exports.validate = function (xmlData, options) {
       if (xmlData[i] === ' ' || xmlData[i] === '\t' || xmlData[i] === '\n' || xmlData[i] === '\r') {
         continue;
       }
-      return getErrorObject('InvalidChar', 'char ' + xmlData[i] + ' is not expected.', getLineNumberForPosition(xmlData, i));
+      return getErrorObject('InvalidChar', `char '${xmlData[i]}' is not expected.`, getLineNumberForPosition(xmlData, i));
     }
   }
 
   if (!tagFound) {
     return getErrorObject('InvalidXml', 'Start tag expected.', 1);
   } else if (tags.length > 0) {
-    return getErrorObject('InvalidXml', 'Invalid ' + JSON.stringify(tags, null, 4).replace(/\r?\n/g, '') + ' found.', 1);
+    return getErrorObject('InvalidXml', `Invalid '${JSON.stringify(tags, null, 4).replace(/\r?\n/g, '')}' found.`, 1);
   }
 
   return true;
@@ -287,23 +287,23 @@ function validateAttributeString(attrStr, options, regxAttrName) {
   for (let i = 0; i < matches.length; i++) {
     if (matches[i][1].length === 0) {
       //nospace before attribute name: a="sd"b="saf"
-      return getErrorObject('InvalidAttr', 'attribute ' + matches[i][2] + ' has no space in starting.', getPositionFromMatch(attrStr, matches[i][0]))
+      return getErrorObject('InvalidAttr', `Attribute '${matches[i][2]}' has no space in starting.`, getPositionFromMatch(attrStr, matches[i][0]))
     } else if (matches[i][3] === undefined && !options.allowBooleanAttributes) {
       //independent attribute: ab
-      return getErrorObject('InvalidAttr', 'boolean attribute ' + matches[i][2] + ' is not allowed.', getPositionFromMatch(attrStr, matches[i][0]));
+      return getErrorObject('InvalidAttr', `boolean attribute '${matches[i][2]}' is not allowed.`, getPositionFromMatch(attrStr, matches[i][0]));
     }
     /* else if(matches[i][6] === undefined){//attribute without value: ab=
                     return { err: { code:"InvalidAttr",msg:"attribute " + matches[i][2] + " has no value assigned."}};
                 } */
     const attrName = matches[i][2];
     if (!validateAttrName(attrName, regxAttrName)) {
-      return getErrorObject('InvalidAttr', 'attribute ' + attrName + ' is an invalid name.', getPositionFromMatch(attrStr, matches[i][0]));
+      return getErrorObject('InvalidAttr', `Attribute '${attrName}' is an invalid name.`, getPositionFromMatch(attrStr, matches[i][0]));
     }
     if (!attrNames.hasOwnProperty(attrName)) {
       //check for duplicate attribute.
       attrNames[attrName] = 1;
     } else {
-      return getErrorObject('InvalidAttr', 'attribute ' + attrName + ' is repeated.', getPositionFromMatch(attrStr, matches[i][0]));
+      return getErrorObject('InvalidAttr', `Attribute '${attrName}' is repeated.`, getPositionFromMatch(attrStr, matches[i][0]));
     }
   }
 
