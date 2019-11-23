@@ -28,7 +28,8 @@ describe("XMLParser", function() {
 
         const expected = {
             "code": "InvalidOptions",
-            "msg":  "Invalid localeRange"
+            "msg":  "Invalid localeRange",
+            "line": 1
         };
 
         const result = validator.validate(xmlData , { localeRange: "а-яёА-ЯЁa-zA-Z<" }).err
