@@ -1,6 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
+        <!-- Global site tag (gtag.js) - Google Analytics -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=UA-80202630-2"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+
+            gtag('config', 'UA-80202630-2');
+        </script>
+
         <title>Fast XMl Parser</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -21,17 +31,27 @@
     <body role="document" style="background-color: #2c3e50;">
 
         <div class="container-fluid">
-            <a href="https://github.com/NaturalIntelligence/fast-xml-parser"><img class="bring-up" style="position: absolute; top: 0; left: 0; border: 0; z-index: 1" src="https://camo.githubusercontent.com/121cd7cbdc3e4855075ea8b558508b91ac463ac2/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f6c6566745f677265656e5f3030373230302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_left_green_007200.png"></a>
-            <h1 style="color:white;" class="text-center">Fast XML Parser <a class="github-button" href="https://github.com/NaturalIntelligence/fast-xml-parser" data-show-count="true" aria-label="Star NaturalIntelligence/fast-xml-parser on GitHub">Star</a></h1>
-            <p style="color:white;" class="text-center">The fastest parser for browsers <!-- Place this tag where you want the button to render. -->
-                </p>
+            
+            
             <div class="row" style="height: calc(100vh - 100px);">
                 <div class="col-md-4" >
                     <span class="float-right" style="color: white"> <span id="lengthxml" style="margin:5px">0</span> bytes</span>
                     <textarea id="txtXml" name="xml" style="width: 100%; height: 100%" class="form-control" placeholder="Paste XML to parse in JS/JSON"></textarea>
                 </div>
                 <div class="col-md-4" style=" color: white;">
+                        <div style="margin: 5px; padding: 5px;">
+                                <a href="https://github.com/NaturalIntelligence/fast-xml-parser"><img class="bring-up" style="position: absolute; top: 0; left: -15px; border: 0; z-index: 1" src="https://camo.githubusercontent.com/121cd7cbdc3e4855075ea8b558508b91ac463ac2/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f6c6566745f677265656e5f3030373230302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_left_green_007200.png"></a>
+                                <h1 style="color:white;" class="text-center">Fast XML Parser <a class="github-button" href="https://github.com/NaturalIntelligence/fast-xml-parser" data-show-count="true" aria-label="Star NaturalIntelligence/fast-xml-parser on GitHub">Star</a></h1>
+                                <p style="color:white;" class="text-center">The fastest parser for browsers <!-- Place this tag where you want the button to render. -->
+                                    </p>
+                        </div>
                         <div style="border: 1px dashed grey; margin: 5px; padding: 5px;">
+                            <h2>Note!!</h2>
+                            <p>We are not interested in your data. But we use Google analytics to improve the quality of our work and add new features.</p>
+                            <p>You can use this application offline. Or stop google analytics using browser plugins. We're still happy to serve our services.</p>
+                        </div>
+                        <div style="border: 1px dashed grey; margin: 5px; padding: 5px;">
+                            <h2>Parsing options</h2>
                             <input type="checkbox" id="attrNodeName"> Group all the attributes  <br>
                             <input type="checkbox" id="ignoreAttributes" checked="true"> Ignore attributes <br>
                             <input type="checkbox" id="ignoreNameSpace"> Remove namespace string from tag and attribute names. <br>
@@ -48,6 +68,7 @@
                             </div>
                         </div>
                         <div style="border: 1px dashed grey; margin: 5px; padding: 5px;">
+                            <h2>Validator options</h2>
                             <input type="checkbox" id="allowBooleanAttributes_v"> Allow Boolean Attributes<br>
                             <span class="clearfix">Locale range <input type="text" id="localeRange_v" style=" color: black; float:right;" placeholder="Try with your mother tongue"><br></span>
                             <div class="text-center" style="margin: 15px">
@@ -55,6 +76,7 @@
                             </div>
                             
                         </div>
+                        
                 </div>
                 <div class="col-md-4">
                         <span class="float-right" style="color: white"><span id="lengthoutput" style="margin:5px">0</span> bytes</span>
