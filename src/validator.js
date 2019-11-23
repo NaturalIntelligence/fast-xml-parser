@@ -22,6 +22,9 @@ exports.validate = function (xmlData, options) {
     return getErrorObject('InvalidOptions', 'Invalid localeRange', 1);
   }
 
+  let firstOpeningTag = '';
+  let lastClosingTag = '';
+
   const tags = [];
   let tagFound = false;
   if (xmlData[0] === '\ufeff') {
@@ -114,6 +117,9 @@ exports.validate = function (xmlData, options) {
             if (tagName !== otg) {
               return getErrorObject('InvalidTag', `Closing tag '${otg}' is expected inplace of '${tagName}'.`, getLineNumberForPosition(xmlData, i));
             }
+
+            //we remember every closing tag that we come across.
+            lastClosingTag = otg;
           }
         } else {
           const isValid = validateAttributeString(attrStr, options, regxAttrName);
@@ -125,6 +131,11 @@ exports.validate = function (xmlData, options) {
           }
           tags.push(tagName);
           tagFound = true;
+
+          //we remember the first opening tag that we find
+          if (firstOpeningTag === '') {
+            firstOpeningTag = tagName;
+          }
         }
 
         //skip tag text value
@@ -157,6 +168,11 @@ exports.validate = function (xmlData, options) {
     return getErrorObject('InvalidXml', 'Start tag expected.', 1);
   } else if (tags.length > 0) {
     return getErrorObject('InvalidXml', `Invalid '${JSON.stringify(tags, null, 4).replace(/\r?\n/g, '')}' found.`, 1);
+  }
+
+  //if the first opening tag does not match the last closing tag we having a document with multiple root nodes.
+  if (firstOpeningTag !== lastClosingTag) {
+    return getErrorObject('InvalidXml', 'Multiple possible root nodes found. Candiates are ["' + firstOpeningTag + '", "' + lastClosingTag + '"]', 0);
   }
 
   return true;

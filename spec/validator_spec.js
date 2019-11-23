@@ -511,4 +511,25 @@ attribute2="attribute2"
         var result = validator.validate(xmlData).err;
         expect(result).toEqual(expected);
     });
+
+    it('should not validate XML documents with multiple root nodes', () => {
+        const xmlData = '<xml></xml><xml2></xml2>';
+
+        const expected = { code: "InvalidXml", msg: 'Multiple possible root nodes found. Candiates are ["xml", "xml2"]', line: 0};
+        var result = validator.validate(xmlData).err;
+        expect(result).toEqual(expected);
+    });
+
+    it('should not validate XML documents with multiple root nodes 2', () => {
+        const xmlData = `<test>
+        <nested>
+        </nested>
+        </test>
+        <xml2>
+        </xml2>`;
+
+        const expected = { code: "InvalidXml", msg: 'Multiple possible root nodes found. Candiates are ["test", "xml2"]', line: 0};
+        var result = validator.validate(xmlData).err;
+        expect(result).toEqual(expected);
+    });
 });
