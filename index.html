@@ -18,14 +18,22 @@
         <link rel="stylesheet" href="static/css/bootstrap.min.css">
         <link rel="stylesheet" href="static/css/prettify.min.css">
         <link rel="stylesheet" href="static/css/jquery-confirm.min.css">
+        <link rel="stylesheet" type="text/css" href="https://codemirror.net/lib/codemirror.css">
 
         <script src="static/js/jquery-3.2.1.min.js"></script>
+        <script src="https://codemirror.net/lib/codemirror.js"></script>
         <script src="static/js/bootstrap.min.js"></script>
-        <script src="static/js/prettify.min.js"></script>
+        <!-- <script src="static/js/prettify.min.js"></script> -->
         <link rel="stylesheet" type="text/css" href="static/css/animate3.5.2.min.css">
 
         <script src="lib/parser.js"></script>
         <script src="static/js/jquery-confirm.min.js"></script>
+        <style>
+            .CodeMirror{
+                height: 100%;
+                width: 100%;
+            }
+        </style>
     </head>
     <body>
     <body role="document" style="background-color: #2c3e50;">
@@ -52,6 +60,7 @@
                         </div>
                         <div style="border: 1px dashed grey; margin: 5px; padding: 5px;">
                             <h2>Parsing options</h2>
+                            <p><small>* Parser will not validate the XML</small></p>
                             <input type="checkbox" id="attrNodeName"> Group all the attributes  <br>
                             <input type="checkbox" id="ignoreAttributes" checked="true"> Ignore attributes <br>
                             <input type="checkbox" id="ignoreNameSpace"> Remove namespace string from tag and attribute names. <br>
@@ -85,33 +94,75 @@
             </div>
         </div>
         <script src="https://cdn.rawgit.com/nimndata/nimnjs-schema-builder/5a452c40/dist/nimn-schema-builder.js"></script>
+        
     <script>
+        var highlightedLine = null;
+        var editor;
+
+        function updateLength(){
+            var xmlData = editor.getValue();
+            $("#lengthxml")[0].innerText = xmlData.replace(/>\s*</g, "><").length;
+        }
+
+        function onChange(){
+            highlightLine();
+            updateLength();
+        }
+        function highlightLine(n) {
+            if (n) {
+                unhighlightLine();
+                highlightedLine = editor.addLineClass(n - 1, 'background', 'alert-danger');
+                editor.setCursor(n);
+            }else{
+                unhighlightLine()
+            }
+        }
+
+        function unhighlightLine() {
+            if (highlightedLine) {
+                editor.removeLineClass(highlightedLine, 'background', 'alert-danger');
+                highlightedLine = null;
+            }
+        }
+
         $( document ).ready(function() {
             //var parser = require("parser");
-            
-            $('#txtXml').on('input', function(){
-                updateLength();
+            editor = CodeMirror.fromTextArea(document.getElementById("txtXml"), {
+                mode: "application/xml",
+                styleActiveLine: true,
+                lineNumbers: true,
+                foldGutter: true,
+                autofocus: true,
+                gutters: ["CodeMirror-foldgutter"]
             });
+
+            // when user types something, remove highlighting from "bad" line
+            editor.on('change', () => onChange());
+            editor.on('drop', () => onChange());
+            
+            /* $('#txtXml').on('input', function(){
+                updateLength();
+            }); */
 
             $('#toJson').on('click', function() {
                 $('#result').val('');
-                var result = parser.parse($('#txtXml').val(),buildParsingConfig());
+                var result = parser.parse(editor.getValue(),buildParsingConfig());
                 updateOutputLength(JSON.stringify(result));
                 $('#result').val(JSON.stringify(result,null,4));
             });
 
             $('#toXml').on('click', function() {
-                $('#txtXml').val('');
+                editor.setValue('');
                 var result = buildJ2XParser().parse(JSON.parse( $('#result').val() ));
-                $('#txtXml').val('<?xml version="1.0"?>\n'+result);
+                editor.setValue('<?xml version="1.0"?>\n'+result);
             });
 
             $('#toNimn').on('click', function() {
                 $('#result').val('');
 
-                var jsonData = parser.parse($('#txtXml').val(),buildParsingConfig());
+                var jsonData = parser.parse(editor.getValue(),buildParsingConfig());
                 var schema = nimnSchemaBuilder.build(jsonData);
-                var result = parser.parseToNimn($('#txtXml').val(), schema, buildParsingConfig());
+                var result = parser.parseToNimn(editor.getValue(), schema, buildParsingConfig());
                 updateOutputLength(result);
                 $('#result').val(result);
             });
@@ -122,10 +173,13 @@
                     allowBooleanAttributes: $("#allowBooleanAttributes_v").prop("checked"),
                     localeRange : $("#localeRange_v").val() === "" ? "a-zA-Z" : $("#cdataTagName").val(),
                 };
-                var val = parser.validate($('#txtXml').val(), config);
+                var val = parser.validate(editor.getValue(), config);
                 if(val === true){
                     $('#result').val("Valid XML");
                 }else{
+                    if (val.err.line) {
+                        highlightLine(val.err.line);
+                    }
                     $('#result').val(JSON.stringify(val,null,4));
                 }
             });
@@ -184,16 +238,13 @@
                 return;
             }
 
-            function updateLength(){
-                var xmlData = $('#txtXml').val();
-                $("#lengthxml")[0].innerText = xmlData.replace(/>\s*</g, "><").length;
-            }
+            
 
             function updateOutputLength(data){
                 $("#lengthoutput")[0].innerText = data.length;
             }
 
-            $('#txtXml').val(`<?xml version="1.0"?>
+            editor.setValue(`<?xml version="1.0"?>
 <any_name>
     <person>
         <phone>+122233344550</phone>
@@ -240,5 +291,6 @@
         });
     </script>
     <script async defer src="https://buttons.github.io/buttons.js"></script>
+    
     </body>
 </html>
