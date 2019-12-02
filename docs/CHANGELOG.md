@@ -1,3 +1,8 @@
+3.15.0 / 2019-11-23
+  * validaor: improve error messaging
+  * validator: add line number in case of error
+  * validator: add more error scenarios to make it more descriptive
+
 3.14.0 / 2019-10-25
   * arrayMode for XML to JS obj parsing
 

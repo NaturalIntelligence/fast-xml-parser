@@ -151,7 +151,7 @@ var tObj = parser.getTraversalObj(xmlData,options);
 var jsonObj = parser.convertToJson(tObj,options);
 
 ```
-You can pass `true` or validation option as 3rd parameter to validate along with parsing which is same as above example.
+As you can notice in above code, validator is not embeded with in the parser and expected to be called separately. However, you can pass `true` or validation options as 3rd parameter to the parser to trigger validator internally. It is same as above example.
 
 ```js
 try{
@@ -160,6 +160,18 @@ try{
   console.log(error.message)
 }
 ```
+
+Validator reurns the following object in case of error;
+```js
+{
+  err: {
+    code: code,
+    msg: message,
+    line: lineNumber,
+  },
+};
+```
+
 
 #### Note: [he](https://www.npmjs.com/package/he) library is used in this example
 
