@@ -22,11 +22,15 @@ exports.validate = function (xmlData, options) {
     return getErrorObject('InvalidOptions', 'Invalid localeRange', 1);
   }
 
-  let firstOpeningTag = '';
-  let lastClosingTag = '';
-
   const tags = [];
   let tagFound = false;
+
+  //keeps track of the depth of a tag
+  let tagDepth = -1;
+
+  //indicates that the root tag has been closed (aka. depth 0 has been reached)
+  let reachedRoot = false;
+
   if (xmlData[0] === '\ufeff') {
     // check for byte order mark (BOM)
     xmlData = xmlData.substr(1);
@@ -118,8 +122,8 @@ exports.validate = function (xmlData, options) {
               return getErrorObject('InvalidTag', `Closing tag '${otg}' is expected inplace of '${tagName}'.`, getLineNumberForPosition(xmlData, i));
             }
 
-            //we remember every closing tag that we come across.
-            lastClosingTag = otg;
+            //whenever we close a tag, we can reduce the depth
+            tagDepth--;
           }
         } else {
           const isValid = validateAttributeString(attrStr, options, regxAttrName);
@@ -131,10 +135,19 @@ exports.validate = function (xmlData, options) {
           }
           tags.push(tagName);
           tagFound = true;
+          tagDepth++;
 
-          //we remember the first opening tag that we find
-          if (firstOpeningTag === '') {
-            firstOpeningTag = tagName;
+          //when reaching the root level
+          if(tagDepth == 0)
+          {
+            //we check if we have reached it before and raise an error if so...
+            if(reachedRoot)
+            {
+              return getErrorObject('InvalidXml', 'Multiple possible root nodes found.', getLineNumberForPosition(xmlData, i));
+            }
+
+            //otherwise we set a flag for the next time around
+            reachedRoot = true;
           }
         }
 
@@ -168,11 +181,6 @@ exports.validate = function (xmlData, options) {
     return getErrorObject('InvalidXml', 'Start tag expected.', 1);
   } else if (tags.length > 0) {
     return getErrorObject('InvalidXml', `Invalid '${JSON.stringify(tags, null, 4).replace(/\r?\n/g, '')}' found.`, 1);
-  }
-
-  //if the first opening tag does not match the last closing tag we having a document with multiple root nodes.
-  if (firstOpeningTag !== lastClosingTag) {
-    return getErrorObject('InvalidXml', 'Multiple possible root nodes found. Candiates are ["' + firstOpeningTag + '", "' + lastClosingTag + '"]', 0);
   }
 
   return true;

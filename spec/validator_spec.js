@@ -515,7 +515,7 @@ attribute2="attribute2"
     it('should not validate XML documents with multiple root nodes', () => {
         const xmlData = '<xml></xml><xml2></xml2>';
 
-        const expected = { code: "InvalidXml", msg: 'Multiple possible root nodes found. Candiates are ["xml", "xml2"]', line: 0};
+        const expected = { code: "InvalidXml", msg: 'Multiple possible root nodes found.', line: 1};
         var result = validator.validate(xmlData).err;
         expect(result).toEqual(expected);
     });
@@ -528,7 +528,15 @@ attribute2="attribute2"
         <xml2>
         </xml2>`;
 
-        const expected = { code: "InvalidXml", msg: 'Multiple possible root nodes found. Candiates are ["test", "xml2"]', line: 0};
+        const expected = { code: "InvalidXml", msg: 'Multiple possible root nodes found.', line: 5};
+        var result = validator.validate(xmlData).err;
+        expect(result).toEqual(expected);
+    });
+
+    it('should not validate XML documents with multiple root nodes 3', () => {
+        const xmlData = `<xml></xml><xml></xml>`;
+
+        const expected = { code: "InvalidXml", msg: 'Multiple possible root nodes found.', line: 1};
         var result = validator.validate(xmlData).err;
         expect(result).toEqual(expected);
     });
