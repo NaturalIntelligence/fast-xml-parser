@@ -25,9 +25,6 @@ exports.validate = function (xmlData, options) {
   const tags = [];
   let tagFound = false;
 
-  //keeps track of the depth of a tag
-  let tagDepth = -1;
-
   //indicates that the root tag has been closed (aka. depth 0 has been reached)
   let reachedRoot = false;
 
@@ -122,8 +119,11 @@ exports.validate = function (xmlData, options) {
               return getErrorObject('InvalidTag', `Closing tag '${otg}' is expected inplace of '${tagName}'.`, getLineNumberForPosition(xmlData, i));
             }
 
-            //whenever we close a tag, we can reduce the depth
-            tagDepth--;
+            //when there are no more tags, we reached the root level.
+            if(tags.length == 0)
+            {
+              reachedRoot = true;
+            }
           }
         } else {
           const isValid = validateAttributeString(attrStr, options, regxAttrName);
@@ -133,22 +133,14 @@ exports.validate = function (xmlData, options) {
             //this gives us the absolute index in the entire xml, which we can use to find the line at last
             return getErrorObject(isValid.err.code, isValid.err.msg, getLineNumberForPosition(xmlData, i - attrStr.length + isValid.err.line));
           }
-          tags.push(tagName);
-          tagFound = true;
-          tagDepth++;
 
-          //when reaching the root level
-          if(tagDepth == 0)
-          {
-            //we check if we have reached it before and raise an error if so...
-            if(reachedRoot)
-            {
+          //if the root level has been reached before ...
+          if(reachedRoot === true) {
               return getErrorObject('InvalidXml', 'Multiple possible root nodes found.', getLineNumberForPosition(xmlData, i));
-            }
-
-            //otherwise we set a flag for the next time around
-            reachedRoot = true;
+          } else {
+              tags.push(tagName);
           }
+          tagFound = true;
         }
 
         //skip tag text value
