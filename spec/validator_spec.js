@@ -511,8 +511,19 @@ attribute2="attribute2"
         var result = validator.validate(xmlData).err;
         expect(result).toEqual(expected);
     });
+});
 
-    it('should not validate XML documents with multiple root nodes', () => {
+describe("should not validate XML documents with multiple root nodes", () => {
+
+    it('when root nodes are repeated', () => {
+        const xmlData = `<xml></xml><xml></xml>`;
+
+        const expected = { code: "InvalidXml", msg: 'Multiple possible root nodes found.', line: 1};
+        var result = validator.validate(xmlData).err;
+        expect(result).toEqual(expected);
+    });
+
+    it('when root nodes are different', () => {
         const xmlData = '<xml></xml><xml2></xml2>';
 
         const expected = { code: "InvalidXml", msg: 'Multiple possible root nodes found.', line: 1};
@@ -520,7 +531,7 @@ attribute2="attribute2"
         expect(result).toEqual(expected);
     });
 
-    it('should not validate XML documents with multiple root nodes and nested tags', () => {
+    it('when root nodes have more nested tags', () => {
         const xmlData = `<test>
         <nested>
         </nested>
@@ -529,14 +540,6 @@ attribute2="attribute2"
         </xml2>`;
 
         const expected = { code: "InvalidXml", msg: 'Multiple possible root nodes found.', line: 5};
-        var result = validator.validate(xmlData).err;
-        expect(result).toEqual(expected);
-    });
-
-    it('should not validate XML documents with repeated multiple root nodes."', () => {
-        const xmlData = `<xml></xml><xml></xml>`;
-
-        const expected = { code: "InvalidXml", msg: 'Multiple possible root nodes found.', line: 1};
         var result = validator.validate(xmlData).err;
         expect(result).toEqual(expected);
     });
