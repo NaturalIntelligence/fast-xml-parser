@@ -520,7 +520,7 @@ attribute2="attribute2"
         expect(result).toEqual(expected);
     });
 
-    it('should not validate XML documents with multiple root nodes 2', () => {
+    it('should not validate XML documents with multiple root nodes and nested tags', () => {
         const xmlData = `<test>
         <nested>
         </nested>
@@ -533,7 +533,7 @@ attribute2="attribute2"
         expect(result).toEqual(expected);
     });
 
-    it('should not validate XML documents with multiple root nodes 3', () => {
+    it('should not validate XML documents with repeated multiple root nodes."', () => {
         const xmlData = `<xml></xml><xml></xml>`;
 
         const expected = { code: "InvalidXml", msg: 'Multiple possible root nodes found.', line: 1};
