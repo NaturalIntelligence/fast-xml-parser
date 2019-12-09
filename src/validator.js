@@ -24,6 +24,10 @@ exports.validate = function (xmlData, options) {
 
   const tags = [];
   let tagFound = false;
+
+  //indicates that the root tag has been closed (aka. depth 0 has been reached)
+  let reachedRoot = false;
+
   if (xmlData[0] === '\ufeff') {
     // check for byte order mark (BOM)
     xmlData = xmlData.substr(1);
@@ -114,6 +118,12 @@ exports.validate = function (xmlData, options) {
             if (tagName !== otg) {
               return getErrorObject('InvalidTag', `Closing tag '${otg}' is expected inplace of '${tagName}'.`, getLineNumberForPosition(xmlData, i));
             }
+
+            //when there are no more tags, we reached the root level.
+            if(tags.length == 0)
+            {
+              reachedRoot = true;
+            }
           }
         } else {
           const isValid = validateAttributeString(attrStr, options, regxAttrName);
@@ -123,7 +133,13 @@ exports.validate = function (xmlData, options) {
             //this gives us the absolute index in the entire xml, which we can use to find the line at last
             return getErrorObject(isValid.err.code, isValid.err.msg, getLineNumberForPosition(xmlData, i - attrStr.length + isValid.err.line));
           }
-          tags.push(tagName);
+
+          //if the root level has been reached before ...
+          if(reachedRoot === true) {
+              return getErrorObject('InvalidXml', 'Multiple possible root nodes found.', getLineNumberForPosition(xmlData, i));
+          } else {
+              tags.push(tagName);
+          }
           tagFound = true;
         }
 
