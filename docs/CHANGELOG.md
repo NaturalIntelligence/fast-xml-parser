@@ -1,3 +1,6 @@
+3.15.1 / 2019-12-09
+  * validaor: fix multiple roots are not allowed
+
 3.15.0 / 2019-11-23
   * validaor: improve error messaging
   * validator: add line number in case of error

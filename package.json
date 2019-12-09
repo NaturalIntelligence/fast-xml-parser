@@ -1,6 +1,6 @@
 {
   "name": "fast-xml-parser",
-  "version": "3.15.0",
+  "version": "3.15.1",
   "description": "Validate XML or Parse XML to JS/JSON very fast without C/C++ based libraries",
   "main": "./src/parser.js",
   "scripts": {
@@ -70,9 +70,9 @@
   ],
   "license": "MIT",
   "devDependencies": {
-    "@babel/core": "^7.7.4",
-    "@babel/plugin-transform-runtime": "^7.7.4",
-    "@babel/preset-env": "^7.7.4",
+    "@babel/core": "^7.7.5",
+    "@babel/plugin-transform-runtime": "^7.7.6",
+    "@babel/preset-env": "^7.7.6",
     "@babel/register": "^7.7.4",
     "babel-loader": "^8.0.6",
     "benchmark": "^2.1.4",
