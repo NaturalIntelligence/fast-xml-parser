@@ -303,7 +303,7 @@ With the correct options, you can get the almost original XML without losing any
 </details>
 
 ### Limitations
- Currently FXP fails to parse XML with attributes has ">" in the value. This problem is left open as change in regex for its fix is degrading the performance. And the parser become very slow in case of long attrbute names.
+ Currently FXP fails to parse XML with attributes has ">" in the value. This problem is left open as change in regex for its fix is degrading the performance. And the parser become very slow in case of long attrbute names. Hoever, It is not ignored and we're working on the fix.
 
 ### Worth to mention
 
