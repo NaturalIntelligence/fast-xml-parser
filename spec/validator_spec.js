@@ -525,6 +525,23 @@ attribute2="attribute2"
         var result = validator.validate(xmlData).err;
         expect(result).toEqual(expected);
     });
+
+    it('should validate value with ampersand', function () {
+        const error = {
+            InvalidChar: "char '&' is not expected."
+        };
+        validate('<rootNode>jekyll &amp; hyde</rootNode>');
+        validate('<rootNode>jekyll &#123; hyde</rootNode>');
+        validate('<rootNode>jekyll &#x1945abcdef; hyde</rootNode>');
+        validate('<rootNode>jekyll &#x1ah; hyde</rootNode>', error);
+        validate('<rootNode>jekyll &#1a; hyde</rootNode>', error);
+        validate('<rootNode>jekyll &#123 hyde</rootNode>', error);
+        validate('<rootNode>jekyll &#1abcd hyde</rootNode>', error);
+        validate('<rootNode>jekyll & hyde</rootNode>', error);
+        validate('<rootNode>jekyll &aa</rootNode>', error);
+        validate('<rootNode>jekyll &abcdefghij1234567890;</rootNode>');
+        validate('<rootNode>jekyll &abcdefghij1234567890a;</rootNode>', error); // limit to 20 chars
+    });
 });
 
 describe("should not validate XML documents with multiple root nodes", () => {
