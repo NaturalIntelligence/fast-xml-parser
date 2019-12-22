@@ -2,6 +2,20 @@
 
 const validator = require("../src/validator");
 
+function validate(xmlData, error, line = 1) {
+    const result = validator.validate(xmlData);
+    if (error) {
+        const expected = {
+            code: Object.keys(error)[0],
+            msg: Object.values(error)[0],
+            line
+        };
+        expect(result.err).toEqual(expected);
+    } else {
+        expect(result).toBe(true);
+    }
+}
+
 describe("XMLParser", function () {
     it("should validate simple xml string", function () {
         let xmlData = "<rootNode></rootNode>";
