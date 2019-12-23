@@ -149,15 +149,8 @@ Parser.prototype.j2x = function(jObj, level) {
       if (this.options.attrNodeName && key === this.options.attrNodeName) {
         const Ks = Object.keys(jObj[key]);
         const L = Ks.length;
-        let Keys = Ks;
-        if (this.options.attributeNamePrefix) {
-          Keys = Ks.map(attr => {
-            if (attr.startsWith(this.options.attributeNamePrefix)) {
-              return attr.substr(this.attrPrefixLen);
-            }
-            return attr;
-          });
-        }
+        this.cleanAttributeKeys = cleanAttributeKeys;
+        const Keys = this.cleanAttributeKeys(Ks);
         for (let j = 0; j < L; j++) {
           attrStr += ' ' + Keys[j] + '="' + this.options.attrValueProcessor('' + jObj[key][Ks[j]]) + '"';
         }
@@ -268,6 +261,19 @@ function isAttribute(name /*, options*/) {
 
 function isCDATA(name) {
   return name === this.options.cdataTagName;
+}
+
+function cleanAttributeKeys(keys) {
+  if (this.options.attributeNamePrefix) {
+    const res = keys.map(attr => {
+      if (attr.startsWith(this.options.attributeNamePrefix)) {
+        return attr.substr(this.attrPrefixLen);
+      }
+      return attr;
+    });
+    return res;
+  }
+  return keys;
 }
 
 //formatting
