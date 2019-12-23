@@ -41,9 +41,9 @@ function Parser(options) {
       return false;
     };
   } else {
-    this.attrPrefixLen = this.options.attributeNamePrefix.length;
     this.isAttribute = isAttribute;
   }
+  if (this.options.attributeNamePrefix) this.attrPrefixLen = this.options.attributeNamePrefix.length;
   if (this.options.cdataTagName) {
     this.isCDATA = isCDATA;
   } else {
@@ -149,8 +149,12 @@ Parser.prototype.j2x = function(jObj, level) {
       if (this.options.attrNodeName && key === this.options.attrNodeName) {
         const Ks = Object.keys(jObj[key]);
         const L = Ks.length;
+        let Keys = Ks;
+        if (this.options.attributeNamePrefix) {
+          Keys = Ks.map(attr => attr.substr(this.attrPrefixLen));
+        }
         for (let j = 0; j < L; j++) {
-          attrStr += ' ' + Ks[j] + '="' + this.options.attrValueProcessor('' + jObj[key][Ks[j]]) + '"';
+          attrStr += ' ' + Keys[j] + '="' + this.options.attrValueProcessor('' + jObj[key][Ks[j]]) + '"';
         }
       } else {
         const result = this.j2x(jObj[key], level + 1);
