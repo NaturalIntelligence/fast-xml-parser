@@ -151,7 +151,12 @@ Parser.prototype.j2x = function(jObj, level) {
         const L = Ks.length;
         let Keys = Ks;
         if (this.options.attributeNamePrefix) {
-          Keys = Ks.map(attr => attr.substr(this.attrPrefixLen));
+          Keys = Ks.map(attr => {
+            if (attr.startsWith(this.options.attributeNamePrefix)) {
+              return attr.substr(this.attrPrefixLen);
+            }
+            return attr;
+          });
         }
         for (let j = 0; j < L; j++) {
           attrStr += ' ' + Keys[j] + '="' + this.options.attrValueProcessor('' + jObj[key][Ks[j]]) + '"';
