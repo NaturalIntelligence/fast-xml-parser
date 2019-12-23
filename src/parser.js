@@ -23,7 +23,7 @@ exports.getTraversalObj = xmlToNodeobj.getTraversalObj;
 exports.convertToJson = nodeToJson.convertToJson;
 exports.convertToJsonString = require('./node2json_str').convertToJsonString;
 exports.validate = validator.validate;
-exports.j2xParser = require('./json2xml');
+exports.J2xParser = require('./json2xml');
 exports.parseToNimn = function(xmlData, schema, options) {
   return exports.convertTonimn(exports.getTraversalObj(xmlData, options), schema, options);
 };

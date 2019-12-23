@@ -63,7 +63,7 @@ export function validate(
   xmlData: string,
   options?: validationOptionsOptional
 ): true | ValidationError;
-export class j2xParser {
+export class J2xParser {
   constructor(options: J2xOptionsOptional);
   parse(options: any): any;
 }
