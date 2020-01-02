@@ -4,8 +4,9 @@ const util = require('./util');
 const buildOptions = require('./util').buildOptions;
 const xmlNode = require('./xmlNode');
 const TagType = {OPENING: 1, CLOSING: 2, SELF: 3, CDATA: 4};
-let regx =
-  '<((!\\[CDATA\\[([\\s\\S]*?)(]]>))|(([\\w:\\-._]*:)?([\\w:\\-._]+))([^>]*)>|((\\/)(([\\w:\\-._]*:)?([\\w:\\-._]+))\\s*>))([^<]*)';
+const regx =
+  '<((!\\[CDATA\\[([\\s\\S]*?)(]]>))|((NAME:)?(NAME))([^>]*)>|((\\/)(NAME)\\s*>))([^<]*)'
+  .replace(/NAME/g, util.nameRegexp);
 
 //const tagsRegx = new RegExp("<(\\/?[\\w:\\-\._]+)([^>]*)>(\\s*"+cdataRegx+")*([^<]+)?","g");
 //const tagsRegx = new RegExp("<(\\/?)((\\w*:)?([\\w:\\-\._]+))([^>]*)>([^<]*)("+cdataRegx+"([^<]*))*([^<]+)?","g");
@@ -32,7 +33,6 @@ const defaultOptions = {
   trimValues: true, //Trim string values of tag and attributes
   cdataTagName: false,
   cdataPositionChar: '\\c',
-  localeRange: '',
   tagValueProcessor: function(a, tagName) {
     return a;
   },
@@ -58,7 +58,6 @@ const props = [
   'trimValues',
   'cdataTagName',
   'cdataPositionChar',
-  'localeRange',
   'tagValueProcessor',
   'attrValueProcessor',
   'parseTrueNumberOnly',
@@ -74,7 +73,6 @@ const getTraversalObj = function(xmlData, options) {
   const xmlObj = new xmlNode('!xml');
   let currentNode = xmlObj;
 
-  regx = regx.replace(/\[\\w/g, '[' + options.localeRange + '\\w');
   const tagsRegx = new RegExp(regx, 'g');
   let tag = tagsRegx.exec(xmlData);
   let nextTag = tagsRegx.exec(xmlData);
@@ -83,7 +81,7 @@ const getTraversalObj = function(xmlData, options) {
 
     if (tagType === TagType.CLOSING) {
       //add parsed data to parent node
-      if (currentNode.parent && tag[14]) {
+      if (currentNode.parent && tag[12]) {
         currentNode.parent.val = util.getValue(currentNode.parent.val) + '' + processTagValue(tag, options, currentNode.parent.tagname);
       }
       if (options.stopNodes.length && options.stopNodes.includes(currentNode.tagname)) {
@@ -101,14 +99,14 @@ const getTraversalObj = function(xmlData, options) {
         //for backtracking
         currentNode.val = util.getValue(currentNode.val) + options.cdataPositionChar;
         //add rest value to parent node
-        if (tag[14]) {
+        if (tag[12]) {
           currentNode.val += processTagValue(tag, options);
         }
       } else {
         currentNode.val = (currentNode.val || '') + (tag[3] || '') + processTagValue(tag, options);
       }
     } else if (tagType === TagType.SELF) {
-      if (currentNode && tag[14]) {
+      if (currentNode && tag[12]) {
         currentNode.val = util.getValue(currentNode.val) + '' + processTagValue(tag, options);
       }
 
@@ -142,7 +140,7 @@ const getTraversalObj = function(xmlData, options) {
 
 function processTagValue(parsedTags, options, parentTagName) {
   const tagName = parsedTags[7] || parentTagName;
-  let val = parsedTags[14];
+  let val = parsedTags[12];
   if (val) {
     if (options.trimValues) {
       val = val.trim();

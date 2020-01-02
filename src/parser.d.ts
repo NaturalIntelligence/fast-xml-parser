@@ -11,7 +11,6 @@ type X2jOptions = {
   trimValues: boolean;
   cdataTagName: false | string;
   cdataPositionChar: string;
-  localeRange:  string;
   parseTrueNumberOnly: boolean;
   tagValueProcessor: (tagValue: string, tagName: string) => string;
   attrValueProcessor: (attrValue: string, attrName: string) => string;
@@ -20,7 +19,6 @@ type X2jOptions = {
 type X2jOptionsOptional = Partial<X2jOptions>;
 type validationOptions = {
   allowBooleanAttributes: boolean;
-  localeRange: string;
 };
 type validationOptionsOptional = Partial<validationOptions>;
 type J2xOptions = {

@@ -1,7 +1,6 @@
 "use strict";
 
 const parser = require("../src/parser");
-const validator = require("../src/validator");
 
 describe("XMLParser", function() {
 
@@ -13,29 +12,12 @@ describe("XMLParser", function() {
             }
         };
         const options = {
-          localeRange: "а-яёА-ЯЁa-zA-Z",
           attributeNamePrefix : "@_"
         }
 
-        const result = parser.parse(xmlData, options, { localeRange: "а-яёА-ЯЁa-zA-Z" });
+        const result = parser.parse(xmlData, options);
         expect(result).toEqual(expected);
         // console.log({ expected})
         // console.log({ result })
     });
-
-    it("should invalid XML with invalid localRange", function() {
-        const xmlData = `<КорневаяЗапись><Тэг>ЗначениеValue53456</Тэг></КорневаяЗапись>`;
-
-        const expected = {
-            "code": "InvalidOptions",
-            "msg":  "Invalid localeRange",
-            "line": 1
-        };
-
-        const result = validator.validate(xmlData , { localeRange: "а-яёА-ЯЁa-zA-Z<" }).err
-        expect(result).toEqual(expected);
-        // console.log({ expected})
-        // console.log({ result })
-    });
-
 });
