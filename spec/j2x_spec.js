@@ -131,6 +131,30 @@ describe("XMLParser", function() {
         expect(result).toEqual(expected);
     });
 
+    it("should parse to XML with prefixed attributes as separate node", function() {
+        const jObj = {
+            a: {
+                "@":     {
+                    "@_b": "val1",
+                    "c": "val2"
+                },
+                "#text": "textvalue",
+                tag:     {
+                    k: 34
+                }
+            }
+        };
+        const parser = new Parser({
+                                      ignoreAttributes:    false,
+                                      attributeNamePrefix: "@_",
+                                      attrNodeName:        "@"
+                                  });
+        const result = parser.parse(jObj);
+        //console.log(result);
+        const expected = `<a b="val1" c="val2">textvalue<tag><k>34</k></tag></a>`;
+        expect(result).toEqual(expected);
+    });
+
     it("should parse grouped attributes as tag name when options are not set", function() {
         const jObj = {
             a: {
