@@ -32,7 +32,7 @@ exports.validate = function (xmlData, options) {
     // check for byte order mark (BOM)
     xmlData = xmlData.substr(1);
   }
-  const regxAttrName = new RegExp(`^[${options.localeRange}_][${options.localeRange}0-9\\-\\.:]*$`);
+  const regxAttrName = new RegExp(`^[${options.localeRange}_][${options.localeRange}0-9_\\-\\.:]*$`);
   const regxTagName = new RegExp(`^([${options.localeRange}_])[${options.localeRange}0-9\\.\\-_:]*$`);
   for (let i = 0; i < xmlData.length; i++) {
     if (xmlData[i] === '<') {
