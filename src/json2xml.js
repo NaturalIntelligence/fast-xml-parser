@@ -12,10 +12,10 @@ const defaultOptions = {
   format: false,
   indentBy: '  ',
   supressEmptyNode: false,
-  tagValueProcessor: function(a) {
+  tagValueProcessor: function (a) {
     return a;
   },
-  attrValueProcessor: function(a) {
+  attrValueProcessor: function (a) {
     return a;
   },
 };
@@ -37,7 +37,7 @@ const props = [
 function Parser(options) {
   this.options = buildOptions(options, defaultOptions, props);
   if (this.options.ignoreAttributes || this.options.attrNodeName) {
-    this.isAttribute = function(/*a*/) {
+    this.isAttribute = function (/*a*/) {
       return false;
     };
   } else {
@@ -47,7 +47,7 @@ function Parser(options) {
   if (this.options.cdataTagName) {
     this.isCDATA = isCDATA;
   } else {
-    this.isCDATA = function(/*a*/) {
+    this.isCDATA = function (/*a*/) {
       return false;
     };
   }
@@ -59,7 +59,7 @@ function Parser(options) {
     this.tagEndChar = '>\n';
     this.newLine = '\n';
   } else {
-    this.indentate = function() {
+    this.indentate = function () {
       return '';
     };
     this.tagEndChar = '>';
@@ -78,11 +78,11 @@ function Parser(options) {
   this.buildObjectNode = buildObjectNode;
 }
 
-Parser.prototype.parse = function(jObj) {
+Parser.prototype.parse = function (jObj) {
   return this.j2x(jObj, 0).val;
 };
 
-Parser.prototype.j2x = function(jObj, level) {
+Parser.prototype.j2x = function (jObj, level) {
   let attrStr = '';
   let val = '';
   const keys = Object.keys(jObj);
@@ -158,7 +158,7 @@ Parser.prototype.j2x = function(jObj, level) {
       }
     }
   }
-  return {attrStr: attrStr, val: val};
+  return { attrStr: attrStr, val: val };
 };
 
 function replaceCDATAstr(str, cdata) {
@@ -183,9 +183,9 @@ function replaceCDATAarr(str, cdata) {
 }
 
 function buildObjectNode(val, key, attrStr, level) {
-  // empty tag is used to specify an array of ordered tags, 
+  // #ordered is used to specify an array of ordered tags, 
   // only when the preserveOrder option is set.
-  if (key === "") {
+  if (key === "#ordered") {
     return val
   }
 

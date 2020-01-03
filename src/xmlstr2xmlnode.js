@@ -72,7 +72,7 @@ const nodeHasExtraText = (currentNode, textAfterNode) => {
 }
 
 const storeTextOrTextNode = (currentNode, options, tag) => {
-  if (!nodeHasExtraText(currentNode, tag[14])) {
+  if (!nodeHasExtraText(currentNode, tag[12])) {
     return
   }
   

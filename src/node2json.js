@@ -2,7 +2,7 @@
 
 const util = require('./util');
 
-const convertToJson = function(node, options) {
+const convertToJson = function (node, options) {
   const jObj = {};
 
   //when no child node or attr is present
@@ -12,9 +12,9 @@ const convertToJson = function(node, options) {
     //otherwise create a textnode if node has some text
     if (util.isExist(node.val)) {
       if (!(typeof node.val === 'string' && (node.val === '' || node.val === options.cdataPositionChar))) {
-        if(options.arrayMode === "strict"){
-          jObj[options.textNodeName] = [ node.val ];
-        }else{
+        if (options.arrayMode === "strict") {
+          jObj[options.textNodeName] = [node.val];
+        } else {
           jObj[options.textNodeName] = node.val;
         }
       }
@@ -35,7 +35,9 @@ const convertToJson = function(node, options) {
       }
     }
 
-    return { "": jArray }
+    const result = { "#ordered": jArray }
+    util.merge(result, node.attrsMap, options.arrayMode)
+    return result
   }
 
   for (let index = 0; index < keys.length; index++) {
@@ -46,15 +48,15 @@ const convertToJson = function(node, options) {
         jObj[tagname].push(convertToJson(node.child[tagname][tag], options));
       }
     } else {
-      if(options.arrayMode === true){
+      if (options.arrayMode === true) {
         const result = convertToJson(node.child[tagname][0], options)
-        if(typeof result === 'object')
-          jObj[tagname] = [ result ];
+        if (typeof result === 'object')
+          jObj[tagname] = [result];
         else
           jObj[tagname] = result;
-      }else if(options.arrayMode === "strict"){
-        jObj[tagname] = [convertToJson(node.child[tagname][0], options) ];
-      }else{
+      } else if (options.arrayMode === "strict") {
+        jObj[tagname] = [convertToJson(node.child[tagname][0], options)];
+      } else {
         jObj[tagname] = convertToJson(node.child[tagname][0], options);
       }
     }
