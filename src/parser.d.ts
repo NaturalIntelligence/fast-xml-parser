@@ -39,7 +39,7 @@ type J2xOptionsOptional = Partial<J2xOptions>;
 type ESchema = string | object | Array<string|object>;
 
 type ValidationError = {
-  err: { code: string; msg: string };
+  err: { code: string; msg: string, line: number };
 };
 
 export function parse(xmlData: string, options?: X2jOptionsOptional, validationOptions?: validationOptionsOptional | boolean): any;
