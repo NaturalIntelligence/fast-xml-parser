@@ -162,7 +162,7 @@ try{
 }
 ```
 
-Validator reurns the following object in case of error;
+Validator returns the following object in case of error;
 ```js
 {
   err: {
