@@ -1,3 +1,8 @@
+3.16.0 / 2020-01-12
+  * validaor: fix for ampersand characters (#215)
+  * refactoring to support unicode chars in tag name
+  * update typing for validator error
+
 3.15.1 / 2019-12-09
   * validaor: fix multiple roots are not allowed
 

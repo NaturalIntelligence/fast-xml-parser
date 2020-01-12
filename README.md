@@ -135,7 +135,6 @@ var options = {
     trimValues: true,
     cdataTagName: "__cdata", //default is 'false'
     cdataPositionChar: "\\c",
-    localeRange: "", //To support non english character in tag/attribute values.
     parseTrueNumberOnly: false,
     arrayMode: false, //"strict"
     attrValueProcessor: (val, attrName) => he.decode(val, {isAttributeValue: true}),//default is a=>a
@@ -190,7 +189,6 @@ Validator returns the following object in case of error;
 * **decodeHTMLchar** : This options has been removed from 3.3.4. Instead, use tagValueProcessor, and attrValueProcessor. See above example.
 * **cdataTagName** : If specified, parser parse CDATA as nested tag instead of adding it's value to parent tag.
 * **cdataPositionChar** : It'll help to covert JSON back to XML without losing CDATA position.
-* **localeRange**: Parser will accept non-English character in tag or attribute name. Check #87 for more detail. Eg `localeRange: "a-zA-Zа-яёА-ЯЁ"`
 * **parseTrueNumberOnly**: if true then values like "+123", or "0123" will not be parsed as number.
 * **arrayMode** : When `false`, a tag with single occurence is parsed as an object but as an array in case of multiple occurences. When `true`, a tag will be parsed as an array always excluding leaf nodes. When `strict`, all the tags will be parsed as array only.
 * **tagValueProcessor** : Process tag value during transformation. Like HTML decoding, word capitalization, etc. Applicable in case of string only.
