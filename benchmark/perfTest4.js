@@ -5,9 +5,9 @@ const suite = new Benchmark.Suite("XML Parser benchmark");
 
 const Parser = require("../src/j2x");
 const parser = new Parser({
-                            format: true
-                            //supressEmptyNode: true
-                        });
+    format: true
+    //suppressEmptyNode: true
+});
 const xml2js = require("xml2js");
 const builder = new xml2js.Builder();
 //const jsonxml = require('jsontoxml');
@@ -25,34 +25,34 @@ console.log("----------------")
 console.log(jsonxml(jsonData)); */
 
 suite
-    .add("j2x", function() {
+    .add("j2x", function () {
         parser.parse(jsonData);
         //parser.parse(jsonData,{format:true});
     })
-    .add("xml2js ", function() {
+    .add("xml2js ", function () {
         builder.buildObject(jsonData);
     })
     /* .add('jsontoxml ', function() {
       const xml = jsonxml(jsonData);
     }) */
 
-    .on("start", function() {
+    .on("start", function () {
         console.log("Running Suite: " + this.name);
     })
-    .on("error", function(e) {
+    .on("error", function (e) {
         console.log("Error in Suite: ", e);
     })
-    .on("abort", function(e) {
+    .on("abort", function (e) {
         console.log("Aborting Suite: " + this.name);
     })
     //.on('cycle',function(event){
     //	console.log("Suite ID:" + event.target.id);
     //})
     // add listeners
-    .on("complete", function() {
+    .on("complete", function () {
         for (let j = 0; j < this.length; j++) {
             console.log(this[j].name + " : " + this[j].hz + " requests/second");
         }
     })
     // run async
-    .run({"async": true});
+    .run({ "async": true });

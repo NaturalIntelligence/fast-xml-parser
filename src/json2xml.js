@@ -11,11 +11,11 @@ const defaultOptions = {
   cdataPositionChar: '\\c',
   format: false,
   indentBy: '  ',
-  supressEmptyNode: false,
-  tagValueProcessor: function(a) {
+  suppressEmptyNode: false,
+  tagValueProcessor: function (a) {
     return a;
   },
-  attrValueProcessor: function(a) {
+  attrValueProcessor: function (a) {
     return a;
   },
 };
@@ -29,7 +29,7 @@ const props = [
   'cdataPositionChar',
   'format',
   'indentBy',
-  'supressEmptyNode',
+  'suppressEmptyNode',
   'tagValueProcessor',
   'attrValueProcessor',
 ];
@@ -37,7 +37,7 @@ const props = [
 function Parser(options) {
   this.options = buildOptions(options, defaultOptions, props);
   if (this.options.ignoreAttributes || this.options.attrNodeName) {
-    this.isAttribute = function(/*a*/) {
+    this.isAttribute = function (/*a*/) {
       return false;
     };
   } else {
@@ -47,7 +47,7 @@ function Parser(options) {
   if (this.options.cdataTagName) {
     this.isCDATA = isCDATA;
   } else {
-    this.isCDATA = function(/*a*/) {
+    this.isCDATA = function (/*a*/) {
       return false;
     };
   }
@@ -59,14 +59,14 @@ function Parser(options) {
     this.tagEndChar = '>\n';
     this.newLine = '\n';
   } else {
-    this.indentate = function() {
+    this.indentate = function () {
       return '';
     };
     this.tagEndChar = '>';
     this.newLine = '';
   }
 
-  if (this.options.supressEmptyNode) {
+  if (this.options.suppressEmptyNode) {
     this.buildTextNode = buildEmptyTextNode;
     this.buildObjNode = buildEmptyObjNode;
   } else {
@@ -78,11 +78,11 @@ function Parser(options) {
   this.buildObjectNode = buildObjectNode;
 }
 
-Parser.prototype.parse = function(jObj) {
+Parser.prototype.parse = function (jObj) {
   return this.j2x(jObj, 0).val;
 };
 
-Parser.prototype.j2x = function(jObj, level) {
+Parser.prototype.j2x = function (jObj, level) {
   let attrStr = '';
   let val = '';
   const keys = Object.keys(jObj);
@@ -90,7 +90,7 @@ Parser.prototype.j2x = function(jObj, level) {
   for (let i = 0; i < len; i++) {
     const key = keys[i];
     if (typeof jObj[key] === 'undefined') {
-      // supress undefined node
+      // suppress undefined node
     } else if (jObj[key] === null) {
       val += this.indentate(level) + '<' + key + '/' + this.tagEndChar;
     } else if (jObj[key] instanceof Date) {
@@ -133,7 +133,7 @@ Parser.prototype.j2x = function(jObj, level) {
         for (let j = 0; j < arrLen; j++) {
           const item = jObj[key][j];
           if (typeof item === 'undefined') {
-            // supress undefined node
+            // suppress undefined node
           } else if (item === null) {
             val += this.indentate(level) + '<' + key + '/' + this.tagEndChar;
           } else if (typeof item === 'object') {
@@ -158,7 +158,7 @@ Parser.prototype.j2x = function(jObj, level) {
       }
     }
   }
-  return {attrStr: attrStr, val: val};
+  return { attrStr: attrStr, val: val };
 };
 
 function replaceCDATAstr(str, cdata) {

@@ -30,13 +30,13 @@ type J2xOptions = {
   cdataPositionChar: string;
   format: boolean;
   indentBy: string;
-  supressEmptyNode: boolean;
+  suppressEmptyNode: boolean;
   tagValueProcessor: (tagValue: string) => string;
   attrValueProcessor: (attrValue: string) => string;
 };
 type J2xOptionsOptional = Partial<J2xOptions>;
 
-type ESchema = string | object | Array<string|object>;
+type ESchema = string | object | Array<string | object>;
 
 type ValidationError = {
   err: { code: string; msg: string, line: number };

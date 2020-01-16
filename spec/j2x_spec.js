@@ -3,9 +3,9 @@
 const Parser = require("../src/parser").j2xParser;
 const he = require("he");
 
-describe("XMLParser", function() {
+describe("XMLParser", function () {
 
-    it("should parse to XML with nested tags", function() {
+    it("should parse to XML with nested tags", function () {
         const jObj = {
             a: {
                 b: {
@@ -21,12 +21,12 @@ describe("XMLParser", function() {
         expect(result).toEqual(expected);
     });
 
-    it("should parse text property to tag value ", function() {
+    it("should parse text property to tag value ", function () {
         const jObj = {
             a: {
                 b: {
                     "#text": "val1",
-                    d:       "val2"
+                    d: "val2"
                 }
             }
         };
@@ -37,12 +37,12 @@ describe("XMLParser", function() {
         expect(result).toEqual(expected);
     });
 
-    it("should parse to XML with array", function() {
+    it("should parse to XML with array", function () {
         const jObj = {
             a: {
                 b: [
                     "val1",
-                    {c: "val2"}
+                    { c: "val2" }
                 ]
             }
         };
@@ -52,7 +52,7 @@ describe("XMLParser", function() {
         expect(result).toEqual(expected);
     });
 
-    it("should supress undefined nodes", function() {
+    it("should suppress undefined nodes", function () {
         const jObj = {
             a: {
                 b: [
@@ -72,7 +72,7 @@ describe("XMLParser", function() {
         expect(result).toEqual(expected);
     });
 
-    it("should parse  attributes properties as tag when options are not given", function() {
+    it("should parse  attributes properties as tag when options are not given", function () {
         const jObj = {
             a: {
                 "@_b": "val1",
@@ -86,105 +86,105 @@ describe("XMLParser", function() {
         expect(result).toEqual(expected);
     });
 
-    it("should parse to XML with attributes", function() {
+    it("should parse to XML with attributes", function () {
         const jObj = {
             a: {
-                "@_b":   "val1",
+                "@_b": "val1",
                 "#text": "textvalue",
-                tag:     {
+                tag: {
                     k: 34
                 },
-                "@_c":   "val2"
+                "@_c": "val2"
             }
         };
         const parser = new Parser({
-                                      ignoreAttributes:    false,
-                                      attributeNamePrefix: "@_"
-                                  });
+            ignoreAttributes: false,
+            attributeNamePrefix: "@_"
+        });
         const result = parser.parse(jObj);
         //console.log(result);
         const expected = `<a b="val1" c="val2">textvalue<tag><k>34</k></tag></a>`;
         expect(result).toEqual(expected);
     });
 
-    it("should parse to XML with attributes as separate node", function() {
+    it("should parse to XML with attributes as separate node", function () {
         const jObj = {
             a: {
-                "@":     {
+                "@": {
                     b: "val1",
                     c: "val2"
                 },
                 "#text": "textvalue",
-                tag:     {
+                tag: {
                     k: 34
                 }
             }
         };
         const parser = new Parser({
-                                      ignoreAttributes:    false,
-                                      attributeNamePrefix: "@_",
-                                      attrNodeName:        "@"
-                                  });
+            ignoreAttributes: false,
+            attributeNamePrefix: "@_",
+            attrNodeName: "@"
+        });
         const result = parser.parse(jObj);
         //console.log(result);
         const expected = `<a b="val1" c="val2">textvalue<tag><k>34</k></tag></a>`;
         expect(result).toEqual(expected);
     });
 
-    it("should parse grouped attributes as tag name when options are not set", function() {
+    it("should parse grouped attributes as tag name when options are not set", function () {
         const jObj = {
             a: {
-                "@":     {
+                "@": {
                     b: "val1",
                     c: "val2"
                 },
                 "#text": "textvalue",
-                tag:     {
+                tag: {
                     k: 34
                 }
             }
         };
         const parser = new Parser({
-                                      ignoreAttributes: false
-                                  });
+            ignoreAttributes: false
+        });
         const result = parser.parse(jObj);
         //console.log(result);
         const expected = `<a><@><b>val1</b><c>val2</c></@>textvalue<tag><k>34</k></tag></a>`;
         expect(result).toEqual(expected);
     });
 
-    it("should parse to XML with cdata", function() {
+    it("should parse to XML with cdata", function () {
         const jObj = {
             a: {
-                "@":       {
+                "@": {
                     b: "val1",
                     c: "val2"
                 },
-                "#text":   "textvalue\\c",
+                "#text": "textvalue\\c",
                 "__cdata": "this text is from CDATA",
-                tag:       {
+                tag: {
                     k: 34
                 }
             }
         };
         const parser = new Parser({
-                                      cdataTagName: "__cdata"
-                                  });
+            cdataTagName: "__cdata"
+        });
         const result = parser.parse(jObj);
         //console.log(result);
         const expected = `<a><@><b>val1</b><c>val2</c></@>textvalue<![CDATA[this text is from CDATA]]><tag><k>34</k></tag></a>`;
         expect(result).toEqual(expected);
     });
 
-    it("should parse to XML with multiple cdata", function() {
+    it("should parse to XML with multiple cdata", function () {
         const jObj = {
             a: {
-                "@":       {
+                "@": {
                     b: "val1",
                     c: "val2"
                 },
-                "#text":   "text\\cvalue\\c",
-                tag:       {
+                "#text": "text\\cvalue\\c",
+                tag: {
                     k: 34
                 },
                 "__cdata": [
@@ -194,22 +194,22 @@ describe("XMLParser", function() {
             }
         };
         const parser = new Parser({
-                                      cdataTagName: "__cdata"
-                                  });
+            cdataTagName: "__cdata"
+        });
         const result = parser.parse(jObj);
         //console.log(result);
         const expected = `<a><@><b>val1</b><c>val2</c></@><tag><k>34</k></tag>text<![CDATA[this text is from CDATA]]>value<![CDATA[this is another text]]></a>`;
         expect(result).toEqual(expected);
     });
 
-    it("should parse to XML with multiple cdata but textnode is not present", function() {
+    it("should parse to XML with multiple cdata but textnode is not present", function () {
         const jObj = {
             a: {
-                "@":       {
+                "@": {
                     b: "val1",
                     c: "val2"
                 },
-                tag:       {
+                tag: {
                     k: 34
                 },
                 "__cdata": [
@@ -219,23 +219,23 @@ describe("XMLParser", function() {
             }
         };
         const parser = new Parser({
-                                      cdataTagName: "__cdata"
-                                  });
+            cdataTagName: "__cdata"
+        });
         const result = parser.parse(jObj);
         //console.log(result);
         const expected = `<a><@><b>val1</b><c>val2</c></@><tag><k>34</k></tag><![CDATA[this text is from CDATA]]><![CDATA[this is another text]]></a>`;
         expect(result).toEqual(expected);
     });
 
-    it("should encode HTML char when parsing to XML", function() {
+    it("should encode HTML char when parsing to XML", function () {
         const jObj = {
             a: {
-                "@":       {
+                "@": {
                     b: "val>1",
                     c: "val<2"
                 },
-                "#text":   "text\\cvalue>\\c",
-                tag:       {
+                "#text": "text\\cvalue>\\c",
+                tag: {
                     k: 34,
                     g: "35 g>"
                 },
@@ -246,19 +246,19 @@ describe("XMLParser", function() {
             }
         };
         const parser = new Parser({
-                                      cdataTagName:   "__cdata",
-                                      attrNodeName:   "@",
-                                      encodeHTMLchar: true,
-                                      tagValueProcessor: a=> { a= ''+ a; return he.encode(a, { useNamedReferences: true}) },
-                                      attrValueProcessor: a=> he.encode(a, {isAttributeValue: true, useNamedReferences: true})
-                                  });
+            cdataTagName: "__cdata",
+            attrNodeName: "@",
+            encodeHTMLchar: true,
+            tagValueProcessor: a => { a = '' + a; return he.encode(a, { useNamedReferences: true }) },
+            attrValueProcessor: a => he.encode(a, { isAttributeValue: true, useNamedReferences: true })
+        });
         const result = parser.parse(jObj);
         //console.log(result);
         const expected = `<a b="val&gt;1" c="val&lt;2"><tag><k>34</k><g>35 g&gt;</g></tag>text<![CDATA[this text is > from CDATA]]>value&gt;<![CDATA[this is another text]]></a>`;
         expect(result).toEqual(expected);
     });
 
-    it("should parse null values to self closing tag", function() {
+    it("should parse null values to self closing tag", function () {
         const jObj = {
             a: null
         };
@@ -269,18 +269,18 @@ describe("XMLParser", function() {
         expect(result).toEqual(expected);
     });
 
-    it("should supress empty node to self closing node when parsing to XML", function() {
+    it("should suppress empty node to self closing node when parsing to XML", function () {
         const jObj = {
             a: {
-                "notattr" : "val",
-                "@":       {
+                "notattr": "val",
+                "@": {
                     b: "val>1",
                     c: "val<2"
                 },
-                "#text":   "text\\cvalue>\\c",
-                tag:       {
-                    k:      34,
-                    g:      "",
+                "#text": "text\\cvalue>\\c",
+                tag: {
+                    k: 34,
+                    g: "",
                     nested: {
                         "@": {
                             b: "val>1",
@@ -295,29 +295,29 @@ describe("XMLParser", function() {
             }
         };
         const parser = new Parser({
-                                      cdataTagName:     "__cdata",
-                                      attributeNamePrefix: "",
-                                      attrNodeName:     "@",
-                                      encodeHTMLchar:   true,
-                                      supressEmptyNode: true,
-                                      tagValueProcessor: a=> { a= ''+ a; return he.encode(a, { useNamedReferences: true}) },
-                                      attrValueProcessor: a=> he.encode(a, {isAttributeValue: true, useNamedReferences: true})
-                                  });
+            cdataTagName: "__cdata",
+            attributeNamePrefix: "",
+            attrNodeName: "@",
+            encodeHTMLchar: true,
+            suppressEmptyNode: true,
+            tagValueProcessor: a => { a = '' + a; return he.encode(a, { useNamedReferences: true }) },
+            attrValueProcessor: a => he.encode(a, { isAttributeValue: true, useNamedReferences: true })
+        });
         const result = parser.parse(jObj);
         //console.log(result);
         const expected = `<a b="val&gt;1" c="val&lt;2"><notattr>val</notattr><tag><k>34</k><g/><nested b="val&gt;1" c="val&lt;2"/></tag>text<![CDATA[this text is > from CDATA]]>value&gt;<![CDATA[]]></a>`;
         expect(result).toEqual(expected);
     });
 
-    it("should format when parsing to XML", function() {
+    it("should format when parsing to XML", function () {
         const jObj = {
             a: {
-                "@":       {
+                "@": {
                     b: "val>1",
                     c: "val<2"
                 },
-                "#text":   "text\\cvalue>\\c",
-                tag:       {
+                "#text": "text\\cvalue>\\c",
+                tag: {
                     k: 34,
                     g: "35 g>"
                 },
@@ -327,20 +327,20 @@ describe("XMLParser", function() {
                 ],
                 element: {
                     subelement: {
-                      "#text": "foo",
-                      "@": {"staticMessage": "bar"}
+                        "#text": "foo",
+                        "@": { "staticMessage": "bar" }
                     }
                 },
             }
         };
         const parser = new Parser({
-                                      cdataTagName:   "__cdata",
-                                      attrNodeName:   "@",
-                                      encodeHTMLchar: true,
-                                      format:         true,
-                                      tagValueProcessor: a=> { a= ''+ a; return he.encode(a, { useNamedReferences: true}) },
-                                      attrValueProcessor: a=> he.encode(a, {isAttributeValue: true, useNamedReferences: true})
-                                  });
+            cdataTagName: "__cdata",
+            attrNodeName: "@",
+            encodeHTMLchar: true,
+            format: true,
+            tagValueProcessor: a => { a = '' + a; return he.encode(a, { useNamedReferences: true }) },
+            attrValueProcessor: a => he.encode(a, { isAttributeValue: true, useNamedReferences: true })
+        });
         const result = parser.parse(jObj);
         const expected = `<a b="val&gt;1" c="val&lt;2">
   <tag>
@@ -359,10 +359,10 @@ describe("XMLParser", function() {
     });
 
 
-    it("should format when parsing to XML", function() {
+    it("should format when parsing to XML", function () {
         const jObj = {
             root: {
-                element:  {
+                element: {
                     $: {
                         aaa: "aaa",
                         bbb: "bbb"
@@ -370,25 +370,25 @@ describe("XMLParser", function() {
                     _: 1
                 },
                 element2: {
-                    $:          {
+                    $: {
                         aaa: "aaa2",
                         bbb: "bbb2"
                     },
-                    subelement: {$: {aaa: "sub_aaa"}}
+                    subelement: { $: { aaa: "sub_aaa" } }
                 },
-                date:"test"
+                date: "test"
             }
         };
         const parser = new Parser({
             attributeNamePrefix: "",
-            attrNodeName:        "$",
-            textNodeName:        "_",
-            ignoreAttributes:    false,
-            cdataTagName:        "$cdata",
-            cdataPositionChar:   "\\c",
-            format:              false,
-            indentBy:            "\t",
-            supressEmptyNode:    true
+            attrNodeName: "$",
+            textNodeName: "_",
+            ignoreAttributes: false,
+            cdataTagName: "$cdata",
+            cdataPositionChar: "\\c",
+            format: false,
+            indentBy: "\t",
+            suppressEmptyNode: true
         });
         const result = parser.parse(jObj);
         const expected = '<root><element aaa="aaa" bbb="bbb">1</element><element2 aaa="aaa2" bbb="bbb2"><subelement aaa="sub_aaa"/></element2><date>test</date></root>';
@@ -397,39 +397,39 @@ describe("XMLParser", function() {
         expect(result).toEqual(expected);
     });
 
-    it("should pars to XML from js object with date object", function() {
+    it("should pars to XML from js object with date object", function () {
         const dateVar = new Date();
         const jObj = {
             root: {
-                element:  {
-                    "date" : dateVar
+                element: {
+                    "date": dateVar
                 },
                 element2: {
-                    $:          {
+                    $: {
                         aaa: "aaa2",
                         bbb: "bbb2"
                     },
-                    subelement: {$: {aaa: "sub_aaa"}}
+                    subelement: { $: { aaa: "sub_aaa" } }
                 },
                 date: dateVar
             }
         };
         const parser = new Parser({
             attributeNamePrefix: "",
-            attrNodeName:        "$",
-            textNodeName:        "_",
-            ignoreAttributes:    false,
-            cdataTagName:        "$cdata",
-            cdataPositionChar:   "\\c",
-            format:              false,
-            indentBy:            "\t",
-            supressEmptyNode:    true,
-            tagValueProcessor: function(a) {
+            attrNodeName: "$",
+            textNodeName: "_",
+            ignoreAttributes: false,
+            cdataTagName: "$cdata",
+            cdataPositionChar: "\\c",
+            format: false,
+            indentBy: "\t",
+            suppressEmptyNode: true,
+            tagValueProcessor: function (a) {
                 return a;
             },
         });
         const result = parser.parse(jObj);
-        const expected = '<root><element><date>'+dateVar.toString()+'</date></element><element2 aaa="aaa2" bbb="bbb2"><subelement aaa="sub_aaa"/></element2><date>'+dateVar.toString()+'</date></root>';
+        const expected = '<root><element><date>' + dateVar.toString() + '</date></element><element2 aaa="aaa2" bbb="bbb2"><subelement aaa="sub_aaa"/></element2><date>' + dateVar.toString() + '</date></root>';
         //console.log(result);
         //console.log(expected);
         expect(result).toEqual(expected);

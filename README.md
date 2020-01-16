@@ -237,7 +237,7 @@ var defaultOptions = {
     cdataPositionChar: "\\c",
     format: false,
     indentBy: "  ",
-    supressEmptyNode: false,
+    suppressEmptyNode: false,
     tagValueProcessor: a=> he.encode(a, { useNamedReferences: true}),// default is a=>a
     attrValueProcessor: a=> he.encode(a, {isAttributeValue: isAttribute, useNamedReferences: true})// default is a=>a
 };
@@ -258,7 +258,7 @@ With the correct options, you can get the almost original XML without losing any
 * **cdataPositionChar** : Identify the position where CDATA tag should be placed. If it is blank then CDATA will be added in the last of tag's value.
 * **format** : If set to true, then format the XML output.
 * **indentBy** : indent by this char `when` format is set to `true`
-* **supressEmptyNode** : If set to `true`, tags with no value (text or nested tags) are written as self closing tags.
+* **suppressEmptyNode** : If set to `true`, tags with no value (text or nested tags) are written as self closing tags.
 * **tagValueProcessor** : Process tag value during transformation. Like HTML encoding, word capitalization, etc. Applicable in case of string only.
 * **attrValueProcessor** : Process attribute value during transformation. Like HTML encoding, word capitalization, etc. Applicable in case of string only.
 </details>
