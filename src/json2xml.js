@@ -76,10 +76,17 @@ function Parser(options) {
 
   this.buildTextValNode = buildTextValNode;
   this.buildObjectNode = buildObjectNode;
+
+  this.closeRoot = false;
+  this.rootTagName = 'root';
 }
 
 Parser.prototype.parse = function(jObj) {
-  return this.j2x(jObj, 0).val;
+  let val = this.j2x(jObj, 0).val;
+  if (this.closeRoot) {
+    val += `</${this.rootTagName}>\n`;
+  }
+  return val;
 };
 
 Parser.prototype.j2x = function(jObj, level) {
@@ -87,6 +94,11 @@ Parser.prototype.j2x = function(jObj, level) {
   let val = '';
   const keys = Object.keys(jObj);
   const len = keys.length;
+  if (len > 1 && level === 0) {
+    val += `<${this.rootTagName}>\n`;
+    this.closeRoot = true;
+    level = 1;
+  }
   for (let i = 0; i < len; i++) {
     const key = keys[i];
     if (typeof jObj[key] === 'undefined') {
