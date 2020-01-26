@@ -49,15 +49,12 @@ exports.validate = function (xmlData, options) {
         }
         //read tagname
         let tagName = '';
-        for (
-          ;
-          i < xmlData.length &&
+        for (; i < xmlData.length &&
           xmlData[i] !== '>' &&
           xmlData[i] !== ' ' &&
           xmlData[i] !== '\t' &&
           xmlData[i] !== '\n' &&
-          xmlData[i] !== '\r';
-          i++
+          xmlData[i] !== '\r'; i++
         ) {
           tagName += xmlData[i];
         }
@@ -72,9 +69,9 @@ exports.validate = function (xmlData, options) {
         }
         if (!validateTagName(tagName)) {
           let msg;
-          if(tagName.trim().length === 0) {
+          if (tagName.trim().length === 0) {
             msg = "There is an unnecessary space between tag name and backward slash '</ ..'.";
-          }else{
+          } else {
             msg = `Tag '${tagName}' is an invalid name.`;
           }
           return getErrorObject('InvalidTag', msg, getLineNumberForPosition(xmlData, i));
@@ -112,8 +109,7 @@ exports.validate = function (xmlData, options) {
             }
 
             //when there are no more tags, we reached the root level.
-            if(tags.length == 0)
-            {
+            if (tags.length == 0) {
               reachedRoot = true;
             }
           }
@@ -127,10 +123,10 @@ exports.validate = function (xmlData, options) {
           }
 
           //if the root level has been reached before ...
-          if(reachedRoot === true) {
-              return getErrorObject('InvalidXml', 'Multiple possible root nodes found.', getLineNumberForPosition(xmlData, i));
+          if (reachedRoot === true) {
+            return getErrorObject('InvalidXml', 'Multiple possible root nodes found.', getLineNumberForPosition(xmlData, i));
           } else {
-              tags.push(tagName);
+            tags.push(tagName);
           }
           tagFound = true;
         }
@@ -285,7 +281,11 @@ function readAttributeStr(xmlData, i) {
     return false;
   }
 
-  return { value: attrStr, index: i, tagClosed: tagClosed };
+  return {
+    value: attrStr,
+    index: i,
+    tagClosed: tagClosed
+  };
 }
 
 /**
@@ -378,14 +378,10 @@ function validateAttrName(attrName) {
   return util.isName(attrName);
 }
 
-//const startsWithXML = new RegExp("^[Xx][Mm][Ll]");
-//  startsWith = /^([a-zA-Z]|_)[\w.\-_:]*/;
+// const startsWithXML = /^xml/i;
 
 function validateTagName(tagname) {
-  /*if(util.doesMatch(tagname,startsWithXML)) return false;
-    else*/
-  //return !tagname.toLowerCase().startsWith("xml") || !util.doesNotMatch(tagname, regxTagName);
-  return util.isName(tagname);
+  return util.isName(tagname) /* && !tagname.match(startsWithXML) */;
 }
 
 //this function returns the line number for the character at the given index
