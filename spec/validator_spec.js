@@ -1,5 +1,7 @@
 "use strict";
 
+const fs = require("fs");
+const path = require("path");
 const validator = require("../src/validator");
 
 function validate(xmlData, error, line = 1) {
@@ -10,363 +12,218 @@ function validate(xmlData, error, line = 1) {
             msg: Object.values(error)[0],
             line
         };
+        // console.log(JSON.stringify(result.err,null,4));
         expect(result.err).toEqual(expected);
     } else {
         expect(result).toBe(true);
     }
 }
 
+function validateFile(fileName, ...args) {
+    const fileNamePath = path.join(__dirname, "assets/" + fileName);
+    validate(fs.readFileSync(fileNamePath).toString(), ...args);
+}
+
 describe("XMLParser", function () {
     it("should validate simple xml string", function () {
-        let xmlData = "<rootNode></rootNode>";
-
-        let result = validator.validate(xmlData);
-        expect(result).toBe(true);
-
-        xmlData = `<rootNode></rootNode     >`;
-
-        result = validator.validate(xmlData);
-        expect(result).toBe(true);
+        validate("<rootNode></rootNode>");
+        validate(`<rootNode></rootNode     >`);
     });
 
     it("should not validate invalid starting tag", function () {
-        const xmlData = "< rootNode></rootNode>";
-        const expected = {
-            "code": "InvalidTag",
-            "msg": "There is an unnecessary space between tag name and backward slash '</ ..'.",
-            "line": 1
-        };
-
-        const result = validator.validate(xmlData).err;
-        //console.log(JSON.stringify(result,null,4));
-        expect(result).toEqual(expected);
+        validate("< rootNode></rootNode>", {
+            InvalidTag: "There is an unnecessary space between tag name and backward slash '</ ..'."
+        });
     });
 
     it("should not validate incomplete xml string", function () {
-        const xmlData = "<rootNode>";
-        const expected = {
-            "code": "InvalidXml",
-            "msg": "Invalid '[    \"rootNode\"]' found.",
-            "line": 1
-        };
-
-        const result = validator.validate(xmlData).err;
-        //console.log(JSON.stringify(result,null,4));
-        expect(result).toEqual(expected);
+        validate("<rootNode>", {
+            InvalidXml: "Invalid '[    \"rootNode\"]' found."
+        });
     });
 
-    it("should not validate invalid starting tag for following characters", function() {
-        const xmlData = "<rootNode#@aa></rootNode#@aa>";
-        const expected = {
-            "code": "InvalidTag",
-            "msg":  "Tag 'rootNode#@aa' is an invalid name.",
-            "line": 1
-        };
-
-        const result = validator.validate(xmlData).err;
-        //console.log(JSON.stringify(result,null,4));
-        expect(result).toEqual(expected);
+    it("should not validate invalid starting tag for following characters", function () {
+        validate("<rootNode#@aa></rootNode#@aa>", {
+            InvalidTag: "Tag 'rootNode#@aa' is an invalid name."
+        });
     });
 
-    it("should return false for non xml text", function() {
-        const xmlData = "rootNode";
-        const expected = { code: "InvalidChar", msg: "char 'r' is not expected.", line: 1 };
-
-        const result = validator.validate(xmlData).err;
-        //console.log(JSON.stringify(result, null, 4));
-        expect(result).toEqual(expected);
+    it("should return false for non xml text", function () {
+        validate("rootNode", {
+            InvalidChar: "char 'r' is not expected."
+        });
     });
 
-    it("should validate self closing tags", function() {
-        const xmlData = "<rootNode><validtag1  /><validtag2/><validtag3  with='attrib'/><validtag4 />text<validtag5/>text</rootNode>";
-        const result = validator.validate(xmlData);
-        expect(result).toBe(true);
+    it("should validate self closing tags", function () {
+        validate("<rootNode><validtag1  /><validtag2/><validtag3  with='attrib'/><validtag4 />text<validtag5/>text</rootNode>");
     });
 
-    it("should not consider these as self closing tags", function() {
-        let xmlData = "<rootNode><validtag1/><invalid tag/><validtag3  with='attrib'/></rootNode>";
-        let expected = {code: "InvalidAttr", msg: "boolean attribute 'tag' is not allowed.", line: 1};
-
-        let result = validator.validate(xmlData).err;
-        //console.log(JSON.stringify(result,null,4));
-        expect(result).toEqual(expected);
-
-
-        xmlData = "<rootNode><notSelfClosing/ ></rootNode>";
-        expected = {code: "InvalidAttr", msg: "Attribute '/' has no space in starting.", line: 1};
-
-        result = validator.validate(xmlData).err;
-        expect(result).toEqual(expected);
+    it("should not consider these as self closing tags", function () {
+        validate("<rootNode><validtag1/><invalid tag/><validtag3  with='attrib'/></rootNode>", {
+            InvalidAttr: "boolean attribute 'tag' is not allowed."
+        });
+        validate("<rootNode><notSelfClosing/ ></rootNode>", {
+            InvalidAttr: "Attribute '/' has no space in starting."
+        });
     });
 
 
     it("should not validate xml string when closing tag is different", function () {
-        const xmlData = "<rootNode></rootnode>";
-        const expected = { code: "InvalidTag", msg: "Closing tag 'rootNode' is expected inplace of 'rootnode'.", line: 1 };
-
-        const result = validator.validate(xmlData).err;
-        //console.log(JSON.stringify(result,null,4));
-        expect(result).toEqual(expected);
+        validate("<rootNode></rootnode>", {
+            InvalidTag: "Closing tag 'rootNode' is expected inplace of 'rootnode'."
+        });
     });
 
     it("should not validate xml string when closing tag is invalid", function () {
-        let xmlData = "<rootNode>< /rootnode>";
-
-        let expected = { code: "InvalidTag", msg: "There is an unnecessary space between tag name and backward slash '</ ..'.", line: 1 };
-
-        let result = validator.validate(xmlData).err;
-        //console.log(JSON.stringify(result,null,4));
-        expect(result).toEqual(expected);
-
-        xmlData = "<rootNode></ rootnode>";
-        expected = { code: "InvalidTag", msg: "There is an unnecessary space between tag name and backward slash '</ ..'.", line: 1 };
-        result = validator.validate(xmlData).err;
-        //console.log(JSON.stringify(result,null,4));
-        expect(result).toEqual(expected);
-
-        xmlData = "<rootNode></rootnode 123>";
-        expected = { code: "InvalidTag", msg: "Closing tag 'rootnode' can't have attributes or invalid starting.", line: 1 };
-        result = validator.validate(xmlData).err;
-        //console.log(JSON.stringify(result,null,4));
-        expect(result).toEqual(expected);
+        validate("<rootNode>< /rootnode>", {
+            InvalidTag: "There is an unnecessary space between tag name and backward slash '</ ..'."
+        });
+        validate("<rootNode></ rootnode>", {
+            InvalidTag: "There is an unnecessary space between tag name and backward slash '</ ..'."
+        });
+        validate("<rootNode></rootnode 123>", {
+            InvalidTag: "Closing tag 'rootnode' can't have attributes or invalid starting."
+        });
     });
 
     it("should validate simple xml string with namespace", function () {
-        const xmlData = "<root:Node></root:Node>";
-
-        const result = validator.validate(xmlData);
-        expect(result).toBe(true);
+        validate("<root:Node></root:Node>");
     });
 
     it("should not validate xml string with namespace when closing tag is diffrent", function () {
-        const xmlData = "<root:Node></root:node>";
-        const expected = { code: "InvalidTag", msg: "Closing tag 'root:Node' is expected inplace of 'root:node'.", line: 1 };
-        const result = validator.validate(xmlData).err;
-        //console.log(JSON.stringify(result,null,4));
-        expect(result).toEqual(expected);
+        validate("<root:Node></root:node>", {
+            InvalidTag: "Closing tag 'root:Node' is expected inplace of 'root:node'."
+        });
     });
 
     it("should validate simple xml string with value", function () {
-        const xmlData = "<root:Node>some value</root:Node>";
-
-        const result = validator.validate(xmlData);
-        expect(result).toBe(true);
+        validate("<root:Node>some value</root:Node>");
     });
 
     it("should not validate simple xml string with value but not matching closing tag", function () {
-        const xmlData = "<root:Node>some value</root>";
-        const expected = { code: "InvalidTag", msg: "Closing tag 'root:Node' is expected inplace of 'root'.", line: 1 };
-        const result = validator.validate(xmlData).err;
-        //console.log(JSON.stringify(result,null,4));
-        expect(result).toEqual(expected);
+        validate("<root:Node>some value</root>", {
+            InvalidTag: "Closing tag 'root:Node' is expected inplace of 'root'."
+        });
     });
 
     it("should not validate simple xml string with value but no closing tag", function () {
-        const xmlData = "<root:Node>some value";
-        const expected = { code: "InvalidXml", msg: "Invalid '[    \"root:Node\"]' found.", line: 1 };
-        const result = validator.validate(xmlData).err;
-        //console.log(JSON.stringify(result,null,4));
-        expect(result).toEqual(expected);
+        validate("<root:Node>some value", {
+            InvalidXml: "Invalid '[    \"root:Node\"]' found."
+        });
     });
 
     it("should validate xml with nested tags", function () {
-        const xmlData = "<rootNode><tag></tag><tag>1</tag><tag>val</tag></rootNode>";
-
-        const result = validator.validate(xmlData);
-        expect(result).toBe(true);
+        validate("<rootNode><tag></tag><tag>1</tag><tag>val</tag></rootNode>");
     });
 
     it("should not validate xml with wrongly nested tags", function () {
-        const xmlData = "<rootNode><tag><tag1></tag>1</tag1><tag>val</tag></rootNode>";
-        const expected = { code: "InvalidTag", msg: "Closing tag 'tag1' is expected inplace of 'tag'.", line: 1 };
-
-        const result = validator.validate(xmlData).err;
-        //console.log(JSON.stringify(result,null,4));
-        expect(result).toEqual(expected);
+        validate("<rootNode><tag><tag1></tag>1</tag1><tag>val</tag></rootNode>", {
+            InvalidTag: "Closing tag 'tag1' is expected inplace of 'tag'."
+        });
     });
 
     it("should validate xml with comment", function () {
-        const xmlData = "<rootNode><!-- <tag> - - --><tag>1</tag><tag>val</tag></rootNode>";
-
-        const result = validator.validate(xmlData);
-        expect(result).toBe(true);
+        validate("<rootNode><!-- <tag> - - --><tag>1</tag><tag>val</tag></rootNode>");
     });
 
     it("should validate xml with comment", function () {
-        const xmlData = "<rootNode><!-- <tag> - - \n--><tag>1</tag><tag>val</tag></rootNode>";
-
-        const result = validator.validate(xmlData);
-        expect(result).toBe(true);
+        validate("<rootNode><!-- <tag> - - \n--><tag>1</tag><tag>val</tag></rootNode>");
     });
 
-    it("should not validate xml with comment in a open tag", function() {
-        const xmlData = "<rootNode<!-- <tag> -- -->><tag>1</tag><tag>val</tag></rootNode>";        
-        const expected = {code: "InvalidTag", msg: "Tag 'rootNode<!--' is an invalid name.", line: 1};
-        const result = validator.validate(xmlData).err;
-        //console.log(JSON.stringify(result,null,4));
-        expect(result).toEqual(expected);
+    it("should not validate xml with comment in a open tag", function () {
+        validate("<rootNode<!-- <tag> -- -->><tag>1</tag><tag>val</tag></rootNode>", {
+            InvalidTag: "Tag 'rootNode<!--' is an invalid name."
+        });
     });
 
-    it("should not validate xml with comment in a open tag", function() {
-        const xmlData = "<rootNode <!-- <tag> -- --> ><tag>1</tag><tag>val</tag></rootNode>";
-        const expected = {code: "InvalidAttr", msg: "boolean attribute '<!--' is not allowed.", line: 1};
-        const result = validator.validate(xmlData).err;
-        //console.log(JSON.stringify(result,null,4));
-        expect(result).toEqual(expected);
+    it("should not validate xml with comment in a open tag", function () {
+        validate("<rootNode <!-- <tag> -- --> ><tag>1</tag><tag>val</tag></rootNode>", {
+            InvalidAttr: "boolean attribute '<!--' is not allowed."
+        });
     });
 
-    it("should correctly identify self closing tags", function() {
-        let xmlData = "<rootNode><in/valid></in/valid></rootNode>";
-        let expected = {code: "InvalidTag", msg: "Tag 'in/valid' is an invalid name.", line: 1};
-        let result = validator.validate(xmlData).err;
-        expect(result).toEqual(expected);
-        xmlData = "<rootNode><in#valid/></rootNode>";
-        expected = {code: "InvalidTag", msg: "Tag 'in#valid' is an invalid name.", line: 1};
-        result = validator.validate(xmlData).err;
-        expect(result).toEqual(expected);
+    it("should correctly identify self closing tags", function () {
+        validate("<rootNode><in/valid></in/valid></rootNode>", {
+            InvalidTag: "Tag 'in/valid' is an invalid name."
+        });
+        validate("<rootNode><in#valid/></rootNode>", {
+            InvalidTag: "Tag 'in#valid' is an invalid name."
+        });
     });
 
-    it("should not validate xml with non closing comment", function() {
-        const xmlData = "<rootNode ><!-- <tag> -- <tag>1</tag><tag>val</tag></rootNode>";
-        const expected = { code: "InvalidXml", msg: "Invalid '[    \"rootNode\"]' found.", line: 1 };
-        const result = validator.validate(xmlData).err;
-        //console.log(JSON.stringify(result,null,4));
-        expect(result).toEqual(expected);
+    it("should not validate xml with non closing comment", function () {
+        validate("<rootNode ><!-- <tag> -- <tag>1</tag><tag>val</tag></rootNode>", {
+            InvalidXml: "Invalid '[    \"rootNode\"]' found."
+        });
     });
 
     it("should not validate xml with unclosed tag", function () {
-        const xmlData = "<rootNode  abc='123' bc='567'";
-        const expected = { code: "InvalidXml", msg: "Invalid '[    \"rootNode\"]' found.", line: 1 };
-        const result = validator.validate(xmlData).err;
-        //console.log(JSON.stringify(result,null,4));
-        expect(result).toEqual(expected);
+        validate("<rootNode  abc='123' bc='567'", {
+            InvalidXml: "Invalid '[    \"rootNode\"]' found."
+        });
     });
 
     it("should validate xml with CDATA", function () {
-        const xmlData = "<name><![CDATA[Jack]]></name>";
-
-        const result = validator.validate(xmlData);
-        expect(result).toBe(true);
+        validate("<name><![CDATA[Jack]]></name>");
     });
 
     it("should validate xml with repeated CDATA", function () {
-        const xmlData = "<name><![CDATA[Jack]]><![CDATA[Jack]]></name>";
-
-        const result = validator.validate(xmlData);
-        expect(result).toBe(true);
+        validate("<name><![CDATA[Jack]]><![CDATA[Jack]]></name>");
     });
 
     it("should validate xml when CDATA consist regx or blank data", function () {
-        const xmlData = "<name><![CDATA[]]><![CDATA[^[ ].*$]]></name>";
-
-        const result = validator.validate(xmlData);
-        expect(result).toBe(true);
+        validate("<name><![CDATA[]]><![CDATA[^[ ].*$]]></name>");
     });
 
-    /*it("should return false when tag starts with xml or XML etc", function () {
-        const xmlData = "<xmlNode  abc='123' bc='567'>val</xmlNode>";
-
-        result = validator.validate(xmlData);
-        //console.log(JSON.stringify(result,null,4));
-        expect(result).toEqual(expected);
-
-        xmlData = "<XmLNode  abc='123' bc='567'></XmLNode>";
-
-        result = validator.validate(xmlData);
-        //console.log(JSON.stringify(result,null,4));
-        expect(result).toEqual(expected);
-
-        xmlData = "<xMLNode/>";
-
-        result = validator.validate(xmlData);
-        //console.log(JSON.stringify(result,null,4));
-        expect(result).toEqual(expected);
-    });*/
+    it("should return false when tag starts with xml or XML etc", function () {
+        /* const error = (tag) => ({
+            InvalidTag: `Tag '${tag}' is an invalid name.`
+        });
+        validate("<xmlNode  abc='123' bc='567'>val</xmlNode>", error("xmlNode"));
+        validate("<XmLNode  abc='123' bc='567'></XmLNode>", error("XmLNode"));
+        validate("<xMLNode/>", error("xMLNode")); */
+    });
 
     it("should return true for valid tag", function () {
-        const xmlData = "<ns:start_tag-2.0></ns:start_tag-2.0>";
-
-        const result = validator.validate(xmlData);
-        expect(result).toBe(true);
+        validate("<ns:start_tag-2.0></ns:start_tag-2.0>");
     });
 
     it("should return false for invalid tag", function () {
-        const xmlData = "<2start_tag  abc='123' bc='567'></2start_tag>";
-        const expected = {
-            "code": "InvalidTag",
-            "msg": "Tag '2start_tag' is an invalid name.",
-            "line": 1
-        };
-        const result = validator.validate(xmlData).err;
-        //console.log(JSON.stringify(result,null,4));
-        expect(result).toEqual(expected);
+        validate("<2start_tag  abc='123' bc='567'></2start_tag>", {
+            InvalidTag: "Tag '2start_tag' is an invalid name."
+        });
     });
 
     it("should return false for invalid tag", function () {
-        const xmlData = "<2start_tag />";
-        const expected = {
-            "code": "InvalidTag",
-            "msg": "Tag '2start_tag' is an invalid name.",
-            line: 1
-        };
-        const result = validator.validate(xmlData).err;
-        //console.log(JSON.stringify(result,null,4));
-        expect(result).toEqual(expected);
+        validate("<2start_tag />", {
+            InvalidTag: "Tag '2start_tag' is an invalid name."
+        });
     });
 
     it("should validate xml data", function () {
-        const fs = require("fs");
-        const path = require("path");
-        const fileNamePath = path.join(__dirname, "assets/sample.xml");
-        const xmlData = fs.readFileSync(fileNamePath).toString();
-
-        const result = validator.validate(xmlData);
-        expect(result).toBe(true);
+        validateFile("sample.xml");
     });
 
     it("should validate complex xml data", function () {
-        const fs = require("fs");
-        const path = require("path");
-        const fileNamePath = path.join(__dirname, "assets/complex.xml");
-        const xmlData = fs.readFileSync(fileNamePath).toString();
-
-        const result = validator.validate(xmlData);
-        expect(result).toBe(true);
+        validateFile("complex.xml");
     });
 
     it("should validate xml data with CRLF", function () {
-        const fs = require("fs");
-        const path = require("path");
-        const fileNamePath = path.join(__dirname, "assets/crlf.xml");
-        const xmlData = fs.readFileSync(fileNamePath).toString();
-
-        const result = validator.validate(xmlData);
-        expect(result).toBe(true);
+        validateFile("crlf.xml");
     });
 
     it("should return false for invalid xml", function () {
-        const fs = require("fs");
-        const path = require("path");
-        const fileNamePath = path.join(__dirname, "assets/invalid.xml");
-        const xmlData = fs.readFileSync(fileNamePath).toString();
-        const expected = { code: "InvalidTag", msg: "Closing tag 'selfclosing' is expected inplace of 'person'.", line: 27 };
-        const result = validator.validate(xmlData).err;
-        //console.log(JSON.stringify(result,null,4));
-        expect(result).toEqual(expected);
+        validateFile("invalid.xml", {
+            InvalidTag: "Closing tag 'selfclosing' is expected inplace of 'person'."
+        }, 27);
     });
 
     it("should return true for valid svg", function () {
-        const fs = require("fs");
-        const path = require("path");
-        const fileNamePath = path.join(__dirname, "assets/by.svg");
-        const svgData = fs.readFileSync(fileNamePath).toString();
-
-        const result = validator.validate(svgData);
-        expect(result).toBe(true);
+        validateFile("by.svg");
     });
 
     it("should validate XML with DOCTYPE", function () {
-        const xmlData = "<?xml version=\"1.0\" standalone=\"yes\" ?>" +
+        validate("<?xml version=\"1.0\" standalone=\"yes\" ?>" +
             "<!--open the DOCTYPE declaration -" +
             "  the open square bracket indicates an internal DTD-->" +
             "<!DOCTYPE foo [" +
@@ -374,156 +231,105 @@ describe("XMLParser", function () {
             "<!ELEMENT foo (#PCDATA)>" +
             "<!--close the DOCTYPE declaration-->" +
             "]>" +
-            "<foo>Hello World.</foo>";
-
-        const result = validator.validate(xmlData);
-        expect(result).toBe(true);
+            "<foo>Hello World.</foo>");
     });
 
 
     it("should fail for XML with ! which is not a comment, DOCTYPE or CDATA", function () {
-        const xmlData = "<test><!bla></!bla></test>";
-        const expected = {
-            "code": "InvalidTag",
-            "msg": "Tag '!bla' is an invalid name.",
-            "line": 1
-        };
-
-        const result = validator.validate(xmlData).err;
-        //console.log(JSON.stringify(result,null,4));
-        expect(result).toEqual(expected);
+        validate("<test><!bla></!bla></test>", {
+            InvalidTag: "Tag '!bla' is an invalid name."
+        });
     });
 
     it("should not validate XML when prolog doesn't start from 1st char", function () {
-        const xmlData = "  <?xml version=\"1.0\" standalone=\"yes\" ?><foo>Hello World.</foo>";
-        const expected = {
-            "code": "InvalidXml",
-            "msg": "XML declaration allowed only at the start of the document.",
-            "line": 1
-        };
-
-        const result = validator.validate(xmlData).err;
-        //console.log(JSON.stringify(result,null,4));
-        expect(result).toEqual(expected);
+        validate("  <?xml version=\"1.0\" standalone=\"yes\" ?><foo>Hello World.</foo>", {
+            InvalidXml: "XML declaration allowed only at the start of the document."
+        });
     });
 
     it("should not validate XML with prolog only", function () {
-        const xmlData = "<?xml version=\"1.0\" standalone=\"yes\" ?>" +
-            "<!--some comment -  end in this line-->";
-        const expected = {
-            "code": "InvalidXml",
-            "msg": "Start tag expected.",
-            line: 1
-
-        };
-        const result = validator.validate(xmlData).err;
-        expect(result).toEqual(expected);
+        validate("<?xml version=\"1.0\" standalone=\"yes\" ?><!--some comment -  end in this line-->", {
+            InvalidXml: "Start tag expected."
+        });
     });
 
     it("should not validate XML with prolog &  DOCTYPE but not any other tag", function () {
-        const xmlData = "<?xml version=\"1.0\" standalone=\"yes\" ?>" +
+        validate("<?xml version=\"1.0\" standalone=\"yes\" ?>" +
             "<!--open the DOCTYPE declaration - the open square bracket indicates an internal DTD-->" +
             "<!DOCTYPE foo [" +
             "<!--define the internal DTD-->" +
             "<!ELEMENT foo (#PCDATA)>" +
             "<!--close the DOCTYPE declaration-->" +
-            "]>";
-        const expected = {
-            "code": "InvalidXml",
-            "msg": "Start tag expected.",
-            line: 1
-        };
-        const result = validator.validate(xmlData).err;
-        expect(result).toEqual(expected);
+            "]>", {
+                InvalidXml: "Start tag expected."
+            });
     });
 
     it("should validate XML PIs", function () {
-        var xmlData = '<?xml version="1.0"?>'
-            + '<?mso-contentType?>'
-            + '<h1></h1>'
-            + '<?mso-contentType something="val"?>';
-
-        var result = validator.validate(xmlData);
-        expect(result).toBe(true);
+        validate('<?xml version="1.0"?>' +
+            '<?mso-contentType?>' +
+            '<h1></h1>' +
+            '<?mso-contentType something="val"?>');
     });
 
     it("should not validate XML PIs with invalid values", function () {
-        var xmlData = '<?xml version="1.0"?>'
-            + '<?mso-contentType valid="value" invalid="?>" ?>'
-            + '<h1></h1>'
-            + '<?mso-contentType something="val"?>';
-
-
-        var expected = { code: 'InvalidChar', msg: 'char \'"\' is not expected.', line: 1 }
-
-        var result = validator.validate(xmlData).err;
-        expect(result).toEqual(expected);
+        validate('<?xml version="1.0"?>' +
+            '<?mso-contentType valid="value" invalid="?>" ?>' +
+            '<h1></h1>' +
+            '<?mso-contentType something="val"?>', {
+                InvalidChar: "char '\"' is not expected."
+            });
     });
 
     it('should validate xml with a "length" attribute', function () {
-        const xmlData = '<name length="1"></name>';
-
-        var result = validator.validate(xmlData);
-        expect(result).toEqual(true);
+        validate('<name length="1"></name>');
     });
 
     it("should not validate xml with repeated attributes", function () {
-        const xmlData = '<name length="bar" length="baz"></name>';
-
-        var expected = { code: 'InvalidAttr', msg: "Attribute 'length' is repeated.", line: 1 }
-
-        var result = validator.validate(xmlData).err;
-        expect(result).toEqual(expected);
+        validate('<name length="bar" length="baz"></name>', {
+            InvalidAttr: "Attribute 'length' is repeated."
+        });
     });
 
     it('should validate xml with a tag attribute splitted on more lines', () => {
-        const xmlData = `
+        validate(`
 <name
 attribute1="attribute1"
 attribute2="attribute2"
 />
-    `;
-
-        var result = validator.validate(xmlData);
-        expect(result).toEqual(true);
+    `);
     });
 
     it('should validate xml not properly closed', () => {
-        const xmlData = `
+        validate(`
 <name
 attribute1="attribute1"
 attribute2="attribute2"
 ></name
-    `;
-
-        const expected = { code: "InvalidTag", msg: "Closing tag 'name' doesn't have proper closing.", line: 6 };
-        var result = validator.validate(xmlData).err;
-        expect(result).toEqual(expected);
+    `, {
+            InvalidTag: "Closing tag 'name' doesn't have proper closing."
+        }, 6);
     });
 
     it('should detect error line when having multiple attributes', () => {
-        const xmlData = `<urlset t
+        validate(`<urlset t
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd http://www.google.com/schemas/sitemap-image/1.1 http://www.google.com/schemas/sitemap-image/1.1/sitemap-image.xsd"
         xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-    </urlset>`;
-
-        const expected = { code: "InvalidAttr", msg: "boolean attribute 't' is not allowed.", line: 1 };
-        var result = validator.validate(xmlData).err;
-        expect(result).toEqual(expected);
+    </urlset>`, {
+            InvalidAttr: "boolean attribute 't' is not allowed."
+        });
     });
 
     it('should detect error line when having multiple attributes 2', () => {
-        const xmlData = `<urlset
+        validate(`<urlset
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd http://www.google.com/schemas/sitemap-image/1.1 http://www.google.com/schemas/sitemap-image/1.1/sitemap-image.xsd"
         xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         t>
-    </urlset>`;
-
-        const expected = { code: "InvalidAttr", msg: "boolean attribute 't' is not allowed.", line: 5 };
-        var result = validator.validate(xmlData).err;
-        expect(result).toEqual(expected);
+    </urlset>`, {
+            InvalidAttr: "boolean attribute 't' is not allowed."
+        }, 5);
     });
 
     it('should validate value with ampersand', function () {
@@ -545,33 +351,26 @@ attribute2="attribute2"
 });
 
 describe("should not validate XML documents with multiple root nodes", () => {
-
     it('when root nodes are repeated', () => {
-        const xmlData = `<xml></xml><xml></xml>`;
-
-        const expected = { code: "InvalidXml", msg: 'Multiple possible root nodes found.', line: 1};
-        var result = validator.validate(xmlData).err;
-        expect(result).toEqual(expected);
+        validate(`<xml></xml><xml></xml>`, {
+            InvalidXml: 'Multiple possible root nodes found.'
+        });
     });
 
     it('when root nodes are different', () => {
-        const xmlData = '<xml></xml><xml2></xml2>';
-
-        const expected = { code: "InvalidXml", msg: 'Multiple possible root nodes found.', line: 1};
-        var result = validator.validate(xmlData).err;
-        expect(result).toEqual(expected);
+        validate('<xml></xml><xml2></xml2>', {
+            InvalidXml: 'Multiple possible root nodes found.'
+        });
     });
 
     it('when root nodes have more nested tags', () => {
-        const xmlData = `<test>
+        validate(`<test>
         <nested>
         </nested>
         </test>
         <xml2>
-        </xml2>`;
-
-        const expected = { code: "InvalidXml", msg: 'Multiple possible root nodes found.', line: 5};
-        var result = validator.validate(xmlData).err;
-        expect(result).toEqual(expected);
+        </xml2>`, {
+            InvalidXml: 'Multiple possible root nodes found.'
+        }, 5);
     });
 });
