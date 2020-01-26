@@ -202,6 +202,17 @@ describe("XMLParser", function() {
         expect(result).toEqual(expected);
     });
 
+    it("should add root node to xml if there is none", function() {
+        const jObj = {
+            a: { "foo": "bar" },
+            b: { "foo": "bar" }
+        };
+        const parser = new Parser();
+        const result = parser.parse(jObj);
+        const expected = `<root><a><foo>bar</foo></a><b><foo>bar</foo></b></root>`;
+        expect(result).toEqual(expected);
+    });
+
     it("should parse to XML with multiple cdata but textnode is not present", function() {
         const jObj = {
             a: {

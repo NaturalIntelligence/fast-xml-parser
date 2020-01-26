@@ -84,7 +84,7 @@ function Parser(options) {
 Parser.prototype.parse = function(jObj) {
   let val = this.j2x(jObj, 0).val;
   if (this.closeRoot) {
-    val += `</${this.rootTagName}>\n`;
+    val += `</${this.rootTagName}>${this.newLine}`;
   }
   return val;
 };
@@ -95,7 +95,7 @@ Parser.prototype.j2x = function(jObj, level) {
   const keys = Object.keys(jObj);
   const len = keys.length;
   if (len > 1 && level === 0) {
-    val += `<${this.rootTagName}>\n`;
+    val += `<${this.rootTagName}>${this.newLine}`;
     this.closeRoot = true;
     level = 1;
   }
