@@ -31,6 +31,7 @@ type J2xOptions = {
   format: boolean;
   indentBy: string;
   supressEmptyNode: boolean;
+  supressEmptyNodeWithoutAttributes: boolean;
   tagValueProcessor: (tagValue: string) => string;
   attrValueProcessor: (attrValue: string) => string;
 };

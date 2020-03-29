@@ -309,6 +309,27 @@ describe("XMLParser", function() {
         expect(result).toEqual(expected);
     });
 
+    it("should not supress empty node without attributes to self closing node when parsing to XML", function() {
+        const jObj = {
+            name: '',
+            address: ''
+        };
+        const parser = new Parser({
+                                      cdataTagName:     "__cdata",
+                                      attributeNamePrefix: "",
+                                      attrNodeName:     "@",
+                                      encodeHTMLchar:   true,
+                                      supressEmptyNode: true,
+                                      supressEmptyNodeWithoutAttributes: false,
+                                      tagValueProcessor: a=> { a= ''+ a; return he.encode(a, { useNamedReferences: true}) },
+                                      attrValueProcessor: a=> he.encode(a, {isAttributeValue: true, useNamedReferences: true})
+                                  });
+        const result = parser.parse(jObj);
+        //console.log(result);
+        const expected = `<name></name><address></address>`;
+        expect(result).toEqual(expected);
+    });
+
     it("should format when parsing to XML", function() {
         const jObj = {
             a: {

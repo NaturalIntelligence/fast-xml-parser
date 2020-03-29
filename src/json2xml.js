@@ -12,6 +12,7 @@ const defaultOptions = {
   format: false,
   indentBy: '  ',
   supressEmptyNode: false,
+  supressEmptyNodeWithoutAttributes: true,
   tagValueProcessor: function(a) {
     return a;
   },
@@ -30,6 +31,7 @@ const props = [
   'format',
   'indentBy',
   'supressEmptyNode',
+  'supressEmptyNodeWithoutAttributes',
   'tagValueProcessor',
   'attrValueProcessor',
 ];
@@ -215,7 +217,7 @@ function buildObjectNode(val, key, attrStr, level) {
 }
 
 function buildEmptyObjNode(val, key, attrStr, level) {
-  if (val !== '') {
+  if (val !== '' || (!this.options.supressEmptyNodeWithoutAttributes && attrStr === '')) {
     return this.buildObjectNode(val, key, attrStr, level);
   } else {
     return this.indentate(level) + '<' + key + attrStr + '/' + this.tagEndChar;
@@ -238,7 +240,7 @@ function buildTextValNode(val, key, attrStr, level) {
 }
 
 function buildEmptyTextNode(val, key, attrStr, level) {
-  if (val !== '') {
+  if (val !== '' || (!this.options.supressEmptyNodeWithoutAttributes && attrStr === '')) {
     return this.buildTextValNode(val, key, attrStr, level);
   } else {
     return this.indentate(level) + '<' + key + attrStr + '/' + this.tagEndChar;
