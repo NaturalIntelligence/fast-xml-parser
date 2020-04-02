@@ -54,6 +54,63 @@ describe("XMLParser", function() {
         expect(result).toEqual(expected);
     });
 
+
+    it("should parse number ending in .0 for parseTrueNumberOnly:false", function () {
+        const xmlData = `<rootNode>
+        <floatTag0>0.0</floatTag0>
+        <floatTag1>1.0</floatTag1>
+        <floatTag2>2.0000</floatTag2>
+        <floatTag3 float="3.00"/>
+        </rootNode>`;
+        const expected = {
+            "rootNode": {
+                "floatTag0": 0,
+                "floatTag1": 1,
+                "floatTag2": 2,
+                "floatTag3": {
+                    "@_float": 3
+                }
+            }
+        };
+
+        const result = parser.parse(xmlData, {
+            ignoreAttributes: false,
+            parseAttributeValue: true,
+            parseTrueNumberOnly: false
+        });
+        //console.log(JSON.stringify(result,null,4));
+        expect(result).toEqual(expected);
+    });
+
+    it("should parse number ending in .0 for parseTrueNumberOnly:true", function () {
+        const xmlData = `<rootNode>
+        <floatTag0>0.0</floatTag0>
+        <floatTag1>1.0</floatTag1>
+        <floatTag2>2.0000</floatTag2>
+        <floatTag3 float="3.00"/>
+        </rootNode>`;
+        const expected = {
+            "rootNode": {
+                "floatTag0": 0,
+                "floatTag1": 1,
+                "floatTag2": 2,
+                "floatTag3": {
+                    "@_float": 3
+                }
+            }
+        };
+
+        const result = parser.parse(xmlData, {
+            ignoreAttributes: false,
+            parseAttributeValue: true,
+            parseTrueNumberOnly: true
+        });
+        //console.log(JSON.stringify(result,null,4));
+        expect(result).toEqual(expected);
+    });
+
+
+
     it("should not parse values to primitive type", function() {
         const xmlData = `<rootNode><tag>value</tag><boolean>true</boolean><intTag>045</intTag><floatTag>65.34</floatTag></rootNode>`;
         const expected = {
