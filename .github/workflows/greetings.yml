@@ -1,0 +1,13 @@
+name: Greetings
+
+on: [pull_request, issues]
+
+jobs:
+  greeting:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/first-interaction@v1
+      with:
+        repo-token: ${{ secrets.GITHUB_TOKEN }}
+        issue-message: 'I''m glad you find this repository helpful. I''ll try to address your issue ASAP. You can watch the repo for new changes or star it.'
+        pr-message: 'I appreciate your effort to create this PR. I would try to check it on priority. It is always good to specify the purpose of PR and following the guidelines to reduce the conversations'

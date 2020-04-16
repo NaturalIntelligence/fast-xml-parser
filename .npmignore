@@ -9,3 +9,5 @@ index.html
 webpack*
 lib
 temp*
+*todo.md
+docs*

@@ -2,7 +2,6 @@
 
 const parser = require("../src/parser");
 const validator = require("../src/validator");
-const he = require("he");
 
 describe("XMLParser", function() {
 
@@ -35,14 +34,16 @@ describe("XMLParser", function() {
         <tag>value</tag>
         <boolean>true</boolean>
         <intTag>045</intTag>
-        <floatTag>65.34</floatTag>
+        <floatTag>65.340</floatTag>
+        <long>420926189200190257681175017717</long>
         </rootNode>`;
         const expected = {
             "rootNode": {
                 "tag":      "value",
                 "boolean":  true,
                 "intTag":   "045",
-                "floatTag": 65.34
+                "floatTag": 65.34,
+                "long": "420926189200190257681175017717"
             }
         };
 
@@ -52,6 +53,63 @@ describe("XMLParser", function() {
         //console.log(JSON.stringify(result,null,4));
         expect(result).toEqual(expected);
     });
+
+
+    it("should parse number ending in .0 for parseTrueNumberOnly:false", function () {
+        const xmlData = `<rootNode>
+        <floatTag0>0.0</floatTag0>
+        <floatTag1>1.0</floatTag1>
+        <floatTag2>2.0000</floatTag2>
+        <floatTag3 float="3.00"/>
+        </rootNode>`;
+        const expected = {
+            "rootNode": {
+                "floatTag0": 0,
+                "floatTag1": 1,
+                "floatTag2": 2,
+                "floatTag3": {
+                    "@_float": 3
+                }
+            }
+        };
+
+        const result = parser.parse(xmlData, {
+            ignoreAttributes: false,
+            parseAttributeValue: true,
+            parseTrueNumberOnly: false
+        });
+        //console.log(JSON.stringify(result,null,4));
+        expect(result).toEqual(expected);
+    });
+
+    it("should parse number ending in .0 for parseTrueNumberOnly:true", function () {
+        const xmlData = `<rootNode>
+        <floatTag0>0.0</floatTag0>
+        <floatTag1>1.0</floatTag1>
+        <floatTag2>2.0000</floatTag2>
+        <floatTag3 float="3.00"/>
+        </rootNode>`;
+        const expected = {
+            "rootNode": {
+                "floatTag0": 0,
+                "floatTag1": 1,
+                "floatTag2": 2,
+                "floatTag3": {
+                    "@_float": 3
+                }
+            }
+        };
+
+        const result = parser.parse(xmlData, {
+            ignoreAttributes: false,
+            parseAttributeValue: true,
+            parseTrueNumberOnly: true
+        });
+        //console.log(JSON.stringify(result,null,4));
+        expect(result).toEqual(expected);
+    });
+
+
 
     it("should not parse values to primitive type", function() {
         const xmlData = `<rootNode><tag>value</tag><boolean>true</boolean><intTag>045</intTag><floatTag>65.34</floatTag></rootNode>`;
@@ -71,13 +129,15 @@ describe("XMLParser", function() {
     });
 
     it("should parse number values of attributes as number", function() {
-        const xmlData = `<rootNode><tag int='045' float='65.34'>value</tag></rootNode>`;
+        const xmlData = `<rootNode><tag int='045' intNegative='-045' float='65.34' floatNegative='-65.34'>value</tag></rootNode>`;
         const expected = {
             "rootNode": {
                 "tag": {
                     "#text":   "value",
                     "@_int":   45,
-                    "@_float": 65.34
+                    "@_intNegative":   -45,
+                    "@_float": 65.34,
+                    "@_floatNegative": -65.34
                 }
             }
         };
@@ -664,20 +724,6 @@ describe("XMLParser", function() {
         expect(result).toEqual(expected);
     });
 
-    it("should decode HTML entities if allowed", function() {
-        const xmlData = "<rootNode>       foo&ampbar&apos;        </rootNode>";
-        const expected = {
-            "rootNode": "foo&bar'"
-        };
-        const result = parser.parse(xmlData, {
-            parseNodeValue: false,
-            decodeHTMLchar: true,
-            tagValueProcessor : a => he.decode(a)
-        });
-        //console.log(JSON.stringify(result,null,4));
-        expect(result).toEqual(expected);
-    });
-
     it("should parse XML with DOCTYPE", function() {
         const xmlData = "<?xml version=\"1.0\" standalone=\"yes\" ?>" +
                         "<!--open the DOCTYPE declaration -" +
@@ -751,15 +797,44 @@ describe("XMLParser", function() {
         expect(result).toEqual(expected);
     });
 
-    it("should add index and childCount to single node", function() {
+        it("should validate before parsing", function() {
+        const xmlData = "<?xml version='1.0'?>"
+        + "<tag>"
+        + "    <subtag2>subtag text</subtag2>"
+        + "</tag";
+
+        expect(() => {
+            parser.parse(xmlData,{trimValues:true}, true);
+        }).toThrowError(`Closing tag 'tag' doesn't have proper closing.`)
+
+    });
+
+    it("should validate with options before parsing", function() {
+        const xmlData = "<?xml version='1.0'?>"
+        + "<tag foo>"
+        + "    <subtag2>subtag text</subtag2>"
+        + "</tag>";
+
+        const expected = {
+            "tag": {
+                "subtag2": "subtag text"
+            }
+        };
+
+        let result = parser.parse(xmlData,{trimValues:true}, { allowBooleanAttributes: true });
+        //console.log(JSON.stringify(result,null,4));
+        expect(result).toEqual(expected);
+    });
+
+	it("should add index and childCount to single node", function() {
         const xmlData = `<rootNode><tag int='045' float='65.34'>value</tag></rootNode>`;
         const expected = {
             "childCount": 1,
             "rootNode": {
-                "#index": 0,
+                "indexPos": 0,
                 "childCount": 1,
                 "tag": {
-                    "#index": 0,
+                    "indexPos": 0,
                     "#text":   "value",
                     "@_int":   45,
                     "@_float": 65.34
@@ -786,20 +861,20 @@ describe("XMLParser", function() {
         const expected = {
               "childCount": 1,
               "rootNode": {
-                  "#index": 0,
+                  "indexPos": 0,
                   "childCount": 3,
                   "tag": [
                       {
                           "#text": "value",
-                          "#index": 0
+                          "indexPos": 0
                       },
                       {
                           "#text": 45,
-                          "#index": 1
+                          "indexPos": 1
                       },
                       {
                           "#text": 65.34,
-                          "#index": 2
+                          "indexPos": 2
                       }
                   ]
               }
@@ -820,23 +895,23 @@ describe("XMLParser", function() {
         const expected = {
             "childCount": 1,
             "rootNode": {
-                "#index": 0,
+                "indexPos": 0,
                 "childCount": 3,
                 "tag": [
                     {
                         "#text": "value",
                         "@_name": "Gabriel",
-                        "#index": 0
+                        "indexPos": 0
                     },
                     {
                         "#text": 45,
                         "@_country": "Argentina",
-                        "#index": 1
+                        "indexPos": 1
                     },
                     {
                         "#text": 65.34,
                         "@_some": "thing",
-                        "#index": 2
+                        "indexPos": 2
                     }
                 ]
             }
@@ -856,20 +931,20 @@ describe("XMLParser", function() {
         const expected = {
             "childCount": 1,
             "rootNode": {
-                "#index": 0,
+                "indexPos": 0,
                 "childCount": 3,
                 "tag": [
                     {
                         "#text": "value",
-                        "#index": 0
+                        "indexPos": 0
                     },
                     {
                         "#text": 45,
-                        "#index": 1
+                        "indexPos": 1
                     },
                     {
                         "#text": 65.34,
-                        "#index": 2
+                        "indexPos": 2
                     }
                 ]
             }
@@ -889,21 +964,21 @@ describe("XMLParser", function() {
         const expected = {
             "childCount": 1,
             "rootNode": {
-                "#index": 0,
+                "indexPos": 0,
                 "childCount": 3,
                 "tag": [
                     {
                         "#text": "value",
-                        "#index": 0
+                        "indexPos": 0
                     },
                     {
                         "#text": 65.34,
-                        "#index": 2
+                        "indexPos": 2
                     }
                 ],
                 "label": {
                     "#text": 45,
-                  "#index": 1
+                  "indexPos": 1
                 },
             }
         };

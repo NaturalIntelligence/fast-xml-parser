@@ -1,0 +1,147 @@
+# Inspired from :
+#   https://github.com/github/gitignore
+#   https://github.com/inikulin/dmn
+#   https://github.com/bahmutov/ban-sensitive-files
+
+#-----------------------
+# Benchmark Files
+#-----------------------
+benchmark/**
+**/benchmark/**
+benchmarks/**
+**/benchmarks/**
+
+#-----------------------
+# Configuration files
+#-----------------------
+# CI
+.travis.yml
+appveyor.yml
+**/appveyor.yml
+
+# eslint
+.eslintrc
+.eslintrc.json
+.eslintrc.yaml
+.eslintrc.yml
+
+# GitHub
+.github/**
+
+# JetBrains
+.idea/**/*
+**/.idea/**/*
+
+# Visual Studio Code
+.vscode/**
+**/.vscode/**
+
+#-----------------------
+# Coverage Files
+#-----------------------
+# Coverage directory used by tools like istanbul
+coverage/**
+**/coverage/**
+
+#-----------------------
+# Demo Files
+#-----------------------
+demo/**
+**/demo/**
+demos/**
+**/demos/**
+
+#-----------------------
+# Dependency directories
+#-----------------------
+node_modules/**
+**/node_modules/**
+jspm_packages/**
+**/jspm_packages/**
+
+#-----------------------
+# Doc Files
+#-----------------------
+doc/**
+**/doc/**
+docs/**
+**/docs/**
+
+#-----------------------
+# Example Files
+#-----------------------
+example/**
+**/example/**
+examples/**
+**/examples/**
+
+#-----------------------
+# Log Files
+#-----------------------
+*.log
+logs/**
+**/logs/**
+*.eventlog
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+*.svclog
+
+# Backup & report files from converting an old project file
+# to a newer Visual Studio version. Backup files are not needed,
+UpgradeLog*.XML
+UpgradeLog*.htm
+
+# MSBuild Binary and Structured Log
+*.binlog
+
+#-----------------------
+# Private SSH keys
+#-----------------------
+*_rsa
+*_rsa.*
+!*_rsa.pub
+*_dsa
+*_dsa.*
+!*_dsa.pub
+
+#-----------------------
+# Script Files
+#-----------------------
+scripts/**
+**/scripts/**
+
+#-----------------------
+# Secret files
+#-----------------------
+*.key
+
+#-----------------------
+# src Files
+#-----------------------
+#src/**
+#**/src/**
+
+#-----------------------
+# Temp Files
+#-----------------------
+tmp/**
+**/tmp/**
+temp/**
+**/temp/**
+
+#-----------------------
+# Test Files
+#-----------------------
+tests/**
+**/tests/**
+test/**
+**/test/**
+*.spec.js
+*.spec.ts
+
+#-----------------------
+# zip files
+#-----------------------
+# Output of 'npm pack'
+*.tgz

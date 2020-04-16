@@ -7,17 +7,20 @@ type X2jOptions = {
   allowBooleanAttributes: boolean;
   parseNodeValue: boolean;
   parseAttributeValue: boolean;
-  arrayMode: boolean;
+  arrayMode: boolean | 'strict';
   trimValues: boolean;
   cdataTagName: false | string;
   cdataPositionChar: string;
-  localeRange:  string;
   parseTrueNumberOnly: boolean;
-  tagValueProcessor: (tagValue: string) => string;
-  attrValueProcessor: (attrValue: string) => string;
+  tagValueProcessor: (tagValue: string, tagName: string) => string;
+  attrValueProcessor: (attrValue: string, attrName: string) => string;
+  stopNodes: string[];
 };
 type X2jOptionsOptional = Partial<X2jOptions>;
-
+type validationOptions = {
+  allowBooleanAttributes: boolean;
+};
+type validationOptionsOptional = Partial<validationOptions>;
 type J2xOptions = {
   attributeNamePrefix: string;
   attrNodeName: false | string;
@@ -36,10 +39,10 @@ type J2xOptionsOptional = Partial<J2xOptions>;
 type ESchema = string | object | Array<string|object>;
 
 type ValidationError = {
-  err: { code: string; msg: string };
+  err: { code: string; msg: string, line: number };
 };
 
-export function parse(xmlData: string, options?: X2jOptionsOptional): any;
+export function parse(xmlData: string, options?: X2jOptionsOptional, validationOptions?: validationOptionsOptional | boolean): any;
 export function convert2nimn(
   node: any,
   e_schema: ESchema,
@@ -56,7 +59,7 @@ export function convertToJsonString(
 ): string;
 export function validate(
   xmlData: string,
-  options?: { allowBooleanAttributes?: boolean }
+  options?: validationOptionsOptional
 ): true | ValidationError;
 export class j2xParser {
   constructor(options: J2xOptionsOptional);
