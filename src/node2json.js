@@ -12,12 +12,16 @@ const convertToJson = function(node, options) {
     //otherwise create a textnode if node has some text
     if (util.isExist(node.val)) {
       if (!(typeof node.val === 'string' && (node.val === '' || node.val === options.cdataPositionChar))) {
-        jObj[options.textNodeName] = node.val;
+        if(options.arrayMode === "strict"){
+          jObj[options.textNodeName] = [ node.val ];
+        }else{
+          jObj[options.textNodeName] = node.val;
+        }
       }
     }
   }
 
-  util.merge(jObj, node.attrsMap);
+  util.merge(jObj, node.attrsMap, options.arrayMode);
 
   const keys = Object.keys(node.child);
   for (let index = 0; index < keys.length; index++) {
@@ -28,7 +32,17 @@ const convertToJson = function(node, options) {
         jObj[tagname].push(convertToJson(node.child[tagname][tag], options));
       }
     } else {
-      jObj[tagname] = convertToJson(node.child[tagname][0], options);
+      if(options.arrayMode === true){
+        const result = convertToJson(node.child[tagname][0], options)
+        if(typeof result === 'object')
+          jObj[tagname] = [ result ];
+        else
+          jObj[tagname] = result;
+      }else if(options.arrayMode === "strict"){
+        jObj[tagname] = [convertToJson(node.child[tagname][0], options) ];
+      }else{
+        jObj[tagname] = convertToJson(node.child[tagname][0], options);
+      }
     }
   }
 

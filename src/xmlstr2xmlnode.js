@@ -4,10 +4,9 @@ const util = require('./util');
 const buildOptions = require('./util').buildOptions;
 const xmlNode = require('./xmlNode');
 const TagType = {OPENING: 1, CLOSING: 2, SELF: 3, CDATA: 4};
-const attrstr_regex = '((\\s*[\\w\\-._:]+(=((\'([^\']*)\')|("([^"]*)")))?)*)\\s*';
-let regx = '<((!\\[CDATA\\[([\\s\\S]*?)(]]>))|(([\\w:\\-._]*:)?([\\w:\\-._]+))'+attrstr_regex+'(\\/)?>|((\\/)(([\\w:\\-._]*:)?([\\w:\\-._]+))\\s*>))([^<]*)';
-  //'<((!\\[CDATA\\[([\\s\\S]*?)(]]>))|(([\\w:\\-._]*:)?([\\w:\\-._]+))([^>]*)>|((\\/)(([\\w:\\-._]*:)?([\\w:\\-._]+))\\s*>))([^<]*)';
-  
+const regx =
+  '<((!\\[CDATA\\[([\\s\\S]*?)(]]>))|((NAME:)?(NAME))([^>]*)>|((\\/)(NAME)\\s*>))([^<]*)'
+  .replace(/NAME/g, util.nameRegexp);
 
 //const tagsRegx = new RegExp("<(\\/?[\\w:\\-\._]+)([^>]*)>(\\s*"+cdataRegx+")*([^<]+)?","g");
 //const tagsRegx = new RegExp("<(\\/?)((\\w*:)?([\\w:\\-\._]+))([^>]*)>([^<]*)("+cdataRegx+"([^<]*))*([^<]+)?","g");
@@ -34,11 +33,10 @@ const defaultOptions = {
   trimValues: true, //Trim string values of tag and attributes
   cdataTagName: false,
   cdataPositionChar: '\\c',
-  localeRange: '',
-  tagValueProcessor: function(a) {
+  tagValueProcessor: function(a, tagName) {
     return a;
   },
-  attrValueProcessor: function(a) {
+  attrValueProcessor: function(a, attrName) {
     return a;
   },
   stopNodes: []
@@ -60,7 +58,6 @@ const props = [
   'trimValues',
   'cdataTagName',
   'cdataPositionChar',
-  'localeRange',
   'tagValueProcessor',
   'attrValueProcessor',
   'parseTrueNumberOnly',
@@ -76,19 +73,16 @@ const getTraversalObj = function(xmlData, options) {
   const xmlObj = new xmlNode('!xml');
   let currentNode = xmlObj;
 
-  regx = regx.replace(/\[\\w/g, '[' + options.localeRange + '\\w');
   const tagsRegx = new RegExp(regx, 'g');
   let tag = tagsRegx.exec(xmlData);
   let nextTag = tagsRegx.exec(xmlData);
   while (tag) {
-    //console.log(tag)
     const tagType = checkForTagType(tag);
-    //console.log(tagType)
 
     if (tagType === TagType.CLOSING) {
       //add parsed data to parent node
-      if (currentNode.parent && tag[22]) {
-        currentNode.parent.val = util.getValue(currentNode.parent.val) + '' + processTagValue(tag[22], options);
+      if (currentNode.parent && tag[12]) {
+        currentNode.parent.val = util.getValue(currentNode.parent.val) + '' + processTagValue(tag, options, currentNode.parent.tagname);
       }
       if (options.stopNodes.length && options.stopNodes.includes(currentNode.tagname)) {
         currentNode.child = []
@@ -105,21 +99,21 @@ const getTraversalObj = function(xmlData, options) {
         //for backtracking
         currentNode.val = util.getValue(currentNode.val) + options.cdataPositionChar;
         //add rest value to parent node
-        if (tag[22]) {
-          currentNode.val += processTagValue(tag[22], options);
+        if (tag[12]) {
+          currentNode.val += processTagValue(tag, options);
         }
       } else {
-        currentNode.val = (currentNode.val || '') + (tag[3] || '') + processTagValue(tag[22], options);
+        currentNode.val = (currentNode.val || '') + (tag[3] || '') + processTagValue(tag, options);
       }
     } else if (tagType === TagType.SELF) {
-      if (currentNode && tag[22]) {
-        currentNode.val = util.getValue(currentNode.val) + '' + processTagValue(tag[22], options);
+      if (currentNode && tag[12]) {
+        currentNode.val = util.getValue(currentNode.val) + '' + processTagValue(tag, options);
       }
 
       const childNode = new xmlNode(options.ignoreNameSpace ? tag[7] : tag[5], currentNode, '');
-      /* if (tag[8] && tag[8].length > 0) {
+      if (tag[8] && tag[8].length > 0) {
         tag[8] = tag[8].substr(0, tag[8].length - 1);
-      } */
+      }
       childNode.attrsMap = buildAttributesMap(tag[8], options);
       currentNode.addChild(childNode);
     } else {
@@ -127,7 +121,7 @@ const getTraversalObj = function(xmlData, options) {
       const childNode = new xmlNode(
         options.ignoreNameSpace ? tag[7] : tag[5],
         currentNode,
-        processTagValue(tag[22], options)
+        processTagValue(tag, options)
       );
       if (options.stopNodes.length && options.stopNodes.includes(childNode.tagname)) {
         childNode.startIndex=tag.index + tag[1].length
@@ -144,12 +138,14 @@ const getTraversalObj = function(xmlData, options) {
   return xmlObj;
 };
 
-function processTagValue(val, options) {
+function processTagValue(parsedTags, options, parentTagName) {
+  const tagName = parsedTags[7] || parentTagName;
+  let val = parsedTags[12];
   if (val) {
     if (options.trimValues) {
       val = val.trim();
     }
-    val = options.tagValueProcessor(val);
+    val = options.tagValueProcessor(val, tagName);
     val = parseValue(val, options.parseNodeValue, options.parseTrueNumberOnly);
   }
 
@@ -159,9 +155,9 @@ function processTagValue(val, options) {
 function checkForTagType(match) {
   if (match[4] === ']]>') {
     return TagType.CDATA;
-  } else if (match[18] === '/') {
+  } else if (match[10] === '/') {
     return TagType.CLOSING;
-  } else if (match[16] === '/') {
+  } else if (typeof match[8] !== 'undefined' && match[8].substr(match[8].length - 1) === '/') {
     return TagType.SELF;
   } else {
     return TagType.OPENING;
@@ -193,6 +189,7 @@ function parseValue(val, shouldParse, parseTrueNumberOnly) {
         parsed = Number.parseInt(val, 16);
       } else if (val.indexOf('.') !== -1) {
         parsed = Number.parseFloat(val);
+        val = val.replace(/\.?0+$/, "");
       } else {
         parsed = Number.parseInt(val, 10);
       }
@@ -229,7 +226,7 @@ function buildAttributesMap(attrStr, options) {
           if (options.trimValues) {
             matches[i][4] = matches[i][4].trim();
           }
-          matches[i][4] = options.attrValueProcessor(matches[i][4]);
+          matches[i][4] = options.attrValueProcessor(matches[i][4], attrName);
           attrs[options.attributeNamePrefix + attrName] = parseValue(
             matches[i][4],
             options.parseAttributeValue,

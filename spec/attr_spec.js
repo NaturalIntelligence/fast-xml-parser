@@ -74,69 +74,11 @@ describe("XMLParser", function() {
         expect(result).toBe(true);
     });
 
-    it("should decode HTML entities / char", function() {
-        const xmlData = `<element id="7" data="foo\r\nbar" bug="foo&ampbar&apos;"/>`;
-        const expected = {
-            "element": {
-                "id":   7,
-                "data": "foo bar",
-                "bug":  "foo&ampbar'"
-            }
-        };
-
-        let result = parser.parse(xmlData, {
-            attributeNamePrefix: "",
-            ignoreAttributes:    false,
-            parseAttributeValue: true,
-            decodeHTMLchar:      true,
-            attrValueProcessor: a => he.decode(a, {isAttributeValue: true})
-        });
-
-        //console.log(JSON.stringify(result,null,4));
-        expect(result).toEqual(expected);
-
-        result = validator.validate(xmlData);
-        expect(result).toBe(true);
-    });
-
     it("should parse Boolean Attributes", function() {
         const xmlData = `<element id="7" str="" data><selfclosing/><selfclosing /><selfclosingwith attr/></element>`;
         const expected = {
             "element": {
                 "id": 7,
-                "str": "",
-                "data": true,
-                "selfclosing": [
-                    "",
-                    ""
-                ],
-                "selfclosingwith": {
-                    "attr": true
-                }
-            }
-        };
-
-        let result = parser.parse(xmlData, {
-            attributeNamePrefix:    "",
-            ignoreAttributes:       false,
-            parseAttributeValue:    true,
-            allowBooleanAttributes: true
-        });
-
-        //console.log(JSON.stringify(result,null,4));
-        expect(result).toEqual(expected);
-
-        result = validator.validate(xmlData, {
-            allowBooleanAttributes: true
-        });
-        expect(result).toBe(true);
-    });
-
-    it("should parse an attribute with '>' ", function() {
-        const xmlData = `<element id="7>" str="" data><selfclosing/><selfclosing /><selfclosingwith attr/></element>`;
-        const expected = {
-            "element": {
-                "id": '7>',
                 "str": "",
                 "data": true,
                 "selfclosing": [
@@ -220,7 +162,8 @@ describe("XMLParser", function() {
         const expected = {
             "err": {
                 "code": "InvalidAttr",
-                "msg":  "attribute 35entity is an invalid name."
+                "msg":  "Attribute '35entity' is an invalid name.",
+                "line": 1
             }
         };
         const result = validator.validate(xmlData);
@@ -233,7 +176,8 @@ describe("XMLParser", function() {
         const expected = {
             "err": {
                 "code": "InvalidAttr",
-                "msg":  "attribute enti+ty is an invalid name."
+                "msg":  "Attribute 'enti+ty' is an invalid name.",
+                "line": 1
             }
         };
 
@@ -247,7 +191,8 @@ describe("XMLParser", function() {
         const expected = {
             "err": {
                 "code": "InvalidTag",
-                "msg":  "closing tag issue can't have attributes or invalid starting."
+                "msg":  "Closing tag 'issue' can't have attributes or invalid starting.",
+                "line": 1
             }
         };
         const result = validator.validate(xmlData);
@@ -260,7 +205,8 @@ describe("XMLParser", function() {
         const expected = {
             "err": {
                 "code": "InvalidAttr",
-                "msg":  "attribute '' has no space in starting."
+                "msg":  "Attribute '''' has no space in starting.",
+                "line": 1
             }
         };
         const result = validator.validate(xmlData);
@@ -286,7 +232,8 @@ describe("XMLParser", function() {
         const expected = {
             "err": {
                 "code": "InvalidAttr",
-                "msg":  "Attributes for rootNode have open quote"
+                "msg":  "Attributes for 'rootNode' have open quote.",
+                "line": 1
             }
         };
         const result = validator.validate(xmlData);
@@ -298,7 +245,8 @@ describe("XMLParser", function() {
         const expected = {
             "err": {
                 "code": "InvalidAttr",
-                "msg":  "attribute abc is repeated."
+                "msg":  "Attribute 'abc' is repeated.",
+                "line": 1
             }
         };
         const result = validator.validate(xmlData);
@@ -311,7 +259,8 @@ describe("XMLParser", function() {
         const expected = {
             "err": {
                 "code": "InvalidAttr",
-                "msg":  "attribute bc has no space in starting."
+                "msg": "Attribute 'bc' has no space in starting.",
+                "line": 1
             }
         };
         const result = validator.validate(xmlData);
@@ -323,7 +272,8 @@ describe("XMLParser", function() {
         const expected = {
             "err": {
                 "code": "InvalidAttr",
-                "msg":  "boolean attribute ab is not allowed."
+                "msg":  "boolean attribute 'ab' is not allowed.",
+                "line": 1
             }
         };
         const result = validator.validate(xmlData);
@@ -336,7 +286,8 @@ describe("XMLParser", function() {
             "err": {
                 "code": "InvalidAttr",
                 // "msg": "attribute 123 is an invalid name."
-                "msg":  "boolean attribute 123 is not allowed."
+                "msg":  "boolean attribute '123' is not allowed.",
+                "line": 1
             }
         };
         const result = validator.validate(xmlData);
@@ -349,8 +300,9 @@ describe("XMLParser", function() {
         const expected = {
             "err": {
                 "code": "InvalidAttr",
-               // "msg": "attribute 123 is an invalid name."
-                "msg": "boolean attribute 123 is not allowed."
+                // "msg": "attribute 123 is an invalid name."
+                "msg":  "boolean attribute '123' is not allowed.",
+                "line": 1
             }
         };
         const result = validator.validate(xmlData);

@@ -3,6 +3,67 @@ Validate XML, Parse XML to JS/JSON and vice versa, or parse XML to Nimn rapidly 
 
 > This project welcomes **contributors**. If you have a feature you'd like to see implemented or a bug you'd liked fixed, the best and fastest way to make that happen is to implement it and submit a PR. Basic knowledge of JS is sufficient. Feel free to ask for any guidance.
 
+
+## Users
+List of some applications/projects using Fast XML Parser. (Raise an issue to submit yours)
+
+<a href="https://github.com/NaturalIntelligence/imglab" title="imglab" ><img src="https://github.com/NaturalIntelligence/imglab/blob/master/img/imglab_logo.png?raw=true" width="80px" ></a>
+<a href="https://github.com/NaturalIntelligence/Stubmatic" title="stubmatic" ><img src="https://camo.githubusercontent.com/ff711425dc2286cd215637b7114eb43e571f001d/68747470733a2f2f6e61747572616c696e74656c6c6967656e63652e6769746875622e696f2f537475626d617469632f696d672f737475626d617469635f6c6f676f2e706e673f7261773d74727565" width="80px" ></a>
+<a href="https://github.com/muneem4node/muneem" title="Muneem" ><img src="https://github.com/muneem4node/muneem/raw/master/static/muneem.png?raw=true" width="80px" ></a>
+<a href="https://github.com/badges/shields" title="shields" ><img src="https://avatars2.githubusercontent.com/u/6254238" width="80px" ></a>
+<a href="https://github.com/renovatebot/renovate" title="renovate" ><img src="https://avatars1.githubusercontent.com/u/38656520" width="80px" ></a>
+<a href="https://vmware.com/" title="vmware" > <img src="https://avatars0.githubusercontent.com/u/473334" width="80px" ></a>
+<a href="https://opensource.microsoft.com/" title="microsoft" > <img src="https://avatars0.githubusercontent.com/u/6154722" width="80px" ></a>
+<a href="https://github.com/notable/notable" title="notable" > <img src="https://avatars3.githubusercontent.com/u/46467536" width="80px" ></a>
+<a href="http://ibm.github.io/" title="IBM" > <img src="https://avatars2.githubusercontent.com/u/1459110" width="80px" ></a>
+<a href="https://www.ft.com/" title="Financial Times" > <img src="https://avatars2.githubusercontent.com/u/3502508" width="80px" ></a>
+<a href="https://github.com/camunda" title="camunda BPM" > <img src="https://avatars3.githubusercontent.com/u/2443838" width="80px" ></a>
+<a href="https://github.com/AnyChart" title="AnyChart" > <img src="https://avatars0.githubusercontent.com/u/703373" width="80px" ></a>
+<a href="https://github.com/magda-io" title="magda-io" > <img src="https://avatars0.githubusercontent.com/u/40348684" width="80px" ></a>
+<a href="https://github.com/geistinteractive" title="Geist Interactive" > <img src="https://avatars0.githubusercontent.com/u/11617965" width="80px" ></a>
+<a href="https://www.tourstream.eu/" title="tourstream" > <img src="https://avatars1.githubusercontent.com/u/23242088" width="80px" ></a>
+<a href="https://www.atomist.com/" title="Atomist" > <img src="https://avatars3.githubusercontent.com/u/19392" width="80px" ></a>
+<a href="http://www.opuscapita.com/" title="OpusCapita" > <img src="https://avatars1.githubusercontent.com/u/23256480" width="80px" ></a>
+<a href="https://nevatrip.ru/" title="nevatrip" > <img src="https://avatars2.githubusercontent.com/u/35730984" width="80px" ></a>
+<a href="http://www.smartbear.com" title="SmartBear Software" > <img src="https://avatars2.githubusercontent.com/u/1644671" width="80px" ></a>
+<a href="http://eosnavigator.com/" title="nevatrip" > <img src="https://avatars1.githubusercontent.com/u/40260563" width="80px" ></a>
+<a href="http://nasa.github.io/" title="NASA" > <img src="https://avatars0.githubusercontent.com/u/848102" width="80px" ></a>
+<a href="http://qgis.org/" title="QGIS" > <img src="https://avatars2.githubusercontent.com/u/483444" width="80px" ></a>
+<a href="http://www.craft.ai/" title="craft ai" > <img src="https://avatars1.githubusercontent.com/u/12046764" width="80px" ></a>
+<a href="http://brownspace.org/" title="Brown Space Engineering" > <img src="https://avatars2.githubusercontent.com/u/5504507" width="80px" ></a>
+<a href="http://www.appcelerator.com/" title="Team Appcelerator" > <img src="https://avatars1.githubusercontent.com/u/82188" width="80px" ></a>
+<a href="https://xmllint.com/" title="XML Lint" > <img src="https://xmllint.com/assets/logo.png" width="80px" ></a>
+<a href="https://github.com/prettier" title="Prettier" > <img src="https://avatars0.githubusercontent.com/u/25822731" width="80px" ></a>
+<a href="https://github.com/dolanmiu/docx" title="docx" > <img src="https://i.imgur.com/37uBGhO.gif" width="80px" ></a>
+<a href="http://orange-opensource.github.io/" title="Open Source by Orange" > <img src="https://avatars3.githubusercontent.com/u/1506386" width="80px" ></a>
+<a href="http://www.ybrain.com/" title="YBRAIN Inc." > <img src="https://avatars2.githubusercontent.com/u/38232440" width="80px" ></a>
+<a href="http://99bitcoins.com/" title="99 bitcoins" > <img src="https://avatars0.githubusercontent.com/u/9527779" width="80px" ></a>
+<a href="https://wechaty.github.io/wechaty/" title="Wechaty" > <img src="https://avatars0.githubusercontent.com/u/21285357" width="80px" ></a>
+<a href="https://opendatakit.org" title="Open Data Kit" > <img src="https://avatars0.githubusercontent.com/u/6222985" width="80px" ></a>
+<a href="https://ridibooks.com" title="RIDI Books" > <img src="https://avatars1.githubusercontent.com/u/24955411" width="80px" ></a>
+<a href="http://signalk.org" title="Signal K" > <img src="https://avatars1.githubusercontent.com/u/7126740" width="80px" ></a>
+<a href="http://brain.js.org/" title="brain.js" > <img src="https://avatars2.githubusercontent.com/u/23732838" width="80px" ></a>
+<a href="https://skygear.io/" title="Skegear" > <img src="https://avatars1.githubusercontent.com/u/15025887" width="80px" ></a>
+<a href="https://npmjs.com/" title="npm" > <img src="https://avatars0.githubusercontent.com/u/6078720" width="80px" ></a>
+<a href=" https://www.mindpointgroup.com" title="mindpointgroup" > <img src="https://avatars1.githubusercontent.com/u/6413533" width="80px" ></a>
+<a href="http://www.acuantcorp.com/" title="Acuant Inc" > <img src="https://avatars3.githubusercontent.com/u/11580319?s=200&v=4" width="80px" ></a>
+<a href="https://www.wazuh.com/" title="wazuh" > <img src="https://avatars2.githubusercontent.com/u/13752566" width="80px" ></a>
+<a href="https://orbs.com/" title="ORBS The Hybrid Blockchain" > <img src="https://avatars1.githubusercontent.com/u/33665977" width="80px" ></a>
+<a href="https://texlab.netlify.com/" title="latex-lsp" > <img src="https://avatars1.githubusercontent.com/u/48360002" width="80px" ></a>
+<a href="https://frontside.io/" title="The Frontside " > <img src="https://avatars1.githubusercontent.com/u/223096" width="80px" ></a>
+<a href="https://creditsense.com.au/" title="Credit Sense Australia " > <img src="https://avatars0.githubusercontent.com/u/46947118" width="80px" ></a>
+<a href="https://www.hustunique.com/" title="UniqueStudio" > <img src="https://avatars1.githubusercontent.com/u/4847684" width="80px" ></a>
+<a href="http://www.openforis.org/" title="Open Foris" > <img src="https://avatars2.githubusercontent.com/u/1212750" width="80px" ></a>
+<a href="#" title="NHS Connect" > <img src="https://avatars3.githubusercontent.com/u/20316669" width="80px" ></a>
+<a href="https://tradle.io/" title="Tradle" > <img src="https://avatars2.githubusercontent.com/u/9482126" width="80px" ></a>
+<a href="http://www.anl.gov/" title="Argonne National Laboratory" > <img src="https://avatars0.githubusercontent.com/u/10468712" width="80px" ></a>
+<a href="https://simpleicons.org/" title="Simple Icons" > <img src="https://avatars2.githubusercontent.com/u/29872746" width="80px" ></a>
+<a href="https://stoplight.io/" title="Stoplight" > <img src="https://avatars1.githubusercontent.com/u/10767217" width="80px" ></a>
+<a href="http://www.fda.gov/" title="Food and Drug Administration " > <img src="https://avatars2.githubusercontent.com/u/6471964" width="80px" ></a>
+<a href="http://www.magento.com/" title="Magento" > <img src="https://avatars2.githubusercontent.com/u/168457" width="80px" ></a>
+
+
+
 ### Join this project as collaborator / maintainer.
 
 
@@ -39,8 +100,6 @@ Validate XML, Parse XML to JS/JSON and vice versa, or parse XML to Nimn rapidly 
     * You can remove namespace from tag or attribute name while parsing
     * It supports boolean attributes, if configured.
 
-
-
 ## How to use
 
 To use it in **NPM package**  install it first
@@ -76,10 +135,11 @@ var options = {
     trimValues: true,
     cdataTagName: "__cdata", //default is 'false'
     cdataPositionChar: "\\c",
-    localeRange: "", //To support non english character in tag/attribute values.
     parseTrueNumberOnly: false,
-    attrValueProcessor: a => he.decode(a, {isAttributeValue: true}),//default is a=>a
-    tagValueProcessor : a => he.decode(a) //default is a=>a
+    arrayMode: false, //"strict"
+    attrValueProcessor: (val, attrName) => he.decode(val, {isAttributeValue: true}),//default is a=>a
+    tagValueProcessor : (val, tagName) => he.decode(val), //default is a=>a
+    stopNodes: ["parse-me-as-string"]
 };
 
 if( parser.validate(xmlData) === true) { //optional (it'll return an object in case it's not valid)
@@ -91,6 +151,28 @@ var tObj = parser.getTraversalObj(xmlData,options);
 var jsonObj = parser.convertToJson(tObj,options);
 
 ```
+As you can notice in above code, validator is not embeded with in the parser and expected to be called separately. However, you can pass `true` or validation options as 3rd parameter to the parser to trigger validator internally. It is same as above example.
+
+```js
+try{
+  var jsonObj = parser.parse(xmlData,options, true);
+}catch(error){
+  console.log(error.message)
+}
+```
+
+Validator returns the following object in case of error;
+```js
+{
+  err: {
+    code: code,
+    msg: message,
+    line: lineNumber,
+  },
+};
+```
+
+
 #### Note: [he](https://www.npmjs.com/package/he) library is used in this example
 
 <details>
@@ -107,8 +189,8 @@ var jsonObj = parser.convertToJson(tObj,options);
 * **decodeHTMLchar** : This options has been removed from 3.3.4. Instead, use tagValueProcessor, and attrValueProcessor. See above example.
 * **cdataTagName** : If specified, parser parse CDATA as nested tag instead of adding it's value to parent tag.
 * **cdataPositionChar** : It'll help to covert JSON back to XML without losing CDATA position.
-* **localeRange**: Parser will accept non-English character in tag or attribute name. Check #87 for more detail. Eg `localeRange: "a-zA-Zа-яёА-ЯЁ"`
 * **parseTrueNumberOnly**: if true then values like "+123", or "0123" will not be parsed as number.
+* **arrayMode** : When `false`, a tag with single occurence is parsed as an object but as an array in case of multiple occurences. When `true`, a tag will be parsed as an array always excluding leaf nodes. When `strict`, all the tags will be parsed as array only.
 * **tagValueProcessor** : Process tag value during transformation. Like HTML decoding, word capitalization, etc. Applicable in case of string only.
 * **attrValueProcessor** : Process attribute value during transformation. Like HTML decoding, word capitalization, etc. Applicable in case of string only.
 * **stopNodes** : an array of tag names which are not required to be parsed. Instead their values are parsed as string.
@@ -218,60 +300,18 @@ With the correct options, you can get the almost original XML without losing any
 
 </details>
 
+### Limitations
+ Currently FXP fails to parse XML with attributes has ">" in the value. This problem is left open as change in regex for its fix is degrading the performance. And the parser become very slow in case of long attrbute names. Hoever, It is not ignored and we're working on the fix.
+
 ### Worth to mention
 
-- **[BigBit standard)](https://github.com/amitguptagwl/bigbit)** : A standard to reprent any number in the universe in comparitively less space and without precision loss. A standard to save space to represent any text string in comparision of UTF encoding.
-- **[imglab](https://github.com/NaturalIntelligence/imglab)** : Speedup and simplify image labeling / annotation. Supports multiple formats, one click annotation, easy interface and much more. There are more than 20k images are annotated every month.
+- **[BigBit standard)](https://github.com/amitguptagwl/bigbit)** : A standard to represent any number in the universe in comparitively less space and without precision loss. A standard to save memory to represent any text string in comparision of UTF encodings.
+- **[imglab](https://github.com/NaturalIntelligence/imglab)** : Speedup and simplify image labeling / annotation. Supports multiple formats, one click annotation, easy interface and much more. There are more than half million images are being annotated every month using this tool.
+- [stubmatic](https://github.com/NaturalIntelligence/Stubmatic) : Create fake webservices, DynamoDB or S3 servers, Manage fake/mock stub data, Or fake any HTTP(s) call.
 - **[अनुमार्गक (anumargak)](https://github.com/NaturalIntelligence/anumargak)** : The fastest and simple router for node js web frameworks with many unique features.
-- [stubmatic](https://github.com/NaturalIntelligence/Stubmatic) : A stub server to mock behaviour of HTTP(s) / REST / SOAP services, incuding DynamoDB calls. You can also mock binary formats.
-- [मुनीम (Muneem)](https://github.com/muneem4node/muneem) : A webframework made for all team members. Faster tha fastify, express, koa, hapi and others.
+- [मुनीम (Muneem)](https://github.com/muneem4node/muneem) : A webframework made for all team members. Fast and Featured.
 - [शब्दावली (shabdawali)](https://github.com/amitguptagwl/shabdawali) : Amazing human like typing effects beyond your imagination.
 
-
-## Users
-List of applications and projects using Fast XML Parser. (Raise an issue to submit yours)
-
-<a href="https://github.com/NaturalIntelligence/imglab" title="imglab" ><img src="https://github.com/NaturalIntelligence/imglab/blob/master/img/imglab_logo.png?raw=true" width="80px" ></a>
-<a href="https://github.com/NaturalIntelligence/Stubmatic" title="stubmatic" ><img src="https://camo.githubusercontent.com/ff711425dc2286cd215637b7114eb43e571f001d/68747470733a2f2f6e61747572616c696e74656c6c6967656e63652e6769746875622e696f2f537475626d617469632f696d672f737475626d617469635f6c6f676f2e706e673f7261773d74727565" width="80px" ></a>
-<a href="https://github.com/muneem4node/muneem" title="Muneem" ><img src="https://github.com/muneem4node/muneem/raw/master/static/muneem.png?raw=true" width="80px" ></a>
-<a href="https://github.com/badges/shields" title="shields" ><img src="https://avatars2.githubusercontent.com/u/6254238" width="80px" ></a>
-<a href="https://github.com/renovatebot/renovate" title="renovate" ><img src="https://avatars1.githubusercontent.com/u/38656520" width="80px" ></a>
-<a href="https://github.com/camunda" title="camunda BPM" > <img src="https://avatars3.githubusercontent.com/u/2443838" width="80px" ></a>
-<a href="https://github.com/AnyChart" title="AnyChart" > <img src="https://avatars0.githubusercontent.com/u/703373" width="80px" ></a>
-<a href="https://github.com/magda-io" title="magda-io" > <img src="https://avatars0.githubusercontent.com/u/40348684" width="80px" ></a>
-<a href="https://github.com/geistinteractive" title="Geist Interactive" > <img src="https://avatars0.githubusercontent.com/u/11617965" width="80px" ></a>
-<a href="https://www.tourstream.eu/" title="tourstream" > <img src="https://avatars1.githubusercontent.com/u/23242088" width="80px" ></a>
-<a href="https://www.atomist.com/" title="Atomist" > <img src="https://avatars3.githubusercontent.com/u/19392" width="80px" ></a>
-<a href="http://www.opuscapita.com/" title="OpusCapita" > <img src="https://avatars1.githubusercontent.com/u/23256480" width="80px" ></a>
-<a href="https://nevatrip.ru/" title="nevatrip" > <img src="https://avatars2.githubusercontent.com/u/35730984" width="80px" ></a>
-<a href="http://eosnavigator.com/" title="nevatrip" > <img src="https://avatars1.githubusercontent.com/u/40260563" width="80px" ></a>
-<a href="http://pds.nasa.gov/" title="NASA-PDS" > <img src="https://avatars2.githubusercontent.com/u/26313833" width="80px" ></a>
-<a href="http://qgis.org/" title="QGIS" > <img src="https://avatars2.githubusercontent.com/u/483444" width="80px" ></a>
-<a href="http://www.craft.ai/" title="craft ai" > <img src="https://avatars1.githubusercontent.com/u/12046764" width="80px" ></a>
-<a href="http://brownspace.org/" title="Brown Space Engineering" > <img src="https://avatars2.githubusercontent.com/u/5504507" width="80px" ></a>
-<a href="http://www.appcelerator.com/" title="Team Appcelerator" > <img src="https://avatars1.githubusercontent.com/u/82188" width="80px" ></a>
-<a href="http://orange-opensource.github.io/" title="Open Source by Orange" > <img src="https://avatars3.githubusercontent.com/u/1506386" width="80px" ></a>
-<a href="http://www.ybrain.com/" title="YBRAIN Inc." > <img src="https://avatars2.githubusercontent.com/u/38232440" width="80px" ></a>
-<a href="http://99bitcoins.com/" title="99 bitcoins" > <img src="https://avatars0.githubusercontent.com/u/9527779" width="80px" ></a>
-<a href="https://www.ft.com/" title="Financial Times" > <img src="https://avatars2.githubusercontent.com/u/3502508" width="80px" ></a>
-<a href="https://opendatakit.org" title="Open Data Kit" > <img src="https://avatars0.githubusercontent.com/u/6222985" width="80px" ></a>
-<a href="https://ridibooks.com" title="RIDI Books" > <img src="https://avatars1.githubusercontent.com/u/24955411" width="80px" ></a>
-<a href="http://signalk.org" title="Signal K" > <img src="https://avatars1.githubusercontent.com/u/7126740" width="80px" ></a>
-<a href="http://brain.js.org/" title="brain.js" > <img src="https://avatars2.githubusercontent.com/u/23732838" width="80px" ></a>
-<a href="https://skygear.io/" title="Skegear" > <img src="https://avatars1.githubusercontent.com/u/15025887" width="80px" ></a>
-<a href=" https://www.mindpointgroup.com" title="mindpointgroup" > <img src="https://avatars1.githubusercontent.com/u/6413533" width="80px" ></a>
-<a href="http://www.acuantcorp.com/" title="Acuant Inc" > <img src="https://avatars3.githubusercontent.com/u/11580319?s=200&v=4" width="80px" ></a>
-<a href="https://www.wazuh.com/" title="wazuh" > <img src="https://avatars2.githubusercontent.com/u/13752566" width="80px" ></a>
-<a href="https://orbs.com/" title="ORBS The Hybrid Blockchain" > <img src="https://avatars1.githubusercontent.com/u/33665977" width="80px" ></a>
-<a href="https://texlab.netlify.com/" title="latex-lsp" > <img src="https://avatars1.githubusercontent.com/u/48360002" width="80px" ></a>
-<a href="https://frontside.io/" title="The Frontside " > <img src="https://avatars1.githubusercontent.com/u/223096" width="80px" ></a>
-<a href="https://www.hustunique.com/" title="UniqueStudio" > <img src="https://avatars1.githubusercontent.com/u/4847684" width="80px" ></a>
-<a href="http://www.openforis.org/" title="Open Foris" > <img src="https://avatars2.githubusercontent.com/u/1212750" width="80px" ></a>
-<a href="#" title="NHS Connect" > <img src="https://avatars3.githubusercontent.com/u/20316669" width="80px" ></a>
-<a href="https://tradle.io/" title="Tradle" > <img src="https://avatars2.githubusercontent.com/u/9482126" width="80px" ></a>
-<a href="http://www.anl.gov/" title="Argonne National Laboratory" > <img src="https://avatars0.githubusercontent.com/u/10468712" width="80px" ></a>
-<a href="https://simpleicons.org/" title="Simple Icons" > <img src="https://avatars2.githubusercontent.com/u/29872746" width="80px" ></a>
-<a href="https://vmware.com/" title="vmware" > <img src="https://avatars0.githubusercontent.com/u/473334" width="80px" ></a>
 
 ## Contributors
 

@@ -12,9 +12,9 @@ describe("XMLParser", function() {
             }
         };
         const options = {
-          localeRange: "а-яёА-ЯЁa-zA-Z",
           attributeNamePrefix : "@_"
         }
+
         const result = parser.parse(xmlData, options);
         expect(result).toEqual(expected);
         // console.log({ expected})

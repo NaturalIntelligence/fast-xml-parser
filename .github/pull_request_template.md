@@ -11,6 +11,6 @@ Please mention the type of PR
 * [ ]Refactoring / Technology upgrade
 * [ ]New Feature
 
-**Note** : Please ensure that you've read contribution [guidelines](https://github.com/NaturalIntelligence/fast-xml-parser/blob/master/CONTRIBUTING.md) before raising this PR.
+**Note** : Please ensure that you've read contribution [guidelines](https://github.com/NaturalIntelligence/fast-xml-parser/blob/master/docs/CONTRIBUTING.md) before raising this PR. If your PR is in progress, please prepend `[WIP]` in PR title. Your PR will be reviewed when `[WIP]` will be removed from the PR title.
 
 [Bookmark](https://github.com/NaturalIntelligence/fast-xml-parser/stargazers) this repository for further updates.
