@@ -94,8 +94,8 @@ List of some applications/projects using Fast XML Parser. (Raise an issue to sub
 * Faster than any pure JS implementation.
 * It can handle big files (tested up to 100mb).
 * Various options are available to customize the transformation
-    * You can parse CDATA as separate property.
-    * You can prefix attributes or group them to separate property. Or can ignore them from result completely.
+    * You can parse CDATA as a separate property.
+    * You can prefix attributes or group them to a separate property. Or they can be ignored from the result completely.
     * You can parse tag's or attribute's value to primitive type: string, integer, float, hexadecimal, or boolean. And can optionally decode for HTML char.
     * You can remove namespace from tag or attribute name while parsing
     * It supports boolean attributes, if configured.
@@ -106,7 +106,7 @@ To use it in **NPM package**  install it first
 
 `$npm install fast-xml-parser` or using [yarn](https://yarnpkg.com/) `$yarn add fast-xml-parser`
 
-To use it from **CLI** Install it globally with `-g` option.
+To use it from a **CLI** install it globally with the `-g` option.
 
 `$npm install fast-xml-parser -g`
 
@@ -151,7 +151,7 @@ var tObj = parser.getTraversalObj(xmlData,options);
 var jsonObj = parser.convertToJson(tObj,options);
 
 ```
-As you can notice in above code, validator is not embeded with in the parser and expected to be called separately. However, you can pass `true` or validation options as 3rd parameter to the parser to trigger validator internally. It is same as above example.
+As you can notice in the above code, validator is not embedded with in the parser and expected to be called separately. However, you can pass `true` or validation options as 3rd parameter to the parser to trigger validator internally. It is same as above example.
 
 ```js
 try{
@@ -190,7 +190,7 @@ Validator returns the following object in case of error;
 * **cdataTagName** : If specified, parser parse CDATA as nested tag instead of adding it's value to parent tag.
 * **cdataPositionChar** : It'll help to covert JSON back to XML without losing CDATA position.
 * **parseTrueNumberOnly**: if true then values like "+123", or "0123" will not be parsed as number.
-* **arrayMode** : When `false`, a tag with single occurence is parsed as an object but as an array in case of multiple occurences. When `true`, a tag will be parsed as an array always excluding leaf nodes. When `strict`, all the tags will be parsed as array only.
+* **arrayMode** : When `false`, a tag with single occurrence is parsed as an object but as an array in case of multiple occurences. When `true`, a tag will be parsed as an array always excluding leaf nodes. When `strict`, all the tags will be parsed as array only.
 * **tagValueProcessor** : Process tag value during transformation. Like HTML decoding, word capitalization, etc. Applicable in case of string only.
 * **attrValueProcessor** : Process attribute value during transformation. Like HTML decoding, word capitalization, etc. Applicable in case of string only.
 * **stopNodes** : an array of tag names which are not required to be parsed. Instead their values are parsed as string.
@@ -301,11 +301,11 @@ With the correct options, you can get the almost original XML without losing any
 </details>
 
 ### Limitations
- Currently FXP fails to parse XML with attributes has ">" in the value. This problem is left open as change in regex for its fix is degrading the performance. And the parser become very slow in case of long attrbute names. Hoever, It is not ignored and we're working on the fix.
+ Currently FXP fails to parse XML with attributes has ">" in the value. This problem is left open as change in regex for its fix is degrading the performance. And the parser become very slow in case of long attribute names. However, it is not ignored and we're working on the fix.
 
 ### Worth to mention
 
-- **[BigBit standard)](https://github.com/amitguptagwl/bigbit)** : A standard to represent any number in the universe in comparitively less space and without precision loss. A standard to save memory to represent any text string in comparision of UTF encodings.
+- **[BigBit standard)](https://github.com/amitguptagwl/bigbit)** : A standard to represent any number in the universe in comparatively less space and without precision loss. A standard to save memory to represent any text string in comparision of UTF encodings.
 - **[imglab](https://github.com/NaturalIntelligence/imglab)** : Speedup and simplify image labeling / annotation. Supports multiple formats, one click annotation, easy interface and much more. There are more than half million images are being annotated every month using this tool.
 - [stubmatic](https://github.com/NaturalIntelligence/Stubmatic) : Create fake webservices, DynamoDB or S3 servers, Manage fake/mock stub data, Or fake any HTTP(s) call.
 - **[अनुमार्गक (anumargak)](https://github.com/NaturalIntelligence/anumargak)** : The fastest and simple router for node js web frameworks with many unique features.
