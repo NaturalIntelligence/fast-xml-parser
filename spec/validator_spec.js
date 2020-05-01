@@ -7,12 +7,13 @@ const validator = require("../src/validator");
 function validate(xmlData, error, line = 1) {
     const result = validator.validate(xmlData);
     if (error) {
+
+        const keys = Object.keys(error);
         const expected = {
-            code: Object.keys(error)[0],
-            msg: Object.values(error)[0],
+            code: keys[0],
+            msg: error[keys[0]],
             line
         };
-        // console.log(JSON.stringify(result.err,null,4));
         expect(result.err).toEqual(expected);
     } else {
         expect(result).toBe(true);
