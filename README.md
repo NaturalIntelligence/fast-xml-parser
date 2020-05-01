@@ -116,7 +116,7 @@ To use it on a **webpage** include it from a [CDN](https://cdnjs.com/libraries/f
 
 
 ```js
-var jsonObj = parser.parse(xmlData [,options] );
+var jsonObj = parser.parse(xmlData,[options]);
 ```
 
 ```js
