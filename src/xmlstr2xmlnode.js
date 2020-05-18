@@ -208,9 +208,9 @@ const getTraversalObj = function(xmlData, options) {
         i = closeIndex;
       } else if( xmlData[i+1] === '?') {
         i = xmlData.indexOf("?>", i) + 1;
-      } else if( xmlData[i+2] === '-') {
+      } else if( xmlData[i+1] === '!' && xmlData[i+2] === '-') {
         i = xmlData.indexOf("-->", i) + 2;
-      } else if( xmlData[i+2] === 'D') {
+      } else if( xmlData[i+1] === '!' && xmlData[i+2] === 'D') {
         const closeIndex = xmlData.indexOf(">",i)
         const tagExp = xmlData.substr(i,closeIndex);
         if(tagExp.indexOf("[")){
@@ -222,14 +222,6 @@ const getTraversalObj = function(xmlData, options) {
         const closeIndex = xmlData.indexOf("]]>",i);
         const tagExp = xmlData.substring(i + 9,closeIndex);
 
-        //save previous value to the parent node
-        /* if(currentNode){
-          if(currentNode.val){
-            currentNode.val = util.getValue(currentNode.val) + '' + processTagValue2(currentNode.tagname, textData , options);
-          }else{
-            currentNode.val = processTagValue2(currentNode.tagname, textData , options);
-          }
-        } */
         //considerations
         //1. CDATA will always have parent node
         //2. A tag with CDATA is not a leaf node so it's value would be string type.

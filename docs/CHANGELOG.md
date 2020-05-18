@@ -1,3 +1,6 @@
+3.17.1 / 2020-05-19
+  * Fixed an issue in checking opening tag
+  
 3.17.0 / 2020-05-18
   * parser: fix '<' issue when it comes in aatr value
   * parser: refactoring to remove dependency from regex
