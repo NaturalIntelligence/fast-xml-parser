@@ -1,3 +1,11 @@
+3.17.0 / 2020-05-18
+  * parser: fix '<' issue when it comes in aatr value
+  * parser: refactoring to remove dependency from regex
+  * validator: fix IE 11 issue for error messages
+  * updated dev dependencies
+  * separated benchmark module to sub-module
+  * breaking change: comments will not be removed from CDATA data
+
 3.16.0 / 2020-01-12
   * validaor: fix for ampersand characters (#215)
   * refactoring to support unicode chars in tag name
