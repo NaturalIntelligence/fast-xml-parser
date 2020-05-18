@@ -279,7 +279,7 @@ describe("XMLParser", function() {
                         "@_boolean": true,
                         "#text":     "some dataafter"
                     },
-                    "before text\n        <nestedtag>\n            nested cdata 1\n        </nestedtag>\n    middle\n        <nestedtag>\n            nested cdata 2\n        </nestedtag>\n    after\n        <nestedtag>\n            nested cdata 3\n        </nestedtag>\n    end"
+                    "before text\n        <nestedtag>\n            nested cdata 1<!--single line comment-->\n        </nestedtag>\n    middle\n        <nestedtag>\n            nested cdata 2<!--multi line\n             comment-->\n        </nestedtag>\n    after\n        <nestedtag>\n            nested cdata 3\n        </nestedtag>\n    end"
                 ],
                 "@_xmlns:soap": "http://schemas.xmlsoap.org/soap/envelope/"
             }
