@@ -1,0 +1,14 @@
+{
+  "name": "fast-xml-parser-benchmark",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Performance test",
+  "scripts": {
+    "perf": "node perfTest3.js"
+  },
+  "devDependencies": {
+    "benchmark": "^2.1.4",
+    "xml2js": "^0.4.23"
+  },
+  "typings": "src/parser.d.ts"
+}

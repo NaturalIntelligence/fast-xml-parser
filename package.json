@@ -75,7 +75,6 @@
     "@babel/preset-env": "^7.7.6",
     "@babel/register": "^7.7.4",
     "babel-loader": "^8.0.6",
-    "benchmark": "^2.1.4",
     "eslint": "^5.16.0",
     "he": "^1.2.0",
     "http-server": "^0.11.1",
