@@ -10,6 +10,15 @@
                 "${workspaceFolder}/spec/attr_spec.js"
             ],
             "internalConsoleOptions": "openOnSessionStart"
+        },{
+            "type": "node",
+            "request": "launch",
+            "name": "Jasmine Tests current test file",
+            "program": "${workspaceFolder}/node_modules/jasmine/bin/jasmine.js",
+            "args": [
+                "${file}"
+            ],
+            "internalConsoleOptions": "openOnSessionStart"
         }
     ]
    
