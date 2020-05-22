@@ -120,6 +120,29 @@ describe("XMLParser", function() {
         //console.log(JSON.stringify(result,null,4));
         expect(result).toEqual(expected);
     });
+    
+    it("should parse tagName without whitespace chars", function() {
+        const xmlData = `<a:root
+         attr='df'>val
+    </a:root>`;
+
+        const expected = {
+            "a:root": {
+                "@_attr": "df",
+                "#text": "val",
+            }
+        };
+
+        let result = parser.parse(xmlData, {
+            //attributeNamePrefix: "",
+            ignoreAttributes:    false,
+            //parseAttributeValue: true,
+            allowBooleanAttributes: true
+        }, true);
+
+        //console.log(JSON.stringify(result,null,4));
+        expect(result).toEqual(expected);
+    });
 
 
 });
