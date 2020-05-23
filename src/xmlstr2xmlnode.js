@@ -213,7 +213,7 @@ const getTraversalObj = function(xmlData, options) {
       } else if( xmlData[i+1] === '!' && xmlData[i+2] === 'D') {
         const closeIndex = xmlData.indexOf(">",i)
         const tagExp = xmlData.substr(i,closeIndex);
-        if(tagExp.indexOf("[")){
+        if(tagExp.indexOf("[") !== -1 ){
           i = xmlData.indexOf("]>", i) + 1;
         }else{
           i = closeIndex;
