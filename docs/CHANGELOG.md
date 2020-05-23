@@ -1,3 +1,7 @@
+3.17.2 / 2020-05-23
+  * Fixed an issue in processing doctype tag
+  * Fixed tagName where it should not have whitespace chars
+
 3.17.1 / 2020-05-19
   * Fixed an issue in checking opening tag
   
