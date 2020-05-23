@@ -38,7 +38,8 @@ const defaultOptions = {
   attrValueProcessor: function(a, attrName) {
     return a;
   },
-  stopNodes: []
+  stopNodes: [],
+  needToStop: (tagName, attr) => false,
   //decodeStrict: false,
 };
 
@@ -60,7 +61,8 @@ const props = [
   'tagValueProcessor',
   'attrValueProcessor',
   'parseTrueNumberOnly',
-  'stopNodes'
+  'stopNodes',
+  'needToStop',
 ];
 exports.props = props;
 
@@ -198,7 +200,7 @@ const getTraversalObj = function(xmlData, options) {
           }
         }
 
-        if (options.stopNodes.length && options.stopNodes.includes(currentNode.tagname)) {
+        if (needToStop(options, currentNode)) {
           currentNode.child = []
           if (currentNode.attrsMap == undefined) { currentNode.attrsMap = {}}
           currentNode.val = xmlData.substr(currentNode.startIndex + 1, i - currentNode.startIndex - 1)
@@ -287,11 +289,11 @@ const getTraversalObj = function(xmlData, options) {
         }else{//opening tag
           
           const childNode = new xmlNode( tagName, currentNode );
-          if (options.stopNodes.length && options.stopNodes.includes(childNode.tagname)) {
-            childNode.startIndex=closeIndex;
-          }
           if(tagName !== tagExp){
             childNode.attrsMap = buildAttributesMap(tagExp, options);
+          }
+          if (needToStop(options, childNode)) {
+            childNode.startIndex=closeIndex;
           }
           currentNode.addChild(childNode);
           currentNode = childNode;
@@ -318,6 +320,30 @@ function closingIndexForOpeningTag(data, i){
         return index
     }
   }
+}
+
+function needToStop(options, node) {
+  if ('startIndex' in node) {
+    return true;
+  }
+  if (options.stopNodes.length && options.stopNodes.includes(node.tagname)) {
+    return true;
+  }
+  let attr;
+  if (options.attrNodeName) {
+    if (node.attrsMap) {
+      attr = node.attrsMap[options.attrNodeName];
+    }
+  } else {
+    attr = node.attrsMap;
+  }
+  if (attr === undefined) {
+    attr = {};
+  }
+  if (options.needToStop(node.tagname, attr)) {
+    return true;
+  }
+  return false;
 }
 
 exports.getTraversalObj = getTraversalObj;
