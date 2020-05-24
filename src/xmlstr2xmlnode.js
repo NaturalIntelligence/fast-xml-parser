@@ -39,7 +39,7 @@ const defaultOptions = {
     return a;
   },
   stopNodes: [],
-  needToStop: (tagName, attr) => false,
+  stopOn: (tagName, attr) => false,
   //decodeStrict: false,
 };
 
@@ -62,7 +62,7 @@ const props = [
   'attrValueProcessor',
   'parseTrueNumberOnly',
   'stopNodes',
-  'needToStop',
+  'stopOn',
 ];
 exports.props = props;
 
@@ -340,7 +340,7 @@ function needToStop(options, node) {
   if (attr === undefined) {
     attr = {};
   }
-  if (options.needToStop(node.tagname, attr)) {
+  if (options.stopOn(node.tagname, attr)) {
     return true;
   }
   return false;

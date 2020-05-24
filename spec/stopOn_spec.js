@@ -10,7 +10,7 @@ describe("XMLParser", function() {
         </content>`;
 
         const result = parser.parse(xml, {
-            needToStop: tag => tag === 'html',
+            stopOn: tag => tag === 'html',
         });
 
         expect(result).toEqual({
@@ -38,7 +38,7 @@ describe("XMLParser", function() {
             textNodeName: "__text",
             allowBooleanAttributes: true,
             ignoreAttributes: false,
-            needToStop: (tag, attr) => tag === "html" || attr.isHTML || attr.type === "html",
+            stopOn: (tag, attr) => tag === "html" || attr.isHTML || attr.type === "html",
         });
 
         expect(result).toEqual({
@@ -77,7 +77,7 @@ describe("XMLParser", function() {
             allowBooleanAttributes: true,
             ignoreAttributes: false,
             stopNodes: ["html"],
-            needToStop: (tag, attr) => attr.isHTML || attr.type === "html",
+            stopOn: (tag, attr) => attr.isHTML || attr.type === "html",
         });
 
         expect(result).toEqual({

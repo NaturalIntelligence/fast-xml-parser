@@ -15,7 +15,7 @@ type X2jOptions = {
   tagValueProcessor: (tagValue: string, tagName: string) => string;
   attrValueProcessor: (attrValue: string, attrName: string) => string;
   stopNodes: string[];
-  needToStop: (tagName: string, attr: {[key: string]: string | number | boolean}) => boolean;
+  stopOn: (tagName: string, attr: {[key: string]: string | number | boolean}) => boolean;
 };
 type X2jOptionsOptional = Partial<X2jOptions>;
 type validationOptions = {
