@@ -66,9 +66,9 @@ exports.props = props;
 
 /**
  * Trim -> valueProcessor -> parse value
- * @param {string} tagName 
- * @param {string} val 
- * @param {object} options 
+ * @param {string} tagName
+ * @param {string} val
+ * @param {object} options
  */
 function processTagValue(tagName, val, options) {
   if (val) {
@@ -179,7 +179,7 @@ const getTraversalObj = function(xmlData, options) {
       if( xmlData[i+1] === '/') {//Closing Tag
         const closeIndex = xmlData.indexOf(">", i);
         let tagName = xmlData.substring(i+2,closeIndex).trim();
-        
+
         if(options.ignoreNameSpace){
           const colonIndex = tagName.indexOf(":");
           if(colonIndex !== -1){
@@ -208,17 +208,17 @@ const getTraversalObj = function(xmlData, options) {
         i = closeIndex;
       } else if( xmlData[i+1] === '?') {
         i = xmlData.indexOf("?>", i) + 1;
-      } else if( xmlData[i+1] === '!' && xmlData[i+2] === '-') {
+      } else if(xmlData.substr(i + 1, 3) === '!--') {
         i = xmlData.indexOf("-->", i) + 2;
-      } else if( xmlData[i+1] === '!' && xmlData[i+2] === 'D') {
-        const closeIndex = xmlData.indexOf(">",i)
-        const tagExp = xmlData.substr(i,closeIndex);
-        if(tagExp.indexOf("[") !== -1 ){
+      } else if( xmlData.substr(i + 1, 2) === '!D') {
+        const closeIndex = xmlData.indexOf(">", i)
+        const tagExp = xmlData.substring(i, closeIndex);
+        if(tagExp.indexOf("[") >= 0){
           i = xmlData.indexOf("]>", i) + 1;
         }else{
           i = closeIndex;
         }
-      }else if( xmlData[i+2] === '[') {
+      }else if(xmlData.substr(i + 1, 2) === '![') {
         const closeIndex = xmlData.indexOf("]]>",i);
         const tagExp = xmlData.substring(i + 9,closeIndex);
 
@@ -243,7 +243,7 @@ const getTraversalObj = function(xmlData, options) {
         } else {
           currentNode.val = (currentNode.val || '') + (tagExp || '');
         }
-        
+
         i = closeIndex + 2;
       }else {//Opening tag
         const closeIndex = closingIndexForOpeningTag(xmlData, i)
@@ -262,7 +262,7 @@ const getTraversalObj = function(xmlData, options) {
             tagName = tagName.substr(colonIndex+1);
           }
         }
-        
+
         //save text to parent node
         if (currentNode && textData) {
           if(currentNode.tagname !== '!xml'){
@@ -271,8 +271,8 @@ const getTraversalObj = function(xmlData, options) {
         }
 
         if(tagExp.lastIndexOf("/") === tagExp.length - 1){//selfClosing tag
-    
-          if(tagName[tagName.length - 1] === "/"){ //remove trailing '/' 
+
+          if(tagName[tagName.length - 1] === "/"){ //remove trailing '/'
             tagName = tagName.substr(0, tagName.length - 1);
             tagExp = tagName;
           }else{
@@ -285,7 +285,7 @@ const getTraversalObj = function(xmlData, options) {
           }
           currentNode.addChild(childNode);
         }else{//opening tag
-          
+
           const childNode = new xmlNode( tagName, currentNode );
           if (options.stopNodes.length && options.stopNodes.includes(childNode.tagname)) {
             childNode.startIndex=closeIndex;
