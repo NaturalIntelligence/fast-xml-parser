@@ -44,12 +44,12 @@ function print(xmlNode, indentation){
     if(xmlNode.child){
       console.log(indentation + "\"child\": {")
       const indentation2 = indentation + indentation;
-      Object.keys(xmlNode.child).forEach( key =>{
+      Object.keys(xmlNode.child).forEach( function(key) {
         const node = xmlNode.child[key];
 
         if(Array.isArray(node)){
           console.log(indentation +  "\""+key+"\" :[")
-          node.forEach( (item,index) => {
+          node.forEach( function(item,index) {
             //console.log(indentation + " \""+index+"\" : [")
             print(item, indentation2);
           })
