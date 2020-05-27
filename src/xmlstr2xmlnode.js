@@ -168,10 +168,12 @@ function buildAttributesMap(attrStr, options) {
 }
 
 const getTraversalObj = function(xmlData, options) {
+  xmlData = xmlData.replace(/(\r\n)|\n/, " ");
   options = buildOptions(options, defaultOptions, props);
   const xmlObj = new xmlNode('!xml');
   let currentNode = xmlObj;
   let textData = "";
+
 //function match(xmlData){
   for(let i=0; i< xmlData.length; i++){
     const ch = xmlData[i];
@@ -246,9 +248,9 @@ const getTraversalObj = function(xmlData, options) {
 
         i = closeIndex + 2;
       }else {//Opening tag
-        const closeIndex = closingIndexForOpeningTag(xmlData, i)
-        //const closeIndex = xmlData.indexOf(">",i);
-        let tagExp = xmlData.substring(i + 1,closeIndex);
+        const result = closingIndexForOpeningTag(xmlData, i+1)
+        let tagExp = result.data;
+        const closeIndex = result.index;
         const separatorIndex = tagExp.indexOf(" ");
         let tagName = tagExp;
         if(separatorIndex !== -1){
@@ -308,6 +310,7 @@ const getTraversalObj = function(xmlData, options) {
 
 function closingIndexForOpeningTag(data, i){
   let attrBoundary;
+  let tagExp = "";
   for (let index = i; index < data.length; index++) {
     let ch = data[index];
     if (attrBoundary) {
@@ -315,8 +318,14 @@ function closingIndexForOpeningTag(data, i){
     } else if (ch === '"' || ch === "'") {
         attrBoundary = ch;
     } else if (ch === '>') {
-        return index
+        return {
+          data: tagExp,
+          index: index
+        }
+    } else if (ch === '\t') {
+      ch = " "
     }
+    tagExp += ch;
   }
 }
 

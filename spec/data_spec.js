@@ -194,7 +194,7 @@ describe("XMLParser", function() {
         expect(result).toEqual(expected);
     });
 
-    xit("should trim \t or \n chars", function() {
+    it("should trim \t or \n chars", function() {
         const xmlData = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
         "<MPD\n" +
         "\tavailabilityStartTime=\"2020-02-16T10:52:03.119Z\"\n" +
@@ -204,19 +204,17 @@ describe("XMLParser", function() {
         "\t</Period>\n" +
         "</MPD>";
         const expected = {
-            "MPD": [
-              {
+            "MPD": {
                 "$": {
                   "availabilityStartTime": "2020-02-16T10:52:03.119Z",
-                  "xmlns:xsi": "http://www.w3.org/2001/XMLSchema-instance",
+                  "xmlns:xsi": "http://www.w3.org/2001/XMLSchema-instance"
                 },
                 "Period": {
                     "$": {
                         "id": "1578477220"
                     }
                 }
-              }
-            ]
+            }
         }
 
         const result = parser.parse(xmlData, {
@@ -225,7 +223,7 @@ describe("XMLParser", function() {
             attrNodeName:"$",
             attributeNamePrefix : "" //TODO attr node prefix should not set when they're grouped
         });
-        console.log(JSON.stringify(result,null,4));
+        //console.log(JSON.stringify(result,null,4));
         expect(result).toEqual(expected);
     });
 
