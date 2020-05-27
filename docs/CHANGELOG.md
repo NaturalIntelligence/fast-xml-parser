@@ -1,3 +1,7 @@
+3.17.3 / 2020-05-23
+  * Fix: tag name separated by \n \t
+  * Fix: throw error for unclosed tags
+
 3.17.2 / 2020-05-23
   * Fixed an issue in processing doctype tag
   * Fixed tagName where it should not have whitespace chars
