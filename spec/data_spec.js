@@ -167,7 +167,7 @@ describe("XMLParser", function() {
         </svg>`;
         const expected = {
             "svg" : {
-                "metadata": "test"
+                "metadata": "[test]"
             }
         };
 
@@ -177,4 +177,88 @@ describe("XMLParser", function() {
         });
         expect(result).toEqual(expected);
     });
+
+    it("should parse XML with undefined as text", function() {
+        const xmlData = `<tag><![CDATA[undefined]]><nested>undefined</nested></tag>`;
+        const expected = {
+            "tag" : {
+                "#text": "undefined",
+                "nested": "undefined"
+            }
+        };
+
+        const result = parser.parse(xmlData, {
+            ignoreAttributes:       false,
+            allowBooleanAttributes: true
+        });
+        expect(result).toEqual(expected);
+    });
+
+    xit("should trim \t or \n chars", function() {
+        const xmlData = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+        "<MPD\n" +
+        "\tavailabilityStartTime=\"2020-02-16T10:52:03.119Z\"\n" +
+        "\txmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\n" +
+        "\t<Period\n" +
+        "\t\tid=\"1578477220\">\n" +
+        "\t</Period>\n" +
+        "</MPD>";
+        const expected = {
+            "MPD": [
+              {
+                "$": {
+                  "availabilityStartTime": "2020-02-16T10:52:03.119Z",
+                  "xmlns:xsi": "http://www.w3.org/2001/XMLSchema-instance",
+                },
+                "Period": {
+                    "$": {
+                        "id": "1578477220"
+                    }
+                }
+              }
+            ]
+        }
+
+        const result = parser.parse(xmlData, {
+            ignoreAttributes:       false,
+            allowBooleanAttributes: true,
+            attrNodeName:"$",
+            attributeNamePrefix : "" //TODO attr node prefix should not set when they're grouped
+        });
+        console.log(JSON.stringify(result,null,4));
+        expect(result).toEqual(expected);
+    });
+
+    it("should error for when any tag is left to close", function(){
+        const xmlData = `<?xml version="1.0"?><tag></tag`;
+        expect(() =>{
+            parser.parse(xmlData);
+        }).toThrowError("Closing Tag is not closed.")
+    })
+    it("should error for when any tag is left to close", function(){
+        const xmlData = `<?xml version="1.0"?><!-- bad `;
+        expect(() =>{
+            parser.parse(xmlData);
+        }).toThrowError("Comment is not closed.")
+    })
+    it("should error for when any tag is left to close", function(){
+        const xmlData = `<?xml version="1.0"?><![CDATA ]`;
+        expect(() =>{
+            parser.parse(xmlData);
+        }).toThrowError("CDATA is not closed.")
+    })
+    it("should error for when any tag is left to close", function(){
+        const xmlData = `<?xml version="1.0"?><!DOCTYPE `;
+        expect(() =>{
+            parser.parse(xmlData);
+        }).toThrowError("DOCTYPE is not closed.")
+    })
+    it("should error for when any tag is left to close", function(){
+        const xmlData = `<?xml version="1.0"?><?pi  `;
+        expect(() =>{
+            parser.parse(xmlData);
+        }).toThrowError("Pi Tag is not closed.")
+    })
+    
+
 });

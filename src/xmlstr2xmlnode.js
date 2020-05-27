@@ -177,7 +177,7 @@ const getTraversalObj = function(xmlData, options) {
     const ch = xmlData[i];
     if(ch === '<'){
       if( xmlData[i+1] === '/') {//Closing Tag
-        const closeIndex = xmlData.indexOf(">", i);
+        const closeIndex = findClosingIndex(xmlData, ">", i, "Closing Tag is not closed.")
         let tagName = xmlData.substring(i+2,closeIndex).trim();
 
         if(options.ignoreNameSpace){
@@ -207,11 +207,11 @@ const getTraversalObj = function(xmlData, options) {
         textData = "";
         i = closeIndex;
       } else if( xmlData[i+1] === '?') {
-        i = xmlData.indexOf("?>", i) + 1;
+        i = findClosingIndex(xmlData, "?>", i, "Pi Tag is not closed.")
       } else if(xmlData.substr(i + 1, 3) === '!--') {
-        i = xmlData.indexOf("-->", i) + 2;
+        i = findClosingIndex(xmlData, "-->", i, "Comment is not closed.")
       } else if( xmlData.substr(i + 1, 2) === '!D') {
-        const closeIndex = xmlData.indexOf(">", i)
+        const closeIndex = findClosingIndex(xmlData, ">", i, "DOCTYPE is not closed.")
         const tagExp = xmlData.substring(i, closeIndex);
         if(tagExp.indexOf("[") >= 0){
           i = xmlData.indexOf("]>", i) + 1;
@@ -219,7 +219,7 @@ const getTraversalObj = function(xmlData, options) {
           i = closeIndex;
         }
       }else if(xmlData.substr(i + 1, 2) === '![') {
-        const closeIndex = xmlData.indexOf("]]>",i);
+        const closeIndex = findClosingIndex(xmlData, "]]>", i, "CDATA is not closed.") - 2
         const tagExp = xmlData.substring(i + 9,closeIndex);
 
         //considerations
@@ -317,6 +317,15 @@ function closingIndexForOpeningTag(data, i){
     } else if (ch === '>') {
         return index
     }
+  }
+}
+
+function findClosingIndex(xmlData, str, i, errMsg){
+  const closingIndex = xmlData.indexOf(str, i);
+  if(closingIndex === -1){
+    throw new Error(errMsg)
+  }else{
+    return closingIndex + str.length - 1;
   }
 }
 
