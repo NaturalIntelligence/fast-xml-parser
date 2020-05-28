@@ -272,7 +272,7 @@ const getTraversalObj = function(xmlData, options) {
           }
         }
 
-        if(tagExp.lastIndexOf("/") === tagExp.length - 1){//selfClosing tag
+        if(tagExp.length > 0 && tagExp.lastIndexOf("/") === tagExp.length - 1){//selfClosing tag
 
           if(tagName[tagName.length - 1] === "/"){ //remove trailing '/'
             tagName = tagName.substr(0, tagName.length - 1);

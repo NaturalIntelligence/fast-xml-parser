@@ -258,5 +258,19 @@ describe("XMLParser", function() {
         }).toThrowError("Pi Tag is not closed.")
     })
     
+    it("should parse XML when there is a space after tagname", function() {
+        const xmlData = `<tag ><![CDATA[undefined]]><nested>undefined</nested></tag>`;
+        const expected = {
+            "tag" : {
+                "#text": "undefined",
+                "nested": "undefined"
+            }
+        };
 
+        const result = parser.parse(xmlData, {
+            ignoreAttributes:       false,
+            allowBooleanAttributes: true
+        },true);
+        expect(result).toEqual(expected);
+    });
 });
