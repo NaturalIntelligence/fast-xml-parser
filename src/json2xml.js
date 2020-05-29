@@ -176,7 +176,8 @@ function replaceCDATAarr(str, cdata) {
     return str + '<![CDATA[' + cdata.join(']]><![CDATA[') + ']]' + this.tagEndChar;
   } else {
     for (let v in cdata) {
-      str = str.replace(this.options.cdataPositionChar, '<![CDATA[' + cdata[v] + ']]>');
+      cdata.hasOwnProperty(v) &&
+      (str = str.replace(this.options.cdataPositionChar, '<![CDATA[' + cdata[v] + ']]>'));
     }
     return str + this.newLine;
   }

@@ -71,6 +71,7 @@ const _e = function(node, e_schema, options) {
           node = node[0];
         }
         for (let i in keys) {
+          if (!keys.hasOwnProperty(i)) continue;
           const key = keys[i];
           //a property defined in schema can be present either in attrsMap or children tags
           //options.textNodeName will not present in both maps, take it's value from val

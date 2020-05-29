@@ -23,7 +23,8 @@ const _cToJsonStr = function(node, options, level) {
     if (node.child[tagname] && node.child[tagname].length > 1) {
       jObj += '"' + tagname + '" : [ ';
       for (var tag in node.child[tagname]) {
-        jObj += _cToJsonStr(node.child[tagname][tag], options) + ' , ';
+        node.child[tagname].hasOwnProperty(tag) &&
+        (jObj += _cToJsonStr(node.child[tagname][tag], options) + ' , ');
       }
       jObj = jObj.substr(0, jObj.length - 1) + ' ] '; //remove extra comma in last
     } else {

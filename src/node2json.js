@@ -29,6 +29,7 @@ const convertToJson = function(node, options) {
     if (node.child[tagname] && node.child[tagname].length > 1) {
       jObj[tagname] = [];
       for (var tag in node.child[tagname]) {
+        node.child[tagname].hasOwnProperty(tag) &&
         jObj[tagname].push(convertToJson(node.child[tagname][tag], options));
       }
     } else {
