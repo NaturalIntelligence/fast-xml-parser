@@ -22,9 +22,9 @@ const _cToJsonStr = function(node, options, level) {
     var tagname = keys[index];
     if (node.child[tagname] && node.child[tagname].length > 1) {
       jObj += '"' + tagname + '" : [ ';
-      for (var tag in node.child[tagname]) {
-        node.child[tagname].hasOwnProperty(tag) &&
-        (jObj += _cToJsonStr(node.child[tagname][tag], options) + ' , ');
+      const keys = Object.keys(node.child[tagname]);
+      for (let i = 0; i < keys.length; i++) {
+        jObj += _cToJsonStr(node.child[tagname][keys[i]], options) + ' , ';
       }
       jObj = jObj.substr(0, jObj.length - 1) + ' ] '; //remove extra comma in last
     } else {

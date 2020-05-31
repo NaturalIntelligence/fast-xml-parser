@@ -175,9 +175,9 @@ function replaceCDATAarr(str, cdata) {
   if (this.options.cdataPositionChar === '' || str === '') {
     return str + '<![CDATA[' + cdata.join(']]><![CDATA[') + ']]' + this.tagEndChar;
   } else {
-    for (let v in cdata) {
-      cdata.hasOwnProperty(v) &&
-      (str = str.replace(this.options.cdataPositionChar, '<![CDATA[' + cdata[v] + ']]>'));
+    const keys = Object.keys(cdata);
+    for (let i = 0; i < keys.length; i++) {
+      str = str.replace(this.options.cdataPositionChar, '<![CDATA[' + cdata[keys[i]] + ']]>');
     }
     return str + this.newLine;
   }

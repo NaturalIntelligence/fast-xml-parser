@@ -28,9 +28,9 @@ const convertToJson = function(node, options) {
     var tagname = keys[index];
     if (node.child[tagname] && node.child[tagname].length > 1) {
       jObj[tagname] = [];
-      for (var tag in node.child[tagname]) {
-        node.child[tagname].hasOwnProperty(tag) &&
-        jObj[tagname].push(convertToJson(node.child[tagname][tag], options));
+      const keys = Object.keys(node.child[tagname]);
+      for (let i = 0; i < keys.length; i++) {
+        jObj[tagname].push(convertToJson(node.child[tagname][keys[i]], options));
       }
     } else {
       if(options.arrayMode === true){

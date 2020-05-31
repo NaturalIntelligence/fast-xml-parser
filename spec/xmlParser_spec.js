@@ -5,6 +5,9 @@ const validator = require("../src/validator");
 
 describe("XMLParser", function() {
 
+    Object.prototype.test = '';
+    Array.prototype.test = '';
+
     it("should parse all values as string, int, boolean, float, hexadecimal", function() {
         const xmlData = `<rootNode>
         <tag>value</tag>
