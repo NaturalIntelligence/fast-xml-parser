@@ -1,3 +1,7 @@
+3.17.4 / 2020-06-07
+  * Refactor some code to support IE11
+  * Fix: `<tag >` space as attribute string
+
 3.17.3 / 2020-05-23
   * Fix: tag name separated by \n \t
   * Fix: throw error for unclosed tags
