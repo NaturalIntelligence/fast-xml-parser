@@ -1,8 +1,26 @@
+
+
 # [fast-xml-parser](https://www.npmjs.com/package/fast-xml-parser)
+[![Backers on Open Collective](https://opencollective.com/fast-xml-parser/backers/badge.svg)](#backers) [![Sponsors on Open Collective](https://opencollective.com/fast-xml-parser/sponsors/badge.svg)](#sponsors) [![Known Vulnerabilities](https://snyk.io/test/github/naturalintelligence/fast-xml-parser/badge.svg)](https://snyk.io/test/github/naturalintelligence/fast-xml-parser)
+[![NPM quality][quality-image]][quality-url]
+[![Travis ci Build Status](https://travis-ci.org/NaturalIntelligence/fast-xml-parser.svg?branch=master)](https://travis-ci.org/NaturalIntelligence/fast-xml-parser)
+[![Coverage Status](https://coveralls.io/repos/github/NaturalIntelligence/fast-xml-parser/badge.svg?branch=master)](https://coveralls.io/github/NaturalIntelligence/fast-xml-parser?branch=master)
+[<img src="https://img.shields.io/badge/Try-me-blue.svg?colorA=FFA500&colorB=0000FF" alt="Try me"/>](https://naturalintelligence.github.io/fast-xml-parser/)
+[![NPM total downloads](https://img.shields.io/npm/dt/fast-xml-parser.svg)](https://npm.im/fast-xml-parser)
+
+[quality-image]: http://npm.packagequality.com/shield/fast-xml-parser.svg?style=flat-square
+[quality-url]: http://packagequality.com/#?package=fast-xml-parser
+
+
 Validate XML, Parse XML to JS/JSON and vice versa, or parse XML to Nimn rapidly without C/C++ based libraries and no callback
 
-> This project welcomes **contributors**. If you have a feature you'd like to see implemented or a bug you'd liked fixed, the best and fastest way to make that happen is to implement it and submit a PR. Basic knowledge of JS is sufficient. Feel free to ask for any guidance.
+![Donate $5](static/img/donation_quote.png)
 
+<a href="https://opencollective.com/fast-xml-parser/donate" target="_blank">
+  <img src="https://opencollective.com/fast-xml-parser/donate/button@2x.png?color=blue" width=200 />
+</a>
+<a href="https://www.patreon.com/bePatron?u=9531404" data-patreon-widget-type="become-patron-button"><img src="https://c5.patreon.com/external/logo/become_a_patron_button.png" alt="Become a Patron!" width="200" /></a>
+<a href="https://paypal.me/naturalintelligence"> <img src="static/img/support_paypal.svg" alt="Stubmatic donate button" width="200"/></a>
 
 ## Users
 List of some applications/projects using Fast XML Parser. (Raise an issue to submit yours)
@@ -64,24 +82,7 @@ List of some applications/projects using Fast XML Parser. (Raise an issue to sub
 
 
 
-### Join this project as collaborator / maintainer.
 
-
-[![Backers on Open Collective](https://opencollective.com/fast-xml-parser/backers/badge.svg)](#backers) [![Sponsors on Open Collective](https://opencollective.com/fast-xml-parser/sponsors/badge.svg)](#sponsors) [![Known Vulnerabilities](https://snyk.io/test/github/naturalintelligence/fast-xml-parser/badge.svg)](https://snyk.io/test/github/naturalintelligence/fast-xml-parser)
-[![NPM quality][quality-image]][quality-url]
-[![Travis ci Build Status](https://travis-ci.org/NaturalIntelligence/fast-xml-parser.svg?branch=master)](https://travis-ci.org/NaturalIntelligence/fast-xml-parser)
-[![Coverage Status](https://coveralls.io/repos/github/NaturalIntelligence/fast-xml-parser/badge.svg?branch=master)](https://coveralls.io/github/NaturalIntelligence/fast-xml-parser?branch=master)
-[<img src="https://img.shields.io/badge/Try-me-blue.svg?colorA=FFA500&colorB=0000FF" alt="Try me"/>](https://naturalintelligence.github.io/fast-xml-parser/)
-[![NPM total downloads](https://img.shields.io/npm/dt/fast-xml-parser.svg)](https://npm.im/fast-xml-parser)
-
-[quality-image]: http://npm.packagequality.com/shield/fast-xml-parser.svg?style=flat-square
-[quality-url]: http://packagequality.com/#?package=fast-xml-parser
-
-<a href="https://opencollective.com/fast-xml-parser/donate" target="_blank">
-  <img src="https://opencollective.com/fast-xml-parser/donate/button@2x.png?color=blue" width=200 />
-</a>
-<a href="https://www.patreon.com/bePatron?u=9531404" data-patreon-widget-type="become-patron-button"><img src="https://c5.patreon.com/external/logo/become_a_patron_button.png" alt="Become a Patron!" width="200" /></a>
-<a href="https://www.paypal.me/amitkumarguptagwl"> <img src="static/img/support_paypal.svg" alt="Stubmatic donate button" width="200"/></a>
 
 ### Main Features
 
@@ -311,6 +312,7 @@ With the correct options, you can get the almost original XML without losing any
 - **[अनुमार्गक (anumargak)](https://github.com/NaturalIntelligence/anumargak)** : The fastest and simple router for node js web frameworks with many unique features.
 - [मुनीम (Muneem)](https://github.com/muneem4node/muneem) : A webframework made for all team members. Fast and Featured.
 - [शब्दावली (shabdawali)](https://github.com/amitguptagwl/shabdawali) : Amazing human like typing effects beyond your imagination.
+
 
 
 ## Contributors
