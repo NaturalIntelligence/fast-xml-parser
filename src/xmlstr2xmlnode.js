@@ -254,7 +254,7 @@ const getTraversalObj = function(xmlData, options) {
         const separatorIndex = tagExp.indexOf(" ");
         let tagName = tagExp;
         if(separatorIndex !== -1){
-          tagName = tagExp.substr(0, separatorIndex).trimRight();
+          tagName = tagExp.substr(0, separatorIndex).replace(/\s\s*$/, '');
           tagExp = tagExp.substr(separatorIndex + 1);
         }
 
