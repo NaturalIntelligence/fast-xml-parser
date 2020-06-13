@@ -81,7 +81,7 @@ const _e = function(node, e_schema, options) {
           } else if (key === options.textNodeName) {
             r = _e(node.val, e_schema[key], options);
           } else {
-            r = _e(node.child[key], e_schema[key], options);
+            r = _e(node.child ? node.child[key] : undefined, e_schema[key], options);
           }
           str = processValue(str, r);
         }
@@ -122,9 +122,10 @@ function hasData(jObj) {
     return chars.missingChar;
   } else if (jObj === null) {
     return chars.nilChar;
+  } else if (Array.isArray(jObj)) {
+    return true;
   } else if (
-    jObj.child &&
-    Object.keys(jObj.child).length === 0 &&
+    (!jObj.child || Object.keys(jObj.child).length === 0) &&
     (!jObj.attrsMap || Object.keys(jObj.attrsMap).length === 0)
   ) {
     return chars.emptyChar;

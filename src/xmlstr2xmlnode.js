@@ -2,13 +2,7 @@
 
 const util = require('./util');
 const buildOptions = require('./util').buildOptions;
-const xmlNode = require('./xmlNode');
-const regx =
-  '<((!\\[CDATA\\[([\\s\\S]*?)(]]>))|((NAME:)?(NAME))([^>]*)>|((\\/)(NAME)\\s*>))([^<]*)'
-  .replace(/NAME/g, util.nameRegexp);
-
-//const tagsRegx = new RegExp("<(\\/?[\\w:\\-\._]+)([^>]*)>(\\s*"+cdataRegx+")*([^<]+)?","g");
-//const tagsRegx = new RegExp("<(\\/?)((\\w*:)?([\\w:\\-\._]+))([^>]*)>([^<]*)("+cdataRegx+"([^<]*))*([^<]+)?","g");
+const XmlNode = require('./xmlNode');
 
 //polyfill
 if (!Number.parseInt && window.parseInt) {
@@ -98,31 +92,36 @@ function resolveNameSpace(tagname, options) {
 
 function parseValue(val, shouldParse, parseTrueNumberOnly) {
   if (shouldParse && typeof val === 'string') {
+    let trimValue = val.trim();
+    if (trimValue === '') {
+      return val;
+    }
+    if (trimValue === 'true') {
+      return true;
+    }
+    if (trimValue === 'false') {
+      return false;
+    }
+    if (isNaN(trimValue)) {
+      return val;
+    }
     let parsed;
-    if (val.trim() === '' || isNaN(val)) {
-      parsed = val === 'true' ? true : val === 'false' ? false : val;
+    if (val.indexOf('0x') !== -1) {
+      //support hexa decimal
+      parsed = Number.parseInt(val, 16);
+    } else if (val.indexOf('.') !== -1) {
+      parsed = Number.parseFloat(val);
+      val = val.replace(/\.?0+$/, "");
     } else {
-      if (val.indexOf('0x') !== -1) {
-        //support hexa decimal
-        parsed = Number.parseInt(val, 16);
-      } else if (val.indexOf('.') !== -1) {
-        parsed = Number.parseFloat(val);
-        val = val.replace(/\.?0+$/, "");
-      } else {
-        parsed = Number.parseInt(val, 10);
-      }
-      if (parseTrueNumberOnly) {
-        parsed = String(parsed) === val ? parsed : val;
-      }
+      parsed = Number.parseInt(val, 10);
+    }
+    if (parseTrueNumberOnly) {
+      parsed = String(parsed) === val ? parsed : val;
     }
     return parsed;
-  } else {
-    if (util.isExist(val)) {
-      return val;
-    } else {
-      return '';
-    }
   }
+
+  return util.isExist(val) ? val : '';
 }
 
 //TODO: change regex to capture NS
@@ -138,15 +137,17 @@ function buildAttributesMap(attrStr, options) {
     const len = matches.length; //don't make it inline
     const attrs = {};
     for (let i = 0; i < len; i++) {
-      const attrName = resolveNameSpace(matches[i][1], options);
+      const match = matches[i];
+      const attrName = resolveNameSpace(match[1], options);
       if (attrName.length) {
-        if (matches[i][4] !== undefined) {
+        let value = match[4];
+        if (value !== undefined) {
           if (options.trimValues) {
-            matches[i][4] = matches[i][4].trim();
+            value = value.trim();
           }
-          matches[i][4] = options.attrValueProcessor(matches[i][4], attrName);
+          value = options.attrValueProcessor(value, attrName);
           attrs[options.attributeNamePrefix + attrName] = parseValue(
-            matches[i][4],
+            value,
             options.parseAttributeValue,
             options.parseTrueNumberOnly
           );
@@ -168,76 +169,51 @@ function buildAttributesMap(attrStr, options) {
 }
 
 const getTraversalObj = function(xmlData, options) {
-  xmlData = xmlData.replace(/(\r\n)|\n/, " ");
   options = buildOptions(options, defaultOptions, props);
-  const xmlObj = new xmlNode('!xml');
+  const xmlObj = new XmlNode('!xml');
   let currentNode = xmlObj;
   let textData = "";
+  let textFrom = 0;
 
-//function match(xmlData){
-  for(let i=0; i< xmlData.length; i++){
+  for (let i = 0; i < xmlData.length; i++) {
     const ch = xmlData[i];
-    if(ch === '<'){
-      if( xmlData[i+1] === '/') {//Closing Tag
-        const closeIndex = findClosingIndex(xmlData, ">", i, "Closing Tag is not closed.")
-        let tagName = xmlData.substring(i+2,closeIndex).trim();
+    if (ch === '<') {
+      textData += xmlData.substring(textFrom, i);
 
-        if(options.ignoreNameSpace){
-          const colonIndex = tagName.indexOf(":");
-          if(colonIndex !== -1){
-            tagName = tagName.substr(colonIndex+1);
-          }
-        }
-
-        /* if (currentNode.parent) {
-          currentNode.parent.val = util.getValue(currentNode.parent.val) + '' + processTagValue2(tagName, textData , options);
-        } */
-        if(currentNode){
-          if(currentNode.val){
-            currentNode.val = util.getValue(currentNode.val) + '' + processTagValue(tagName, textData , options);
-          }else{
-            currentNode.val = processTagValue(tagName, textData , options);
-          }
-        }
-
-        if (options.stopNodes.length && options.stopNodes.includes(currentNode.tagname)) {
-          currentNode.child = []
-          if (currentNode.attrsMap == undefined) { currentNode.attrsMap = {}}
-          currentNode.val = xmlData.substr(currentNode.startIndex + 1, i - currentNode.startIndex - 1)
-        }
+      if (xmlData[i + 1] === '/') {//Closing Tag
+        i = closeTag(xmlData, currentNode, textData, i, options);
         currentNode = currentNode.parent;
-        textData = "";
-        i = closeIndex;
-      } else if( xmlData[i+1] === '?') {
+        textData = '';
+      } else if (xmlData[i + 1] === '?') {
         i = findClosingIndex(xmlData, "?>", i, "Pi Tag is not closed.")
-      } else if(xmlData.substr(i + 1, 3) === '!--') {
+      } else if (xmlData.substr(i + 1, 3) === '!--') {
         i = findClosingIndex(xmlData, "-->", i, "Comment is not closed.")
-      } else if( xmlData.substr(i + 1, 2) === '!D') {
-        const closeIndex = findClosingIndex(xmlData, ">", i, "DOCTYPE is not closed.")
+      } else if (xmlData.substr(i + 1, 2) === '!D') {
+        const closeIndex = findClosingIndex(xmlData, ">", i, "DOCTYPE is not closed.");
         const tagExp = xmlData.substring(i, closeIndex);
-        if(tagExp.indexOf("[") >= 0){
+        if (tagExp.indexOf("[") >= 0) {
           i = xmlData.indexOf("]>", i) + 1;
-        }else{
+        } else {
           i = closeIndex;
         }
-      }else if(xmlData.substr(i + 1, 2) === '![') {
-        const closeIndex = findClosingIndex(xmlData, "]]>", i, "CDATA is not closed.") - 2
-        const tagExp = xmlData.substring(i + 9,closeIndex);
+      } else if (xmlData.substr(i + 1, 2) === '![') {
+        const closeIndex = findClosingIndex(xmlData, "]]>", i, "CDATA is not closed.") - 2;
+        const tagExp = xmlData.substring(i + 9, closeIndex);
 
         //considerations
         //1. CDATA will always have parent node
         //2. A tag with CDATA is not a leaf node so it's value would be string type.
-        if(textData){
-          currentNode.val = util.getValue(currentNode.val) + '' + processTagValue(currentNode.tagname, textData , options);
+        if (textData) {
+          currentNode.appendVal(processTagValue(currentNode.tagname, textData, options));
           textData = "";
         }
 
         if (options.cdataTagName) {
           //add cdata node
-          const childNode = new xmlNode(options.cdataTagName, currentNode, tagExp);
+          const childNode = new XmlNode(options.cdataTagName, currentNode, tagExp);
           currentNode.addChild(childNode);
           //for backtracking
-          currentNode.val = util.getValue(currentNode.val) + options.cdataPositionChar;
+          currentNode.appendVal(options.cdataPositionChar);
           //add rest value to parent node
           if (tagExp) {
             childNode.val = tagExp;
@@ -247,95 +223,117 @@ const getTraversalObj = function(xmlData, options) {
         }
 
         i = closeIndex + 2;
-      }else {//Opening tag
-        const result = closingIndexForOpeningTag(xmlData, i+1)
-        let tagExp = result.data;
-        const closeIndex = result.index;
-        const separatorIndex = tagExp.indexOf(" ");
-        let tagName = tagExp;
-        if(separatorIndex !== -1){
-          tagName = tagExp.substr(0, separatorIndex).replace(/\s\s*$/, '');
-          tagExp = tagExp.substr(separatorIndex + 1);
-        }
-
-        if(options.ignoreNameSpace){
-          const colonIndex = tagName.indexOf(":");
-          if(colonIndex !== -1){
-            tagName = tagName.substr(colonIndex+1);
-          }
-        }
-
-        //save text to parent node
-        if (currentNode && textData) {
-          if(currentNode.tagname !== '!xml'){
-            currentNode.val = util.getValue(currentNode.val) + '' + processTagValue( currentNode.tagname, textData, options);
-          }
-        }
-
-        if(tagExp.length > 0 && tagExp.lastIndexOf("/") === tagExp.length - 1){//selfClosing tag
-
-          if(tagName[tagName.length - 1] === "/"){ //remove trailing '/'
-            tagName = tagName.substr(0, tagName.length - 1);
-            tagExp = tagName;
-          }else{
-            tagExp = tagExp.substr(0, tagExp.length - 1);
-          }
-
-          const childNode = new xmlNode(tagName, currentNode, '');
-          if(tagName !== tagExp){
-            childNode.attrsMap = buildAttributesMap(tagExp, options);
-          }
-          currentNode.addChild(childNode);
-        }else{//opening tag
-
-          const childNode = new xmlNode( tagName, currentNode );
-          if (options.stopNodes.length && options.stopNodes.includes(childNode.tagname)) {
-            childNode.startIndex=closeIndex;
-          }
-          if(tagName !== tagExp){
-            childNode.attrsMap = buildAttributesMap(tagExp, options);
-          }
-          currentNode.addChild(childNode);
-          currentNode = childNode;
-        }
+      } else {//Opening tag
+        const result = openTag(xmlData, currentNode, textData, i, options);
+        i = result.closeIndex;
+        currentNode = result.currentNode;
         textData = "";
-        i = closeIndex;
       }
-    }else{
-      textData += xmlData[i];
+      textFrom = i + 1;
     }
   }
   return xmlObj;
-}
+};
 
-function closingIndexForOpeningTag(data, i){
-  let attrBoundary;
-  let tagExp = "";
-  for (let index = i; index < data.length; index++) {
-    let ch = data[index];
-    if (attrBoundary) {
-        if (ch === attrBoundary) attrBoundary = "";//reset
-    } else if (ch === '"' || ch === "'") {
-        attrBoundary = ch;
-    } else if (ch === '>') {
-        return {
-          data: tagExp,
-          index: index
-        }
-    } else if (ch === '\t') {
-      ch = " "
+function openTag(xmlData, currentNode, textData, pos, options) {
+  let {selfClosing, tagName, tagExp, closeIndex} = closingIndexForOpeningTag(xmlData, pos + 1, options.ignoreNameSpace);
+
+  if (textData && currentNode.tagname !== '!xml') {
+    currentNode.appendVal(processTagValue(currentNode.tagname, textData, options));
+  }
+
+  if (selfClosing) {
+    const childNode = new XmlNode(tagName, currentNode, '');
+    if (tagExp) {
+      childNode.attrsMap = buildAttributesMap(tagExp, options);
     }
-    tagExp += ch;
+    currentNode.addChild(childNode);
+  } else {
+    const childNode = new XmlNode(tagName, currentNode);
+    if (tagExp) {
+      childNode.attrsMap = buildAttributesMap(tagExp, options);
+    }
+    currentNode.addChild(childNode);
+    if (options.stopNodes.length && options.stopNodes.includes(childNode.tagname)) {
+      childNode.startIndex = closeIndex;
+    }
+    currentNode = childNode;
   }
+  return {closeIndex, currentNode};
 }
 
-function findClosingIndex(xmlData, str, i, errMsg){
-  const closingIndex = xmlData.indexOf(str, i);
-  if(closingIndex === -1){
-    throw new Error(errMsg)
-  }else{
-    return closingIndex + str.length - 1;
+function closeTag(xmlData, currentNode, textData, pos, options) {
+  const closeIndex = findClosingIndex(xmlData, ">", pos, "Closing Tag is not closed.");
+
+  if (options.stopNodes.length && options.stopNodes.includes(currentNode.tagname)) {
+    currentNode.eraseChildNodes();
+
+    currentNode.val = xmlData.substr(currentNode.startIndex + 1, pos - currentNode.startIndex - 1);
+  } else if (currentNode.val !== undefined) {
+    currentNode.appendVal(processTagValue(currentNode.tagname, textData, options));
+  } else {
+    currentNode.val = processTagValue(currentNode.tagname, textData, options);
   }
+  return closeIndex;
+}
+
+function closingIndexForOpeningTag(xmlData, from, ignoreNameSpace) {
+  let tagName;
+  let index;
+  for (index = from; index < xmlData.length; index++) {
+    let ch = xmlData[index];
+    if (ch === '>') {
+      const selfClosing = xmlData[index - 1] === '/';
+      tagName = xmlData.substring(from, selfClosing ? index - 1 : index);
+      return {
+        selfClosing,
+        tagName,
+        tagExp: null,
+        closeIndex: index,
+      }
+    } else if (ignoreNameSpace && ch === ':') {
+      from = index + 1;
+    } else if (ch === ' ' || ch === '\n' || ch === '\r' || ch === '\t') {
+      tagName = xmlData.substring(from, index);
+      index++;
+      break;
+    }
+  }
+
+  if (index === xmlData.length) {
+    throw new Error('Tag is not closed.')
+  }
+
+  let attrBoundary = null;
+  for (let i = index; i < xmlData.length; i++) {
+    let ch = xmlData[i];
+    if (attrBoundary !== null) {
+      if (ch === attrBoundary) {
+        attrBoundary = null;
+      }
+    } else if (ch === '"' || ch === "'") {
+      attrBoundary = ch;
+    } else if (ch === '>') {
+      const selfClosing = xmlData[i - 1] === '/';
+      const tagExp = xmlData.substring(index, selfClosing ? i - 1 : i);
+      return {
+        selfClosing,
+        tagName,
+        tagExp,
+        closeIndex: i
+      }
+    }
+  }
+
+  throw new Error('Tag is not closed.')
+}
+
+function findClosingIndex(xmlData, str, pos, errMsg) {
+  const closingIndex = xmlData.indexOf(str, pos);
+  if (closingIndex === -1) {
+    throw new Error(errMsg)
+  }
+  return closingIndex + str.length - 1;
 }
 
 exports.getTraversalObj = getTraversalObj;

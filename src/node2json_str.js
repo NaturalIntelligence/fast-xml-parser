@@ -16,7 +16,7 @@ const _cToJsonStr = function(node, options, level) {
   let jObj = '{';
 
   //traver through all the children
-  const keys = Object.keys(node.child);
+  const keys = node.child == null ? [] : Object.keys(node.child);
 
   for (let index = 0; index < keys.length; index++) {
     var tagname = keys[index];
