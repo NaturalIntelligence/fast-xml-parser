@@ -4,9 +4,10 @@ const util = require('./util');
 
 const defaultOptions = {
   allowBooleanAttributes: false, //A tag can have attributes without any value
+  ignoreNameSpace: false //Ignore namespace verification
 };
 
-const props = ['allowBooleanAttributes'];
+const props = ['allowBooleanAttributes', 'ignoreNameSpace'];
 
 //const tagsPattern = new RegExp("<\\/?([\\w:\\-_\.]+)\\s*\/?>","g");
 exports.validate = function (xmlData, options) {
@@ -16,6 +17,7 @@ exports.validate = function (xmlData, options) {
   //xmlData = xmlData.replace(/(^\s*<\?xml.*?\?>)/g,"");//Remove XML starting tag
   //xmlData = xmlData.replace(/(<!DOCTYPE[\s\w\"\.\/\-\:]+(\[.*\])*\s*>)/g,"");//Remove DOCTYPE
   const tags = [];
+  let nameSpaces = [];
   let tagFound = false;
 
   //indicates that the root tag has been closed (aka. depth 0 has been reached)
@@ -77,10 +79,26 @@ exports.validate = function (xmlData, options) {
           return getErrorObject('InvalidTag', msg, getLineNumberForPosition(xmlData, i));
         }
 
-        const result = readAttributeStr(xmlData, i);
+        const result = readAttributeStr(xmlData, i, options);
         if (result === false) {
           return getErrorObject('InvalidAttr', "Attributes for '"+tagName+"' have open quote.", getLineNumberForPosition(xmlData, i));
         }
+
+        if (!options.ignoreNameSpace) {
+            if (result.nsArray.length > 0) {
+                //Pushing namespaces defined in tag
+                for (let x=0; x < result.nsArray.length; x++) {
+                    nameSpaces.push(result.nsArray[x]);
+                }
+            }
+
+            const nsResult = validateNameSpace(tagName, nameSpaces);
+
+            if (!nsResult.isValid) {
+                return getErrorObject('InvalidNS', nsResult.errorMsg, getLineNumberForPosition(xmlData, i));
+            }
+        }
+
         let attrStr = result.value;
         i = result.index;
 
@@ -104,8 +122,15 @@ exports.validate = function (xmlData, options) {
             return getErrorObject('InvalidTag', "Closing tag '"+tagName+"' can't have attributes or invalid starting.", getLineNumberForPosition(xmlData, i));
           } else {
             const otg = tags.pop();
-            if (tagName !== otg) {
-              return getErrorObject('InvalidTag', "Closing tag '"+otg+"' is expected inplace of '"+tagName+"'.", getLineNumberForPosition(xmlData, i));
+            if (tagName !== otg.name) {
+              return getErrorObject('InvalidTag', "Closing tag '"+otg.name+"' is expected inplace of '"+tagName+"'.", getLineNumberForPosition(xmlData, i));
+            }
+
+            if (!options.ignoreNameSpace && otg.nsArray.length > 0) {
+                //Pushing namespaces defined in tag
+                for (let x=0; x < otg.nsArray.length; x++) {
+                    nameSpaces.pop(otg.nsArray[x]);
+                }
             }
 
             //when there are no more tags, we reached the root level.
@@ -126,7 +151,15 @@ exports.validate = function (xmlData, options) {
           if (reachedRoot === true) {
             return getErrorObject('InvalidXml', 'Multiple possible root nodes found.', getLineNumberForPosition(xmlData, i));
           } else {
-            tags.push(tagName);
+            let tagObject = {
+                name: tagName
+            };
+
+            if (!options.ignoreNameSpace) {
+                tagObject["nsArray"] = result.nsArray;
+            }
+
+            tags.push(tagObject);
           }
           tagFound = true;
         }
@@ -255,7 +288,7 @@ var singleQuote = "'";
  * @param {string} xmlData
  * @param {number} i
  */
-function readAttributeStr(xmlData, i) {
+function readAttributeStr(xmlData, i, options) {
   let attrStr = '';
   let startChar = '';
   let tagClosed = false;
@@ -281,11 +314,17 @@ function readAttributeStr(xmlData, i) {
     return false;
   }
 
-  return {
+  let result = {
     value: attrStr,
     index: i,
     tagClosed: tagClosed
   };
+
+  if (!options.ignoreNameSpace) {
+    result["nsArray"] = getNameSpaceDefinitions(attrStr);
+  }
+
+  return result;
 }
 
 /**
@@ -382,6 +421,42 @@ function validateAttrName(attrName) {
 
 function validateTagName(tagname) {
   return util.isName(tagname) /* && !tagname.match(startsWithXML) */;
+}
+
+function validateNameSpace(tagName, nsArray) {
+    let tagSplit = tagName.split(":");
+    let isValid, errorMsg;
+    switch (tagSplit.length){ 
+        case 1:
+            isValid = true;
+            break;
+        case 2:
+            if (nsArray.indexOf(tagSplit[0]) > -1) {
+                isValid = true;
+            } else {
+                isValid = false;
+                errorMsg = "Namespace prefix '" + tagSplit[0] + "' is not defined for tag '" + tagName + "'";
+            }
+            break;
+        default:
+            isValid = false;
+            errorMsg = "Tag '" + tagName + "' cannot have multiple namespace prefixes";
+    }
+    return {
+        isValid: isValid,
+        errorMsg: errorMsg
+    }
+}
+
+function getNameSpaceDefinitions(attributeString) {
+    const regexNs = /xmlns:([^=]+)=/g;
+    let nsArray = [];
+    let matches = regexNs.exec(attributeString);
+    while (matches){
+        nsArray.push(matches[1]);
+        matches = regexNs.exec(attributeString);
+    }
+    return nsArray;
 }
 
 //this function returns the line number for the character at the given index

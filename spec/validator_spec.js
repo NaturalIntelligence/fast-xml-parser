@@ -5,7 +5,7 @@ const path = require("path");
 const validator = require("../src/validator");
 
 function validate(xmlData, error, line = 1) {
-    const result = validator.validate(xmlData);
+    const result = validator.validate(xmlData, { ignoreNameSpace: true });
     if (error) {
 
         const keys = Object.keys(error);
@@ -39,7 +39,7 @@ describe("XMLParser", function () {
 
     it("should not validate incomplete xml string", function () {
         validate("<rootNode>", {
-            InvalidXml: "Invalid '[    \"rootNode\"]' found."
+            InvalidXml: "Invalid '[    {        \"name\": \"rootNode\"    }]' found."
         });
     });
 
@@ -109,7 +109,7 @@ describe("XMLParser", function () {
 
     it("should not validate simple xml string with value but no closing tag", function () {
         validate("<root:Node>some value", {
-            InvalidXml: "Invalid '[    \"root:Node\"]' found."
+            InvalidXml: "Invalid '[    {        \"name\": \"root:Node\"    }]' found."
         });
     });
 
@@ -154,13 +154,13 @@ describe("XMLParser", function () {
 
     it("should not validate xml with non closing comment", function () {
         validate("<rootNode ><!-- <tag> -- <tag>1</tag><tag>val</tag></rootNode>", {
-            InvalidXml: "Invalid '[    \"rootNode\"]' found."
+            InvalidXml: "Invalid '[    {        \"name\": \"rootNode\"    }]' found."
         });
     });
 
     it("should not validate xml with unclosed tag", function () {
         validate("<rootNode  abc='123' bc='567'", {
-            InvalidXml: "Invalid '[    \"rootNode\"]' found."
+            InvalidXml: "Invalid '[    {        \"name\": \"rootNode\"    }]' found."
         });
     });
 

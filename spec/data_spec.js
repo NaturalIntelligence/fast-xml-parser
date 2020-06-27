@@ -115,7 +115,7 @@ describe("XMLParser", function() {
             ignoreAttributes:    false,
             //parseAttributeValue: true,
             allowBooleanAttributes: true
-        }, true);
+        }, { ignoreNameSpace: true });
 
         //console.log(JSON.stringify(result,null,4));
         expect(result).toEqual(expected);
@@ -138,7 +138,7 @@ describe("XMLParser", function() {
             ignoreAttributes:    false,
             //parseAttributeValue: true,
             allowBooleanAttributes: true
-        }, true);
+        }, { ignoreNameSpace: true });
 
         //console.log(JSON.stringify(result,null,4));
         expect(result).toEqual(expected);
