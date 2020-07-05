@@ -85,12 +85,8 @@ exports.validate = function (xmlData, options) {
         }
 
         if (!options.ignoreNameSpace) {
-            if (result.nsArray.length > 0) {
-                //Pushing namespaces defined in tag
-                for (let x=0; x < result.nsArray.length; x++) {
-                    nameSpaces.push(result.nsArray[x]);
-                }
-            }
+            //Pushing namespaces defined in tag
+            Array.prototype.push.apply(nameSpaces, result.nsArray);
 
             const nsResult = validateNameSpace(tagName, nameSpaces);
 
@@ -109,11 +105,9 @@ exports.validate = function (xmlData, options) {
           if (isValid === true) {
             tagFound = true;
 
-            if (!options.ignoreNameSpace && result.nsArray.length > 0) {
-                //Popping namespaces defined in tag
-                for (let x=0; x < result.nsArray.length; x++) {
-                    nameSpaces.pop(result.nsArray[x]);
-                }
+            if (!options.ignoreNameSpace) {
+                //Removing namespaces defined in current tag
+                nameSpaces.length -= result.nsArray.length;
             }
             //continue; //text may presents after self closing tag
           } else {
@@ -133,11 +127,9 @@ exports.validate = function (xmlData, options) {
               return getErrorObject('InvalidTag', "Closing tag '"+otg.name+"' is expected inplace of '"+tagName+"'.", getLineNumberForPosition(xmlData, i));
             }
 
-            if (!options.ignoreNameSpace && otg.nsArray.length > 0) {
-                //Popping namespaces defined in tag
-                for (let x=0; x < otg.nsArray.length; x++) {
-                    nameSpaces.pop(otg.nsArray[x]);
-                }
+            if (!options.ignoreNameSpace) {
+                //Removing namespaces defined in current tag
+                nameSpaces.length -= otg.nsArray.length;
             }
 
             //when there are no more tags, we reached the root level.
