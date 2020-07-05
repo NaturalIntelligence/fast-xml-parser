@@ -94,8 +94,8 @@ exports.validate = function (xmlData, options) {
 
             const nsResult = validateNameSpace(tagName, nameSpaces);
 
-            if (!nsResult.isValid) {
-                return getErrorObject('InvalidNS', nsResult.errorMsg, getLineNumberForPosition(xmlData, i));
+            if (nsResult !== true) {
+                return getErrorObject('InvalidTag', nsResult, getLineNumberForPosition(xmlData, i));
             }
         }
 
@@ -105,9 +105,16 @@ exports.validate = function (xmlData, options) {
         if (attrStr[attrStr.length - 1] === '/') {
           //self closing tag
           attrStr = attrStr.substring(0, attrStr.length - 1);
-          const isValid = validateAttributeString(attrStr, options);
+          const isValid = validateAttributeString(attrStr, nameSpaces, options);
           if (isValid === true) {
             tagFound = true;
+
+            if (!options.ignoreNameSpace && result.nsArray.length > 0) {
+                //Popping namespaces defined in tag
+                for (let x=0; x < result.nsArray.length; x++) {
+                    nameSpaces.pop(result.nsArray[x]);
+                }
+            }
             //continue; //text may presents after self closing tag
           } else {
             //the result from the nested function returns the position of the error within the attribute
@@ -127,7 +134,7 @@ exports.validate = function (xmlData, options) {
             }
 
             if (!options.ignoreNameSpace && otg.nsArray.length > 0) {
-                //Pushing namespaces defined in tag
+                //Popping namespaces defined in tag
                 for (let x=0; x < otg.nsArray.length; x++) {
                     nameSpaces.pop(otg.nsArray[x]);
                 }
@@ -139,7 +146,7 @@ exports.validate = function (xmlData, options) {
             }
           }
         } else {
-          const isValid = validateAttributeString(attrStr, options);
+          const isValid = validateAttributeString(attrStr, nameSpaces, options);
           if (isValid !== true) {
             //the result from the nested function returns the position of the error within the attribute
             //in order to get the 'true' error line, we need to calculate the position where the attribute begins (i - attrStr.length) and then add the position within the attribute
@@ -334,7 +341,7 @@ const validAttrStrRegxp = new RegExp('(\\s*)([^\\s=]+)(\\s*=)?(\\s*([\'"])(([\\s
 
 //attr, ="sd", a="amit's", a="sd"b="saf", ab  cd=""
 
-function validateAttributeString(attrStr, options) {
+function validateAttributeString(attrStr, nsArray, options) {
   //console.log("start:"+attrStr+":end");
 
   //if(attrStr.trim().length === 0) return true; //empty string
@@ -357,6 +364,18 @@ function validateAttributeString(attrStr, options) {
     if (!validateAttrName(attrName)) {
       return getErrorObject('InvalidAttr', "Attribute '"+attrName+"' is an invalid name.", getPositionFromMatch(attrStr, matches[i][0]));
     }
+
+    if (!options.ignoreNameSpace) {
+        const nsDefMatches = util.getAllMatches(matches[i][0], nameSpaceDefinitionRegex);
+        //Skipping namespace definition attribute
+        if (!nsDefMatches || nsDefMatches.length === 0 || attrName !== nsDefMatches[0][1]) {
+            const nsResult = validateNameSpace(attrName, nsArray);
+            if (nsResult !== true) {
+                return getErrorObject('InvalidAttr', nsResult, getPositionFromMatch(attrStr, matches[i][0]));
+            }
+        }
+    }
+
     if (!attrNames.hasOwnProperty(attrName)) {
       //check for duplicate attribute.
       attrNames[attrName] = 1;
@@ -423,38 +442,29 @@ function validateTagName(tagname) {
   return util.isName(tagname) /* && !tagname.match(startsWithXML) */;
 }
 
-function validateNameSpace(tagName, nsArray) {
-    let tagSplit = tagName.split(":");
-    let isValid, errorMsg;
-    switch (tagSplit.length){ 
+const nameSpaceDefinitionRegex = new RegExp(/(xmlns:([^:=]+))=/, 'g');
+
+function validateNameSpace(elemName, nsArray) {
+    let elemSplit = elemName.split(":");
+    switch (elemSplit.length){ 
         case 1:
-            isValid = true;
-            break;
+            return true;
         case 2:
-            if (nsArray.indexOf(tagSplit[0]) > -1) {
-                isValid = true;
+            if (nsArray.indexOf(elemSplit[0]) > -1) {
+                return true;
             } else {
-                isValid = false;
-                errorMsg = "Namespace prefix '" + tagSplit[0] + "' is not defined for tag '" + tagName + "'";
+                return "Namespace prefix '" + elemSplit[0] + "' is not defined for '" + elemName + "'";
             }
-            break;
         default:
-            isValid = false;
-            errorMsg = "Tag '" + tagName + "' cannot have multiple namespace prefixes";
-    }
-    return {
-        isValid: isValid,
-        errorMsg: errorMsg
+            return "'" + elemName + "' cannot have multiple namespace prefixes";
     }
 }
 
 function getNameSpaceDefinitions(attributeString) {
-    const regexNs = /xmlns:([^=]+)=/g;
     let nsArray = [];
-    let matches = regexNs.exec(attributeString);
-    while (matches){
-        nsArray.push(matches[1]);
-        matches = regexNs.exec(attributeString);
+    let matches = util.getAllMatches(attributeString, nameSpaceDefinitionRegex);
+    for (let i=0; i< matches.length; i++){
+        nsArray.push(matches[i][2]);
     }
     return nsArray;
 }

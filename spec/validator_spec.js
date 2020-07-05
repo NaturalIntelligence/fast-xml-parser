@@ -4,8 +4,8 @@ const fs = require("fs");
 const path = require("path");
 const validator = require("../src/validator");
 
-function validate(xmlData, ignoreNameSpace, error, line = 1) {
-    const result = validator.validate(xmlData, { ignoreNameSpace: ignoreNameSpace });
+function validate(xmlData, options, error, line = 1) {
+    const result = validator.validate(xmlData, options);
     if (error) {
 
         const keys = Object.keys(error);
@@ -21,11 +21,11 @@ function validate(xmlData, ignoreNameSpace, error, line = 1) {
 }
 
 function validateIgnoringNS(xmlData, error, line) {
-    validate(xmlData, true, error, line);
+    validate(xmlData, { ignoreNameSpace: true }, error, line);
 }
 
 function validateWithNS(xmlData, error, line) {
-    validate(xmlData, false, error, line);
+    validate(xmlData, null, error, line);
 }
 
 function validateFile(fileName, ...args) {
@@ -94,29 +94,82 @@ describe("XMLParser", function () {
             InvalidTag: "Closing tag 'rootnode' can't have attributes or invalid starting."
         });
     });
-
-    it("should validate simple xml string with namespace", function () {
+    
+    it("should validate tag with namespace", function () {
         validateWithNS("<root:Node xmlns:root='urn:none'></root:Node>");
     });
 
-    it("should not validate simple xml string when namespace is not defined", function () {
-        validateWithNS("<root:Node></root:Node>", {
-            InvalidNS: "Namespace prefix 'root' is not defined for tag 'root:Node'"
+    it("should validate attribute with namespace", function () {
+        validateWithNS("<rootNode xmlns:ns='urn:none'><tag ns:attr='value' /></rootNode>");
+    });
+
+    it("should validate self closing tag with namespace", function () {
+        validateWithNS("<rootNode><ns:tag type='self' xmlns:ns='urn:none'/></rootNode>");
+    });
+
+    it("should validate attributes in self closing tag with namespace", function () {
+        validateWithNS("<rootNode><ns:tag ns:type='self' xmlns:ns='urn:none'/></rootNode>");
+    });
+
+    it("should not validate other tags with namespace when namespace is defined in self closing tag", function () {
+        validateWithNS("<rootNode><ns:tag type='self' xmlns:ns='urn:none'/><ns:testTag></ns:testTag></rootNode>", {
+            InvalidTag: "Namespace prefix 'ns' is not defined for 'ns:testTag'"
         });
     });
 
-    it("should not validate xml when namespace is defined later", function () {
+    it("should not validate attributes outside self closing tag with namespace definition", function () {
+        validateWithNS("<rootNode><tag type='self' xmlns:ns='urn:none'/><testTag ns:attr='value'></testTag></rootNode>", {
+            InvalidAttr: "Namespace prefix 'ns' is not defined for 'ns:attr'"
+        });
+    });
+
+    it("should not validate tags with namespace when namespace is defined in a sibling tag", function () {
+        validateWithNS("<rootNode><tag1 type='self' xmlns:ns='urn:none'><ns:child1 /></tag1><tag2><ns:child2 /></tag2></rootNode>", {
+            InvalidTag: "Namespace prefix 'ns' is not defined for 'ns:child2'"
+        });
+    });
+
+    it("should not validate tag when namespace is not defined", function () {
+        validateWithNS("<root:Node></root:Node>", {
+            InvalidTag: "Namespace prefix 'root' is not defined for 'root:Node'"
+        });
+    });
+
+    it("should not validate attribute when namespace is not defined", function () {
+        validateWithNS("<rootNode ns:attr='value'></rootNode>", {
+            InvalidAttr: "Namespace prefix 'ns' is not defined for 'ns:attr'"
+        });
+    });
+
+    it("should not validate tag when namespace is defined later", function () {
         validateWithNS(`<root:Node>
         <tag xmlns:root="urn:none">
         </tag>
         </root:Node>`, {
-            InvalidNS: "Namespace prefix 'root' is not defined for tag 'root:Node'"
+            InvalidTag: "Namespace prefix 'root' is not defined for 'root:Node'"
         });
     });
 
-    it("should not validate simple xml string when multiple namespace prefixes are present", function () {
+    it("should not validate attribute when namespace is defined later", function () {
+        validateWithNS(`<rootNode>
+        <tag1 ns:attr="value">
+        </tag1>
+        <tag2 xmlns:ns="urn:none">
+        </tag2>
+        </rootNode>`, {
+            InvalidAttr: "Namespace prefix 'ns' is not defined for 'ns:attr'"
+        }, 2);
+    });
+
+    it("should not validate tag when multiple namespace prefixes are present", function () {
         validateWithNS("<root:ns:Node></root:ns:Node>", {
-            InvalidNS: "Tag 'root:ns:Node' cannot have multiple namespace prefixes"
+            InvalidTag: "'root:ns:Node' cannot have multiple namespace prefixes"
+        });
+    });
+
+    it("should not validate attribute when multiple namespace prefixes are present", function () {
+        validateWithNS("<rootNode ns1:ns2:attr='value'></rootNode>", {
+            InvalidAttr: "'ns1:ns2:attr' cannot have multiple namespace prefixes"
         });
     });
 
