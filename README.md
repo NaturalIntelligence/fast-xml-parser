@@ -14,6 +14,8 @@
 
 Validate XML, Parse XML to JS/JSON and vice versa, or parse XML to Nimn rapidly without C/C++ based libraries and no callback
 
+To cover expenses, we're planning to launch [FXP Enterprise](https://github.com/NaturalIntelligence/fxp-ent) edition in parallel. Watch it for further updates, if you're interested.
+
 ![Donate $5](static/img/donation_quote.png)
 
 <a href="https://opencollective.com/fast-xml-parser/donate" target="_blank">
