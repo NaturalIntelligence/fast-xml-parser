@@ -103,6 +103,20 @@ describe("XMLParser", function () {
         validateWithNS("<rootNode xmlns:ns='urn:none'><tag ns:attr='value' /></rootNode>");
     });
 
+    it("should not validate namespace attribute with empty URI", function () {
+        validateWithNS("<root:Node xmlns:root=''></root:Node>", {
+            InvalidAttr: "Invalid URI for namespace root"
+        });
+    });
+
+    it("should validate all namespaces defined in a tag", function () {
+        validateWithNS(`<rootNode xmlns:ns1='urn:none' xmlns:ns2='urn:none'>
+        <ns1:tag>
+        <ns2:child></ns2:child>
+        </ns1:tag>
+        </rootNode>`);
+    });
+
     it("should validate self closing tag with namespace", function () {
         validateWithNS("<rootNode><ns:tag type='self' xmlns:ns='urn:none'/></rootNode>");
     });
@@ -168,9 +182,25 @@ describe("XMLParser", function () {
     });
 
     it("should not validate attribute when multiple namespace prefixes are present", function () {
-        validateWithNS("<rootNode ns1:ns2:attr='value'></rootNode>", {
+        validateWithNS("<rootNode xmlns:ns1='urn:none' xmlns:ns2='urn:none'><tag ns1:ns2:attr='value' /></rootNode>", {
             InvalidAttr: "'ns1:ns2:attr' cannot have multiple namespace prefixes"
         });
+    });
+
+    it("should not validate attributes with same name and same namespace prefix", function () {
+        validateWithNS("<rootNode xmlns:ns1='urn:none' xmlns:ns2='a'><tag ns1:attr='value' ns1:attr='value2' /></rootNode>", {
+            InvalidAttr: "Attribute 'attr' in namespace 'urn:none' is repeated."
+        });
+    });
+
+    it("should not validate attributes with same name and same namespace", function () {
+        validateWithNS("<rootNode xmlns:ns1='urn:none' xmlns:ns2='urn:none'><tag ns1:attr='value' ns2:attr='value2' /></rootNode>",{
+            InvalidAttr: "Attribute 'attr' in namespace 'urn:none' is repeated."
+        });
+    });
+
+    it("should validate attributes with same name and different namespace", function () {
+        validateWithNS("<rootNode xmlns:ns1='urn:none' xmlns:ns2='a'><tag ns1:attr='value' ns2:attr='value2' /></rootNode>");
     });
 
     it("should not validate xml string with namespace when closing tag is diffrent", function () {
@@ -371,6 +401,12 @@ describe("XMLParser", function () {
     it("should not validate xml with repeated attributes", function () {
         validateIgnoringNS('<name length="bar" length="baz"></name>', {
             InvalidAttr: "Attribute 'length' is repeated."
+        });
+    });
+
+    it("should not validate attributes with same name and different namespace prefix, if namespace is ignored", function () {
+        validateIgnoringNS("<rootNode xmlns:ns1='urn:none' xmlns:ns2=''><tag ns1:attr='value' ns2:attr='value2'></rootNode>", {
+            InvalidAttr: "Attribute 'attr' is repeated."
         });
     });
 

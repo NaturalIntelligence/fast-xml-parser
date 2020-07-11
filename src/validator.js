@@ -85,6 +85,10 @@ exports.validate = function (xmlData, options) {
         }
 
         if (!options.ignoreNameSpace) {
+            if (result.nsError) {
+                return getErrorObject('InvalidAttr', result.nsError, getLineNumberForPosition(xmlData, i));
+            }
+
             //Pushing namespaces defined in tag
             Array.prototype.push.apply(nameSpaces, result.nsArray);
 
@@ -320,7 +324,12 @@ function readAttributeStr(xmlData, i, options) {
   };
 
   if (!options.ignoreNameSpace) {
-    result["nsArray"] = getNameSpaceDefinitions(attrStr);
+    const nsResult = getNameSpaceDefinitions(attrStr);
+    if (Array.isArray(nsResult)) {
+        result["nsArray"] = nsResult;
+    } else {
+        result["nsError"] = nsResult;
+    }
   }
 
   return result;
@@ -352,7 +361,7 @@ function validateAttributeString(attrStr, nsArray, options) {
     /* else if(matches[i][6] === undefined){//attribute without value: ab=
                     return { err: { code:"InvalidAttr",msg:"attribute " + matches[i][2] + " has no value assigned."}};
                 } */
-    const attrName = matches[i][2];
+    let attrName = matches[i][2];
     if (!validateAttrName(attrName)) {
       return getErrorObject('InvalidAttr', "Attribute '"+attrName+"' is an invalid name.", getPositionFromMatch(attrStr, matches[i][0]));
     }
@@ -366,13 +375,27 @@ function validateAttributeString(attrStr, nsArray, options) {
                 return getErrorObject('InvalidAttr', nsResult, getPositionFromMatch(attrStr, matches[i][0]));
             }
         }
+        const attrSplit = attrName.split(":");
+        if (attrSplit.length > 1) {
+            for (let i=0; i < nsArray.length; i++) {
+                const nsSplit = nsArray[i].split("'");
+                if (nsSplit[0] === attrSplit[0]) {
+                    attrName = nsSplit[1] + "'" + attrSplit[1];
+                    break;
+                }
+            }
+        }
+    } else {
+        attrName = attrName.replace(/[^:]+:/, "");
     }
 
     if (!attrNames.hasOwnProperty(attrName)) {
-      //check for duplicate attribute.
-      attrNames[attrName] = 1;
+        //check for duplicate attribute.
+        attrNames[attrName] = 1;
     } else {
-      return getErrorObject('InvalidAttr', "Attribute '"+attrName+"' is repeated.", getPositionFromMatch(attrStr, matches[i][0]));
+        const attrSplit = attrName.split("'");
+        const msg = attrSplit.length === 2 ?  "'" + attrSplit[1] + "' in namespace '" + attrSplit[0] + "'": "'" + attrName + "'";
+        return getErrorObject('InvalidAttr', "Attribute "+ msg +" is repeated.", getPositionFromMatch(attrStr, matches[i][0]));
     }
   }
 
@@ -434,7 +457,7 @@ function validateTagName(tagname) {
   return util.isName(tagname) /* && !tagname.match(startsWithXML) */;
 }
 
-const nameSpaceDefinitionRegex = new RegExp(/(xmlns:([^:=]+))=/, 'g');
+const nameSpaceDefinitionRegex = new RegExp(/(xmlns:([^:=]+))=['"]([^'"]*)['"]/, 'g');
 
 function validateNameSpace(elemName, nsArray) {
     let elemSplit = elemName.split(":");
@@ -442,11 +465,12 @@ function validateNameSpace(elemName, nsArray) {
         case 1:
             return true;
         case 2:
-            if (nsArray.indexOf(elemSplit[0]) > -1) {
-                return true;
-            } else {
-                return "Namespace prefix '" + elemSplit[0] + "' is not defined for '" + elemName + "'";
+            for (let i=0; i< nsArray.length; i++) {
+                if (nsArray[i].split("'")[0] === elemSplit[0]){
+                    return true;
+                } 
             }
+            return "Namespace prefix '" + elemSplit[0] + "' is not defined for '" + elemName + "'";
         default:
             return "'" + elemName + "' cannot have multiple namespace prefixes";
     }
@@ -456,7 +480,11 @@ function getNameSpaceDefinitions(attributeString) {
     let nsArray = [];
     let matches = util.getAllMatches(attributeString, nameSpaceDefinitionRegex);
     for (let i=0; i< matches.length; i++){
-        nsArray.push(matches[i][2]);
+        if (matches[i][3]) {
+            nsArray.push(matches[i][2] + "'" + matches[i][3]);
+        } else {
+            return "Invalid URI for namespace " + matches[i][2];
+        }
     }
     return nsArray;
 }
