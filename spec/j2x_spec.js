@@ -5,6 +5,24 @@ const he = require("he");
 
 describe("XMLParser", function() {
 
+    fit("should parse to XML with nested tags", function() {
+        const jObj = {
+            a: {
+                b: [
+                    "",
+                    {c: "val2"}
+                ]
+            }
+        };
+        const parser = new Parser({
+            supressEmptyNode: true
+        });
+        const result = parser.parse(jObj);
+        console.log(result);
+        const expected = `<a><b/><b><c>val2</c></b></a>`;
+        expect(result).toEqual(expected);
+    });
+
     it("should parse to XML with nested tags", function() {
         const jObj = {
             a: {
@@ -34,6 +52,24 @@ describe("XMLParser", function() {
         const result = parser.parse(jObj);
         //console.log(result);
         const expected = `<a><b>val1<d>val2</d></b></a>`;
+        expect(result).toEqual(expected);
+    });
+
+    fit("should not supress empty node", function() {
+        const jObj = {
+            a: {
+                b: [
+                    "",
+                    {c: "val2"}
+                ]
+            }
+        };
+        const parser = new Parser({
+            supressEmptyNode: false
+        });
+        const result = parser.parse(jObj);
+        
+        const expected = `<a><b></b><b><c>val2</c></b></a>`;
         expect(result).toEqual(expected);
     });
 
