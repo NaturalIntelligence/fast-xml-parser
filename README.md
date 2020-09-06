@@ -319,7 +319,7 @@ With the correct options, you can get the almost original XML without losing any
 
 ## Contributors
 
-This project exists thanks to [all](graphs/contributors) the people who contribute. [[Contribute](CONTRIBUTING.md)].
+This project exists thanks to [all](graphs/contributors) the people who contribute. [[Contribute](docs/CONTRIBUTING.md)].
 <!-- <a href="graphs/contributors"><img src="https://opencollective.com/fast-xml-parser/contributors.svg?width=890&button=false" /></a> -->
 <!--
 ### Lead Maintainers
