@@ -303,9 +303,6 @@ With the correct options, you can get the almost original XML without losing any
 
 </details>
 
-### Limitations
- Currently FXP fails to parse XML with attributes has ">" in the value. This problem is left open as change in regex for its fix is degrading the performance. And the parser become very slow in case of long attribute names. However, it is not ignored and we're working on the fix.
-
 ### Worth to mention
 
 - **[BigBit standard)](https://github.com/amitguptagwl/bigbit)** : A standard to represent any number in the universe in comparatively less space and without precision loss. A standard to save memory to represent any text string in comparision of UTF encodings.
