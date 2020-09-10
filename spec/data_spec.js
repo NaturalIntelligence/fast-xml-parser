@@ -101,7 +101,7 @@ describe("XMLParser", function() {
                 },
                 "a:b": 2,
                 "a-b:b-a": 2,
-                "a:c": "test&amp;\r\nтест&lt;\r\ntest",
+                "a:c": "test&amp;\nтест&lt;\ntest",
                 "a:el": "<a>&lt;<a/>&lt;b&gt;2</b>]]]]>&amp;a",
                 "c:string": {
                     "#text": "&#x441;&#x442;&#x440;&#x430;&#x445;&#x43e;&#x432;&#x430;&#x43d;&#x438;&#x44f;    » &#x43e;&#x442; &#x441;&#x443;&#x43c;&#x43c;&#x44b;     &#x435;&#x433;&#x43e; &#x430;&#x43a;&#x442;&#x438;&#x432;&#x43e;&#x432;",
