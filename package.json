@@ -68,7 +68,7 @@
       "url": "https://github.com/Tatsh"
     }
   ],
-  "license": "MIT",
+  "license": "MIT Modified",
   "devDependencies": {
     "@babel/core": "^7.10.2",
     "@babel/plugin-transform-runtime": "^7.10.1",
