@@ -168,7 +168,7 @@ function buildAttributesMap(attrStr, options) {
 }
 
 const getTraversalObj = function(xmlData, options) {
-  xmlData = xmlData.replace(/(\r\n)|\n/, " ");
+  xmlData = xmlData.replace(/\r\n?/g, "\n");
   options = buildOptions(options, defaultOptions, props);
   const xmlObj = new xmlNode('!xml');
   let currentNode = xmlObj;

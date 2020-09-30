@@ -4,6 +4,25 @@ const parser = require("../src/parser");
 const validator = require("../src/validator");
 
 describe("XMLParser", function() {
+    it("should parse multiline tag value when tags without spaces", function() {
+        const xmlData = `<?xml version='1.0'?><root><person>lastname
+firstname
+patronymic</person></root>`;
+        let result = parser.parse(xmlData, {
+            ignoreAttributes: false
+        });
+
+        const expected = {
+            "root": {
+                "person": "lastname\nfirstname\npatronymic"
+            }
+        };
+
+        expect(result).toEqual(expected);
+
+        result = validator.validate(xmlData);
+        expect(result).toBe(true);
+    });
     it("should parse tag having CDATA", function() {
         const xmlData = `<?xml version='1.0'?>
 <any_name>
@@ -32,7 +51,6 @@ describe("XMLParser", function() {
                 }
             }
         };
-
         let result = parser.parse(xmlData, {
             ignoreAttributes: false
         });
