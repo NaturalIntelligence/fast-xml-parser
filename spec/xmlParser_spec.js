@@ -825,4 +825,18 @@ describe("XMLParser", function() {
         //console.log(JSON.stringify(result,null,4));
         expect(result).toEqual(expected);
     });
+
+    it("should ignore root element", function() {
+        const xmlData = "<?xml version='1.0'?>"
+        + "<tag>"
+        + "    <subtag2>subtag text</subtag2>"
+        + "</tag>";
+
+        const expected = {
+            "subtag2": "subtag text"
+        };
+
+        let result = parser.parse(xmlData, { ignoreRootElement: true });
+        expect(result).toEqual(expected);
+    });
 });

@@ -25,7 +25,7 @@ const defaultOptions = {
   ignoreAttributes: true,
   ignoreNameSpace: false,
   allowBooleanAttributes: false, //a tag can have attributes without any value
-  //ignoreRootElement : false,
+  ignoreRootElement: false,
   parseNodeValue: true,
   parseAttributeValue: false,
   arrayMode: false,
@@ -51,6 +51,7 @@ const props = [
   'ignoreAttributes',
   'ignoreNameSpace',
   'allowBooleanAttributes',
+  'ignoreRootElement',
   'parseNodeValue',
   'parseAttributeValue',
   'arrayMode',

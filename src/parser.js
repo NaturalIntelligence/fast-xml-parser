@@ -9,7 +9,7 @@ const validator = require('./validator');
 exports.parse = function(xmlData, options, validationOption) {
   if( validationOption){
     if(validationOption === true) validationOption = {}
-    
+
     const result = validator.validate(xmlData, validationOption);
     if (result !== true) {
       throw Error( result.err.msg)
@@ -18,7 +18,8 @@ exports.parse = function(xmlData, options, validationOption) {
   options = buildOptions(options, x2xmlnode.defaultOptions, x2xmlnode.props);
   const traversableObj = xmlToNodeobj.getTraversalObj(xmlData, options)
   //print(traversableObj, "  ");
-  return nodeToJson.convertToJson(traversableObj, options);
+  const json = nodeToJson.convertToJson(traversableObj, options);
+  return options.ignoreRootElement ? json[Object.keys(json)[0]] : json;
 };
 exports.convertTonimn = require('../src/nimndata').convert2nimn;
 exports.getTraversalObj = xmlToNodeobj.getTraversalObj;
@@ -53,11 +54,11 @@ function print(xmlNode, indentation){
             //console.log(indentation + " \""+index+"\" : [")
             print(item, indentation2);
           })
-          console.log(indentation + "],")  
+          console.log(indentation + "],")
         }else{
           console.log(indentation + " \""+key+"\" : {")
           print(node, indentation2);
-          console.log(indentation + "},")  
+          console.log(indentation + "},")
         }
       });
       console.log(indentation + "},")

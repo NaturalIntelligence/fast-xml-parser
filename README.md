@@ -186,6 +186,7 @@ Validator returns the following object in case of error;
 * **ignoreAttributes** : Ignore attributes to be parsed.
 * **ignoreNameSpace** : Remove namespace string from tag and attribute names.
 * **allowBooleanAttributes** : a tag can have attributes without any value
+* **ignoreRootElement** : Don't include the root element in the result object.
 * **parseNodeValue** : Parse the value of text node to float, integer, or boolean.
 * **parseAttributeValue** : Parse the value of an attribute to float, integer, or boolean.
 * **trimValues** : trim string values of an attribute or node
