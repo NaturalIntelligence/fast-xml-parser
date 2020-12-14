@@ -11,7 +11,6 @@
     "bundle": "webpack && webpack --config webpack-prod.config.js",
     "coverage": "istanbul cover -x \"cli.js\" -x \"spec/*spec.js\" jasmine spec/*spec.js;",
     "coverage:check": "istanbul check-coverage --branch 90 --statement 90",
-    "postinstall": "node tasks/postinstall.js || exit 0",
     "prettier": "prettier --write src/**/*.js",
     "publish-please": "publish-please",
     "prepublishOnly": "publish-please guard"
