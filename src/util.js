@@ -83,17 +83,20 @@ exports.buildOptions = function(options, defaultOptions, props) {
 };
 
 /**
- * Check if a tagname should be treated as array
+ * Check if a tag name should be treated as array
  *
- * @param tagname the node tagname
- * @param arrayMode
+ * @param tagName the node tagname
+ * @param arrayMode the array mode option
+ * @param parentTagName the parent tag name
  * @returns {boolean} true if node should be parsed as array
  */
-exports.isTagnameInArrayMode = function (tagname, arrayMode) {
-  if (arrayMode instanceof RegExp) {
-    return arrayMode.test(tagname)
+exports.isTagNameInArrayMode = function (tagName, arrayMode, parentTagName) {
+  if (arrayMode === false) {
+    return false;
+  } else if (arrayMode instanceof RegExp) {
+    return arrayMode.test(tagName);
   } else if (typeof arrayMode === 'function') {
-    return !!arrayMode(tagname)
+    return !!arrayMode(tagName, parentTagName);
   }
 
   return arrayMode === "strict";

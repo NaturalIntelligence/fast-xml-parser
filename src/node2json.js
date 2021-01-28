@@ -2,7 +2,7 @@
 
 const util = require('./util');
 
-const convertToJson = function(node, options) {
+const convertToJson = function(node, options, parentTagName) {
   const jObj = {};
 
   // when no child node or attr is present
@@ -11,29 +11,27 @@ const convertToJson = function(node, options) {
   }
 
   // otherwise create a textnode if node has some text
-  if (util.isExist(node.val)) {
-    if (!(typeof node.val === 'string' && (node.val === '' || node.val === options.cdataPositionChar))) {
-      const asArray = util.isTagnameInArrayMode(node.tagname, options.arrayMode)
-      jObj[options.textNodeName] = asArray ? [node.val] : node.val;
-    }
+  if (util.isExist(node.val) && !(typeof node.val === 'string' && (node.val === '' || node.val === options.cdataPositionChar))) {
+    const asArray = util.isTagNameInArrayMode(node.tagname, options.arrayMode, parentTagName)
+    jObj[options.textNodeName] = asArray ? [node.val] : node.val;
   }
 
   util.merge(jObj, node.attrsMap, options.arrayMode);
 
   const keys = Object.keys(node.child);
   for (let index = 0; index < keys.length; index++) {
-    const tagname = keys[index];
-    if (node.child[tagname] && node.child[tagname].length > 1) {
-      jObj[tagname] = [];
-      for (let tag in node.child[tagname]) {
-        if (node.child[tagname].hasOwnProperty(tag)) {
-          jObj[tagname].push(convertToJson(node.child[tagname][tag], options));
+    const tagName = keys[index];
+    if (node.child[tagName] && node.child[tagName].length > 1) {
+      jObj[tagName] = [];
+      for (let tag in node.child[tagName]) {
+        if (node.child[tagName].hasOwnProperty(tag)) {
+          jObj[tagName].push(convertToJson(node.child[tagName][tag], options, tagName));
         }
       }
     } else {
-      const result = convertToJson(node.child[tagname][0], options);
-      const asArray = (options.arrayMode === true && typeof result === 'object') || util.isTagnameInArrayMode(tagname, options.arrayMode);
-      jObj[tagname] = asArray ? [result] : result;
+      const result = convertToJson(node.child[tagName][0], options, tagName);
+      const asArray = (options.arrayMode === true && typeof result === 'object') || util.isTagNameInArrayMode(tagName, options.arrayMode, parentTagName);
+      jObj[tagName] = asArray ? [result] : result;
     }
   }
 

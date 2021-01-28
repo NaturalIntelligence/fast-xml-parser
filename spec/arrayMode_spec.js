@@ -227,11 +227,86 @@ describe("XMLParser with arrayMode enabled", function () {
         expect(regExResult).toEqual(expected);
 
         const cbExResult = parser.parse(xmlData, {
-            arrayMode: function (tagname) {
-                return ['inventory', 'item'].includes(tagname)
+            arrayMode: function (tagName) {
+                return ['inventory', 'item'].includes(tagName)
             },
             ignoreAttributes: false,
         });
+        expect(cbExResult).toEqual(expected);
+    });
+
+    it("should parse all the tags as an array that match arrayMode callback with parent tag", function () {
+        const xmlData = `<report>
+        <store>
+            <region>US</region>
+            <inventory>
+                <item grade="A">
+                    <name>Banana</name>
+                    <count>200</count>
+                </item>
+                <item grade="B">
+                    <name>Apple</name>
+                    <count>100</count>
+                </item>
+            </inventory>
+        </store>
+        <store>
+            <region>EU</region>
+            <inventory>
+                <item>
+                    <name>Banana</name>
+                    <count>100</count>
+                </item>
+            </inventory>
+        </store>
+    </report>`;
+
+        const expected = {
+            "report":
+              {
+                  "store": [
+                      {
+                          "region": "US",
+                          "inventory":
+                            {
+                                "item": [
+                                    {
+                                        "@_grade": "A",
+                                        "name": "Banana",
+                                        "count": 200
+                                    },
+                                    {
+                                        "@_grade": "B",
+                                        "name": "Apple",
+                                        "count": 100
+                                    }
+                                ]
+                            }
+                      },
+                      {
+                          "region": "EU",
+                          "inventory":
+                            {
+                                "item": [
+                                    {
+                                        "name": "Banana",
+                                        "count": 100
+                                    }
+                                ]
+                            }
+                      }
+                  ]
+              }
+
+        };
+
+        const cbExResult = parser.parse(xmlData, {
+            arrayMode: function (tagName, parentTagName) {
+                return parentTagName === 'inventory';
+            },
+            ignoreAttributes: false,
+        });
+
         expect(cbExResult).toEqual(expected);
     });
 });
