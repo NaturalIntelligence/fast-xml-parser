@@ -193,7 +193,7 @@ Validator returns the following object in case of error;
 * **cdataTagName** : If specified, parser parse CDATA as nested tag instead of adding it's value to parent tag.
 * **cdataPositionChar** : It'll help to covert JSON back to XML without losing CDATA position.
 * **parseTrueNumberOnly**: if true then values like "+123", or "0123" will not be parsed as number.
-* **arrayMode** : When `false`, a tag with single occurrence is parsed as an object but as an array in case of multiple occurences. When `true`, a tag will be parsed as an array always excluding leaf nodes. When `strict`, all the tags will be parsed as array only.
+* **arrayMode** : When `false`, a tag with single occurrence is parsed as an object but as an array in case of multiple occurences. When `true`, a tag will be parsed as an array always excluding leaf nodes. When `strict`, all the tags will be parsed as array only. When instance of `RegEx`, only tags will be parsed as array that match the regex. When `function` a tag name is passed to the callback that can be checked.
 * **tagValueProcessor** : Process tag value during transformation. Like HTML decoding, word capitalization, etc. Applicable in case of string only.
 * **attrValueProcessor** : Process attribute value during transformation. Like HTML decoding, word capitalization, etc. Applicable in case of string only.
 * **stopNodes** : an array of tag names which are not required to be parsed. Instead their values are parsed as string.

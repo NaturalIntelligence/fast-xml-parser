@@ -43,9 +43,9 @@ exports.merge = function(target, a, arrayMode) {
     const keys = Object.keys(a); // will return an array of own properties
     const len = keys.length; //don't make it inline
     for (let i = 0; i < len; i++) {
-      if(arrayMode === 'strict'){
+      if (arrayMode === 'strict') {
         target[keys[i]] = [ a[keys[i]] ];
-      }else{
+      } else {
         target[keys[i]] = a[keys[i]];
       }
     }
@@ -81,6 +81,26 @@ exports.buildOptions = function(options, defaultOptions, props) {
   }
   return newOptions;
 };
+
+/**
+ * Check if a tag name should be treated as array
+ *
+ * @param tagName the node tagname
+ * @param arrayMode the array mode option
+ * @param parentTagName the parent tag name
+ * @returns {boolean} true if node should be parsed as array
+ */
+exports.isTagNameInArrayMode = function (tagName, arrayMode, parentTagName) {
+  if (arrayMode === false) {
+    return false;
+  } else if (arrayMode instanceof RegExp) {
+    return arrayMode.test(tagName);
+  } else if (typeof arrayMode === 'function') {
+    return !!arrayMode(tagName, parentTagName);
+  }
+
+  return arrayMode === "strict";
+}
 
 exports.isName = isName;
 exports.getAllMatches = getAllMatches;

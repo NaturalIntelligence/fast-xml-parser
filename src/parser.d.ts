@@ -7,7 +7,7 @@ type X2jOptions = {
   allowBooleanAttributes: boolean;
   parseNodeValue: boolean;
   parseAttributeValue: boolean;
-  arrayMode: boolean | 'strict';
+  arrayMode: boolean | 'strict' | RegExp | ((tagName: string, parentTagName: string) => boolean);
   trimValues: boolean;
   cdataTagName: false | string;
   cdataPositionChar: string;
