@@ -1,3 +1,7 @@
+3.18.0 / 2021-02-05
+  * Support RegEx and function in arrayMode option 
+  * Fix #317 : validate nested PI tags
+
 3.17.4 / 2020-06-07
   * Refactor some code to support IE11
   * Fix: `<tag >` space as attribute string
