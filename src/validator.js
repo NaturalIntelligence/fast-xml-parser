@@ -27,17 +27,18 @@ exports.validate = function (xmlData, options) {
   }
 
   for (let i = 0; i < xmlData.length; i++) {
-    if (xmlData[i] === '<') {
+
+    if (xmlData[i] === '<' && xmlData[i+1] === '?') {
+      i+=2;
+      i = readPI(xmlData,i);
+      if (i.err) return i;
+    }else if (xmlData[i] === '<') {
       //starting of tag
       //read until you reach to '>' avoiding any '>' in attribute value
 
       i++;
-      if (xmlData[i] === '?') {
-        i = readPI(xmlData, ++i);
-        if (i.err) {
-          return i;
-        }
-      } else if (xmlData[i] === '!') {
+      
+      if (xmlData[i] === '!') {
         i = readCommentAndCDATA(xmlData, i);
         continue;
       } else {
@@ -140,7 +141,10 @@ exports.validate = function (xmlData, options) {
               i++;
               i = readCommentAndCDATA(xmlData, i);
               continue;
-            } else {
+            } else if (xmlData[i+1] === '?') {
+              i = readPI(xmlData, ++i);
+              if (i.err) return i;
+            } else{
               break;
             }
           } else if (xmlData[i] === '&') {

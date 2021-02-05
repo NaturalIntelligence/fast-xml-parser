@@ -272,6 +272,16 @@ describe("XMLParser", function () {
             '<h1></h1>' +
             '<?mso-contentType something="val"?>');
     });
+    
+    it("should validate XML PIs", function () {
+        validate('<h1><?mso?> abc</h1>');
+    });
+
+    it("should validate XML PIs", function () {
+        const xml = `<?xml version="1.0"?>
+        <content><?tibcochar ?> something</content>`;
+        validate(xml);
+    });
 
     it("should not validate XML PIs with invalid values", function () {
         validate('<?xml version="1.0"?>' +
