@@ -178,6 +178,25 @@ describe("XMLParser", function() {
         expect(result).toEqual(expected);
     });
 
+    it("should parse XML when namespaced ignored", function() {
+        const xmlData = `<a:b>c</a:b><a:d/><a:e atr="sasa" boolean>`;
+        const expected = {
+            "b" : "c",
+            "d" : "",
+            "e" : {
+                "@_atr": "sasa",
+                "@_boolean": true,
+            }
+        };
+
+        const result = parser.parse(xmlData, {
+            ignoreAttributes:       false,
+            allowBooleanAttributes: true,
+            ignoreNameSpace:        true,
+        });
+        expect(result).toEqual(expected);
+    });
+
     it("should parse XML with undefined as text", function() {
         const xmlData = `<tag><![CDATA[undefined]]><nested>undefined</nested></tag>`;
         const expected = {
