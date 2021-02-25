@@ -253,6 +253,7 @@ const getTraversalObj = function(xmlData, options) {
         const closeIndex = result.index;
         const separatorIndex = tagExp.indexOf(" ");
         let tagName = tagExp;
+        let shouldBuildAttributesMap = true;
         if(separatorIndex !== -1){
           tagName = tagExp.substr(0, separatorIndex).replace(/\s\s*$/, '');
           tagExp = tagExp.substr(separatorIndex + 1);
@@ -262,6 +263,7 @@ const getTraversalObj = function(xmlData, options) {
           const colonIndex = tagName.indexOf(":");
           if(colonIndex !== -1){
             tagName = tagName.substr(colonIndex+1);
+            shouldBuildAttributesMap = tagName !== result.data.substr(colonIndex + 1);
           }
         }
 
@@ -292,7 +294,7 @@ const getTraversalObj = function(xmlData, options) {
           if (options.stopNodes.length && options.stopNodes.includes(childNode.tagname)) {
             childNode.startIndex=closeIndex;
           }
-          if(tagName !== tagExp){
+          if(tagName !== tagExp && shouldBuildAttributesMap){
             childNode.attrsMap = buildAttributesMap(tagExp, options);
           }
           currentNode.addChild(childNode);
