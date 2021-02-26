@@ -20,7 +20,7 @@ exports.parse = function(xmlData, options, validationOption) {
   //print(traversableObj, "  ");
   return nodeToJson.convertToJson(traversableObj, options);
 };
-exports.convertTonimn = require('../src/nimndata').convert2nimn;
+exports.convertTonimn = require('./nimndata').convert2nimn;
 exports.getTraversalObj = xmlToNodeobj.getTraversalObj;
 exports.convertToJson = nodeToJson.convertToJson;
 exports.convertToJsonString = require('./node2json_str').convertToJsonString;
