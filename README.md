@@ -347,3 +347,8 @@ Support this project by becoming a sponsor. Your logo will show up here with a l
 <a href="https://opencollective.com/fast-xml-parser/sponsor/7/website" target="_blank"><img src="https://opencollective.com/fast-xml-parser/sponsor/7/avatar.svg"></a>
 <a href="https://opencollective.com/fast-xml-parser/sponsor/8/website" target="_blank"><img src="https://opencollective.com/fast-xml-parser/sponsor/8/avatar.svg"></a>
 <a href="https://opencollective.com/fast-xml-parser/sponsor/9/website" target="_blank"><img src="https://opencollective.com/fast-xml-parser/sponsor/9/avatar.svg"></a>
+
+# License
+
+* MIT License
+* We may mention the logo/name/reference of the users without further permission required. However, you can request to remove it,if you're not the user of this library anymore. We'll do the necessary changes ASAP.
