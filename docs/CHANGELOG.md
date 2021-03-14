@@ -1,3 +1,7 @@
+3.19.0 / 2021-03-14
+  * License changed to MIT original
+  * Fix #321 : namespace tag parsing
+
 3.18.0 / 2021-02-05
   * Support RegEx and function in arrayMode option 
   * Fix #317 : validate nested PI tags

@@ -83,8 +83,7 @@ List of some applications/projects using Fast XML Parser. (Raise an issue to sub
 <a href="http://www.magento.com/" title="Magento" > <img src="https://avatars2.githubusercontent.com/u/168457" width="80px" ></a>
 
 
-
-
+The list of users is collected either from the list published by Github, cummunicated directly through mails/chat , or from other resources. If you feel that your name in the above list is incorrectly published or you're not the user of this library anymore then you can inform us to remove it. We'll do the necessary changes ASAP.
 
 ### Main Features
 
@@ -351,4 +350,3 @@ Support this project by becoming a sponsor. Your logo will show up here with a l
 # License
 
 * MIT License
-* We may mention the logo/name/reference of the users without further permission required. However, you can request to remove it,if you're not the user of this library anymore. We'll do the necessary changes ASAP.
