@@ -242,6 +242,8 @@ var defaultOptions = {
     supressEmptyNode: false,
     tagValueProcessor: a=> he.encode(a, { useNamedReferences: true}),// default is a=>a
     attrValueProcessor: a=> he.encode(a, {isAttributeValue: isAttribute, useNamedReferences: true})// default is a=>a
+    preserveArrays: false
+    
 };
 var parser = new Parser(defaultOptions);
 var xml = parser.parse(json_or_js_obj);
@@ -263,6 +265,8 @@ With the correct options, you can get the almost original XML without losing any
 * **supressEmptyNode** : If set to `true`, tags with no value (text or nested tags) are written as self closing tags.
 * **tagValueProcessor** : Process tag value during transformation. Like HTML encoding, word capitalization, etc. Applicable in case of string only.
 * **attrValueProcessor** : Process attribute value during transformation. Like HTML encoding, word capitalization, etc. Applicable in case of string only.
+* **preserveArrays** : If set to `true`, preserve arrays structure e.g. when you for this JSON {"Samples": [{"Sample": "1"}, {"Sample": "2"}]} this XML presentation would be generated <code> &lt;Samples&gt;&lt;Sample&gt;1&lt;/Sample&gt;&lt;Sample&gt;2&lt;Sample/&gt;&lt;Samples&gt; </code> instead of <code> &lt;Samples&gt;&lt;Sample&gt;1&lt;/Sample&gt;&lt;Samples&gt;&lt;Samples&gt;&lt;Sample&gt;2&lt;/Sample&gt;&lt;Samples&gt; </code>
+
 </details>
 
 ## Benchmark

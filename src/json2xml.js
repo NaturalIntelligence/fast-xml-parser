@@ -18,6 +18,7 @@ const defaultOptions = {
   attrValueProcessor: function(a) {
     return a;
   },
+  preserveArrays: false
 };
 
 const props = [
@@ -32,6 +33,7 @@ const props = [
   'supressEmptyNode',
   'tagValueProcessor',
   'attrValueProcessor',
+  'preserveArrays'
 ];
 
 function Parser(options) {
@@ -128,20 +130,43 @@ Parser.prototype.j2x = function(jObj, level) {
           val += this.replaceCDATAarr('', jObj[key]);
         }
       } else {
-        //nested nodes
-        const arrLen = jObj[key].length;
-        for (let j = 0; j < arrLen; j++) {
-          const item = jObj[key][j];
-          if (typeof item === 'undefined') {
-            // supress undefined node
-          } else if (item === null) {
-            val += this.indentate(level) + '<' + key + '/' + this.tagEndChar;
-          } else if (typeof item === 'object') {
-            const result = this.j2x(item, level + 1);
-            val += this.buildObjNode(result.val, key, result.attrStr, level);
-          } else {
-            val += this.buildTextNode(item, key, '', level);
+        if(this.options.preserveArrays) {
+          //Preserve arrays structure e.g. when you have {"Samples": [{"Sample": "1"}, {"Sample": "2"}]}
+          // you get <Samples><Sample>1</Sample><Sample>2<Sample/><Samples>
+          //instead of <Samples><Sample>1</Sample><Samples><Samples><Sample>2</Sample><Samples>
+          const arrLen = jObj[key].length;
+          var tempVal = "";
+
+          for (let j = 0; j < arrLen; j++) {
+            const item = jObj[key][j];
+            if (typeof item === 'undefined') {
+              // supress undefined node
+            } else if (item === null) {
+              val += this.indentate(level) + '<' + key + '/' + this.tagEndChar;
+            } else if (typeof item === 'object') {
+              const result = this.j2x(item, level + 1);
+              tempVal += result.val;
+            } else {
+              val += this.buildTextNode(item, key, '', level);
+            }
           }
+          val += this.buildObjNode(tempVal, key, [], level);
+        } else {
+            //nested nodes
+            const arrLen = jObj[key].length;
+            for (let j = 0; j < arrLen; j++) {
+              const item = jObj[key][j];
+              if (typeof item === 'undefined') {
+                // supress undefined node
+              } else if (item === null) {
+                val += this.indentate(level) + '<' + key + '/' + this.tagEndChar;
+              } else if (typeof item === 'object') {
+                const result = this.j2x(item, level + 1);
+                val += this.buildObjNode(result.val, key, result.attrStr, level);
+              } else {
+                val += this.buildTextNode(item, key, '', level);
+              }
+            }
         }
       }
     } else {
