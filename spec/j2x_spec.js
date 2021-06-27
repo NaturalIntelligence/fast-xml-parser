@@ -52,6 +52,21 @@ describe("XMLParser", function() {
         expect(result).toEqual(expected);
     });
 
+    it("should parse to XML with preserved array structure", function() {
+        const jObj = {
+            a: [
+                {"b": "val1"},
+                {"b": "val2"}
+            ]
+        };
+        const parser = new Parser({
+            preserveArrays: true
+        });
+        const result = parser.parse(jObj);
+        const expected = `<a><b>val1</b><b>val2</b></a>`;
+        expect(result).toEqual(expected);
+    });
+
     it("should supress undefined nodes", function() {
         const jObj = {
             a: {

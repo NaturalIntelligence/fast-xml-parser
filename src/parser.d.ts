@@ -33,6 +33,7 @@ type J2xOptions = {
   supressEmptyNode: boolean;
   tagValueProcessor: (tagValue: string) => string;
   attrValueProcessor: (attrValue: string) => string;
+  preserveArrays: boolean;
 };
 type J2xOptionsOptional = Partial<J2xOptions>;
 
