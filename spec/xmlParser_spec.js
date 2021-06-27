@@ -397,6 +397,21 @@ describe("XMLParser", function() {
         expect(result).toEqual(expected);
     });
 
+
+    it("should enforce text node when flag supplied", function() {
+        const xmlData = `<tag.1 t1='1'>val1</tag.1><tag.2>val2</tag.2>`;
+        const expected = {
+            "tag.1": { "#text": 'val1', "@_t1": '1' },
+            "tag.2": { "#text": 'val2' },
+        };
+
+        const result = parser.parse(xmlData, {
+            ignoreAttributes: false,
+            forceTextNode: true,
+        });
+        expect(result).toEqual(expected);
+    });
+
     it("should not parse text value with tag", function() {
         const xmlData = `<score><c1>71<message>23</message>29</c1></score>`;
         const expected = {

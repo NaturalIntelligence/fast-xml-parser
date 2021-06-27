@@ -4,6 +4,7 @@ const buildOptions = require('./util').buildOptions;
 
 const defaultOptions = {
   attributeNamePrefix: '@_',
+  forceTextNode: false,
   attrNodeName: false,
   textNodeName: '#text',
   ignoreAttributes: true,
@@ -22,6 +23,7 @@ const defaultOptions = {
 
 const props = [
   'attributeNamePrefix',
+  'forceTextNode',
   'attrNodeName',
   'textNodeName',
   'ignoreAttributes',

@@ -3,6 +3,7 @@ type X2jOptions = {
   attrNodeName: false | string;
   textNodeName: string;
   ignoreAttributes: boolean;
+  forceTextNode: boolean;
   ignoreNameSpace: boolean;
   allowBooleanAttributes: boolean;
   parseNodeValue: boolean;
@@ -23,6 +24,7 @@ type validationOptions = {
 type validationOptionsOptional = Partial<validationOptions>;
 type J2xOptions = {
   attributeNamePrefix: string;
+  forceTextNode: boolean;
   attrNodeName: false | string;
   textNodeName: string;
   ignoreAttributes: boolean;

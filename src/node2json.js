@@ -5,8 +5,16 @@ const util = require('./util');
 const convertToJson = function(node, options, parentTagName) {
   const jObj = {};
 
+
+
   // when no child node or attr is present
   if ((!node.child || util.isEmptyObject(node.child)) && (!node.attrsMap || util.isEmptyObject(node.attrsMap))) {
+    if(options.forceTextNode) {
+      const asArray = util.isTagNameInArrayMode(node.tagname, options.arrayMode, parentTagName)
+      jObj[options.textNodeName] = asArray ? [node.val] : node.val;
+      return jObj;
+    }
+    
     return util.isExist(node.val) ? node.val : '';
   }
 

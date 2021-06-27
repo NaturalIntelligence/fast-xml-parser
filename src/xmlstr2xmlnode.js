@@ -23,6 +23,7 @@ const defaultOptions = {
   attrNodeName: false,
   textNodeName: '#text',
   ignoreAttributes: true,
+  forceTextNode: false,
   ignoreNameSpace: false,
   allowBooleanAttributes: false, //a tag can have attributes without any value
   //ignoreRootElement : false,
@@ -48,6 +49,7 @@ const props = [
   'attributeNamePrefix',
   'attrNodeName',
   'textNodeName',
+  'forceTextNode',
   'ignoreAttributes',
   'ignoreNameSpace',
   'allowBooleanAttributes',
