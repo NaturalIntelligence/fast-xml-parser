@@ -8,7 +8,7 @@ Pre release
 * [ ] TS typings are updated
 
 In general
-* [ ] tests are written
+* [ ] tests are added/updated
 
 Post release
 * [ ] Tagged and Released on github

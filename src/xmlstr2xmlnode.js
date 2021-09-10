@@ -3,6 +3,8 @@
 const util = require('./util');
 const buildOptions = require('./util').buildOptions;
 const xmlNode = require('./xmlNode');
+const toNumber = require("strnum");
+
 const regx =
   '<((!\\[CDATA\\[([\\s\\S]*?)(]]>))|((NAME:)?(NAME))([^>]*)>|((\\/)(NAME)\\s*>))([^<]*)'
   .replace(/NAME/g, util.nameRegexp);
@@ -32,6 +34,10 @@ const defaultOptions = {
   trimValues: true, //Trim string values of tag and attributes
   cdataTagName: false,
   cdataPositionChar: '\\c',
+  numParseOptions: {
+    hex: true,
+    leadingZeros: true
+  },
   tagValueProcessor: function(a, tagName) {
     return a;
   },
@@ -60,6 +66,7 @@ const props = [
   'tagValueProcessor',
   'attrValueProcessor',
   'parseTrueNumberOnly',
+  'numParseOptions',
   'stopNodes'
 ];
 exports.props = props;
@@ -76,7 +83,7 @@ function processTagValue(tagName, val, options) {
       val = val.trim();
     }
     val = options.tagValueProcessor(val, tagName);
-    val = parseValue(val, options.parseNodeValue, options.parseTrueNumberOnly);
+    val = parseValue(val, options.parseNodeValue, options.numParseOptions);
   }
 
   return val;
@@ -96,26 +103,13 @@ function resolveNameSpace(tagname, options) {
   return tagname;
 }
 
-function parseValue(val, shouldParse, parseTrueNumberOnly) {
+function parseValue(val, shouldParse, options) {
   if (shouldParse && typeof val === 'string') {
-    let parsed;
-    if (val.trim() === '' || isNaN(val)) {
-      parsed = val === 'true' ? true : val === 'false' ? false : val;
-    } else {
-      if (val.indexOf('0x') !== -1) {
-        //support hexa decimal
-        parsed = Number.parseInt(val, 16);
-      } else if (val.indexOf('.') !== -1) {
-        parsed = Number.parseFloat(val);
-        val = val.replace(/\.?0+$/, "");
-      } else {
-        parsed = Number.parseInt(val, 10);
-      }
-      if (parseTrueNumberOnly) {
-        parsed = String(parsed) === val ? parsed : val;
-      }
-    }
-    return parsed;
+    //console.log(options)
+    const newval = val.trim();
+    if(newval === 'true' ) return true;
+    else if(newval === 'false' ) return false;
+    else return toNumber(val, options);
   } else {
     if (util.isExist(val)) {
       return val;
@@ -148,7 +142,7 @@ function buildAttributesMap(attrStr, options) {
           attrs[options.attributeNamePrefix + attrName] = parseValue(
             matches[i][4],
             options.parseAttributeValue,
-            options.parseTrueNumberOnly
+            options.numParseOptions
           );
         } else if (options.allowBooleanAttributes) {
           attrs[options.attributeNamePrefix + attrName] = true;

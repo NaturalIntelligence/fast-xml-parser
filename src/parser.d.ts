@@ -12,10 +12,16 @@ type X2jOptions = {
   cdataTagName: false | string;
   cdataPositionChar: string;
   parseTrueNumberOnly: boolean;
+  numParseOptions: strnumOptions;
   tagValueProcessor: (tagValue: string, tagName: string) => string;
   attrValueProcessor: (attrValue: string, attrName: string) => string;
   stopNodes: string[];
 };
+type strnumOptions = {
+  hex: boolean;
+  leadingZeros: boolean,
+  skipLike: RegExp
+}
 type X2jOptionsOptional = Partial<X2jOptions>;
 type validationOptions = {
   allowBooleanAttributes: boolean;

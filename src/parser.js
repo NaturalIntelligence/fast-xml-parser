@@ -6,7 +6,7 @@ const x2xmlnode = require('./xmlstr2xmlnode');
 const buildOptions = require('./util').buildOptions;
 const validator = require('./validator');
 
-exports.parse = function(xmlData, options, validationOption) {
+exports.parse = function(xmlData, givenOptions = {}, validationOption) {
   if( validationOption){
     if(validationOption === true) validationOption = {}
     
@@ -15,7 +15,16 @@ exports.parse = function(xmlData, options, validationOption) {
       throw Error( result.err.msg)
     }
   }
-  options = buildOptions(options, x2xmlnode.defaultOptions, x2xmlnode.props);
+  if(givenOptions.parseTrueNumberOnly 
+    && givenOptions.parseNodeValue !== false
+    && !givenOptions.numParseOptions){
+    
+      givenOptions.numParseOptions = {
+        leadingZeros: false,
+      }
+  }
+  let options = buildOptions(givenOptions, x2xmlnode.defaultOptions, x2xmlnode.props);
+
   const traversableObj = xmlToNodeobj.getTraversalObj(xmlData, options)
   //print(traversableObj, "  ");
   return nodeToJson.convertToJson(traversableObj, options);

@@ -43,7 +43,7 @@ describe("XMLParser", function() {
                 "boolean":  true,
                 "intTag":   "045",
                 "floatTag": 65.34,
-                "long": "420926189200190257681175017717"
+                "long": 4.209261892001902e+29
             }
         };
 
@@ -823,6 +823,66 @@ describe("XMLParser", function() {
 
         let result = parser.parse(xmlData,{trimValues:true}, { allowBooleanAttributes: true });
         //console.log(JSON.stringify(result,null,4));
+        expect(result).toEqual(expected);
+    });
+
+    it("should not parse numbers with leading zeros when `leadingZeros: false`", function() {
+        const xmlData = `<rootNode attr1='0045' name='004.5'>.005</rootNode>`;
+        const expected = {
+            "rootNode": {
+                "@_attr1": "0045",
+                "@_name":  "004.5",
+                "#text":   0.005
+            }
+        };
+
+        const result = parser.parse(xmlData, {
+            ignoreAttributes: false,
+            parseAttributeValue: true,
+            numParseOptions: {
+                leadingZeros: false
+            }
+        });
+        expect(result).toEqual(expected);
+    });
+    it("should parse numbers with leading zeros when `leadingZeros: true`", function() {
+        const xmlData = `<rootNode attr1='0045' name='004.5'>.005</rootNode>`;
+        const expected = {
+            "rootNode": {
+                "@_attr1": 45,
+                "@_name":  4.5,
+                "#text":   0.005
+            }
+        };
+
+        const result = parser.parse(xmlData, {
+            ignoreAttributes: false,
+            parseAttributeValue: true,
+            numParseOptions: {
+                leadingZeros: true
+            }
+        });
+        expect(result).toEqual(expected);
+    });
+
+    it("should not parse number of specific format if skipLike is set", function() {
+        const xmlData = `<rootNode attr1='0045' name='004.5'>0000000005</rootNode>`;
+        const expected = {
+            "rootNode": {
+                "@_attr1": 45,
+                "@_name":  4.5,
+                "#text":   "0000000005"
+            }
+        };
+
+        const result = parser.parse(xmlData, {
+            ignoreAttributes: false,
+            parseAttributeValue: true,
+            numParseOptions: {
+                leadingZeros: true,
+                skipLike: /[0-9]{10}/
+            }
+        });
         expect(result).toEqual(expected);
     });
 });
