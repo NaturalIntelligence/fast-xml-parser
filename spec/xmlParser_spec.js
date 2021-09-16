@@ -885,4 +885,29 @@ describe("XMLParser", function() {
         });
         expect(result).toEqual(expected);
     });
+
+    it("should create text node even if there are no attributes or node children", function() {
+        const xmlData = `<rootNode>
+        <tag>value</tag>
+        <tag2 some="attribute">12345</tag2>
+        </rootNode>`;
+        const expected = {
+            "rootNode": {
+                "tag": {
+                    "#text": "value"
+                },
+                "tag2": {
+                    "#text": 12345,
+                    "@_some": "attribute"
+                },
+            }
+        };
+
+        const result = parser.parse(xmlData, {
+            alwaysCreateTextNode : true,
+            ignoreAttributes: false,
+            parseAttributeValue: true
+        });
+        expect(result).toEqual(expected);
+    });
 });
