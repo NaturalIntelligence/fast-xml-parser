@@ -6,7 +6,7 @@ const convertToJson = function(node, options, parentTagName) {
   const jObj = {};
 
   // when no child node or attr is present
-  if ((!node.child || util.isEmptyObject(node.child)) && (!node.attrsMap || util.isEmptyObject(node.attrsMap))) {
+  if (!options.alwaysCreateTextNode && (!node.child || util.isEmptyObject(node.child)) && (!node.attrsMap || util.isEmptyObject(node.attrsMap))) {
     return util.isExist(node.val) ? node.val : '';
   }
 
