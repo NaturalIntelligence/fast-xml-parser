@@ -20,7 +20,7 @@ type X2jOptions = {
 type strnumOptions = {
   hex: boolean;
   leadingZeros: boolean,
-  skipLike: RegExp
+  skipLike?: RegExp
 }
 type X2jOptionsOptional = Partial<X2jOptions>;
 type validationOptions = {
