@@ -1,3 +1,6 @@
+3.20.1 / 2021-09-25
+  * update strnum package
+
 3.20.0 / 2021-09-10
   * Use strnum npm package to parse string to number
     * breaking change: long number will be parsed to scientific notation.
