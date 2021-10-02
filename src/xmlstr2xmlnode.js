@@ -44,7 +44,8 @@ const defaultOptions = {
   attrValueProcessor: function(a, attrName) {
     return a;
   },
-  stopNodes: []
+  stopNodes: [],
+  alwaysCreateTextNode: false
   //decodeStrict: false,
 };
 
@@ -67,7 +68,8 @@ const props = [
   'attrValueProcessor',
   'parseTrueNumberOnly',
   'numParseOptions',
-  'stopNodes'
+  'stopNodes',
+  'alwaysCreateTextNode'
 ];
 exports.props = props;
 
