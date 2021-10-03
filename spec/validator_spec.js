@@ -38,9 +38,7 @@ describe("XMLParser", function () {
     });
 
     it("should not validate incomplete xml string", function () {
-        validate("<rootNode>", {
-            InvalidXml: "Invalid '[    \"rootNode\"]' found."
-        });
+        validate("<rootNode>", {InvalidTag: "Unclosed tag 'rootNode'."}, 1);
     });
 
     it("should not validate invalid starting tag for following characters", function () {
@@ -71,7 +69,7 @@ describe("XMLParser", function () {
 
     it("should not validate xml string when closing tag is different", function () {
         validate("<rootNode></rootnode>", {
-            InvalidTag: "Closing tag 'rootNode' is expected inplace of 'rootnode'."
+            InvalidTag: "Unclosed tag 'rootNode'."
         });
     });
 
@@ -93,7 +91,7 @@ describe("XMLParser", function () {
 
     it("should not validate xml string with namespace when closing tag is diffrent", function () {
         validate("<root:Node></root:node>", {
-            InvalidTag: "Closing tag 'root:Node' is expected inplace of 'root:node'."
+            InvalidTag: "Unclosed tag 'root:Node'."
         });
     });
 
@@ -103,13 +101,13 @@ describe("XMLParser", function () {
 
     it("should not validate simple xml string with value but not matching closing tag", function () {
         validate("<root:Node>some value</root>", {
-            InvalidTag: "Closing tag 'root:Node' is expected inplace of 'root'."
+            InvalidTag: "Unclosed tag 'root:Node'."
         });
     });
 
     it("should not validate simple xml string with value but no closing tag", function () {
         validate("<root:Node>some value", {
-            InvalidXml: "Invalid '[    \"root:Node\"]' found."
+            InvalidTag: "Unclosed tag 'root:Node'."
         });
     });
 
@@ -119,7 +117,7 @@ describe("XMLParser", function () {
 
     it("should not validate xml with wrongly nested tags", function () {
         validate("<rootNode><tag><tag1></tag>1</tag1><tag>val</tag></rootNode>", {
-            InvalidTag: "Closing tag 'tag1' is expected inplace of 'tag'."
+            InvalidTag: "Unclosed tag 'tag1'."
         });
     });
 
@@ -154,13 +152,12 @@ describe("XMLParser", function () {
 
     it("should not validate xml with non closing comment", function () {
         validate("<rootNode ><!-- <tag> -- <tag>1</tag><tag>val</tag></rootNode>", {
-            InvalidXml: "Invalid '[    \"rootNode\"]' found."
-        });
+            InvalidTag: "Unclosed tag 'rootNode'."}, 1);
     });
 
     it("should not validate xml with unclosed tag", function () {
         validate("<rootNode  abc='123' bc='567'", {
-            InvalidXml: "Invalid '[    \"rootNode\"]' found."
+            InvalidTag: "Unclosed tag 'rootNode'."
         });
     });
 
@@ -215,8 +212,8 @@ describe("XMLParser", function () {
 
     it("should return false for invalid xml", function () {
         validateFile("invalid.xml", {
-            InvalidTag: "Closing tag 'selfclosing' is expected inplace of 'person'."
-        }, 27);
+            InvalidTag: "Unclosed tag 'selfclosing'."
+        }, 11);
     });
 
     it("should return true for valid svg", function () {
@@ -384,4 +381,21 @@ describe("should not validate XML documents with multiple root nodes", () => {
             InvalidXml: 'Multiple possible root nodes found.'
         }, 5);
     });
+});
+
+describe("should report correct line numbers for unclosed tags", () => {
+
+    it('- child tag', () =>
+        validate(`<parent>
+                    <childA/>
+                    <childB>  <!-- error: should be self-closing -->
+                    <childC/>
+                  </parent>`, {InvalidTag: "Unclosed tag 'childB'."}, 3));
+
+    it('- root tag', () =>
+        validate(`             <!-- line 1 -->
+                               <!-- line 2 -->
+                    <parent>   <!-- line 3  error: not closed -->
+                      <childA/>
+                      <childB/>`, {InvalidTag: "Unclosed tag 'parent'."}, 3));
 });
