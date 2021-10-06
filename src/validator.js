@@ -106,7 +106,9 @@ exports.validate = function (xmlData, options) {
           } else {
             const otg = tags.pop();
             if (tagName !== otg.tagName) {
-              return getErrorObject('InvalidTag', "Unclosed tag '"+otg.tagName+"'.", getLineNumberForPosition(xmlData, otg.tagStartPos));
+              return getErrorObject('InvalidTag',
+                "Expected closing tag '"+otg.tagName+"' (opened in line "+getLineNumberForPosition(xmlData, otg.tagStartPos)+") instead of closing tag '"+tagName+"'.",
+                getLineNumberForPosition(xmlData, i));
             }
 
             //when there are no more tags, we reached the root level.
