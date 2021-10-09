@@ -71,7 +71,7 @@ exports.validate = function (xmlData, options) {
         if (!validateTagName(tagName)) {
           let msg;
           if (tagName.trim().length === 0) {
-            msg = "There is an unnecessary space between tag name and backward slash '</ ..'.";
+            msg = "Invalid space after '<'.";
           } else {
             msg = "Tag '"+tagName+"' is an invalid name.";
           }

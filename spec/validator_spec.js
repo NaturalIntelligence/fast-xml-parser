@@ -40,7 +40,7 @@ describe("XMLParser", function () {
 
     it("should not validate invalid starting tag", function () {
         validate("< rootNode></rootNode>", {
-            InvalidTag: "There is an unnecessary space between tag name and backward slash '</ ..'."
+            InvalidTag: "Invalid space after '<'."
         });
     });
 
@@ -82,10 +82,10 @@ describe("XMLParser", function () {
 
     it("should not validate xml string when closing tag is invalid", function () {
         validate("<rootNode>< /rootnode>", {
-            InvalidTag: "There is an unnecessary space between tag name and backward slash '</ ..'."
+            InvalidTag: "Invalid space after '<'."
         });
         validate("<rootNode></ rootnode>", {
-            InvalidTag: "There is an unnecessary space between tag name and backward slash '</ ..'."
+            InvalidTag: "Invalid space after '<'."
         });
         validate("<rootNode></rootnode 123>", {
             InvalidTag: "Closing tag 'rootnode' can't have attributes or invalid starting."
