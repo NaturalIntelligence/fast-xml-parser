@@ -4,7 +4,7 @@ const fs = require("fs");
 const path = require("path");
 const validator = require("../src/validator");
 
-function validate(xmlData, error, line = 1) {
+function validate(xmlData, error, line = 1, col) {
     const result = validator.validate(xmlData);
     if (error) {
 
@@ -12,8 +12,15 @@ function validate(xmlData, error, line = 1) {
         const expected = {
             code: keys[0],
             msg: error[keys[0]],
-            line
+            line,
+            col,
         };
+
+        // don't evaluate col if it is not set by the test case
+        if(col === undefined) {
+            delete expected.col;
+            delete result.err.col;
+        }
         expect(result.err).toEqual(expected);
     } else {
         expect(result).toBe(true);
@@ -69,7 +76,7 @@ describe("XMLParser", function () {
 
     it("should not validate xml string when closing tag is different", function () {
         validate("<rootNode></rootnode>", {
-            InvalidTag: "Expected closing tag 'rootNode' (opened in line 1) instead of closing tag 'rootnode'."
+            InvalidTag: "Expected closing tag 'rootNode' (opened in line 1, col 1) instead of closing tag 'rootnode'."
         });
     });
 
@@ -91,7 +98,7 @@ describe("XMLParser", function () {
 
     it("should not validate xml string with namespace when closing tag is diffrent", function () {
         validate("<root:Node></root:node>", {
-            InvalidTag: "Expected closing tag 'root:Node' (opened in line 1) instead of closing tag 'root:node'."
+            InvalidTag: "Expected closing tag 'root:Node' (opened in line 1, col 1) instead of closing tag 'root:node'."
         });
     });
 
@@ -101,7 +108,7 @@ describe("XMLParser", function () {
 
     it("should not validate simple xml string with value but not matching closing tag", function () {
         validate("<root:Node>some value</root>", {
-            InvalidTag: "Expected closing tag 'root:Node' (opened in line 1) instead of closing tag 'root'."
+            InvalidTag: "Expected closing tag 'root:Node' (opened in line 1, col 1) instead of closing tag 'root'."
         });
     });
 
@@ -117,7 +124,7 @@ describe("XMLParser", function () {
 
     it("should not validate xml with wrongly nested tags", function () {
         validate("<rootNode><tag><tag1></tag>1</tag1><tag>val</tag></rootNode>", {
-            InvalidTag: "Expected closing tag 'tag1' (opened in line 1) instead of closing tag 'tag'."
+            InvalidTag: "Expected closing tag 'tag1' (opened in line 1, col 16) instead of closing tag 'tag'."
         });
     });
 
@@ -212,8 +219,8 @@ describe("XMLParser", function () {
 
     it("should return false for invalid xml", function () {
         validateFile("invalid.xml", {
-            InvalidTag: "Expected closing tag 'selfclosing' (opened in line 11) instead of closing tag 'person'."
-        }, 27);
+            InvalidTag: "Expected closing tag 'selfclosing' (opened in line 11, col 2) instead of closing tag 'person'."
+        }, 27, 5);
     });
 
     it("should return true for valid svg", function () {
@@ -337,7 +344,7 @@ attribute2="attribute2"
         t>
     </urlset>`, {
             InvalidAttr: "boolean attribute 't' is not allowed."
-        }, 5);
+       }, 5, 9);
     });
 
     it('should validate value with ampersand', function () {
@@ -391,7 +398,7 @@ describe("should report correct line numbers for unclosed tags", () => {
                     <childB>  <!-- error: should be self-closing -->
                     <childC/>
                   </parent>`,
-                 {InvalidTag: "Expected closing tag 'childB' (opened in line 3) instead of closing tag 'parent'."}, 5));
+                 {InvalidTag: "Expected closing tag 'childB' (opened in line 3, col 21) instead of closing tag 'parent'."}, 5, 19));
 
     it('- root tag', () =>
         validate(`             <!-- line 1 -->
@@ -399,7 +406,7 @@ describe("should report correct line numbers for unclosed tags", () => {
                     <parent>   <!-- line 3  error: not closed -->
                       <childA/>
                     <childB/>`,
-                 {InvalidTag: "Unclosed tag 'parent'."}, 3));
+                 {InvalidTag: "Unclosed tag 'parent'."}, 3, 21));
 
     it('- incorrect close tag', () =>
         validate(`<parent>
@@ -408,7 +415,7 @@ describe("should report correct line numbers for unclosed tags", () => {
                     </incorrect>
                     <empty/>
                   <parent>`,
-                 {InvalidTag: "Expected closing tag 'child' (opened in line 2) instead of closing tag 'incorrect'."}, 4));
+                 {InvalidTag: "Expected closing tag 'child' (opened in line 2, col 21) instead of closing tag 'incorrect'."}, 4, 21));
 
     it('- nested incorrect close tag', () =>
         validate(`<parent>
@@ -418,5 +425,5 @@ describe("should report correct line numbers for unclosed tags", () => {
                     </incorrect>
                     <empty/>
                   </parent>`,
-                 {InvalidTag: "Expected closing tag 'self' (opened in line 4) instead of closing tag 'incorrect'."}, 5));
+                 {InvalidTag: "Expected closing tag 'self' (opened in line 4, col 24) instead of closing tag 'incorrect'."}, 5, 21));
 });
