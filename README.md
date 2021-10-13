@@ -103,13 +103,19 @@ The list of users is collected either from the list published by Github, cummuni
 
 ## How to use
 
-To use it in **NPM package**  install it first
+### Installation
 
-`$npm install fast-xml-parser` or using [yarn](https://yarnpkg.com/) `$yarn add fast-xml-parser`
+To use it as an **NPM package**:
+
+`npm install fast-xml-parser`
+
+Or using [yarn](https://yarnpkg.com/):
+
+`yarn add fast-xml-parser`
 
 To use it from a **CLI** install it globally with the `-g` option.
 
-`$npm install fast-xml-parser -g`
+`npm install fast-xml-parser -g`
 
 To use it on a **webpage** include it from a [CDN](https://cdnjs.com/libraries/fast-xml-parser)
 
