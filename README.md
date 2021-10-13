@@ -147,7 +147,7 @@ var options = {
       hex: true,
       leadingZeros: true,
       //skipLike: /\+[0-9]{10}/
-    }
+    },
     arrayMode: false, //"strict"
     attrValueProcessor: (val, attrName) => he.decode(val, {isAttributeValue: true}),//default is a=>a
     tagValueProcessor : (val, tagName) => he.decode(val), //default is a=>a
