@@ -789,7 +789,7 @@ describe("XMLParser", function() {
             }
         };
 
-        var result = validator.validate(xmlData);
+        let result = validator.validate(xmlData);
         expect(result).toBe(true);
 
         result = parser.parse(xmlData,{trimValues:false});

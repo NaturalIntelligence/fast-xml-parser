@@ -123,14 +123,14 @@ To use it on a **webpage** include it from a [CDN](https://cdnjs.com/libraries/f
 
 
 ```js
-var jsonObj = parser.parse(xmlData [,options] );
+const jsonObj = parser.parse(xmlData [,options] );
 ```
 
 ```js
-var parser = require('fast-xml-parser');
-var he = require('he');
+const parser = require('fast-xml-parser');
+const he = require('he');
 
-var options = {
+const options = {
     attributeNamePrefix : "@_",
     attrNodeName: "attr", //default is 'false'
     textNodeName : "#text",
@@ -155,19 +155,19 @@ var options = {
 };
 
 if( parser.validate(xmlData) === true) { //optional (it'll return an object in case it's not valid)
-    var jsonObj = parser.parse(xmlData,options);
+    let jsonObj = parser.parse(xmlData,options);
 }
 
 // Intermediate obj
-var tObj = parser.getTraversalObj(xmlData,options);
-var jsonObj = parser.convertToJson(tObj,options);
+const tObj = parser.getTraversalObj(xmlData,options);
+let jsonObj = parser.convertToJson(tObj,options);
 
 ```
 As you can notice in the above code, validator is not embedded with in the parser and expected to be called separately. However, you can pass `true` or validation options as 3rd parameter to the parser to trigger validator internally. It is same as above example.
 
 ```js
 try{
-  var jsonObj = parser.parse(xmlData,options, true);
+  let jsonObj = parser.parse(xmlData,options, true);
 }catch(error){
   console.log(error.message)
 }
@@ -229,18 +229,18 @@ $cat xmlfile.xml | xml2js [-ns|-a|-c|-v|-V] [-o outputfile.json]
 	<summary>To use it <b>on webpage</b></summary>
 
 ```js
-var result = parser.validate(xmlData);
+const result = parser.validate(xmlData);
 if (result !== true) console.log(result.err);
-var jsonObj = parser.parse(xmlData);
+const jsonObj = parser.parse(xmlData);
 ```
 </details>
 
 ### JSON / JS Object to XML
 
 ```js
-var Parser = require("fast-xml-parser").j2xParser;
+const Parser = require("fast-xml-parser").j2xParser;
 //default options need not to set
-var defaultOptions = {
+const defaultOptions = {
     attributeNamePrefix : "@_",
     attrNodeName: "@", //default is false
     textNodeName : "#text",
@@ -253,8 +253,8 @@ var defaultOptions = {
     tagValueProcessor: a=> he.encode(a, { useNamedReferences: true}),// default is a=>a
     attrValueProcessor: a=> he.encode(a, {isAttributeValue: isAttribute, useNamedReferences: true})// default is a=>a
 };
-var parser = new Parser(defaultOptions);
-var xml = parser.parse(json_or_js_obj);
+const parser = new Parser(defaultOptions);
+const xml = parser.parse(json_or_js_obj);
 ```
 
 <details>

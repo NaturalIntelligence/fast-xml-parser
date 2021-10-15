@@ -19,10 +19,10 @@ const _cToJsonStr = function(node, options, level) {
   const keys = Object.keys(node.child);
 
   for (let index = 0; index < keys.length; index++) {
-    var tagname = keys[index];
+    const tagname = keys[index];
     if (node.child[tagname] && node.child[tagname].length > 1) {
       jObj += '"' + tagname + '" : [ ';
-      for (var tag in node.child[tagname]) {
+      for (let tag in node.child[tagname]) {
         jObj += _cToJsonStr(node.child[tagname][tag], options) + ' , ';
       }
       jObj = jObj.substr(0, jObj.length - 1) + ' ] '; //remove extra comma in last

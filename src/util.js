@@ -67,7 +67,7 @@ exports.getValue = function(v) {
 // const fakeCallNoReturn = function() {};
 
 exports.buildOptions = function(options, defaultOptions, props) {
-  var newOptions = {};
+  let newOptions = {};
   if (!options) {
     return defaultOptions; //if there are not options
   }

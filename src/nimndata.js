@@ -48,7 +48,7 @@ const _e = function(node, e_schema, options) {
         //attributes can't be repeated. hence check in children tags only
         str += chars.arrStart;
         const itemSchema = e_schema[0];
-        //var itemSchemaType = itemSchema;
+        //const itemSchemaType = itemSchema;
         const arr_len = node.length;
 
         if (typeof itemSchema === 'string') {
