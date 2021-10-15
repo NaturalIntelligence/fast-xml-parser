@@ -96,11 +96,11 @@
         <script src="https://cdn.rawgit.com/nimndata/nimnjs-schema-builder/5a452c40/dist/nimn-schema-builder.js"></script>
         
     <script>
-        var highlightedLine = null;
-        var editor;
+        let highlightedLine = null;
+        const editor;
 
         function updateLength(){
-            var xmlData = editor.getValue();
+            const xmlData = editor.getValue();
             $("#lengthxml")[0].innerText = xmlData.replace(/>\s*</g, "><").length;
         }
 
@@ -126,7 +126,7 @@
         }
 
         $( document ).ready(function() {
-            //var parser = require("parser");
+            //const parser = require("parser");
             editor = CodeMirror.fromTextArea(document.getElementById("txtXml"), {
                 mode: "application/xml",
                 styleActiveLine: true,
@@ -146,34 +146,34 @@
 
             $('#toJson').on('click', function() {
                 $('#result').val('');
-                var result = parser.parse(editor.getValue(),buildParsingConfig());
+                const result = parser.parse(editor.getValue(),buildParsingConfig());
                 updateOutputLength(JSON.stringify(result));
                 $('#result').val(JSON.stringify(result,null,4));
             });
 
             $('#toXml').on('click', function() {
                 editor.setValue('');
-                var result = buildJ2XParser().parse(JSON.parse( $('#result').val() ));
+                const result = buildJ2XParser().parse(JSON.parse( $('#result').val() ));
                 editor.setValue('<?xml version="1.0"?>\n'+result);
             });
 
             $('#toNimn').on('click', function() {
                 $('#result').val('');
 
-                var jsonData = parser.parse(editor.getValue(),buildParsingConfig());
-                var schema = nimnSchemaBuilder.build(jsonData);
-                var result = parser.parseToNimn(editor.getValue(), schema, buildParsingConfig());
+                const jsonData = parser.parse(editor.getValue(),buildParsingConfig());
+                const schema = nimnSchemaBuilder.build(jsonData);
+                const result = parser.parseToNimn(editor.getValue(), schema, buildParsingConfig());
                 updateOutputLength(result);
                 $('#result').val(result);
             });
 
             $('#validate').on('click', function() {
                 $('#result').val('');
-                var config = {
+                const config = {
                     allowBooleanAttributes: $("#allowBooleanAttributes_v").prop("checked"),
                     localeRange : $("#localeRange_v").val() === "" ? "a-zA-Z" : $("#cdataTagName").val(),
                 };
-                var val = parser.validate(editor.getValue(), config);
+                const val = parser.validate(editor.getValue(), config);
                 if(val === true){
                     $('#result').val("Valid XML");
                 }else{
@@ -188,7 +188,7 @@
             $('#ignoreAttributes').on('change', function (){optionsLogic();});
 
             function buildParsingConfig(){
-                var config = {
+                const config = {
                     attributeNamePrefix : "@_",
                     attrNodeName: $("#attrNodeName").prop("checked") ? "@" : false,
                     textNodeName : "#text",
@@ -209,7 +209,7 @@
             }
 
             function buildJ2XParser(){
-                var defaultOptions = {
+                const defaultOptions = {
                     attributeNamePrefix : "@_",
                     attrNodeName: $("#attrNodeName").prop("checked") ? "@" : false,
                     textNodeName : "#text",
@@ -225,7 +225,7 @@
             }
             
             function optionsLogic(){
-                var ignoreAttr = $('#ignoreAttributes').prop('checked');
+                const ignoreAttr = $('#ignoreAttributes').prop('checked');
                 if(ignoreAttr){
                     $('#attrNodeName').prop('checked', !ignoreAttr);
                     $('#ParseAttributeValue').prop('checked', !ignoreAttr);
