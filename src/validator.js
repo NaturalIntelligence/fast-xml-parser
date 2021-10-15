@@ -4,9 +4,10 @@ const util = require('./util');
 
 const defaultOptions = {
   allowBooleanAttributes: false, //A tag can have attributes without any value
+  ignoreNameSpace: false //Ignore namespace verification
 };
 
-const props = ['allowBooleanAttributes'];
+const props = ['allowBooleanAttributes', 'ignoreNameSpace'];
 
 //const tagsPattern = new RegExp("<\\/?([\\w:\\-_\.]+)\\s*\/?>","g");
 exports.validate = function (xmlData, options) {
@@ -16,6 +17,7 @@ exports.validate = function (xmlData, options) {
   //xmlData = xmlData.replace(/(^\s*<\?xml.*?\?>)/g,"");//Remove XML starting tag
   //xmlData = xmlData.replace(/(<!DOCTYPE[\s\w\"\.\/\-\:]+(\[.*\])*\s*>)/g,"");//Remove DOCTYPE
   const tags = [];
+  let nameSpaces = [];
   let tagFound = false;
 
   //indicates that the root tag has been closed (aka. depth 0 has been reached)
@@ -78,19 +80,40 @@ exports.validate = function (xmlData, options) {
           return getErrorObject('InvalidTag', msg, getLineNumberForPosition(xmlData, i));
         }
 
-        const result = readAttributeStr(xmlData, i);
+        const result = readAttributeStr(xmlData, i, options);
         if (result === false) {
           return getErrorObject('InvalidAttr', "Attributes for '"+tagName+"' have open quote.", getLineNumberForPosition(xmlData, i));
         }
+
+        if (!options.ignoreNameSpace) {
+            if (result.nsError) {
+                return getErrorObject('InvalidAttr', result.nsError, getLineNumberForPosition(xmlData, i));
+            }
+
+            //Pushing namespaces defined in tag
+            Array.prototype.push.apply(nameSpaces, result.nsArray);
+
+            const nsResult = validateNameSpace(tagName, nameSpaces);
+
+            if (nsResult !== true) {
+                return getErrorObject('InvalidTag', nsResult, getLineNumberForPosition(xmlData, i));
+            }
+        }
+
         let attrStr = result.value;
         i = result.index;
 
         if (attrStr[attrStr.length - 1] === '/') {
           //self closing tag
           attrStr = attrStr.substring(0, attrStr.length - 1);
-          const isValid = validateAttributeString(attrStr, options);
+          const isValid = validateAttributeString(attrStr, nameSpaces, options);
           if (isValid === true) {
             tagFound = true;
+
+            if (!options.ignoreNameSpace) {
+                //Removing namespaces defined in current tag
+                nameSpaces.length -= result.nsArray.length;
+            }
             //continue; //text may presents after self closing tag
           } else {
             //the result from the nested function returns the position of the error within the attribute
@@ -105,8 +128,13 @@ exports.validate = function (xmlData, options) {
             return getErrorObject('InvalidTag', "Closing tag '"+tagName+"' can't have attributes or invalid starting.", getLineNumberForPosition(xmlData, i));
           } else {
             const otg = tags.pop();
-            if (tagName !== otg) {
-              return getErrorObject('InvalidTag', "Closing tag '"+otg+"' is expected inplace of '"+tagName+"'.", getLineNumberForPosition(xmlData, i));
+            if (tagName !== otg.name) {
+              return getErrorObject('InvalidTag', "Closing tag '"+otg.name+"' is expected inplace of '"+tagName+"'.", getLineNumberForPosition(xmlData, i));
+            }
+
+            if (!options.ignoreNameSpace) {
+                //Removing namespaces defined in current tag
+                nameSpaces.length -= otg.nsArray.length;
             }
 
             //when there are no more tags, we reached the root level.
@@ -115,7 +143,7 @@ exports.validate = function (xmlData, options) {
             }
           }
         } else {
-          const isValid = validateAttributeString(attrStr, options);
+          const isValid = validateAttributeString(attrStr, nameSpaces, options);
           if (isValid !== true) {
             //the result from the nested function returns the position of the error within the attribute
             //in order to get the 'true' error line, we need to calculate the position where the attribute begins (i - attrStr.length) and then add the position within the attribute
@@ -127,7 +155,15 @@ exports.validate = function (xmlData, options) {
           if (reachedRoot === true) {
             return getErrorObject('InvalidXml', 'Multiple possible root nodes found.', getLineNumberForPosition(xmlData, i));
           } else {
-            tags.push(tagName);
+            let tagObject = {
+                name: tagName
+            };
+
+            if (!options.ignoreNameSpace) {
+                tagObject["nsArray"] = result.nsArray;
+            }
+
+            tags.push(tagObject);
           }
           tagFound = true;
         }
@@ -259,7 +295,7 @@ var singleQuote = "'";
  * @param {string} xmlData
  * @param {number} i
  */
-function readAttributeStr(xmlData, i) {
+function readAttributeStr(xmlData, i, options) {
   let attrStr = '';
   let startChar = '';
   let tagClosed = false;
@@ -285,11 +321,22 @@ function readAttributeStr(xmlData, i) {
     return false;
   }
 
-  return {
+  let result = {
     value: attrStr,
     index: i,
     tagClosed: tagClosed
   };
+
+  if (!options.ignoreNameSpace) {
+    const nsResult = getNameSpaceDefinitions(attrStr);
+    if (Array.isArray(nsResult)) {
+        result["nsArray"] = nsResult;
+    } else {
+        result["nsError"] = nsResult;
+    }
+  }
+
+  return result;
 }
 
 /**
@@ -299,7 +346,7 @@ const validAttrStrRegxp = new RegExp('(\\s*)([^\\s=]+)(\\s*=)?(\\s*([\'"])(([\\s
 
 //attr, ="sd", a="amit's", a="sd"b="saf", ab  cd=""
 
-function validateAttributeString(attrStr, options) {
+function validateAttributeString(attrStr, nsArray, options) {
   //console.log("start:"+attrStr+":end");
 
   //if(attrStr.trim().length === 0) return true; //empty string
@@ -318,15 +365,41 @@ function validateAttributeString(attrStr, options) {
     /* else if(matches[i][6] === undefined){//attribute without value: ab=
                     return { err: { code:"InvalidAttr",msg:"attribute " + matches[i][2] + " has no value assigned."}};
                 } */
-    const attrName = matches[i][2];
+    let attrName = matches[i][2];
     if (!validateAttrName(attrName)) {
       return getErrorObject('InvalidAttr', "Attribute '"+attrName+"' is an invalid name.", getPositionFromMatch(attrStr, matches[i][0]));
     }
-    if (!attrNames.hasOwnProperty(attrName)) {
-      //check for duplicate attribute.
-      attrNames[attrName] = 1;
+
+    if (!options.ignoreNameSpace) {
+        const nsDefMatches = util.getAllMatches(matches[i][0], nameSpaceDefinitionRegex);
+        //Skipping namespace definition attribute
+        if (!nsDefMatches || nsDefMatches.length === 0 || attrName !== nsDefMatches[0][1]) {
+            const nsResult = validateNameSpace(attrName, nsArray);
+            if (nsResult !== true) {
+                return getErrorObject('InvalidAttr', nsResult, getPositionFromMatch(attrStr, matches[i][0]));
+            }
+        }
+        const attrSplit = attrName.split(":");
+        if (attrSplit.length > 1) {
+            for (let i=0; i < nsArray.length; i++) {
+                const nsSplit = nsArray[i].split("'");
+                if (nsSplit[0] === attrSplit[0]) {
+                    attrName = nsSplit[1] + "'" + attrSplit[1];
+                    break;
+                }
+            }
+        }
     } else {
-      return getErrorObject('InvalidAttr', "Attribute '"+attrName+"' is repeated.", getPositionFromMatch(attrStr, matches[i][0]));
+        attrName = attrName.replace(/[^:]+:/, "");
+    }
+
+    if (!attrNames.hasOwnProperty(attrName)) {
+        //check for duplicate attribute.
+        attrNames[attrName] = 1;
+    } else {
+        const attrSplit = attrName.split("'");
+        const msg = attrSplit.length === 2 ?  "'" + attrSplit[1] + "' in namespace '" + attrSplit[0] + "'": "'" + attrName + "'";
+        return getErrorObject('InvalidAttr', "Attribute "+ msg +" is repeated.", getPositionFromMatch(attrStr, matches[i][0]));
     }
   }
 
@@ -386,6 +459,38 @@ function validateAttrName(attrName) {
 
 function validateTagName(tagname) {
   return util.isName(tagname) /* && !tagname.match(startsWithXML) */;
+}
+
+const nameSpaceDefinitionRegex = new RegExp(/(xmlns:([^:=]+))=['"]([^'"]*)['"]/, 'g');
+
+function validateNameSpace(elemName, nsArray) {
+    let elemSplit = elemName.split(":");
+    switch (elemSplit.length){ 
+        case 1:
+            return true;
+        case 2:
+            for (let i=0; i< nsArray.length; i++) {
+                if (nsArray[i].split("'")[0] === elemSplit[0]){
+                    return true;
+                } 
+            }
+            return "Namespace prefix '" + elemSplit[0] + "' is not defined for '" + elemName + "'";
+        default:
+            return "'" + elemName + "' cannot have multiple namespace prefixes";
+    }
+}
+
+function getNameSpaceDefinitions(attributeString) {
+    let nsArray = [];
+    let matches = util.getAllMatches(attributeString, nameSpaceDefinitionRegex);
+    for (let i=0; i< matches.length; i++){
+        if (matches[i][3]) {
+            nsArray.push(matches[i][2] + "'" + matches[i][3]);
+        } else {
+            return "Invalid URI for namespace " + matches[i][2];
+        }
+    }
+    return nsArray;
 }
 
 //this function returns the line number for the character at the given index
