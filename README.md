@@ -151,7 +151,8 @@ const options = {
     arrayMode: false, //"strict"
     attrValueProcessor: (val, attrName) => he.decode(val, {isAttributeValue: true}),//default is a=>a
     tagValueProcessor : (val, tagName) => he.decode(val), //default is a=>a
-    stopNodes: ["parse-me-as-string"]
+    stopNodes: ["parse-me-as-string"],
+    alwaysCreateTextNode: false
 };
 
 if( parser.validate(xmlData) === true) { //optional (it'll return an object in case it's not valid)
@@ -206,7 +207,7 @@ Validator returns the following object in case of error;
 * **tagValueProcessor** : Process tag value during transformation. Like HTML decoding, word capitalization, etc. Applicable in case of string only.
 * **attrValueProcessor** : Process attribute value during transformation. Like HTML decoding, word capitalization, etc. Applicable in case of string only.
 * **stopNodes** : an array of tag names which are not required to be parsed. Instead their values are parsed as string.
-
+* **alwaysCreateTextNode** : When `true`, forces the parser always return a property for the `textNodeName` even if there are no attributes or node children.
 </details>
 
 <details>
