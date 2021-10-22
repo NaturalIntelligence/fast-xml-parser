@@ -23,6 +23,8 @@ To cover expenses, we're planning to launch [FXP Enterprise](https://github.com/
 </a>
 <a href="https://paypal.me/naturalintelligence"> <img src="static/img/support_paypal.svg" alt="Stubmatic donate button" width="200"/></a>
 
+Check [ThankYouBackers](https://github.com/NaturalIntelligence/ThankYouBackers) for our contributors
+
 ## Users
 List of some applications/projects using Fast XML Parser. (Raise an issue to submit yours)
 
