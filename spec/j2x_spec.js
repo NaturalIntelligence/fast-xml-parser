@@ -509,7 +509,7 @@ describe("XMLParser", function() {
                 "capacity": 2
               }
         
-        ];;
+        ];
         const parser = new Parser({
           rootNodeName: "car"
         });
