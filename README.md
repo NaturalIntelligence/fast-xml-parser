@@ -254,7 +254,8 @@ const defaultOptions = {
     indentBy: "  ",
     supressEmptyNode: false,
     tagValueProcessor: a=> he.encode(a, { useNamedReferences: true}),// default is a=>a
-    attrValueProcessor: a=> he.encode(a, {isAttributeValue: isAttribute, useNamedReferences: true})// default is a=>a
+    attrValueProcessor: a=> he.encode(a, {isAttributeValue: isAttribute, useNamedReferences: true}),// default is a=>a
+    rootNodeName: "element"
 };
 const parser = new Parser(defaultOptions);
 const xml = parser.parse(json_or_js_obj);
@@ -276,6 +277,7 @@ With the correct options, you can get the almost original XML without losing any
 * **supressEmptyNode** : If set to `true`, tags with no value (text or nested tags) are written as self closing tags.
 * **tagValueProcessor** : Process tag value during transformation. Like HTML encoding, word capitalization, etc. Applicable in case of string only.
 * **attrValueProcessor** : Process attribute value during transformation. Like HTML encoding, word capitalization, etc. Applicable in case of string only.
+* **rootNodeName** : When input js object is array, parser uses array index by default as tag name. You can set this property for proper response.
 </details>
 
 ## Benchmark

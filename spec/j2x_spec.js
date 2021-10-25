@@ -435,4 +435,35 @@ describe("XMLParser", function() {
         expect(result).toEqual(expected);
     });
 
+    it("should parse js array to valid XML", function() {
+        const cars = [
+            {
+                "color": "purple",
+                "type": "minivan",
+                "registration": "2020-02-03",
+                "capacity": 7
+              },
+              {
+                "color": "orange",
+                "type": "SUV",
+                "registration": "2021-05-17",
+                "capacity": 4
+              },
+              {
+                "color": "green",
+                "type": "coupe",
+                "registration": "2019-11-13",
+                "capacity": 2
+              }
+        
+        ];;
+        const parser = new Parser({
+          rootNodeName: "car"
+        });
+        const result = parser.parse(cars);
+        const expected = '<car><color>purple</color><type>minivan</type><registration>2020-02-03</registration><capacity>7</capacity></car><car><color>orange</color><type>SUV</type><registration>2021-05-17</registration><capacity>4</capacity></car><car><color>green</color><type>coupe</type><registration>2019-11-13</registration><capacity>2</capacity></car>';
+        // console.log(result);
+        //console.log(expected);
+        expect(result).toEqual(expected);
+    });
 });

@@ -32,6 +32,7 @@ const props = [
   'supressEmptyNode',
   'tagValueProcessor',
   'attrValueProcessor',
+  'rootNodeName', //when array as root
 ];
 
 function Parser(options) {
@@ -79,6 +80,11 @@ function Parser(options) {
 }
 
 Parser.prototype.parse = function(jObj) {
+  if(Array.isArray(jObj) && this.options.rootNodeName && this.options.rootNodeName.length > 1){
+    jObj = {
+      [this.options.rootNodeName] : jObj
+    }
+  }
   return this.j2x(jObj, 0).val;
 };
 
