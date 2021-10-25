@@ -1,3 +1,22 @@
+Note: If you find missing information about particular minor version, that version must have been changed without any functional change in this library.
+
+3.21.0 / 2021-10-25
+  * feat: added option `rootNodeName` to set tag name for array input when converting js object to XML.
+  * feat: added option `alwaysCreateTextNode` to force text node creation (by: *@massimo-ua*)
+  * ⚠️ feat: Better error location for unclosed tags. (by *@Gei0r*)
+    * Some error messages would be changed when validating XML. Eg
+      * `{ InvalidXml: "Invalid '[    \"rootNode\"]' found." }` → `{InvalidTag: "Unclosed tag 'rootNode'."}`
+      * `{ InvalidTag: "Closing tag 'rootNode' is expected inplace of 'rootnode'." }` → `{ InvalidTag: "Expected closing tag 'rootNode' (opened in line 1) instead of closing tag 'rootnode'."}`
+  * ⚠️ feat: Column in error response when validating XML
+```js
+{
+  "code": "InvalidAttr",
+  "msg":  "Attribute 'abc' is repeated.",
+  "line": 1,
+  "col": 22
+}
+```
+
 3.20.1 / 2021-09-25
   * update strnum package
 
