@@ -358,6 +358,59 @@ describe("XMLParser", function() {
         expect(result).toEqual(expected);
     });
 
+    it("should format when parsing to XML", function() {
+      const jObj = {
+        a: {
+          "@": {
+            b: "val>1",
+            c: "val<2"
+          },
+          "#text": "text\\cvalue>\\c",
+          tag: {
+            k: 34,
+            g: "35 g>"
+          },
+          "__cdata": [
+            "this text is > from CDATA",
+            "this is another text"
+          ],
+          element: {
+            subelement: {
+              "#text": "foo",
+              "@": {"staticMessage": "bar"}
+            }
+          },
+          only_text: [
+            {
+              '#text': 'text value'
+            }
+          ]
+      }
+    };
+    const parser = new Parser({
+      cdataTagName: "__cdata",
+      attrNodeName: "@",
+      encodeHTMLchar: true,
+      format: true,
+      tagValueProcessor: a => { a= ''+ a; return he.encode(a, { useNamedReferences: true }) },
+      attrValueProcessor: a => he.encode(a, { isAttributeValue: true, useNamedReferences: true })
+    });
+    const result = parser.parse(jObj);
+    const expected = `<a b="val&gt;1" c="val&lt;2">
+  <tag>
+    <k>34</k>
+    <g>35 g&gt;</g>
+  </tag>
+  text<![CDATA[this text is > from CDATA]]>value&gt;<![CDATA[this is another text]]>
+  <element>
+    <subelement staticMessage="bar">foo</subelement>
+  </element>
+  <only_text>text value</only_text>
+</a>
+`;
+    expect(result).toEqual(expected);
+  });
+
 
     it("should format when parsing to XML", function() {
         const jObj = {

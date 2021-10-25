@@ -189,7 +189,7 @@ function replaceCDATAarr(str, cdata) {
 }
 
 function buildObjectNode(val, key, attrStr, level) {
-  if (attrStr && !val.includes('<')) {
+  if (!val.indexOf('<') !== -1) {
     return (
       this.indentate(level) +
       '<' +
