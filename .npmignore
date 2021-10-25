@@ -11,3 +11,4 @@ lib
 temp*
 *todo.md
 docs*
+.nyc_output

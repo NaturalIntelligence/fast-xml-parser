@@ -4,9 +4,9 @@
   "description": "Validate XML or Parse XML to JS/JSON very fast without C/C++ based libraries",
   "main": "./src/parser.js",
   "scripts": {
-    "test": "npx nyc jasmine spec/*spec.js",
+    "test": "nyc --reporter=lcov --reporter=text jasmine spec/*spec.js",
     "unit": "jasmine",
-    "coverage": "npx nyc report --reporter html --reporter text -t .nyc_output --report-dir .nyc_output/summary",
+    "coverage": "nyc report --reporter html --reporter text -t .nyc_output --report-dir .nyc_output/summary",
     "perf": "node ./benchmark/perfTest3.js",
     "lint": "eslint src/*.js spec/*.js",
     "bundle": "webpack && webpack --config webpack-prod.config.js",
