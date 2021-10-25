@@ -163,7 +163,8 @@ describe("XMLParser", function() {
             "err": {
                 "code": "InvalidAttr",
                 "msg":  "Attribute '35entity' is an invalid name.",
-                "line": 1
+                "line": 1,
+                "col": 8
             }
         };
         const result = validator.validate(xmlData);
@@ -177,7 +178,8 @@ describe("XMLParser", function() {
             "err": {
                 "code": "InvalidAttr",
                 "msg":  "Attribute 'enti+ty' is an invalid name.",
-                "line": 1
+                "line": 1,
+                "col": 8
             }
         };
 
@@ -192,7 +194,8 @@ describe("XMLParser", function() {
             "err": {
                 "code": "InvalidTag",
                 "msg":  "Closing tag 'issue' can't have attributes or invalid starting.",
-                "line": 1
+                "line": 1,
+                "col": 8
             }
         };
         const result = validator.validate(xmlData);
@@ -206,7 +209,8 @@ describe("XMLParser", function() {
             "err": {
                 "code": "InvalidAttr",
                 "msg":  "Attribute '''' has no space in starting.",
-                "line": 1
+                "line": 1,
+                "col": 12
             }
         };
         const result = validator.validate(xmlData);
@@ -233,7 +237,8 @@ describe("XMLParser", function() {
             "err": {
                 "code": "InvalidAttr",
                 "msg":  "Attributes for 'rootNode' have open quote.",
-                "line": 1
+                "line": 1,
+                "col": 10
             }
         };
         const result = validator.validate(xmlData);
@@ -246,7 +251,8 @@ describe("XMLParser", function() {
             "err": {
                 "code": "InvalidAttr",
                 "msg":  "Attribute 'abc' is repeated.",
-                "line": 1
+                "line": 1,
+                "col": 22
             }
         };
         const result = validator.validate(xmlData);
@@ -260,7 +266,8 @@ describe("XMLParser", function() {
             "err": {
                 "code": "InvalidAttr",
                 "msg": "Attribute 'bc' has no space in starting.",
-                "line": 1
+                "line": 1,
+                "col": 21
             }
         };
         const result = validator.validate(xmlData);
@@ -273,7 +280,8 @@ describe("XMLParser", function() {
             "err": {
                 "code": "InvalidAttr",
                 "msg":  "boolean attribute 'ab' is not allowed.",
-                "line": 1
+                "line": 1,
+                "col": 11
             }
         };
         const result = validator.validate(xmlData);
@@ -287,7 +295,8 @@ describe("XMLParser", function() {
                 "code": "InvalidAttr",
                 // "msg": "attribute 123 is an invalid name."
                 "msg":  "boolean attribute '123' is not allowed.",
-                "line": 1
+                "line": 1,
+                "col": 12
             }
         };
         const result = validator.validate(xmlData);
@@ -302,7 +311,8 @@ describe("XMLParser", function() {
                 "code": "InvalidAttr",
                 // "msg": "attribute 123 is an invalid name."
                 "msg":  "boolean attribute '123' is not allowed.",
-                "line": 1
+                "line": 1,
+                "col": 12
             }
         };
         const result = validator.validate(xmlData);

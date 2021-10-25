@@ -10,6 +10,7 @@ const getAllMatches = function(string, regex) {
   let match = regex.exec(string);
   while (match) {
     const allmatches = [];
+    allmatches.startIndex = regex.lastIndex - match[0].length;
     const len = match.length;
     for (let index = 0; index < len; index++) {
       allmatches.push(match[index]);

@@ -71,7 +71,7 @@ exports.validate = function (xmlData, options) {
         if (!validateTagName(tagName)) {
           let msg;
           if (tagName.trim().length === 0) {
-            msg = "There is an unnecessary space between tag name and backward slash '</ ..'.";
+            msg = "Invalid space after '<'.";
           } else {
             msg = "Tag '"+tagName+"' is an invalid name.";
           }
@@ -87,6 +87,7 @@ exports.validate = function (xmlData, options) {
 
         if (attrStr[attrStr.length - 1] === '/') {
           //self closing tag
+          const attrStrStart = i - attrStr.length;
           attrStr = attrStr.substring(0, attrStr.length - 1);
           const isValid = validateAttributeString(attrStr, options);
           if (isValid === true) {
@@ -96,19 +97,20 @@ exports.validate = function (xmlData, options) {
             //the result from the nested function returns the position of the error within the attribute
             //in order to get the 'true' error line, we need to calculate the position where the attribute begins (i - attrStr.length) and then add the position within the attribute
             //this gives us the absolute index in the entire xml, which we can use to find the line at last
-            return getErrorObject(isValid.err.code, isValid.err.msg, getLineNumberForPosition(xmlData, i - attrStr.length + isValid.err.line));
+            return getErrorObject(isValid.err.code, isValid.err.msg, getLineNumberForPosition(xmlData, attrStrStart + isValid.err.line));
           }
         } else if (closingTag) {
           if (!result.tagClosed) {
             return getErrorObject('InvalidTag', "Closing tag '"+tagName+"' doesn't have proper closing.", getLineNumberForPosition(xmlData, i));
           } else if (attrStr.trim().length > 0) {
-            return getErrorObject('InvalidTag', "Closing tag '"+tagName+"' can't have attributes or invalid starting.", getLineNumberForPosition(xmlData, i));
+            return getErrorObject('InvalidTag', "Closing tag '"+tagName+"' can't have attributes or invalid starting.", getLineNumberForPosition(xmlData, tagStartPos));
           } else {
             const otg = tags.pop();
             if (tagName !== otg.tagName) {
+              let openPos = getLineNumberForPosition(xmlData, otg.tagStartPos);
               return getErrorObject('InvalidTag',
-                "Expected closing tag '"+otg.tagName+"' (opened in line "+getLineNumberForPosition(xmlData, otg.tagStartPos)+") instead of closing tag '"+tagName+"'.",
-                getLineNumberForPosition(xmlData, i));
+                "Expected closing tag '"+otg.tagName+"' (opened in line "+openPos.line+", col "+openPos.col+") instead of closing tag '"+tagName+"'.",
+                getLineNumberForPosition(xmlData, tagStartPos));
             }
 
             //when there are no more tags, we reached the root level.
@@ -175,7 +177,7 @@ exports.validate = function (xmlData, options) {
   }else if (tags.length > 0) {
       return getErrorObject('InvalidXml', "Invalid '"+
           JSON.stringify(tags.map(t => t.tagName), null, 4).replace(/\r?\n/g, '')+
-          "' found.", 1);
+          "' found.", {line: 1, col: 1});
   }
 
   return true;
@@ -275,7 +277,6 @@ function readAttributeStr(xmlData, i) {
         startChar = xmlData[i];
       } else if (startChar !== xmlData[i]) {
         //if vaue is enclosed with double quote then single quotes are allowed inside the value and vice versa
-        continue;
       } else {
         startChar = '';
       }
@@ -316,23 +317,23 @@ function validateAttributeString(attrStr, options) {
   for (let i = 0; i < matches.length; i++) {
     if (matches[i][1].length === 0) {
       //nospace before attribute name: a="sd"b="saf"
-      return getErrorObject('InvalidAttr', "Attribute '"+matches[i][2]+"' has no space in starting.", getPositionFromMatch(attrStr, matches[i][0]))
+      return getErrorObject('InvalidAttr', "Attribute '"+matches[i][2]+"' has no space in starting.", getPositionFromMatch(matches[i]))
     } else if (matches[i][3] === undefined && !options.allowBooleanAttributes) {
       //independent attribute: ab
-      return getErrorObject('InvalidAttr', "boolean attribute '"+matches[i][2]+"' is not allowed.", getPositionFromMatch(attrStr, matches[i][0]));
+      return getErrorObject('InvalidAttr', "boolean attribute '"+matches[i][2]+"' is not allowed.", getPositionFromMatch(matches[i]));
     }
     /* else if(matches[i][6] === undefined){//attribute without value: ab=
                     return { err: { code:"InvalidAttr",msg:"attribute " + matches[i][2] + " has no value assigned."}};
                 } */
     const attrName = matches[i][2];
     if (!validateAttrName(attrName)) {
-      return getErrorObject('InvalidAttr', "Attribute '"+attrName+"' is an invalid name.", getPositionFromMatch(attrStr, matches[i][0]));
+      return getErrorObject('InvalidAttr', "Attribute '"+attrName+"' is an invalid name.", getPositionFromMatch(matches[i]));
     }
     if (!attrNames.hasOwnProperty(attrName)) {
       //check for duplicate attribute.
       attrNames[attrName] = 1;
     } else {
-      return getErrorObject('InvalidAttr', "Attribute '"+attrName+"' is repeated.", getPositionFromMatch(attrStr, matches[i][0]));
+      return getErrorObject('InvalidAttr', "Attribute '"+attrName+"' is repeated.", getPositionFromMatch(matches[i]));
     }
   }
 
@@ -379,7 +380,8 @@ function getErrorObject(code, message, lineNumber) {
     err: {
       code: code,
       msg: message,
-      line: lineNumber,
+      line: lineNumber.line || lineNumber,
+      col: lineNumber.col,
     },
   };
 }
@@ -397,10 +399,15 @@ function validateTagName(tagname) {
 //this function returns the line number for the character at the given index
 function getLineNumberForPosition(xmlData, index) {
   const lines = xmlData.substring(0, index).split(/\r?\n/);
-  return lines.length;
+  return {
+    line: lines.length,
+
+    // column number is last line's length + 1, because column numbering starts at 1:
+    col: lines[lines.length - 1].length + 1
+  };
 }
 
-//this function returns the position of the last character of match within attrStr
-function getPositionFromMatch(attrStr, match) {
-  return attrStr.indexOf(match) + match.length;
+//this function returns the position of the first character of match within attrStr
+function getPositionFromMatch(match) {
+  return match.startIndex + match[1].length;
 }
