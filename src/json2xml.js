@@ -144,7 +144,18 @@ Parser.prototype.j2x = function(jObj, level) {
             val += this.indentate(level) + '<' + key + '/' + this.tagEndChar;
           } else if (typeof item === 'object') {
             const result = this.j2x(item, level + 1);
-            val += this.buildObjNode(result.val, key, result.attrStr, level);
+            let keyCounter = 0
+            let containsTextNode = false
+            for (let i in item) {
+              keyCounter++
+              if (i === this.options.textNodeName) containsTextNode = true
+              if (keyCounter > 1) break
+            }
+            if (containsTextNode && keyCounter === 1) {
+              val += this.buildTextNode(result.val, key, result.attrStr, level);
+            } else {
+              val += this.buildObjNode(result.val, key, result.attrStr, level);
+            }
           } else {
             val += this.buildTextNode(item, key, '', level);
           }
@@ -160,7 +171,18 @@ Parser.prototype.j2x = function(jObj, level) {
         }
       } else {
         const result = this.j2x(jObj[key], level + 1);
-        val += this.buildObjNode(result.val, key, result.attrStr, level);
+        let keyCounter = 0
+        let containsTextNode = false
+        for (let i in jObj[key]) {
+          keyCounter++
+          if (i === this.options.textNodeName) containsTextNode = true
+          if (keyCounter > 1) break
+        }
+        if (containsTextNode && keyCounter === 1) {
+          val += this.buildTextNode(result.val, key, result.attrStr, level);
+        } else {
+          val += this.buildObjNode(result.val, key, result.attrStr, level);
+        }
       }
     }
   }
@@ -189,7 +211,7 @@ function replaceCDATAarr(str, cdata) {
 }
 
 function buildObjectNode(val, key, attrStr, level) {
-  if (val.indexOf('<') === -1) {
+  if (attrStr && val.indexOf('<') === -1) {
     return (
       this.indentate(level) +
       '<' +
