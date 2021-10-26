@@ -55,7 +55,7 @@ function Parser(options) {
   this.replaceCDATAstr = replaceCDATAstr;
   this.replaceCDATAarr = replaceCDATAarr;
 
-  this.onlyPropIsTextNode = onlyPropIsTextNode
+  this.processTextOrObjNode = processTextOrObjNode
 
   if (this.options.format) {
     this.indentate = indentate;
@@ -93,10 +93,7 @@ Parser.prototype.parse = function(jObj) {
 Parser.prototype.j2x = function(jObj, level) {
   let attrStr = '';
   let val = '';
-  const keys = Object.keys(jObj);
-  const len = keys.length;
-  for (let i = 0; i < len; i++) {
-    const key = keys[i];
+  for (let key in jObj) {
     if (typeof jObj[key] === 'undefined') {
       // supress undefined node
     } else if (jObj[key] === null) {
@@ -145,12 +142,7 @@ Parser.prototype.j2x = function(jObj, level) {
           } else if (item === null) {
             val += this.indentate(level) + '<' + key + '/' + this.tagEndChar;
           } else if (typeof item === 'object') {
-            const result = this.j2x(item, level + 1);
-            if (this.onlyPropIsTextNode(item)) {
-              val += this.buildTextNode(result.val, key, result.attrStr, level);
-            } else {
-              val += this.buildObjNode(result.val, key, result.attrStr, level);
-            }
+            val += this.processTextOrObjNode(item, key, level)
           } else {
             val += this.buildTextNode(item, key, '', level);
           }
@@ -165,19 +157,15 @@ Parser.prototype.j2x = function(jObj, level) {
           attrStr += ' ' + Ks[j] + '="' + this.options.attrValueProcessor('' + jObj[key][Ks[j]]) + '"';
         }
       } else {
-        const result = this.j2x(jObj[key], level + 1);
-        if (this.onlyPropIsTextNode(jObj[key])) {
-          val += this.buildTextNode(result.val, key, result.attrStr, level);
-        } else {
-          val += this.buildObjNode(result.val, key, result.attrStr, level);
-        }
+        val += this.processTextOrObjNode(jObj[key], key, level)
       }
     }
   }
   return {attrStr: attrStr, val: val};
 };
 
-function onlyPropIsTextNode(object) {
+function processTextOrObjNode (object, key, level) {
+  const result = this.j2x(object, level + 1);
   let keyCounter = 0
   let containsTextNode = false
   for (let i in object) {
@@ -185,7 +173,11 @@ function onlyPropIsTextNode(object) {
     if (i === this.options.textNodeName) containsTextNode = true
     if (keyCounter > 1) break
   }
-  return containsTextNode && keyCounter === 1
+  if (containsTextNode && keyCounter === 1) {
+    return this.buildTextNode(result.val, key, result.attrStr, level);
+  } else {
+    return this.buildObjNode(result.val, key, result.attrStr, level);
+  }
 }
 
 function replaceCDATAstr(str, cdata) {
