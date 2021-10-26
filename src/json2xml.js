@@ -55,6 +55,8 @@ function Parser(options) {
   this.replaceCDATAstr = replaceCDATAstr;
   this.replaceCDATAarr = replaceCDATAarr;
 
+  this.onlyPropIsTextNode = onlyPropIsTextNode
+
   if (this.options.format) {
     this.indentate = indentate;
     this.tagEndChar = '>\n';
@@ -144,14 +146,7 @@ Parser.prototype.j2x = function(jObj, level) {
             val += this.indentate(level) + '<' + key + '/' + this.tagEndChar;
           } else if (typeof item === 'object') {
             const result = this.j2x(item, level + 1);
-            let keyCounter = 0
-            let containsTextNode = false
-            for (let i in item) {
-              keyCounter++
-              if (i === this.options.textNodeName) containsTextNode = true
-              if (keyCounter > 1) break
-            }
-            if (containsTextNode && keyCounter === 1) {
+            if (this.onlyPropIsTextNode(item)) {
               val += this.buildTextNode(result.val, key, result.attrStr, level);
             } else {
               val += this.buildObjNode(result.val, key, result.attrStr, level);
@@ -171,14 +166,7 @@ Parser.prototype.j2x = function(jObj, level) {
         }
       } else {
         const result = this.j2x(jObj[key], level + 1);
-        let keyCounter = 0
-        let containsTextNode = false
-        for (let i in jObj[key]) {
-          keyCounter++
-          if (i === this.options.textNodeName) containsTextNode = true
-          if (keyCounter > 1) break
-        }
-        if (containsTextNode && keyCounter === 1) {
+        if (this.onlyPropIsTextNode(jObj[key])) {
           val += this.buildTextNode(result.val, key, result.attrStr, level);
         } else {
           val += this.buildObjNode(result.val, key, result.attrStr, level);
@@ -188,6 +176,17 @@ Parser.prototype.j2x = function(jObj, level) {
   }
   return {attrStr: attrStr, val: val};
 };
+
+function onlyPropIsTextNode(object) {
+  let keyCounter = 0
+  let containsTextNode = false
+  for (let i in object) {
+    keyCounter++
+    if (i === this.options.textNodeName) containsTextNode = true
+    if (keyCounter > 1) break
+  }
+  return containsTextNode && keyCounter === 1
+}
 
 function replaceCDATAstr(str, cdata) {
   str = this.options.tagValueProcessor('' + str);
