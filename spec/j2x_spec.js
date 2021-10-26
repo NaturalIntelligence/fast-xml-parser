@@ -358,7 +358,7 @@ describe("XMLParser", function() {
         expect(result).toEqual(expected);
     });
 
-    it("should format when parsing to XML", function() {
+    it("should format when parsing to XML when nodes have only a text prop", function() {
       const jObj = {
         a: {
           "@": {
@@ -380,11 +380,14 @@ describe("XMLParser", function() {
               "@": {"staticMessage": "bar"}
             }
           },
-          only_text: [
+          only_text_array: [
             {
               '#text': 'text value'
             }
-          ]
+          ],
+          only_text_obj: {
+            '#text': 'another text val'
+          }
       }
     };
     const parser = new Parser({
@@ -405,7 +408,8 @@ describe("XMLParser", function() {
   <element>
     <subelement staticMessage="bar">foo</subelement>
   </element>
-  <only_text>text value</only_text>
+  <only_text_array>text value</only_text_array>
+  <only_text_obj>another text val</only_text_obj>
 </a>
 `;
     expect(result).toEqual(expected);
