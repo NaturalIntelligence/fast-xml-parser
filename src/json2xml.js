@@ -165,15 +165,8 @@ Parser.prototype.j2x = function(jObj, level) {
 };
 
 function processTextOrObjNode (object, key, level) {
-  let keyCounter = 0;
-  let containsTextNode = false;
-  for (let i in object) {
-    keyCounter++;
-    if (i === this.options.textNodeName) containsTextNode = true;
-    if (keyCounter > 1) break;
-  }
   const result = this.j2x(object, level + 1);
-  if (containsTextNode && keyCounter === 1) {
+  if (object[this.options.textNodeName] !== undefined && Object.keys(object).length === 1) {
     return this.buildTextNode(result.val, key, result.attrStr, level);
   } else {
     return this.buildObjNode(result.val, key, result.attrStr, level);
