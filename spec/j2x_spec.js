@@ -358,6 +358,63 @@ describe("XMLParser", function() {
         expect(result).toEqual(expected);
     });
 
+    it("should format when parsing to XML when nodes have only a text prop", function() {
+      const jObj = {
+        a: {
+          "@": {
+            b: "val>1",
+            c: "val<2"
+          },
+          "#text": "text\\cvalue>\\c",
+          tag: {
+            k: 34,
+            g: "35 g>"
+          },
+          "__cdata": [
+            "this text is > from CDATA",
+            "this is another text"
+          ],
+          element: {
+            subelement: {
+              "#text": "foo",
+              "@": {"staticMessage": "bar"}
+            }
+          },
+          only_text_array: [
+            {
+              '#text': 'text value'
+            }
+          ],
+          only_text_obj: {
+            '#text': 'another text val'
+          }
+      }
+    };
+    const parser = new Parser({
+      cdataTagName: "__cdata",
+      attrNodeName: "@",
+      encodeHTMLchar: true,
+      format: true,
+      tagValueProcessor: a => { a= ''+ a; return he.encode(a, { useNamedReferences: true }) },
+      attrValueProcessor: a => he.encode(a, { isAttributeValue: true, useNamedReferences: true })
+    });
+    const result = parser.parse(jObj);
+    const expected = `<a b="val&gt;1" c="val&lt;2">
+  <tag>
+    <k>34</k>
+    <g>35 g&gt;</g>
+  </tag>
+  text<![CDATA[this text is > from CDATA]]>value&gt;<![CDATA[this is another text]]>
+  <element>
+    <subelement staticMessage="bar">foo</subelement>
+  </element>
+  <only_text_array>text value</only_text_array>
+  <only_text_obj>another text val</only_text_obj>
+</a>
+`;
+    expect(result).toEqual(expected);
+  });
+
 
     it("should format when parsing to XML", function() {
         const jObj = {
@@ -456,7 +513,7 @@ describe("XMLParser", function() {
                 "capacity": 2
               }
         
-        ];;
+        ];
         const parser = new Parser({
           rootNodeName: "car"
         });

@@ -3,7 +3,7 @@
 const Benchmark = require("benchmark");
 const suite = new Benchmark.Suite("XML Parser benchmark");
 
-const Parser = require("../src/j2x");
+const Parser = require("../src/json2xml");
 const parser = new Parser({
                             format: true
                             //supressEmptyNode: true

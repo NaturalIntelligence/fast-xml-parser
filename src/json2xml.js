@@ -55,6 +55,8 @@ function Parser(options) {
   this.replaceCDATAstr = replaceCDATAstr;
   this.replaceCDATAarr = replaceCDATAarr;
 
+  this.processTextOrObjNode = processTextOrObjNode
+
   if (this.options.format) {
     this.indentate = indentate;
     this.tagEndChar = '>\n';
@@ -91,10 +93,7 @@ Parser.prototype.parse = function(jObj) {
 Parser.prototype.j2x = function(jObj, level) {
   let attrStr = '';
   let val = '';
-  const keys = Object.keys(jObj);
-  const len = keys.length;
-  for (let i = 0; i < len; i++) {
-    const key = keys[i];
+  for (let key in jObj) {
     if (typeof jObj[key] === 'undefined') {
       // supress undefined node
     } else if (jObj[key] === null) {
@@ -143,8 +142,7 @@ Parser.prototype.j2x = function(jObj, level) {
           } else if (item === null) {
             val += this.indentate(level) + '<' + key + '/' + this.tagEndChar;
           } else if (typeof item === 'object') {
-            const result = this.j2x(item, level + 1);
-            val += this.buildObjNode(result.val, key, result.attrStr, level);
+            val += this.processTextOrObjNode(item, key, level)
           } else {
             val += this.buildTextNode(item, key, '', level);
           }
@@ -159,13 +157,21 @@ Parser.prototype.j2x = function(jObj, level) {
           attrStr += ' ' + Ks[j] + '="' + this.options.attrValueProcessor('' + jObj[key][Ks[j]]) + '"';
         }
       } else {
-        const result = this.j2x(jObj[key], level + 1);
-        val += this.buildObjNode(result.val, key, result.attrStr, level);
+        val += this.processTextOrObjNode(jObj[key], key, level)
       }
     }
   }
   return {attrStr: attrStr, val: val};
 };
+
+function processTextOrObjNode (object, key, level) {
+  const result = this.j2x(object, level + 1);
+  if (object[this.options.textNodeName] !== undefined && Object.keys(object).length === 1) {
+    return this.buildTextNode(result.val, key, result.attrStr, level);
+  } else {
+    return this.buildObjNode(result.val, key, result.attrStr, level);
+  }
+}
 
 function replaceCDATAstr(str, cdata) {
   str = this.options.tagValueProcessor('' + str);
@@ -189,7 +195,7 @@ function replaceCDATAarr(str, cdata) {
 }
 
 function buildObjectNode(val, key, attrStr, level) {
-  if (attrStr && !val.includes('<')) {
+  if (attrStr && val.indexOf('<') === -1) {
     return (
       this.indentate(level) +
       '<' +
