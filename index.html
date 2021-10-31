@@ -72,7 +72,6 @@
                             <span class="clearfix">Locale range <input type="text" id="localeRange" style=" color: black; float:right;" placeholder="Try with your mother tongue"><br></span>
                             <div class="text-center" style="margin: 15px">
                                 <button id="toJson" class="btn btn-primary" type="button">Parse to JSON >> </button>
-                                <button id="toNimn" class="btn btn-primary" type="button">Parse to Nimn >> </button>
                                 <button id="toXml" class="btn btn-primary" type="button"> << Parse to XML</button>
                             </div>
                         </div>
@@ -93,7 +92,6 @@
                 </div>
             </div>
         </div>
-        <script src="https://cdn.rawgit.com/nimndata/nimnjs-schema-builder/5a452c40/dist/nimn-schema-builder.js"></script>
         
     <script>
         let highlightedLine = null;
@@ -155,16 +153,6 @@
                 editor.setValue('');
                 const result = buildJ2XParser().parse(JSON.parse( $('#result').val() ));
                 editor.setValue('<?xml version="1.0"?>\n'+result);
-            });
-
-            $('#toNimn').on('click', function() {
-                $('#result').val('');
-
-                const jsonData = parser.parse(editor.getValue(),buildParsingConfig());
-                const schema = nimnSchemaBuilder.build(jsonData);
-                const result = parser.parseToNimn(editor.getValue(), schema, buildParsingConfig());
-                updateOutputLength(result);
-                $('#result').val(result);
             });
 
             $('#validate').on('click', function() {
