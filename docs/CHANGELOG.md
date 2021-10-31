@@ -1,5 +1,8 @@
 Note: If you find missing information about particular minor version, that version must have been changed without any functional change in this library.
 
+3.21.1 / 2021-10-31
+* Correctly format JSON elements with a text prop but no attribute props ( By [haddadnj](https://github.com/haddadnj) )
+
 3.21.0 / 2021-10-25
   * feat: added option `rootNodeName` to set tag name for array input when converting js object to XML.
   * feat: added option `alwaysCreateTextNode` to force text node creation (by: *@massimo-ua*)
