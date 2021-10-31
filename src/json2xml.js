@@ -11,7 +11,7 @@ const defaultOptions = {
   cdataPositionChar: '\\c',
   format: false,
   indentBy: '  ',
-  supressEmptyNode: false,
+  suppressEmptyNode: false,
   tagValueProcessor: function(a) {
     return a;
   },
@@ -29,7 +29,7 @@ const props = [
   'cdataPositionChar',
   'format',
   'indentBy',
-  'supressEmptyNode',
+  'suppressEmptyNode',
   'tagValueProcessor',
   'attrValueProcessor',
   'rootNodeName', //when array as root
@@ -69,7 +69,7 @@ function Parser(options) {
     this.newLine = '';
   }
 
-  if (this.options.supressEmptyNode) {
+  if (this.options.suppressEmptyNode) {
     this.buildTextNode = buildEmptyTextNode;
     this.buildObjNode = buildEmptyObjNode;
   } else {

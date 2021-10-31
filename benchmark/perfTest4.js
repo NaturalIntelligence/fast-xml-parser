@@ -6,7 +6,7 @@ const suite = new Benchmark.Suite("XML Parser benchmark");
 const Parser = require("../src/json2xml");
 const parser = new Parser({
                             format: true
-                            //supressEmptyNode: true
+                            //suppressEmptyNode: true
                         });
 const xml2js = require("xml2js");
 const builder = new xml2js.Builder();

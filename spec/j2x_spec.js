@@ -299,7 +299,7 @@ describe("XMLParser", function() {
                                       attributeNamePrefix: "",
                                       attrNodeName:     "@",
                                       encodeHTMLchar:   true,
-                                      supressEmptyNode: true,
+                                      suppressEmptyNode: true,
                                       tagValueProcessor: a=> { a= ''+ a; return he.encode(a, { useNamedReferences: true}) },
                                       attrValueProcessor: a=> he.encode(a, {isAttributeValue: true, useNamedReferences: true})
                                   });
@@ -445,7 +445,7 @@ describe("XMLParser", function() {
             cdataPositionChar:   "\\c",
             format:              false,
             indentBy:            "\t",
-            supressEmptyNode:    true
+            suppressEmptyNode:    true
         });
         const result = parser.parse(jObj);
         const expected = '<root><element aaa="aaa" bbb="bbb">1</element><element2 aaa="aaa2" bbb="bbb2"><subelement aaa="sub_aaa"/></element2><date>test</date></root>';
@@ -480,7 +480,7 @@ describe("XMLParser", function() {
             cdataPositionChar:   "\\c",
             format:              false,
             indentBy:            "\t",
-            supressEmptyNode:    true,
+            suppressEmptyNode:    true,
             tagValueProcessor: function(a) {
                 return a;
             },

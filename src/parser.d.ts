@@ -37,7 +37,7 @@ type J2xOptions = {
   cdataPositionChar: string;
   format: boolean;
   indentBy: string;
-  supressEmptyNode: boolean;
+  suppressEmptyNode: boolean;
   tagValueProcessor: (tagValue: string) => string;
   attrValueProcessor: (attrValue: string) => string;
 };
