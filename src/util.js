@@ -83,26 +83,6 @@ exports.buildOptions = function(options, defaultOptions, props) {
   return newOptions;
 };
 
-/**
- * Check if a tag name should be treated as array
- *
- * @param tagName the node tagname
- * @param arrayMode the array mode option
- * @param parentTagName the parent tag name
- * @returns {boolean} true if node should be parsed as array
- */
-exports.isTagNameInArrayMode = function (tagName, arrayMode, parentTagName) {
-  if (arrayMode === false) {
-    return false;
-  } else if (arrayMode instanceof RegExp) {
-    return arrayMode.test(tagName);
-  } else if (typeof arrayMode === 'function') {
-    return !!arrayMode(tagName, parentTagName);
-  }
-
-  return arrayMode === "strict";
-}
-
 exports.isName = isName;
 exports.getAllMatches = getAllMatches;
 exports.nameRegexp = nameRegexp;

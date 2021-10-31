@@ -7,7 +7,6 @@ type X2jOptions = {
   allowBooleanAttributes: boolean;
   parseNodeValue: boolean;
   parseAttributeValue: boolean;
-  arrayMode: boolean | 'strict' | RegExp | ((tagName: string, parentTagName: string) => boolean);
   trimValues: boolean;
   cdataTagName: false | string;
   cdataPositionChar: string;
@@ -17,6 +16,7 @@ type X2jOptions = {
   attrValueProcessor: (attrValue: string, attrName: string) => string;
   stopNodes: string[];
   alwaysCreateTextNode: boolean;
+  isArray: (tagName: string, jpath: string, isLeafNode: boolean, isAttribute: boolean) => boolean;
 };
 type strnumOptions = {
   hex: boolean;
@@ -50,11 +50,6 @@ type ValidationError = {
 };
 
 export function parse(xmlData: string, options?: X2jOptionsOptional, validationOptions?: validationOptionsOptional | boolean): any;
-export function convert2nimn(
-  node: any,
-  e_schema: ESchema,
-  options?: X2jOptionsOptional
-): any;
 export function getTraversalObj(
   xmlData: string,
   options?: X2jOptionsOptional
@@ -72,8 +67,3 @@ export class j2xParser {
   constructor(options: J2xOptionsOptional);
   parse(options: any): any;
 }
-export function parseToNimn(
-  xmlData: string,
-  schema: any,
-  options: Partial<X2jOptions>
-): any;

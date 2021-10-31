@@ -30,7 +30,6 @@ const defaultOptions = {
   //ignoreRootElement : false,
   parseNodeValue: true,
   parseAttributeValue: false,
-  arrayMode: false,
   trimValues: true, //Trim string values of tag and attributes
   cdataTagName: false,
   cdataPositionChar: '\\c',
@@ -45,8 +44,9 @@ const defaultOptions = {
     return a;
   },
   stopNodes: [],
-  alwaysCreateTextNode: false
+  alwaysCreateTextNode: false,
   //decodeStrict: false,
+  isArray: () => false
 };
 
 exports.defaultOptions = defaultOptions;
@@ -60,7 +60,6 @@ const props = [
   'allowBooleanAttributes',
   'parseNodeValue',
   'parseAttributeValue',
-  'arrayMode',
   'trimValues',
   'cdataTagName',
   'cdataPositionChar',
@@ -69,7 +68,8 @@ const props = [
   'parseTrueNumberOnly',
   'numParseOptions',
   'stopNodes',
-  'alwaysCreateTextNode'
+  'alwaysCreateTextNode',
+  'isArray'
 ];
 exports.props = props;
 
