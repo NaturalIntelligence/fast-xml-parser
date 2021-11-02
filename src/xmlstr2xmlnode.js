@@ -197,7 +197,7 @@ const getTraversalObj = function(xmlData, options) {
         if (isItStopNode(options.stopNodes, tagsNodeStack, currentNode.tagname)) { //TODO: namespace
           const top = tagsNodeStack[tagsNodeStack.length - 1];
           const stopNode = top.child[ top.child.length -1 ];
-          stopNode[currentNode.tagname] = xmlData.substr(currentNode.startIndex + 1, i - currentNode.startIndex - 1);
+          stopNode[currentNode.tagname] = [ { [options.textNodeName] :xmlData.substr(currentNode.startIndex + 1, i - currentNode.startIndex - 1) }];
         }
         
         currentNode = tagsNodeStack.pop();//avoid recurssion, set the parent tag scope
