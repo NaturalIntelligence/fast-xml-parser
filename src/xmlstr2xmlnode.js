@@ -291,7 +291,7 @@ const getTraversalObj = function(xmlData, options) {
       textData += xmlData[i];
     }
   }
-  return xmlObj;
+  return xmlObj.child[0];
 }
 
 /**
