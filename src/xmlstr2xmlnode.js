@@ -225,7 +225,11 @@ const getTraversalObj = function(xmlData, options) {
           textData = "";
         }
 
-        currentNode.add(options.cdataTagName || options.textNodeName, trimValue(tagExp, options));
+        if(options.cdataTagName){
+          currentNode.add(options.cdataTagName, [ { [options.textNodeName] : trimValue(tagExp, options) } ]);
+        }else{
+          currentNode.add(options.textNodeName, trimValue(tagExp, options));
+        }
         
         i = closeIndex + 2;
       }else {//Opening tag
