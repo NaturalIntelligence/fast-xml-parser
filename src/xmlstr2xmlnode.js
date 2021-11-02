@@ -74,18 +74,17 @@ const props = [
 exports.props = props;
 
 /**
- * Trim -> valueProcessor -> parse value
- * @param {string} tagName
+ * Trim
  * @param {string} val
  * @param {object} options
  */
-function processTagValue(tagName, val, options) {
+function trimValue(val, options) {
   if (val) {
     if (options.trimValues) {
       val = val.trim();
     }
-    val = options.tagValueProcessor(val, tagName);
-    val = parseValue(val, options.parseNodeValue, options.numParseOptions);
+    // val = options.tagValueProcessor(val, tagName);
+    // val = parseValue(val, options.parseNodeValue, options.numParseOptions);
   }
 
   return val;
@@ -169,11 +168,13 @@ const getTraversalObj = function(xmlData, options) {
   const xmlObj = new xmlNode('!xml');
   let currentNode = xmlObj;
   let textData = "";
-
+  const tagsNodeStack = [];
 //function match(xmlData){
   for(let i=0; i< xmlData.length; i++){
     const ch = xmlData[i];
     if(ch === '<'){
+      // const nextIndex = i+1;
+      // const _2ndChar = xmlData[nextIndex];
       if( xmlData[i+1] === '/') {//Closing Tag
         const closeIndex = findClosingIndex(xmlData, ">", i, "Closing Tag is not closed.")
         let tagName = xmlData.substring(i+2,closeIndex).trim();
@@ -185,23 +186,21 @@ const getTraversalObj = function(xmlData, options) {
           }
         }
 
-        /* if (currentNode.parent) {
-          currentNode.parent.val = util.getValue(currentNode.parent.val) + '' + processTagValue2(tagName, textData , options);
-        } */
         if(currentNode){
-          if(currentNode.val){
-            currentNode.val = util.getValue(currentNode.val) + '' + processTagValue(tagName, textData , options);
-          }else{
-            currentNode.val = processTagValue(tagName, textData , options);
-          }
+          textData = trimValue(textData, options)
+          if(textData) currentNode.add(options.textNodeName, textData);
+          textData = "";
         }
 
-        if (options.stopNodes.length && options.stopNodes.includes(currentNode.tagname)) {
-          currentNode.child = []
-          if (currentNode.attrsMap == undefined) { currentNode.attrsMap = {}}
-          currentNode.val = xmlData.substr(currentNode.startIndex + 1, i - currentNode.startIndex - 1)
+        //ToDo: should be based on jPath
+        // if (options.stopNodes.length && options.stopNodes.includes(currentNode.tagname)) {
+        if (isItStopNode(options.stopNodes, tagsNodeStack, currentNode.tagname)) { //TODO: namespace
+          const top = tagsNodeStack[tagsNodeStack.length - 1];
+          const stopNode = top.child[ top.child.length -1 ];
+          stopNode[currentNode.tagname] = xmlData.substr(currentNode.startIndex + 1, i - currentNode.startIndex - 1);
         }
-        currentNode = currentNode.parent;
+        
+        currentNode = tagsNodeStack.pop();//avoid recurssion, set the parent tag scope
         textData = "";
         i = closeIndex;
       } else if( xmlData[i+1] === '?') {
@@ -217,40 +216,26 @@ const getTraversalObj = function(xmlData, options) {
           i = closeIndex;
         }
       }else if(xmlData.substr(i + 1, 2) === '![') {
-        const closeIndex = findClosingIndex(xmlData, "]]>", i, "CDATA is not closed.") - 2
+        const closeIndex = findClosingIndex(xmlData, "]]>", i, "CDATA is not closed.") - 2;
         const tagExp = xmlData.substring(i + 9,closeIndex);
 
-        //considerations
-        //1. CDATA will always have parent node
-        //2. A tag with CDATA is not a leaf node so it's value would be string type.
-        if(textData){
-          currentNode.val = util.getValue(currentNode.val) + '' + processTagValue(currentNode.tagname, textData , options);
+        if(textData){ //store previously collected data as textNode
+          textData = trimValue(textData, options)
+          if(textData) currentNode.add(options.textNodeName, textData);
           textData = "";
         }
 
-        if (options.cdataTagName) {
-          //add cdata node
-          const childNode = new xmlNode(options.cdataTagName, currentNode, tagExp);
-          currentNode.addChild(childNode);
-          //for backtracking
-          currentNode.val = util.getValue(currentNode.val) + options.cdataPositionChar;
-          //add rest value to parent node
-          if (tagExp) {
-            childNode.val = tagExp;
-          }
-        } else {
-          currentNode.val = (currentNode.val || '') + (tagExp || '');
-        }
-
+        currentNode.add(options.cdataTagName || options.textNodeName, trimValue(tagExp, options));
+        
         i = closeIndex + 2;
       }else {//Opening tag
-        const result = closingIndexForOpeningTag(xmlData, i+1)
+        const result = tagExpWithClosingIndex(xmlData, i+1)
         let tagExp = result.data;
         const closeIndex = result.index;
         const separatorIndex = tagExp.indexOf(" ");
         let tagName = tagExp;
         let shouldBuildAttributesMap = true;
-        if(separatorIndex !== -1){
+        if(separatorIndex !== -1){//separate tag name and attributes expression
           tagName = tagExp.substr(0, separatorIndex).replace(/\s\s*$/, '');
           tagExp = tagExp.substr(separatorIndex + 1);
         }
@@ -263,10 +248,12 @@ const getTraversalObj = function(xmlData, options) {
           }
         }
 
-        //save text to parent node
+        //save text as child node
         if (currentNode && textData) {
           if(currentNode.tagname !== '!xml'){
-            currentNode.val = util.getValue(currentNode.val) + '' + processTagValue( currentNode.tagname, textData, options);
+            textData = trimValue(textData, options)
+            if(textData) currentNode.add(options.textNodeName, textData);
+            textData = "";
           }
         }
 
@@ -279,17 +266,18 @@ const getTraversalObj = function(xmlData, options) {
             tagExp = tagExp.substr(0, tagExp.length - 1);
           }
 
-          const childNode = new xmlNode(tagName, currentNode, '');
+          const childNode = new xmlNode(tagName);
+          tagsNodeStack.push(currentNode);
           if(tagName !== tagExp){
             childNode.attrsMap = buildAttributesMap(tagExp, options);
           }
           currentNode.addChild(childNode);
         }else{//opening tag
 
-          const childNode = new xmlNode( tagName, currentNode );
-          if (options.stopNodes.length && options.stopNodes.includes(childNode.tagname)) {
-            childNode.startIndex=closeIndex;
-          }
+          const childNode = new xmlNode( tagName);
+          tagsNodeStack.push(currentNode);
+          childNode.startIndex=closeIndex; //for further processing
+          
           if(tagName !== tagExp && shouldBuildAttributesMap){
             childNode.attrsMap = buildAttributesMap(tagExp, options);
           }
@@ -306,11 +294,43 @@ const getTraversalObj = function(xmlData, options) {
   return xmlObj;
 }
 
-function closingIndexForOpeningTag(data, i){
+/**
+ * 
+ * @param {string[]} stopNodes 
+ * @param {XmlNode[]} tagsNodeStack 
+ */
+function isItStopNode(stopNodes, tagsNodeStack, currentTagName){
+  const matchingStopNodes = [];
+  //filter the list of stopNodes as per current tag
+  stopNodes.forEach( jPath => {
+    if( jPath.substr( jPath.length - currentTagName.length) === currentTagName) matchingStopNodes.push(jPath);
+  });
+
+  if(matchingStopNodes.length > 0){
+    let jPath = "";
+    for (let i = 1; i < tagsNodeStack.length; i++) {
+      const node = tagsNodeStack[i];
+      jPath += "." + node.tagname;
+    }
+    jPath += "." + currentTagName;
+    jPath = jPath.substr(1);
+    for (let i = 0; i < matchingStopNodes.length; i++) {
+      if(matchingStopNodes[i] === jPath) return true;
+    }
+  }else return false;
+}
+
+/**
+ * Returns the tag Expression and where it is ending handling single-dobule quotes situation
+ * @param {string} xmlData 
+ * @param {number} i starting index
+ * @returns 
+ */
+function tagExpWithClosingIndex(xmlData, i){
   let attrBoundary;
   let tagExp = "";
-  for (let index = i; index < data.length; index++) {
-    let ch = data[index];
+  for (let index = i; index < xmlData.length; index++) {
+    let ch = xmlData[index];
     if (attrBoundary) {
         if (ch === attrBoundary) attrBoundary = "";//reset
     } else if (ch === '"' || ch === "'") {
