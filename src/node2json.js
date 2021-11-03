@@ -66,4 +66,81 @@ function isLeafNode(node, tagName){
   if( childNode && Object.keys(childNode).length > 0) return false;
   return true;
 }
-exports.convertToJson = convertToJson;
+
+//a non-leaf tag would be an array
+function prettify(node, options){
+  return compress( [node], options);
+}
+
+/**
+ * 
+ * @param {array} arr 
+ * @param {object} options 
+ * @param {string} jPath 
+ * @returns object
+ */
+function compress(arr, options, jPath){
+  let text = "";
+  const compressedObj = {};
+  for (let i = 0; i < arr.length; i++) {
+    const tagObj = arr[i];
+    const property = propName(tagObj);
+    let newJpath = "";
+    if(jPath === undefined) newJpath = property;
+    else newJpath = jPath + "." + property;
+
+    if(property === options.textNodeName){
+      text += tagObj[property];
+    }else if(property === undefined){
+      continue;
+    }else if(tagObj[property]){
+      
+      let val = compress(tagObj[property], options, newJpath);
+      if(tagObj.attributes){
+        assignAttributes( val, tagObj.attributes, newJpath, options);
+      }else if(Object.keys(val).length === 1 && val[options.textNodeName]){
+        val = val[options.textNodeName];
+      }else if(Object.keys(val).length === 0){
+        val = "";
+      }
+
+      if(compressedObj[property] !== undefined) {
+        if(!Array.isArray(compressedObj[property])) {
+          compressedObj[property] = [ compressedObj[property] ];
+        }
+        compressedObj[property].push(val);
+      }else{
+        compressedObj[property] = val;
+      }
+    }
+    
+  }
+  //TODO: if a node is not an array, then check if it should be an array
+  //
+  if(text.length > 0) compressedObj[options.textNodeName] = text;
+  return compressedObj;
+}
+
+function propName(obj){
+  const keys = Object.keys(obj);
+  for (let i = 0; i < keys.length; i++) {
+    const key = keys[i];
+    if(key !== "attributes") return key;
+  }
+}
+
+function assignAttributes(obj, attrMap, jpath, options){
+  if (attrMap) {
+    const keys = Object.keys(attrMap);
+    const len = keys.length; //don't make it inline
+    for (let i = 0; i < len; i++) {
+      const atrrName = keys[i];
+      if (options.isArray(atrrName, jpath + "." + atrrName, true, true)) {
+        obj[atrrName] = [ attrMap[atrrName] ];
+      } else {
+        obj[atrrName] = attrMap[atrrName];
+      }
+    }
+  }
+}
+exports.convertToJson = prettify;
