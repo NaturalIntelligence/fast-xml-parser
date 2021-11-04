@@ -74,7 +74,7 @@ function prettify(node, options){
  * @returns object
  */
 function compress(arr, options, jPath){
-  let text = "";
+  let text;
   const compressedObj = {};
   for (let i = 0; i < arr.length; i++) {
     const tagObj = arr[i];
@@ -84,7 +84,8 @@ function compress(arr, options, jPath){
     else newJpath = jPath + "." + property;
 
     if(property === options.textNodeName){
-      text += tagObj[property];
+      if(text === undefined) text = tagObj[property];
+      else text += "" + tagObj[property];
     }else if(property === undefined){
       continue;
     }else if(tagObj[property]){
@@ -118,7 +119,7 @@ function compress(arr, options, jPath){
     }
     
   }
-  if(text.length > 0) compressedObj[options.textNodeName] = text;
+  if(text && text.length > 0) compressedObj[options.textNodeName] = text;
   return compressedObj;
 }
 
