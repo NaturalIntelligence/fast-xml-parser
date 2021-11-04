@@ -61,12 +61,6 @@ function copyAttributesifPresent(tagObj, attrMap, jpath, options){
   }
 }
 
-function isLeafNode(node, tagName){
-  const childNode = node[tagName][0].child;
-  if( childNode && Object.keys(childNode).length > 0) return false;
-  return true;
-}
-
 //a non-leaf tag would be an array
 function prettify(node, options){
   return compress( [node], options);
@@ -96,6 +90,8 @@ function compress(arr, options, jPath){
     }else if(tagObj[property]){
       
       let val = compress(tagObj[property], options, newJpath);
+      const isLeaf = isLeafTag(val, options);
+
       if(tagObj.attributes){
         assignAttributes( val, tagObj.attributes, newJpath, options);
       }else if(Object.keys(val).length === 1 && val[options.textNodeName]){
@@ -110,13 +106,17 @@ function compress(arr, options, jPath){
         }
         compressedObj[property].push(val);
       }else{
-        compressedObj[property] = val;
+        //TODO: if a node is not an array, then check if it should be an array
+        //also determine if it is a leaf node
+        if (options.isArray(property, newJpath, isLeaf )) {
+          compressedObj[property] = [val];
+        }else{
+          compressedObj[property] = val;
+        }
       }
     }
     
   }
-  //TODO: if a node is not an array, then check if it should be an array
-  //
   if(text.length > 0) compressedObj[options.textNodeName] = text;
   return compressedObj;
 }
@@ -142,5 +142,11 @@ function assignAttributes(obj, attrMap, jpath, options){
       }
     }
   }
+}
+
+function isLeafTag(obj, options){
+  const propCount = Object.keys(obj).length;
+  if( propCount === 0 || (propCount === 1 && obj[options.textNodeName]) ) return true;
+  return false;
 }
 exports.convertToJson = prettify;
