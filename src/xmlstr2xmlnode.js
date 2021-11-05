@@ -37,7 +37,7 @@ const defaultOptions = {
     hex: true,
     leadingZeros: true
   },
-  tagValueProcessor: function(a, tagName) {
+  tagValueProcessor: function(tagName, a) {
     return a;
   },
   attrValueProcessor: function(a, attrName) {
@@ -67,9 +67,9 @@ const props = [
   'attrValueProcessor',
   'parseTrueNumberOnly',
   'numParseOptions',
-  'stopNodes',
-  'alwaysCreateTextNode',
-  'isArray'
+  'stopNodes', //done
+  'alwaysCreateTextNode', //done
+  'isArray', //done
 ];
 exports.props = props;
 
@@ -78,16 +78,24 @@ exports.props = props;
  * @param {string} val
  * @param {object} options
  */
-function trimValue(val, options) {
+function parseValue(val, options, tagName, jPath) {
   if (val) {
     if (options.trimValues) {
       val = val.trim();
     }
-    // val = options.tagValueProcessor(val, tagName);
-    // val = parseValue(val, options.parseNodeValue, options.numParseOptions);
+    if(val.length > 0){
+      const newval = options.tagValueProcessor(tagName, val, jPath);
+      if(newval === false || newval === null || newval === undefined){
+        //don't parse
+        return val;
+      }else if(typeof newval === typeof val && newval === val){
+        //don't prase
+        return newval;
+      }else{
+        return _parseValue(val, options.parseNodeValue, options.numParseOptions);
+      }
+    }
   }
-
-  return val;
 }
 
 function resolveNameSpace(tagname, options) {
@@ -104,7 +112,7 @@ function resolveNameSpace(tagname, options) {
   return tagname;
 }
 
-function parseValue(val, shouldParse, options) {
+function _parseValue(val, shouldParse, options) {
   if (shouldParse && typeof val === 'string') {
     //console.log(options)
     const newval = val.trim();
@@ -140,7 +148,7 @@ function buildAttributesMap(attrStr, options) {
             matches[i][4] = matches[i][4].trim();
           }
           matches[i][4] = options.attrValueProcessor(matches[i][4], attrName);
-          attrs[options.attributeNamePrefix + attrName] = parseValue(
+          attrs[options.attributeNamePrefix + attrName] = _parseValue(
             matches[i][4],
             options.parseAttributeValue,
             options.numParseOptions
@@ -169,8 +177,9 @@ const getTraversalObj = function(xmlData, options) {
   let currentNode = xmlObj;
   let textData = "";
   const tagsNodeStack = [];
-//function match(xmlData){
-  for(let i=0; i< xmlData.length; i++){
+  let jPath = "";
+
+  for(let i=0; i< xmlData.length; i++){//for each char in XML data
     const ch = xmlData[i];
     if(ch === '<'){
       // const nextIndex = i+1;
@@ -185,20 +194,20 @@ const getTraversalObj = function(xmlData, options) {
             tagName = tagName.substr(colonIndex+1);
           }
         }
-
+        
         if(currentNode){
-          textData = trimValue(textData, options)
+          textData = parseValue(textData, options, currentNode.tagname, jPath)
           if(textData) currentNode.add(options.textNodeName, textData);
           textData = "";
         }
 
-        //ToDo: should be based on jPath
-        // if (options.stopNodes.length && options.stopNodes.includes(currentNode.tagname)) {
         if (isItStopNode(options.stopNodes, tagsNodeStack, currentNode.tagname)) { //TODO: namespace
           const top = tagsNodeStack[tagsNodeStack.length - 1];
           const stopNode = top.child[ top.child.length -1 ];
           stopNode[currentNode.tagname] = [ { [options.textNodeName] :xmlData.substr(currentNode.startIndex + 1, i - currentNode.startIndex - 1) }];
         }
+        
+        jPath = jPath.substr(0, jPath.lastIndexOf("."));
         
         currentNode = tagsNodeStack.pop();//avoid recurssion, set the parent tag scope
         textData = "";
@@ -220,15 +229,15 @@ const getTraversalObj = function(xmlData, options) {
         const tagExp = xmlData.substring(i + 9,closeIndex);
 
         if(textData){ //store previously collected data as textNode
-          textData = trimValue(textData, options)
+          textData = parseValue(textData, options, currentNode.tagname, jPath);
           if(textData) currentNode.add(options.textNodeName, textData);
           textData = "";
         }
 
         if(options.cdataTagName){
-          currentNode.add(options.cdataTagName, [ { [options.textNodeName] : trimValue(tagExp, options) } ]);
+          currentNode.add(options.cdataTagName, [ { [options.textNodeName] : parseValue(tagExp, options, options.cdataTagName, jPath + "." + options.cdataTagName) } ]);
         }else{
-          currentNode.add(options.textNodeName, trimValue(tagExp, options));
+          currentNode.add(options.textNodeName, parseValue(tagExp, options, currentNode.tagname, jPath));
         }
         
         i = closeIndex + 2;
@@ -251,11 +260,13 @@ const getTraversalObj = function(xmlData, options) {
             shouldBuildAttributesMap = tagName !== result.data.substr(colonIndex + 1);
           }
         }
-
+        if(tagName !== xmlObj.tagname){
+          jPath += jPath ? "." + tagName : tagName;
+        }
         //save text as child node
         if (currentNode && textData) {
           if(currentNode.tagname !== '!xml'){
-            textData = trimValue(textData, options)
+            textData = parseValue(textData, options, currentNode.tagname, jPath );
             if(textData) currentNode.add(options.textNodeName, textData);
             textData = "";
           }
@@ -272,14 +283,12 @@ const getTraversalObj = function(xmlData, options) {
 
           const childNode = new xmlNode(tagName);
           tagsNodeStack.push(currentNode);
-          if(tagName !== tagExp){
-            childNode.attrsMap = buildAttributesMap(tagExp, options);
-          }
           currentNode.addChild(childNode);
         }else{//opening tag
-
+          
           const childNode = new xmlNode( tagName);
           tagsNodeStack.push(currentNode);
+          
           childNode.startIndex=closeIndex; //for further processing
           
           if(tagName !== tagExp && shouldBuildAttributesMap){
