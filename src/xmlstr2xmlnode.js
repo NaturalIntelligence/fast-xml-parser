@@ -89,7 +89,7 @@ function parseValue(val, options, tagName, jPath) {
         //don't parse
         return val;
       }else if(typeof newval !== typeof val || newval !== val){
-        //don't prase
+        //overwrite
         return newval;
       }else{
         return _parseValue(val, options.parseNodeValue, options.numParseOptions);
@@ -132,7 +132,7 @@ function _parseValue(val, shouldParse, options) {
 //const attrsRegx = new RegExp("([\\w\\-\\.\\:]+)\\s*=\\s*(['\"])((.|\n)*?)\\2","gm");
 const attrsRegx = new RegExp('([^\\s=]+)\\s*(=\\s*([\'"])(.*?)\\3)?', 'g');
 
-function buildAttributesMap(attrStr, options) {
+function buildAttributesMap(attrStr, jPath, options) {
   if (!options.ignoreAttributes && typeof attrStr === 'string') {
     attrStr = attrStr.replace(/\r?\n/g, ' ');
     //attrStr = attrStr || attrStr.trim();
@@ -142,19 +142,31 @@ function buildAttributesMap(attrStr, options) {
     const attrs = {};
     for (let i = 0; i < len; i++) {
       const attrName = resolveNameSpace(matches[i][1], options);
+      let oldVal = matches[i][4];
+      const aName = options.attributeNamePrefix + attrName;
       if (attrName.length) {
-        if (matches[i][4] !== undefined) {
+        if (oldVal !== undefined) {
           if (options.trimValues) {
-            matches[i][4] = matches[i][4].trim();
+            oldVal = oldVal.trim();
           }
-          matches[i][4] = options.attrValueProcessor(matches[i][4], attrName);
-          attrs[options.attributeNamePrefix + attrName] = _parseValue(
-            matches[i][4],
-            options.parseAttributeValue,
-            options.numParseOptions
-          );
+          
+          const newVal = options.attrValueProcessor(attrName, oldVal, jPath);
+          if(newVal === null || newVal === undefined){
+            //don't parse
+            attrs[aName] = oldVal;
+          }else if(typeof newVal !== typeof oldVal || newVal !== oldVal){
+            //overwrite
+            attrs[aName] = newVal;
+          }else{
+            //parse
+            attrs[aName] = _parseValue(
+              oldVal,
+              options.parseAttributeValue,
+              options.numParseOptions
+            );
+          }
         } else if (options.allowBooleanAttributes) {
-          attrs[options.attributeNamePrefix + attrName] = true;
+          attrs[aName] = true;
         }
       }
     }
@@ -273,7 +285,7 @@ const getTraversalObj = function(xmlData, options) {
         }
 
         if(tagExp.length > 0 && tagExp.lastIndexOf("/") === tagExp.length - 1){//selfClosing tag
-
+          
           if(tagName[tagName.length - 1] === "/"){ //remove trailing '/'
             tagName = tagName.substr(0, tagName.length - 1);
             tagExp = tagName;
@@ -283,8 +295,9 @@ const getTraversalObj = function(xmlData, options) {
 
           const childNode = new xmlNode(tagName);
           if(tagName !== tagExp && shouldBuildAttributesMap){
-            childNode.attrsMap = buildAttributesMap(tagExp, options);
+            childNode.attrsMap = buildAttributesMap(tagExp, jPath , options);
           }
+          jPath = jPath.substr(0, jPath.lastIndexOf("."));
           tagsNodeStack.push(currentNode);
           currentNode.addChild(childNode);
         }else{//opening tag
@@ -295,7 +308,7 @@ const getTraversalObj = function(xmlData, options) {
           childNode.startIndex=closeIndex; //for further processing
           
           if(tagName !== tagExp && shouldBuildAttributesMap){
-            childNode.attrsMap = buildAttributesMap(tagExp, options);
+            childNode.attrsMap = buildAttributesMap(tagExp, jPath, options);
           }
           currentNode.addChild(childNode);
           currentNode = childNode;
