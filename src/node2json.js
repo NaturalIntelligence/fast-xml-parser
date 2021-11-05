@@ -119,7 +119,10 @@ function compress(arr, options, jPath){
     }
     
   }
-  if(text && text.length > 0) compressedObj[options.textNodeName] = text;
+  // if(text && text.length > 0) compressedObj[options.textNodeName] = text;
+  if(typeof text === "string"){
+    if(text.length > 0) compressedObj[options.textNodeName] = text;
+  }else if(text !== undefined) compressedObj[options.textNodeName] = text;
   return compressedObj;
 }
 

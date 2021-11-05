@@ -85,10 +85,10 @@ function parseValue(val, options, tagName, jPath) {
     }
     if(val.length > 0){
       const newval = options.tagValueProcessor(tagName, val, jPath);
-      if(newval === false || newval === null || newval === undefined){
+      if(newval === null || newval === undefined){
         //don't parse
         return val;
-      }else if(typeof newval === typeof val && newval === val){
+      }else if(typeof newval !== typeof val || newval !== val){
         //don't prase
         return newval;
       }else{
