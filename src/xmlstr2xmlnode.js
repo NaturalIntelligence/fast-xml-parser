@@ -282,6 +282,9 @@ const getTraversalObj = function(xmlData, options) {
           }
 
           const childNode = new xmlNode(tagName);
+          if(tagName !== tagExp && shouldBuildAttributesMap){
+            childNode.attrsMap = buildAttributesMap(tagExp, options);
+          }
           tagsNodeStack.push(currentNode);
           currentNode.addChild(childNode);
         }else{//opening tag
