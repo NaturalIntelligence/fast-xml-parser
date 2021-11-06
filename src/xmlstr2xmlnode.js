@@ -37,11 +37,11 @@ const defaultOptions = {
     hex: true,
     leadingZeros: true
   },
-  tagValueProcessor: function(tagName, a) {
-    return a;
+  tagValueProcessor: function(tagName, val) {
+    return val;
   },
-  attrValueProcessor: function(a, attrName) {
-    return a;
+  attrValueProcessor: function(attrName, val) {
+    return val;
   },
   stopNodes: [],
   alwaysCreateTextNode: false,
