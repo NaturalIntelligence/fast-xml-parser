@@ -294,7 +294,7 @@ const getTraversalObj = function(xmlData, options) {
             childNode.attrsMap = buildAttributesMap(tagExp, jPath , options);
           }
           jPath = jPath.substr(0, jPath.lastIndexOf("."));
-          tagsNodeStack.push(currentNode);
+          // tagsNodeStack.push(currentNode);
           currentNode.addChild(childNode);
         }else{//opening tag
           
