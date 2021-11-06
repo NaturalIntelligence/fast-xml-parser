@@ -95,7 +95,7 @@ function compress(arr, options, jPath){
 
       if(tagObj.attributes){
         assignAttributes( val, tagObj.attributes, newJpath, options);
-      }else if(Object.keys(val).length === 1 && val[options.textNodeName] && !options.alwaysCreateTextNode){
+      }else if(Object.keys(val).length === 1 && val[options.textNodeName] !== undefined && !options.alwaysCreateTextNode){
         val = val[options.textNodeName];
       }else if(Object.keys(val).length === 0){
         if(options.alwaysCreateTextNode) val[options.textNodeName] = "";
