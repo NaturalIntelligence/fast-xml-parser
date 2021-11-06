@@ -32,7 +32,6 @@ const defaultOptions = {
   parseAttributeValue: false,
   trimValues: true, //Trim string values of tag and attributes
   cdataTagName: false,
-  cdataPositionChar: '\\c',
   numParseOptions: {
     hex: true,
     leadingZeros: true
@@ -52,21 +51,19 @@ const defaultOptions = {
 exports.defaultOptions = defaultOptions;
 
 const props = [
-  'attributeNamePrefix',
-  'attrNodeName',
-  'textNodeName',
-  'ignoreAttributes',
-  'ignoreNameSpace',
-  'allowBooleanAttributes',
-  'parseNodeValue',
-  'parseAttributeValue',
-  'trimValues',
-  'cdataTagName',
-  'cdataPositionChar',
-  'tagValueProcessor',
-  'attrValueProcessor',
-  'parseTrueNumberOnly',
-  'numParseOptions',
+  'attributeNamePrefix', //done
+  'attrNodeName', //done
+  'textNodeName', //done
+  'ignoreAttributes', //done
+  'ignoreNameSpace', //done
+  'allowBooleanAttributes', //done
+  'parseNodeValue', //done
+  'parseAttributeValue', //done
+  'trimValues', //done
+  'cdataTagName',//done
+  'tagValueProcessor',//done
+  'attrValueProcessor',//done
+  'numParseOptions', //done
   'stopNodes', //done
   'alwaysCreateTextNode', //done
   'isArray', //done
@@ -74,12 +71,11 @@ const props = [
 exports.props = props;
 
 /**
- * Trim
  * @param {string} val
  * @param {object} options
  */
 function parseValue(val, options, tagName, jPath) {
-  if (val) {
+  if (val !== undefined) {
     if (options.trimValues) {
       val = val.trim();
     }
@@ -209,7 +205,7 @@ const getTraversalObj = function(xmlData, options) {
         
         if(currentNode){
           textData = parseValue(textData, options, currentNode.tagname, jPath)
-          if(textData) currentNode.add(options.textNodeName, textData);
+          if(textData !== undefined &&  textData !== "") currentNode.add(options.textNodeName, textData);
           textData = "";
         }
 
@@ -242,7 +238,7 @@ const getTraversalObj = function(xmlData, options) {
 
         if(textData){ //store previously collected data as textNode
           textData = parseValue(textData, options, currentNode.tagname, jPath);
-          if(textData) currentNode.add(options.textNodeName, textData);
+          if(textData !== undefined &&  textData !== "") currentNode.add(options.textNodeName, textData);
           textData = "";
         }
 
@@ -279,7 +275,7 @@ const getTraversalObj = function(xmlData, options) {
         if (currentNode && textData) {
           if(currentNode.tagname !== '!xml'){
             textData = parseValue(textData, options, currentNode.tagname, jPath );
-            if(textData) currentNode.add(options.textNodeName, textData);
+            if(textData !== undefined &&  textData !== "") currentNode.add(options.textNodeName, textData);
             textData = "";
           }
         }

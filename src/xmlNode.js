@@ -11,7 +11,7 @@ class XmlNode{
     this.child.push( {[key]: val });
   }
   addChild(node) {
-    if(Object.keys(node.attrsMap).length > 0){
+    if(node.attrsMap && Object.keys(node.attrsMap).length > 0){
       this.child.push( { [node.tagname]: node.child, attributes: node.attrsMap });
     }else{
       this.child.push( { [node.tagname]: node.child });
