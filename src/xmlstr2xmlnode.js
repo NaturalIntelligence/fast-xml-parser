@@ -74,9 +74,9 @@ exports.props = props;
  * @param {string} val
  * @param {object} options
  */
-function parseValue(val, options, tagName, jPath) {
+function parseValue(val, options, tagName, jPath, dontTrim) {
   if (val !== undefined) {
-    if (options.trimValues) {
+    if (options.trimValues && !dontTrim) {
       val = val.trim();
     }
     if(val.length > 0){
@@ -242,10 +242,15 @@ const getTraversalObj = function(xmlData, options) {
           textData = "";
         }
 
+        //cdata should be set even if it is 0 length string
         if(options.cdataTagName){
-          currentNode.add(options.cdataTagName, [ { [options.textNodeName] : parseValue(tagExp, options, options.cdataTagName, jPath + "." + options.cdataTagName) } ]);
+          let val = parseValue(tagExp, options, options.cdataTagName, jPath + "." + options.cdataTagName, true);
+          if(!val) val = "";
+          currentNode.add(options.cdataTagName, [ { [options.textNodeName] : val } ]);
         }else{
-          currentNode.add(options.textNodeName, parseValue(tagExp, options, currentNode.tagname, jPath));
+          let val = parseValue(tagExp, options, currentNode.tagname, jPath, true);
+          if(!val) val = "";
+          currentNode.add(options.textNodeName, val);
         }
         
         i = closeIndex + 2;
