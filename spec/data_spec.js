@@ -245,7 +245,7 @@ describe("XMLParser", function() {
         const result = parser.parse(xmlData, {
             ignoreAttributes:       false,
             allowBooleanAttributes: true,
-            attrNodeName:"$",
+            attributesGroupName:"$",
             attributeNamePrefix : "" //TODO attr node prefix should not set when they're grouped
         });
         //console.log(JSON.stringify(result,null,4));

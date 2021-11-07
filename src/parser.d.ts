@@ -1,6 +1,6 @@
 type X2jOptions = {
   attributeNamePrefix: string;
-  attrNodeName: false | string;
+  attributesGroupName: false | string;
   textNodeName: string;
   ignoreAttributes: boolean;
   ignoreNameSpace: boolean;
@@ -30,7 +30,7 @@ type validationOptions = {
 type validationOptionsOptional = Partial<validationOptions>;
 type J2xOptions = {
   attributeNamePrefix: string;
-  attrNodeName: false | string;
+  attributesGroupName: false | string;
   textNodeName: string;
   ignoreAttributes: boolean;
   cdataTagName: false | string;

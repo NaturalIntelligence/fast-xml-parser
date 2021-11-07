@@ -22,7 +22,7 @@ if (!Number.parseFloat && window.parseFloat) {
 
 const defaultOptions = {
   attributeNamePrefix: '@_',
-  attrNodeName: false,
+  attributesGroupName: false,
   textNodeName: '#text',
   ignoreAttributes: true,
   ignoreNameSpace: false,
@@ -51,22 +51,22 @@ const defaultOptions = {
 exports.defaultOptions = defaultOptions;
 
 const props = [
-  'attributeNamePrefix', //done
-  'attrNodeName', //done
-  'textNodeName', //done
-  'ignoreAttributes', //done
-  'ignoreNameSpace', //done
-  'allowBooleanAttributes', //done
-  'parseNodeValue', //done
-  'parseAttributeValue', //done
-  'trimValues', //done
-  'cdataTagName',//done
-  'tagValueProcessor',//done
-  'attrValueProcessor',//done
-  'numParseOptions', //done
-  'stopNodes', //done
-  'alwaysCreateTextNode', //done
-  'isArray', //done
+  'attributeNamePrefix',
+  'attributesGroupName',
+  'textNodeName',
+  'ignoreAttributes',
+  'ignoreNameSpace',
+  'allowBooleanAttributes',
+  'parseNodeValue',
+  'parseAttributeValue',
+  'trimValues',
+  'cdataTagName',
+  'tagValueProcessor',
+  'attrValueProcessor',
+  'numParseOptions',
+  'stopNodes',
+  'alwaysCreateTextNode',
+  'isArray',
 ];
 exports.props = props;
 
@@ -169,9 +169,9 @@ function buildAttributesMap(attrStr, jPath, options) {
     if (!Object.keys(attrs).length) {
       return;
     }
-    if (options.attrNodeName) {
+    if (options.attributesGroupName) {
       const attrCollection = {};
-      attrCollection[options.attrNodeName] = attrs;
+      attrCollection[options.attributesGroupName] = attrs;
       return attrCollection;
     }
     return attrs;

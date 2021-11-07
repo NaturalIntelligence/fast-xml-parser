@@ -494,7 +494,7 @@ describe("XMLParser", function() {
 
         const result = parser.parse(xmlData, {
             attributeNamePrefix: "",
-            attrNodeName:        "$",
+            attributesGroupName:        "$",
             ignoreNameSpace:     true,
             ignoreAttributes:    false
         });
