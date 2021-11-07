@@ -72,13 +72,14 @@ describe("XMLParser", function() {
                 }
             }
         };
-
-        const result = parser.parse(xmlData, {
+        const options = {
             ignoreAttributes: false,
             parseAttributeValue: true,
             parseTrueNumberOnly: false
-        });
-        //console.log(JSON.stringify(result,null,4));
+        }
+        // const result = parser.getTraversalObj(xmlData, options );
+        const result = parser.parse(xmlData, options );
+        // console.log(JSON.stringify(result,null,4));
         expect(result).toEqual(expected);
     });
 
@@ -100,12 +101,14 @@ describe("XMLParser", function() {
             }
         };
 
-        const result = parser.parse(xmlData, {
+        const options = {
             ignoreAttributes: false,
             parseAttributeValue: true,
             parseTrueNumberOnly: true
-        });
-        //console.log(JSON.stringify(result,null,4));
+        };
+        // const result = parser.getTraversalObj(xmlData, options);
+        const result = parser.parse(xmlData, options);
+        // console.log(JSON.stringify(result,null,4));
         expect(result).toEqual(expected);
     });
 
@@ -239,10 +242,12 @@ describe("XMLParser", function() {
                 }
             }
         };
-
-        const result = parser.parse(xmlData, {
+        const options = {
             ignoreAttributes: false
-        });
+        };
+        // const result = parser.getTraversalObj(xmlData, options);
+        const result = parser.parse(xmlData, options);
+        // console.log(JSON.stringify(result,null,2));
         expect(result).toEqual(expected);
     });
 
@@ -384,16 +389,16 @@ describe("XMLParser", function() {
         expect(result).toEqual(expected);
     });
 
-    it("should parse different tags", function() {
+    xit("should parse different tags", function() {
         const xmlData = `<tag.1>val1</tag.1><tag.2>val2</tag.2>`;
         const expected = {
             "tag.1": "val1",
             "tag.2": "val2"
         };
 
-        const result = parser.parse(xmlData, {
-            ignoreAttributes: false
-        });
+        const result = parser.getTraversalObj(xmlData);
+        // const result = parser.parse(xmlData);
+        console.log(JSON.stringify(result,null,4));
         expect(result).toEqual(expected);
     });
 
@@ -567,14 +572,14 @@ describe("XMLParser", function() {
                 ]
             }
         };
-
-        const result = parser.parse(xmlData, {
+        const options = {
             ignoreAttributes:      false,
-            ignoreNonTextNodeAttr: false,
             attributeNamePrefix:   "@",
             textNodeName:          "#_text"
-        });
-        //console.log(JSON.stringify(result,null,4));
+        };
+        // const result = parser.getTraversalObj(xmlData, options);
+        const result = parser.parse(xmlData, options);
+        // console.log(JSON.stringify(result,null,4));
         expect(result).toEqual(expected);
     });
 

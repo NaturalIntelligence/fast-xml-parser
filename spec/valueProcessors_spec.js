@@ -14,7 +14,7 @@ describe("XMLParser", function() {
         const result = parser.parse(xmlData, {
             parseNodeValue: false,
             decodeHTMLchar: true,
-            tagValueProcessor : a => he.decode(a)
+            tagValueProcessor : (name,a) => he.decode(a)
         });
         //console.log(JSON.stringify(result,null,4));
         expect(result).toEqual(expected);
@@ -35,7 +35,7 @@ describe("XMLParser", function() {
             ignoreAttributes:    false,
             parseAttributeValue: true,
             decodeHTMLchar:      true,
-            attrValueProcessor: a => he.decode(a, {isAttributeValue: true})
+            attrValueProcessor: (name, a) => he.decode(a, {isAttributeValue: true})
         });
 
         //console.log(JSON.stringify(result,null,4));
@@ -69,7 +69,7 @@ describe("XMLParser", function() {
 
         const resultMap = {}
         const result = parser.parse(xmlData, {
-            tagValueProcessor: (val, tagName) => {
+            tagValueProcessor: (tagName, val) => {
                 if(resultMap[tagName]){
                     resultMap[tagName].push(val)
                 }else{
@@ -78,14 +78,10 @@ describe("XMLParser", function() {
                 return val;
             }
         });
-        //console.log(JSON.stringify(result,null,4));
-        //console.log(JSON.stringify(resultMap,null,4));
+        // console.log(JSON.stringify(result,null,4));
+        // console.log(JSON.stringify(resultMap,null,4));
         expect(result).toEqual(expected);
         expect(resultMap).toEqual({
-            "any_name": [
-                "",
-                ""
-            ],
             "person": [
                 "start",
                 "middle",
@@ -100,7 +96,7 @@ describe("XMLParser", function() {
         });
     });
 
-    it("result should have no value if tag processor returns nothing", function() {
+    it("result should not change/parse values if tag processor returns nothing", function() {
         const xmlData = `<?xml version='1.0'?>
         <any_name>
             <person>
@@ -115,17 +111,18 @@ describe("XMLParser", function() {
         const expected = {
             "any_name": {
                 "person": {
-                    "name1": "",
-                    "name2": ""
+                    "name1": "Jack 1",
+                    "name2": "35",
+                    "#text": "startmiddleend"
                 }
             }
-        };
+        }
+        
 
         const result = parser.parse(xmlData, {
-            tagValueProcessor: (val, tagName) => {
-            }
+            tagValueProcessor: (tagName, val) => {}
         });
-        //console.log(JSON.stringify(result,null,4));
+        // console.log(JSON.stringify(result,null,4));
         expect(result).toEqual(expected);
     });
 
@@ -140,9 +137,7 @@ describe("XMLParser", function() {
 
         const expected = {
             "any_name": {
-                "#text" : "fxpfxp",
                 "person": {
-                    "#text" : "fxpfxpfxp",
                     "name1": "fxp",
                     "name2": "fxp"
                 }
@@ -150,11 +145,11 @@ describe("XMLParser", function() {
         };
 
         const result = parser.parse(xmlData, {
-            tagValueProcessor: (val, tagName) => {
+            tagValueProcessor: (tagName, val) => {
                 return "fxp"
             }
         });
-        //console.log(JSON.stringify(result,null,4));
+        // console.log(JSON.stringify(result,null,4));
         expect(result).toEqual(expected);
     });
 
@@ -175,11 +170,11 @@ describe("XMLParser", function() {
             ignoreAttributes:    false,
             parseAttributeValue: true,
             decodeHTMLchar:      true,
-            attrValueProcessor: (val, attrName) => {
-                if(resultMap[attrName]){
-                    resultMap[attrName].push(val)
+            attrValueProcessor: (name, val) => {
+                if(resultMap[name]){
+                    resultMap[name].push(val)
                 }else{
-                    resultMap[attrName] = [val];
+                    resultMap[name] = [val];
                 }
                 return val;
             }

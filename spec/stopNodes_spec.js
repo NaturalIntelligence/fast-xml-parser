@@ -18,10 +18,10 @@ describe("XMLParser", function() {
             attributeNamePrefix: "",
             ignoreAttributes:    false,
             parseAttributeValue: true,
-            stopNodes: ["fix1"]
+            stopNodes: ["issue.fix1"]
         });
 
-        //console.log(JSON.stringify(result,null,4));
+        // console.log(JSON.stringify(result,null,4));
         expect(result).toEqual(expected);
 
         result = validator.validate(xmlData);
@@ -45,7 +45,7 @@ describe("XMLParser", function() {
             attributeNamePrefix: "",
             ignoreAttributes:    false,
             parseAttributeValue: true,
-            stopNodes: ["fix1", "fix2"]
+            stopNodes: ["issue.fix1", "issue.fix2"]
         });
 
         //console.log(JSON.stringify(result,null,4));
@@ -71,7 +71,7 @@ describe("XMLParser", function() {
       attributeNamePrefix: "",
       ignoreAttributes:    false,
       parseAttributeValue: true,
-      stopNodes: ["fix1", "fix2"]
+      stopNodes: ["issue.fix1", "issue.fix2"]
     });
 
     //console.log(JSON.stringify(result,null,4));
@@ -94,7 +94,7 @@ describe("XMLParser", function() {
             attributeNamePrefix: "",
             ignoreAttributes:    false,
             parseAttributeValue: true,
-            stopNodes: ["fix1", "fix2"]
+            stopNodes: ["issue.fix1", "issue.fix2"]
         });
 
         //console.log(JSON.stringify(result,null,4));
@@ -117,7 +117,7 @@ describe("XMLParser", function() {
       attributeNamePrefix: "",
       ignoreAttributes:    false,
       parseAttributeValue: true,
-      stopNodes: ["fix1", "fix2"]
+      stopNodes: ["issue.fix1", "issue.fix2"]
     });
 
     //console.log(JSON.stringify(result,null,4));
@@ -152,7 +152,7 @@ describe("XMLParser", function() {
             attributeNamePrefix:    "",
             ignoreAttributes:       false,
             parseAttributeValue:    true,
-            stopNodes: ["fix1", "fix2"]
+            stopNodes: ["issue.fix1", "issue.fix2"]
         });
 
         //console.log(JSON.stringify(result,null,4));

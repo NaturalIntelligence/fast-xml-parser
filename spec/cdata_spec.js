@@ -90,10 +90,12 @@ patronymic</person></root>`;
         let result = parser.parse(xmlData, {
             ignoreAttributes: false
         });
-
+        
+        // console.log(JSON.stringify(result,null,4));
         expect(result).toEqual(expected);
 
         result = validator.validate(xmlData);
+
         expect(result).toBe(true);
     });
 
@@ -205,11 +207,10 @@ patronymic</person></root>`;
             }
         };
 
-        const result = parser.parse(xmlData, {
-            ignoreAttributes: false
-        });
+        // const result = parser.getTraversalObj(xmlData);
+        const result = parser.parse(xmlData);
 
-        //console.log(JSON.stringify(result,null,4));
+        // console.log(JSON.stringify(result,null,4));
         expect(result).toEqual(expected);
     });
 
@@ -228,11 +229,11 @@ patronymic</person></root>`;
                 },
                 "b": "text",
                 "c": {
-                    "#text":   "\\cafter",
+                    "#text":   "after",
                     "__cdata": "text"
                 },
                 "d": {
-                    "#text":   "23\\c24",
+                    "#text":   "2324",
                     "__cdata": ""
                 }
             }
@@ -243,7 +244,7 @@ patronymic</person></root>`;
             cdataTagName:     "__cdata"
         });
 
-        //console.log(JSON.stringify(result,null,4));
+        // console.log(JSON.stringify(result,null,4));
         expect(result).toEqual(expected);
     });
 
@@ -307,7 +308,7 @@ patronymic</person></root>`;
             ignoreAttributes:       false,
             allowBooleanAttributes: true
         });
-        //console.log(JSON.stringify(result,null,4));
+        // console.log(JSON.stringify(result,null,4));
         expect(result).toEqual(expected);
     });
 });

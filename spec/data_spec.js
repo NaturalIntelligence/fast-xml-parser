@@ -73,7 +73,7 @@ describe("XMLParser", function() {
             allowBooleanAttributes: true
         });
 
-        //console.log(JSON.stringify(result,null,4));
+        // console.log(JSON.stringify(result,null,4));
         expect(result).toEqual(expected);
     });
     
@@ -179,21 +179,27 @@ describe("XMLParser", function() {
     });
 
     it("should parse XML when namespaced ignored", function() {
-        const xmlData = `<a:b>c</a:b><a:d/><a:e atr="sasa" boolean>`;
+        const xmlData = `<root><a:b>c</a:b><a:d/><a:e atr="sasa" boolean></root>`;
         const expected = {
-            "b" : "c",
-            "d" : "",
-            "e" : {
-                "@_atr": "sasa",
-                "@_boolean": true,
+            "root":{
+                "b" : "c",
+                "d" : "",
+                "e" : {
+                    "@_atr": "sasa",
+                    "@_boolean": true,
+                }
             }
         };
 
-        const result = parser.parse(xmlData, {
+        const options = {
             ignoreAttributes:       false,
             allowBooleanAttributes: true,
             ignoreNameSpace:        true,
-        });
+        };
+        // const result = parser.getTraversalObj(xmlData, options);
+        const result = parser.parse(xmlData, options);
+        
+        // console.log(JSON.stringify(result,null,4));
         expect(result).toEqual(expected);
     });
 
