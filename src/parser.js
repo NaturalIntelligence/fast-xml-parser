@@ -16,7 +16,7 @@ exports.parse = function(xmlData, givenOptions = {}, validationOption) {
     }
   }
   if(givenOptions.parseTrueNumberOnly 
-    && givenOptions.parseNodeValue !== false
+    && givenOptions.parseTagValue !== false
     && !givenOptions.numParseOptions){
     
       givenOptions.numParseOptions = {

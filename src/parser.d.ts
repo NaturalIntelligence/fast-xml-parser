@@ -3,9 +3,9 @@ type X2jOptions = {
   attributesGroupName: false | string;
   textNodeName: string;
   ignoreAttributes: boolean;
-  ignoreNameSpace: boolean;
+  removeNSPrefix: boolean;
   allowBooleanAttributes: boolean;
-  parseNodeValue: boolean;
+  parseTagValue: boolean;
   parseAttributeValue: boolean;
   trimValues: boolean;
   cdataTagName: false | string;

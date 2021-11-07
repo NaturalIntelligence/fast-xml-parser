@@ -144,7 +144,7 @@ describe("XMLParser", function() {
         let result = parser.parse(xmlData, {
             attributeNamePrefix: "",
             ignoreAttributes:    false,
-            ignoreNameSpace:     true
+            removeNSPrefix:     true
         });
 
         //console.log(JSON.stringify(result,null,4));

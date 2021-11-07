@@ -126,7 +126,7 @@ describe("XMLParser", function() {
         };
 
         const result = parser.parse(xmlData, {
-            parseNodeValue: false
+            parseTagValue: false
         });
         expect(result).toEqual(expected);
     });
@@ -164,7 +164,7 @@ describe("XMLParser", function() {
         };
 
         const result = parser.parse(xmlData, {
-            parseNodeValue: true
+            parseTagValue: true
         });
         expect(result).toEqual(expected);
     });
@@ -214,7 +214,7 @@ describe("XMLParser", function() {
         };
 
         const result = parser.parse(xmlData, {
-            ignoreNameSpace:  true,
+            removeNSPrefix:  true,
             ignoreAttributes: false
         });
 
@@ -495,7 +495,7 @@ describe("XMLParser", function() {
         const result = parser.parse(xmlData, {
             attributeNamePrefix: "",
             attributesGroupName:        "$",
-            ignoreNameSpace:     true,
+            removeNSPrefix:     true,
             ignoreAttributes:    false
         });
 
@@ -688,7 +688,7 @@ describe("XMLParser", function() {
             }
         };
 
-        const result = parser.parse(xmlData, {ignoreNameSpace: true});
+        const result = parser.parse(xmlData, {removeNSPrefix: true});
         expect(result).toEqual(expected);
     });
 
@@ -698,7 +698,7 @@ describe("XMLParser", function() {
             "rootNode": "       123        "
         };
         const result = parser.parse(xmlData, {
-            parseNodeValue: false,
+            parseTagValue: false,
             trimValues:     false
         });
         //console.log(JSON.stringify(result,null,4));
@@ -711,7 +711,7 @@ describe("XMLParser", function() {
             "rootNode": "123"
         };
         const result = parser.parse(xmlData, {
-            parseNodeValue: false
+            parseTagValue: false
         });
         //console.log(JSON.stringify(result,null,4));
         expect(result).toEqual(expected);
@@ -723,7 +723,7 @@ describe("XMLParser", function() {
             "rootNode": "foo&ampbar&apos;"
         };
         const result = parser.parse(xmlData, {
-            parseNodeValue: false
+            parseTagValue: false
         });
         //console.log(JSON.stringify(result,null,4));
         expect(result).toEqual(expected);
@@ -744,7 +744,7 @@ describe("XMLParser", function() {
             foo: "Hello World."
         };
         const result = parser.parse(xmlData, {
-            //parseNodeValue: false,
+            //parseTagValue: false,
             //trimValues: false
         });
         //console.log(JSON.stringify(result,null,4));

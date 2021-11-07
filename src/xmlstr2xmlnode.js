@@ -25,10 +25,10 @@ const defaultOptions = {
   attributesGroupName: false,
   textNodeName: '#text',
   ignoreAttributes: true,
-  ignoreNameSpace: false,
+  removeNSPrefix: false,
   allowBooleanAttributes: false, //a tag can have attributes without any value
   //ignoreRootElement : false,
-  parseNodeValue: true,
+  parseTagValue: true,
   parseAttributeValue: false,
   trimValues: true, //Trim string values of tag and attributes
   cdataTagName: false,
@@ -53,11 +53,11 @@ exports.defaultOptions = defaultOptions;
 const props = [
   'attributeNamePrefix',
   'attributesGroupName',
-  'textNodeName',
+  'textNodeName', //TODO
   'ignoreAttributes',
-  'ignoreNameSpace',
+  'removeNSPrefix',
   'allowBooleanAttributes',
-  'parseNodeValue',
+  'parseTagValue',
   'parseAttributeValue',
   'trimValues',
   'cdataTagName',
@@ -88,14 +88,14 @@ function parseValue(val, options, tagName, jPath, dontTrim) {
         //overwrite
         return newval;
       }else{
-        return _parseValue(val, options.parseNodeValue, options.numParseOptions);
+        return _parseValue(val, options.parseTagValue, options.numParseOptions);
       }
     }
   }
 }
 
 function resolveNameSpace(tagname, options) {
-  if (options.ignoreNameSpace) {
+  if (options.removeNSPrefix) {
     const tags = tagname.split(':');
     const prefix = tagname.charAt(0) === '/' ? '/' : '';
     if (tags[0] === 'xmlns') {
@@ -196,7 +196,7 @@ const getTraversalObj = function(xmlData, options) {
         const closeIndex = findClosingIndex(xmlData, ">", i, "Closing Tag is not closed.")
         let tagName = xmlData.substring(i+2,closeIndex).trim();
 
-        if(options.ignoreNameSpace){
+        if(options.removeNSPrefix){
           const colonIndex = tagName.indexOf(":");
           if(colonIndex !== -1){
             tagName = tagName.substr(colonIndex+1);
@@ -266,7 +266,7 @@ const getTraversalObj = function(xmlData, options) {
           tagExp = tagExp.substr(separatorIndex + 1);
         }
 
-        if(options.ignoreNameSpace){
+        if(options.removeNSPrefix){
           const colonIndex = tagName.indexOf(":");
           if(colonIndex !== -1){
             tagName = tagName.substr(colonIndex+1);

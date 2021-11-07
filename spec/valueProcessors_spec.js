@@ -12,7 +12,7 @@ describe("XMLParser", function() {
             "rootNode": "foo&bar'"
         };
         const result = parser.parse(xmlData, {
-            parseNodeValue: false,
+            parseTagValue: false,
             decodeHTMLchar: true,
             tagValueProcessor : (name,a) => he.decode(a)
         });

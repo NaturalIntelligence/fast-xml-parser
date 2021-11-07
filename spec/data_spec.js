@@ -194,7 +194,7 @@ describe("XMLParser", function() {
         const options = {
             ignoreAttributes:       false,
             allowBooleanAttributes: true,
-            ignoreNameSpace:        true,
+            removeNSPrefix:        true,
         };
         // const result = parser.getTraversalObj(xmlData, options);
         const result = parser.parse(xmlData, options);
