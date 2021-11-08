@@ -2,10 +2,10 @@
 
 const fs = require("fs");
 const path = require("path");
-const validator = require("../src/validator");
+const {XMLParser, XMLValidator} = require("../src/fxp");
 
 function validate(xmlData, error, line = 1, col) {
-    const result = validator.validate(xmlData);
+    const result = XMLValidator.validate(xmlData);
     if (error) {
 
         const keys = Object.keys(error);
@@ -32,7 +32,7 @@ function validateFile(fileName, ...args) {
     validate(fs.readFileSync(fileNamePath).toString(), ...args);
 }
 
-describe("XMLParser", function () {
+describe("XML Validator", function () {
     it("should validate simple xml string", function () {
         validate("<rootNode></rootNode>");
         validate(`<rootNode></rootNode     >`);

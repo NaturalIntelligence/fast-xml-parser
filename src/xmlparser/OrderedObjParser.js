@@ -1,7 +1,6 @@
 'use strict';
 
-const util = require('./util');
-const buildOptions = require('./util').buildOptions;
+const util = require('../util');
 const xmlNode = require('./xmlNode');
 const toNumber = require("strnum");
 
@@ -20,55 +19,6 @@ if (!Number.parseFloat && window.parseFloat) {
   Number.parseFloat = window.parseFloat;
 }
 
-const defaultOptions = {
-  attributeNamePrefix: '@_',
-  attributesGroupName: false,
-  textNodeName: '#text',
-  ignoreAttributes: true,
-  removeNSPrefix: false,
-  allowBooleanAttributes: false, //a tag can have attributes without any value
-  //ignoreRootElement : false,
-  parseTagValue: true,
-  parseAttributeValue: false,
-  trimValues: true, //Trim string values of tag and attributes
-  cdataTagName: false,
-  numParseOptions: {
-    hex: true,
-    leadingZeros: true
-  },
-  tagValueProcessor: function(tagName, val) {
-    return val;
-  },
-  attrValueProcessor: function(attrName, val) {
-    return val;
-  },
-  stopNodes: [],
-  alwaysCreateTextNode: false,
-  //decodeStrict: false,
-  isArray: () => false
-};
-
-exports.defaultOptions = defaultOptions;
-
-const props = [
-  'attributeNamePrefix',
-  'attributesGroupName',
-  'textNodeName', //TODO
-  'ignoreAttributes',
-  'removeNSPrefix',
-  'allowBooleanAttributes',
-  'parseTagValue',
-  'parseAttributeValue',
-  'trimValues',
-  'cdataTagName',
-  'tagValueProcessor',
-  'attrValueProcessor',
-  'numParseOptions',
-  'stopNodes',
-  'alwaysCreateTextNode',
-  'isArray',
-];
-exports.props = props;
 
 /**
  * @param {string} val
@@ -88,7 +38,7 @@ function parseValue(val, options, tagName, jPath, dontTrim) {
         //overwrite
         return newval;
       }else{
-        return _parseValue(val, options.parseTagValue, options.numParseOptions);
+        return _parseValue(val, options.parseTagValue, options.numberParseOptions);
       }
     }
   }
@@ -158,7 +108,7 @@ function buildAttributesMap(attrStr, jPath, options) {
             attrs[aName] = _parseValue(
               oldVal,
               options.parseAttributeValue,
-              options.numParseOptions
+              options.numberParseOptions
             );
           }
         } else if (options.allowBooleanAttributes) {
@@ -178,9 +128,8 @@ function buildAttributesMap(attrStr, jPath, options) {
   }
 }
 
-const getTraversalObj = function(xmlData, options) {
+const parseToOrderedJsObj = function(xmlData, options) {
   xmlData = xmlData.replace(/\r\n?/g, "\n");
-  options = buildOptions(options, defaultOptions, props);
   const xmlObj = new xmlNode('!xml');
   let currentNode = xmlObj;
   let textData = "";
@@ -386,4 +335,4 @@ function findClosingIndex(xmlData, str, i, errMsg){
   }
 }
 
-exports.getTraversalObj = getTraversalObj;
+exports.parseToOrderedJsObj = parseToOrderedJsObj;

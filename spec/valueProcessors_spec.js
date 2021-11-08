@@ -1,7 +1,6 @@
 "use strict";
 
-const parser = require("../src/parser");
-const validator = require("../src/validator");
+const {XMLParser, XMLValidator} = require("../src/fxp");
 const he = require("he");
 
 describe("XMLParser", function() {
@@ -11,11 +10,14 @@ describe("XMLParser", function() {
         const expected = {
             "rootNode": "foo&bar'"
         };
-        const result = parser.parse(xmlData, {
+
+        const options = {
             parseTagValue: false,
             decodeHTMLchar: true,
             tagValueProcessor : (name,a) => he.decode(a)
-        });
+        };
+        const parser = new XMLParser(options);
+        let result = parser.parse(xmlData);
         //console.log(JSON.stringify(result,null,4));
         expect(result).toEqual(expected);
     });
@@ -30,18 +32,19 @@ describe("XMLParser", function() {
             }
         };
 
-        let result = parser.parse(xmlData, {
+        const options = {
             attributeNamePrefix: "",
             ignoreAttributes:    false,
             parseAttributeValue: true,
             decodeHTMLchar:      true,
             attrValueProcessor: (name, a) => he.decode(a, {isAttributeValue: true})
-        });
-
+        };
+        const parser = new XMLParser(options);
+        let result = parser.parse(xmlData);
         //console.log(JSON.stringify(result,null,4));
         expect(result).toEqual(expected);
 
-        result = validator.validate(xmlData);
+        result = XMLValidator.validate(xmlData);
         expect(result).toBe(true);
     });
 
@@ -68,7 +71,7 @@ describe("XMLParser", function() {
         };
 
         const resultMap = {}
-        const result = parser.parse(xmlData, {
+        const options = {
             tagValueProcessor: (tagName, val) => {
                 if(resultMap[tagName]){
                     resultMap[tagName].push(val)
@@ -77,7 +80,9 @@ describe("XMLParser", function() {
                 }
                 return val;
             }
-        });
+        };
+        const parser = new XMLParser(options);
+        let result = parser.parse(xmlData);
         // console.log(JSON.stringify(result,null,4));
         // console.log(JSON.stringify(resultMap,null,4));
         expect(result).toEqual(expected);
@@ -118,10 +123,11 @@ describe("XMLParser", function() {
             }
         }
         
-
-        const result = parser.parse(xmlData, {
-            tagValueProcessor: (tagName, val) => {}
-        });
+        const options = {
+            tagValueProcessor: (tagName, val) => {}          
+        };
+        const parser = new XMLParser(options);
+        let result = parser.parse(xmlData);
         // console.log(JSON.stringify(result,null,4));
         expect(result).toEqual(expected);
     });
@@ -144,11 +150,13 @@ describe("XMLParser", function() {
             }
         };
 
-        const result = parser.parse(xmlData, {
+        const options = {
             tagValueProcessor: (tagName, val) => {
                 return "fxp"
             }
-        });
+        };
+        const parser = new XMLParser(options);
+        let result = parser.parse(xmlData);
         // console.log(JSON.stringify(result,null,4));
         expect(result).toEqual(expected);
     });
@@ -165,7 +173,7 @@ describe("XMLParser", function() {
 
         const resultMap = {}
 
-        let result = parser.parse(xmlData, {
+        const options = {
             attributeNamePrefix: "",
             ignoreAttributes:    false,
             parseAttributeValue: true,
@@ -178,8 +186,9 @@ describe("XMLParser", function() {
                 }
                 return val;
             }
-        });
-
+        };
+        const parser = new XMLParser(options);
+        let result = parser.parse(xmlData);
         //console.log(JSON.stringify(resultMap,null,4));
         expect(result).toEqual(expected);
 

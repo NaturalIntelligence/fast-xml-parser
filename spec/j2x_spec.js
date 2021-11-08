@@ -1,6 +1,6 @@
 "use strict";
 
-const Parser = require("../src/parser").j2xParser;
+const {XMLBuilder} = require("../src/fxp");
 const he = require("he");
 
 describe("XMLParser", function() {
@@ -14,8 +14,8 @@ describe("XMLParser", function() {
                 }
             }
         };
-        const parser = new Parser();
-        const result = parser.parse(jObj);
+        const builder = new XMLBuilder;
+        const result = builder.build(jObj);
         //console.log(result);
         const expected = `<a><b><c>val1</c><d>val2</d></b></a>`;
         expect(result).toEqual(expected);
@@ -30,8 +30,8 @@ describe("XMLParser", function() {
                 }
             }
         };
-        const parser = new Parser();
-        const result = parser.parse(jObj);
+        const builder = new XMLBuilder;
+        const result = builder.build(jObj);
         //console.log(result);
         const expected = `<a><b>val1<d>val2</d></b></a>`;
         expect(result).toEqual(expected);
@@ -46,8 +46,8 @@ describe("XMLParser", function() {
                 ]
             }
         };
-        const parser = new Parser();
-        const result = parser.parse(jObj);
+        const builder = new XMLBuilder;
+        const result = builder.build(jObj);
         const expected = `<a><b>val1</b><b><c>val2</c></b></a>`;
         expect(result).toEqual(expected);
     });
@@ -66,8 +66,8 @@ describe("XMLParser", function() {
                 ]
             }
         };
-        const parser = new Parser();
-        const result = parser.parse(jObj);
+        const builder = new XMLBuilder;
+        const result = builder.build(jObj);
         const expected = "<a><b>val1</b><b><c>val2</c><e>val3</e></b></a>";
         expect(result).toEqual(expected);
     });
@@ -79,8 +79,8 @@ describe("XMLParser", function() {
                 "@_c": "val2"
             }
         };
-        const parser = new Parser();
-        const result = parser.parse(jObj);
+        const builder = new XMLBuilder;
+        const result = builder.build(jObj);
         //console.log(result);
         const expected = `<a><@_b>val1</@_b><@_c>val2</@_c></a>`;
         expect(result).toEqual(expected);
@@ -97,11 +97,11 @@ describe("XMLParser", function() {
                 "@_c":   "val2"
             }
         };
-        const parser = new Parser({
+        const builder = new XMLBuilder({
                                       ignoreAttributes:    false,
                                       attributeNamePrefix: "@_"
                                   });
-        const result = parser.parse(jObj);
+        const result = builder.build(jObj);
         //console.log(result);
         const expected = `<a b="val1" c="val2">textvalue<tag><k>34</k></tag></a>`;
         expect(result).toEqual(expected);
@@ -120,12 +120,12 @@ describe("XMLParser", function() {
                 }
             }
         };
-        const parser = new Parser({
+        const builder = new XMLBuilder({
                                       ignoreAttributes:    false,
                                       attributeNamePrefix: "@_",
                                       attrNodeName:        "@"
                                   });
-        const result = parser.parse(jObj);
+        const result = builder.build(jObj);
         //console.log(result);
         const expected = `<a b="val1" c="val2">textvalue<tag><k>34</k></tag></a>`;
         expect(result).toEqual(expected);
@@ -144,10 +144,10 @@ describe("XMLParser", function() {
                 }
             }
         };
-        const parser = new Parser({
+        const builder = new XMLBuilder({
                                       ignoreAttributes: false
                                   });
-        const result = parser.parse(jObj);
+        const result = builder.build(jObj);
         //console.log(result);
         const expected = `<a><@><b>val1</b><c>val2</c></@>textvalue<tag><k>34</k></tag></a>`;
         expect(result).toEqual(expected);
@@ -167,10 +167,10 @@ describe("XMLParser", function() {
                 }
             }
         };
-        const parser = new Parser({
+        const builder = new XMLBuilder({
                                       cdataTagName: "__cdata"
                                   });
-        const result = parser.parse(jObj);
+        const result = builder.build(jObj);
         //console.log(result);
         const expected = `<a><@><b>val1</b><c>val2</c></@>textvalue<![CDATA[this text is from CDATA]]><tag><k>34</k></tag></a>`;
         expect(result).toEqual(expected);
@@ -193,10 +193,10 @@ describe("XMLParser", function() {
                 ]
             }
         };
-        const parser = new Parser({
+        const builder = new XMLBuilder({
                                       cdataTagName: "__cdata"
                                   });
-        const result = parser.parse(jObj);
+        const result = builder.build(jObj);
         //console.log(result);
         const expected = `<a><@><b>val1</b><c>val2</c></@><tag><k>34</k></tag>text<![CDATA[this text is from CDATA]]>value<![CDATA[this is another text]]></a>`;
         expect(result).toEqual(expected);
@@ -218,10 +218,10 @@ describe("XMLParser", function() {
                 ]
             }
         };
-        const parser = new Parser({
+        const builder = new XMLBuilder({
                                       cdataTagName: "__cdata"
                                   });
-        const result = parser.parse(jObj);
+        const result = builder.build(jObj);
         //console.log(result);
         const expected = `<a><@><b>val1</b><c>val2</c></@><tag><k>34</k></tag><![CDATA[this text is from CDATA]]><![CDATA[this is another text]]></a>`;
         expect(result).toEqual(expected);
@@ -245,14 +245,14 @@ describe("XMLParser", function() {
                 ]
             }
         };
-        const parser = new Parser({
+        const builder = new XMLBuilder({
                                       cdataTagName:   "__cdata",
                                       attrNodeName:   "@",
                                       encodeHTMLchar: true,
                                       tagValueProcessor: a=> { a= ''+ a; return he.encode(a, { useNamedReferences: true}) },
                                       attrValueProcessor: a=> he.encode(a, {isAttributeValue: true, useNamedReferences: true})
                                   });
-        const result = parser.parse(jObj);
+        const result = builder.build(jObj);
         //console.log(result);
         const expected = `<a b="val&gt;1" c="val&lt;2"><tag><k>34</k><g>35 g&gt;</g></tag>text<![CDATA[this text is > from CDATA]]>value&gt;<![CDATA[this is another text]]></a>`;
         expect(result).toEqual(expected);
@@ -262,8 +262,8 @@ describe("XMLParser", function() {
         const jObj = {
             a: null
         };
-        const parser = new Parser();
-        const result = parser.parse(jObj);
+        const builder = new XMLBuilder;
+        const result = builder.build(jObj);
         //console.log(result);
         const expected = `<a/>`;
         expect(result).toEqual(expected);
@@ -294,7 +294,7 @@ describe("XMLParser", function() {
                 ]
             }
         };
-        const parser = new Parser({
+        const builder = new XMLBuilder({
                                       cdataTagName:     "__cdata",
                                       attributeNamePrefix: "",
                                       attrNodeName:     "@",
@@ -303,7 +303,7 @@ describe("XMLParser", function() {
                                       tagValueProcessor: a=> { a= ''+ a; return he.encode(a, { useNamedReferences: true}) },
                                       attrValueProcessor: a=> he.encode(a, {isAttributeValue: true, useNamedReferences: true})
                                   });
-        const result = parser.parse(jObj);
+        const result = builder.build(jObj);
         //console.log(result);
         const expected = `<a b="val&gt;1" c="val&lt;2"><notattr>val</notattr><tag><k>34</k><g/><nested b="val&gt;1" c="val&lt;2"/></tag>text<![CDATA[this text is > from CDATA]]>value&gt;<![CDATA[]]></a>`;
         expect(result).toEqual(expected);
@@ -333,7 +333,7 @@ describe("XMLParser", function() {
                 },
             }
         };
-        const parser = new Parser({
+        const builder = new XMLBuilder({
                                       cdataTagName:   "__cdata",
                                       attrNodeName:   "@",
                                       encodeHTMLchar: true,
@@ -341,7 +341,7 @@ describe("XMLParser", function() {
                                       tagValueProcessor: a=> { a= ''+ a; return he.encode(a, { useNamedReferences: true}) },
                                       attrValueProcessor: a=> he.encode(a, {isAttributeValue: true, useNamedReferences: true})
                                   });
-        const result = parser.parse(jObj);
+        const result = builder.build(jObj);
         const expected = `<a b="val&gt;1" c="val&lt;2">
   <tag>
     <k>34</k>
@@ -390,7 +390,7 @@ describe("XMLParser", function() {
           }
       }
     };
-    const parser = new Parser({
+    const builder = new XMLBuilder({
       cdataTagName: "__cdata",
       attrNodeName: "@",
       encodeHTMLchar: true,
@@ -398,7 +398,7 @@ describe("XMLParser", function() {
       tagValueProcessor: a => { a= ''+ a; return he.encode(a, { useNamedReferences: true }) },
       attrValueProcessor: a => he.encode(a, { isAttributeValue: true, useNamedReferences: true })
     });
-    const result = parser.parse(jObj);
+    const result = builder.build(jObj);
     const expected = `<a b="val&gt;1" c="val&lt;2">
   <tag>
     <k>34</k>
@@ -436,7 +436,7 @@ describe("XMLParser", function() {
                 date:"test"
             }
         };
-        const parser = new Parser({
+        const builder = new XMLBuilder({
             attributeNamePrefix: "",
             attrNodeName:        "$",
             textNodeName:        "_",
@@ -447,7 +447,7 @@ describe("XMLParser", function() {
             indentBy:            "\t",
             suppressEmptyNode:    true
         });
-        const result = parser.parse(jObj);
+        const result = builder.build(jObj);
         const expected = '<root><element aaa="aaa" bbb="bbb">1</element><element2 aaa="aaa2" bbb="bbb2"><subelement aaa="sub_aaa"/></element2><date>test</date></root>';
         //console.log(result);
         //console.log(expected);
@@ -471,7 +471,7 @@ describe("XMLParser", function() {
                 date: dateVar
             }
         };
-        const parser = new Parser({
+        const builder = new XMLBuilder({
             attributeNamePrefix: "",
             attrNodeName:        "$",
             textNodeName:        "_",
@@ -485,7 +485,7 @@ describe("XMLParser", function() {
                 return a;
             },
         });
-        const result = parser.parse(jObj);
+        const result = builder.build(jObj);
         const expected = '<root><element><date>'+dateVar.toString()+'</date></element><element2 aaa="aaa2" bbb="bbb2"><subelement aaa="sub_aaa"/></element2><date>'+dateVar.toString()+'</date></root>';
         //console.log(result);
         //console.log(expected);
@@ -514,10 +514,10 @@ describe("XMLParser", function() {
               }
         
         ];
-        const parser = new Parser({
+        const builder = new XMLBuilder({
           rootNodeName: "car"
         });
-        const result = parser.parse(cars);
+        const result = builder.build(cars);
         const expected = '<car><color>purple</color><type>minivan</type><registration>2020-02-03</registration><capacity>7</capacity></car><car><color>orange</color><type>SUV</type><registration>2021-05-17</registration><capacity>4</capacity></car><car><color>green</color><type>coupe</type><registration>2019-11-13</registration><capacity>2</capacity></car>';
         // console.log(result);
         //console.log(expected);

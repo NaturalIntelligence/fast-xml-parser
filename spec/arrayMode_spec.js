@@ -1,6 +1,6 @@
 "use strict";
 
-const parser = require("../src/parser");
+const {XMLParser} = require("../src/fxp");
 
 describe("XMLParser with arrayMode enabled", function () {
 
@@ -69,13 +69,16 @@ describe("XMLParser with arrayMode enabled", function () {
         const alwaysArray = [
             "report.store.inventory.item"
         ];
-        const result = parser.parse(xmlData, {
+        const options = {
             ignoreAttributes: false,
             isArray: (tagName, jpath, isLeafNode) => { 
                 // console.log(tagName, jpath, isLeafNode) 
                 if( alwaysArray.indexOf(jpath) !== -1) return true;
               }
-        });
+        };
+
+        const parser = new XMLParser(options);
+        const result = parser.parse(xmlData);
         // console.log(JSON.stringify(result,null,4));
         expect(result).toEqual(expected);
     });
@@ -114,12 +117,14 @@ describe("XMLParser with arrayMode enabled", function () {
             }
         };
 
-        const result = parser.parse(xmlData, {
+        const options = {
             ignoreAttributes: false,
             isArray: (tagName, jpath, isLeafNode, isAttribute) => { 
                 if(isLeafNode === true && isAttribute !== true) return true;
               }
-        });
+        };
+        const parser = new XMLParser(options);
+        const result = parser.parse(xmlData);
         // console.log(JSON.stringify(result,null,4));
         expect(result).toEqual(expected);
     });
@@ -158,12 +163,14 @@ describe("XMLParser with arrayMode enabled", function () {
             }
         };
 
-        const result = parser.parse(xmlData, {
+        const options = {
             ignoreAttributes: false,
             isArray: (tagName, jpath, isLeafNode, isAttribute) => { 
                 if(isLeafNode === true) return true;
               }
-        });
+        }
+        const parser = new XMLParser(options);
+        const result = parser.parse(xmlData);
         // console.log(JSON.stringify(result,null,4));
         expect(result).toEqual(expected);
     });
@@ -202,13 +209,14 @@ describe("XMLParser with arrayMode enabled", function () {
                 ]
             }
         };
-
-        const result = parser.parse(xmlData, {
+        const options = {
             ignoreAttributes: false,
             isArray: (tagName, jpath, isLeafNode, isAttribute) => { 
                 if(isAttribute === true) return true;
               }
-        });
+        }
+        const parser = new XMLParser(options);
+        const result = parser.parse(xmlData);
         // console.log(JSON.stringify(result,null,4));
         expect(result).toEqual(expected);
     });

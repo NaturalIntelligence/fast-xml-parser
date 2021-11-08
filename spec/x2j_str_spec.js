@@ -1,6 +1,6 @@
 "use strict";
 
-const parser = require("../src/parser");
+const {XMLParser, XMLValidator} = require("../src/fxp");
 
 describe("XMLParser", function() {
 
@@ -15,7 +15,11 @@ describe("XMLParser", function() {
             }
         };
 
-        const result = parser.convertToJsonString(parser.getTraversalObj(xmlData));
+        const options = {
+            ignoreAttributes: false
+        };
+        const parser = new XMLParser(options);
+        const result = parser.prettifyString(parser.parse(xmlData));
         //console.log(JSON.stringify(result,null,4));
         //console.log(result);
         //expect(result).toEqual(expected);

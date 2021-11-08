@@ -1,16 +1,19 @@
 "use strict";
 
-const parser = require("../src/parser");
-const validator = require("../src/validator");
+const {XMLParser, XMLValidator} = require("../src/fxp");
 
 describe("XMLParser", function() {
     it("should parse multiline tag value when tags without spaces", function() {
         const xmlData = `<?xml version='1.0'?><root><person>lastname
 firstname
 patronymic</person></root>`;
-        let result = parser.parse(xmlData, {
+
+
+        const options = {
             ignoreAttributes: false
-        });
+        };
+        const parser = new XMLParser(options);
+        let result = parser.parse(xmlData);
 
         const expected = {
             "root": {
@@ -20,7 +23,7 @@ patronymic</person></root>`;
 
         expect(result).toEqual(expected);
 
-        result = validator.validate(xmlData);
+        result = XMLValidator.validate(xmlData);
         expect(result).toBe(true);
     });
     it("should parse tag having CDATA", function() {
@@ -51,15 +54,18 @@ patronymic</person></root>`;
                 }
             }
         };
-        let result = parser.parse(xmlData, {
+
+        const options = {
             ignoreAttributes: false
-        });
+        };
+        const parser = new XMLParser(options);
+        let result = parser.parse(xmlData);
 
         //console.log(JSON.stringify(result,null,4));
 
         expect(result).toEqual(expected);
 
-        result = validator.validate(xmlData);
+        result = XMLValidator.validate(xmlData);
         expect(result).toBe(true);
     });
 
@@ -87,14 +93,16 @@ patronymic</person></root>`;
             }
         };
 
-        let result = parser.parse(xmlData, {
+        const options = {
             ignoreAttributes: false
-        });
+        };
+        const parser = new XMLParser(options);
+        let result = parser.parse(xmlData);
         
         // console.log(JSON.stringify(result,null,4));
         expect(result).toEqual(expected);
 
-        result = validator.validate(xmlData);
+        result = XMLValidator.validate(xmlData);
 
         expect(result).toBe(true);
     });
@@ -116,14 +124,16 @@ patronymic</person></root>`;
             }
         };
 
-        let result = parser.parse(xmlData, {
+        const options = {
             ignoreAttributes: false
-        });
+        };
+        const parser = new XMLParser(options);
+        let result = parser.parse(xmlData);
 
         //console.log(JSON.stringify(result,null,4));
         expect(result).toEqual(expected);
 
-        result = validator.validate(xmlData);
+        result = XMLValidator.validate(xmlData);
         expect(result).toBe(true);
     });
 
@@ -136,13 +146,15 @@ patronymic</person></root>`;
             }
         };
 
-        let result = parser.parse(xmlData, {
+        const options = {
             ignoreAttributes: false
-        });
+        };
+        const parser = new XMLParser(options);
+        let result = parser.parse(xmlData);
 
         expect(result).toEqual(expected);
 
-        result = validator.validate(xmlData);
+        result = XMLValidator.validate(xmlData);
         expect(result).toBe(true);
     });
 
@@ -155,13 +167,15 @@ patronymic</person></root>`;
             }
         };
 
-        let result = parser.parse(xmlData, {
+        const options = {
             ignoreAttributes: false
-        });
+        };
+        const parser = new XMLParser(options);
+        let result = parser.parse(xmlData);
 
         expect(result).toEqual(expected);
 
-        result = validator.validate(xmlData);
+        result = XMLValidator.validate(xmlData);
         expect(result).toBe(true);
     });
 
@@ -182,9 +196,11 @@ patronymic</person></root>`;
             }
         };
 
-        const result = parser.parse(xmlData, {
+        const options = {
             ignoreAttributes: false
-        });
+        };
+        const parser = new XMLParser(options);
+        let result = parser.parse(xmlData);
 
         //console.log(JSON.stringify(result,null,4));
         expect(result).toEqual(expected);
@@ -207,8 +223,12 @@ patronymic</person></root>`;
             }
         };
 
-        // const result = parser.getTraversalObj(xmlData);
-        const result = parser.parse(xmlData);
+        
+        const options = {
+            ignoreAttributes: false
+        };
+        const parser = new XMLParser(options);
+        let result = parser.parse(xmlData);
 
         // console.log(JSON.stringify(result,null,4));
         expect(result).toEqual(expected);
@@ -239,10 +259,12 @@ patronymic</person></root>`;
             }
         };
 
-        const result = parser.parse(xmlData, {
+        const options = {
             ignoreAttributes: false,
             cdataTagName:     "__cdata"
-        });
+        };
+        const parser = new XMLParser(options);
+        let result = parser.parse(xmlData);
 
         // console.log(JSON.stringify(result,null,4));
         expect(result).toEqual(expected);
@@ -273,11 +295,12 @@ patronymic</person></root>`;
             }
         };
 
-        const result = parser.parse(xmlData, {
-            ignoreAttributes:  false,
-            cdataTagName:      "__cdata",
-            cdataPositionChar: ""
-        });
+        const options = {
+            ignoreAttributes: false,
+            cdataTagName:     "__cdata"
+        };
+        const parser = new XMLParser(options);
+        let result = parser.parse(xmlData);
 
         //console.log(JSON.stringify(result,null,4));
         expect(result).toEqual(expected);
@@ -304,10 +327,13 @@ patronymic</person></root>`;
             }
         };
 
-        const result = parser.parse(xmlData, {
-            ignoreAttributes:       false,
+        const options = {
+            ignoreAttributes: false,
             allowBooleanAttributes: true
-        });
+        };
+        const parser = new XMLParser(options);
+        let result = parser.parse(xmlData);
+        
         // console.log(JSON.stringify(result,null,4));
         expect(result).toEqual(expected);
     });

@@ -1,7 +1,6 @@
 "use strict";
 
-const parser = require("../src/parser");
-const validator = require("../src/validator");
+const {XMLParser, XMLValidator} = require("../src/fxp");
 const he = require("he");
 
 describe("XMLParser", function() {
@@ -14,17 +13,19 @@ describe("XMLParser", function() {
             }
         };
 
-        let result = parser.parse(xmlData, {
-            attributeNamePrefix: "",
+        const options = {
+          attributeNamePrefix: "",
             ignoreAttributes:    false,
             parseAttributeValue: true,
             stopNodes: ["issue.fix1"]
-        });
+      };
+      const parser = new XMLParser(options);
+      let result = parser.parse(xmlData);
 
         // console.log(JSON.stringify(result,null,4));
         expect(result).toEqual(expected);
 
-        result = validator.validate(xmlData);
+        result = XMLValidator.validate(xmlData);
         expect(result).toBe(true);
     });
 
@@ -41,17 +42,19 @@ describe("XMLParser", function() {
 			}
         };
 
-        let result = parser.parse(xmlData, {
-            attributeNamePrefix: "",
+        const options = {
+          attributeNamePrefix: "",
             ignoreAttributes:    false,
             parseAttributeValue: true,
             stopNodes: ["issue.fix1", "issue.fix2"]
-        });
+      };
+      const parser = new XMLParser(options);
+      let result = parser.parse(xmlData);
 
         //console.log(JSON.stringify(result,null,4));
         expect(result).toEqual(expected);
 
-        result = validator.validate(xmlData);
+        result = XMLValidator.validate(xmlData);
         expect(result).toBe(true);
     });
 
@@ -67,17 +70,19 @@ describe("XMLParser", function() {
       }
     };
 
-    let result = parser.parse(xmlData, {
+    const options = {
       attributeNamePrefix: "",
-      ignoreAttributes:    false,
-      parseAttributeValue: true,
-      stopNodes: ["issue.fix1", "issue.fix2"]
-    });
+        ignoreAttributes:    false,
+        parseAttributeValue: true,
+        stopNodes: ["issue.fix1", "issue.fix2"]
+  };
+  const parser = new XMLParser(options);
+  let result = parser.parse(xmlData);
 
     //console.log(JSON.stringify(result,null,4));
     expect(result).toEqual(expected);
 
-    result = validator.validate(xmlData);
+    result = XMLValidator.validate(xmlData);
     expect(result).toBe(true);
   });
 
@@ -90,17 +95,19 @@ describe("XMLParser", function() {
 			}
         };
 
-        let result = parser.parse(xmlData, {
-            attributeNamePrefix: "",
+        const options = {
+          attributeNamePrefix: "",
             ignoreAttributes:    false,
             parseAttributeValue: true,
             stopNodes: ["issue.fix1", "issue.fix2"]
-        });
+      };
+      const parser = new XMLParser(options);
+      let result = parser.parse(xmlData);
 
         //console.log(JSON.stringify(result,null,4));
         expect(result).toEqual(expected);
 
-        result = validator.validate(xmlData);
+        result = XMLValidator.validate(xmlData);
         expect(result).toBe(true);
     });
 
@@ -113,17 +120,19 @@ describe("XMLParser", function() {
       }
     };
 
-    let result = parser.parse(xmlData, {
+    const options = {
       attributeNamePrefix: "",
-      ignoreAttributes:    false,
-      parseAttributeValue: true,
-      stopNodes: ["issue.fix1", "issue.fix2"]
-    });
+        ignoreAttributes:    false,
+        parseAttributeValue: true,
+        stopNodes: ["issue.fix1", "issue.fix2"]
+  };
+  const parser = new XMLParser(options);
+  let result = parser.parse(xmlData);
 
     //console.log(JSON.stringify(result,null,4));
     expect(result).toEqual(expected);
 
-    result = validator.validate(xmlData);
+    result = XMLValidator.validate(xmlData);
     expect(result).toBe(true);
   });
 
@@ -147,18 +156,19 @@ describe("XMLParser", function() {
 				"fix2": "\n\t\t<![CDATA[<some>Mohan</some>]]>\n\t"
 			}
         };
-
-        let result = parser.parse(xmlData, {
-            attributeNamePrefix:    "",
-            ignoreAttributes:       false,
-            parseAttributeValue:    true,
+        const options = {
+          attributeNamePrefix: "",
+            ignoreAttributes:    false,
+            parseAttributeValue: true,
             stopNodes: ["issue.fix1", "issue.fix2"]
-        });
+      };
+      const parser = new XMLParser(options);
+      let result = parser.parse(xmlData);
 
         //console.log(JSON.stringify(result,null,4));
         expect(result).toEqual(expected);
 
-        result = validator.validate(xmlData, {
+        result = XMLValidator.validate(xmlData, {
             allowBooleanAttributes: true
         });
         expect(result).toBe(true);
@@ -170,16 +180,18 @@ describe("XMLParser", function() {
             "fix1": "<p>p 1</p><div class=\"show\">div 1</div>"
         };
 
-        let result = parser.parse(xmlData, {
-            attributeNamePrefix: "",
+        const options = {
+          attributeNamePrefix: "",
             ignoreAttributes:    false,
             stopNodes: ["fix1", "fix2"]
-        });
+      };
+      const parser = new XMLParser(options);
+      let result = parser.parse(xmlData);
 
         //console.log(JSON.stringify(result,null,4));
         expect(result).toEqual(expected);
 
-        result = validator.validate(xmlData, {
+        result = XMLValidator.validate(xmlData, {
             allowBooleanAttributes: true
         });
         expect(result).toBe(true);

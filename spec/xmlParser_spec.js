@@ -1,7 +1,6 @@
 "use strict";
 
-const parser = require("../src/parser");
-const validator = require("../src/validator");
+const {XMLParser, XMLValidator} = require("../src/fxp");
 
 describe("XMLParser", function() {
 
@@ -23,7 +22,8 @@ describe("XMLParser", function() {
             }
         };
 
-        const result = parser.parse(xmlData);
+        const parser = new XMLParser();
+        let result = parser.parse(xmlData);
         //console.log(JSON.stringify(result,null,4));
         expect(result).toEqual(expected);
     });
@@ -47,9 +47,13 @@ describe("XMLParser", function() {
             }
         };
 
-        const result = parser.parse(xmlData, {
-            parseTrueNumberOnly : true
-        });
+        const options = {
+            numberParseOptions: {
+                leadingZeros: false
+            }
+        };
+        const parser = new XMLParser(options);
+        let result = parser.parse(xmlData);
         //console.log(JSON.stringify(result,null,4));
         expect(result).toEqual(expected);
     });
@@ -72,13 +76,17 @@ describe("XMLParser", function() {
                 }
             }
         };
+        
         const options = {
             ignoreAttributes: false,
             parseAttributeValue: true,
-            parseTrueNumberOnly: false
-        }
-        // const result = parser.getTraversalObj(xmlData, options );
-        const result = parser.parse(xmlData, options );
+            numberParseOptions: {
+                leadingZeros: false
+            }
+        };
+        const parser = new XMLParser(options);
+        let result = parser.parse(xmlData);
+
         // console.log(JSON.stringify(result,null,4));
         expect(result).toEqual(expected);
     });
@@ -104,10 +112,13 @@ describe("XMLParser", function() {
         const options = {
             ignoreAttributes: false,
             parseAttributeValue: true,
-            parseTrueNumberOnly: true
+            numberParseOptions: {
+                leadingZeros: false
+            }
         };
-        // const result = parser.getTraversalObj(xmlData, options);
-        const result = parser.parse(xmlData, options);
+        const parser = new XMLParser(options);
+        let result = parser.parse(xmlData);
+        
         // console.log(JSON.stringify(result,null,4));
         expect(result).toEqual(expected);
     });
@@ -125,9 +136,11 @@ describe("XMLParser", function() {
             }
         };
 
-        const result = parser.parse(xmlData, {
+        const options = {
             parseTagValue: false
-        });
+        };
+        const parser = new XMLParser(options);
+        let result = parser.parse(xmlData);
         expect(result).toEqual(expected);
     });
 
@@ -145,11 +158,12 @@ describe("XMLParser", function() {
             }
         };
 
-        const result = parser.parse(xmlData, {
+        const options = {
             ignoreAttributes:    false,
             parseAttributeValue: true
-        });
-
+        };
+        const parser = new XMLParser(options);
+        let result = parser.parse(xmlData);
         expect(result).toEqual(expected);
     });
 
@@ -163,9 +177,11 @@ describe("XMLParser", function() {
             }
         };
 
-        const result = parser.parse(xmlData, {
+        const options = {
             parseTagValue: true
-        });
+        };
+        const parser = new XMLParser(options);
+        let result = parser.parse(xmlData);
         expect(result).toEqual(expected);
     });
 
@@ -179,7 +195,11 @@ describe("XMLParser", function() {
             }
         };
 
-        const result = parser.parse(xmlData);
+        const options = {
+
+        };
+        const parser = new XMLParser(options);
+        let result = parser.parse(xmlData);
         expect(result).toEqual(expected);
     });
 
@@ -213,10 +233,12 @@ describe("XMLParser", function() {
             }
         };
 
-        const result = parser.parse(xmlData, {
+        const options = {
             removeNSPrefix:  true,
             ignoreAttributes: false
-        });
+        };
+        const parser = new XMLParser(options);
+        let result = parser.parse(xmlData);
 
         expect(result).toEqual(expected);
     });
@@ -229,7 +251,11 @@ describe("XMLParser", function() {
             }
         };
 
-        const result = parser.parse(xmlData);
+        const options = {
+
+        };
+        const parser = new XMLParser(options);
+        let result = parser.parse(xmlData);
         expect(result).toEqual(expected);
     });
 
@@ -242,11 +268,13 @@ describe("XMLParser", function() {
                 }
             }
         };
+        
         const options = {
             ignoreAttributes: false
         };
-        // const result = parser.getTraversalObj(xmlData, options);
-        const result = parser.parse(xmlData, options);
+        const parser = new XMLParser(options);
+        let result = parser.parse(xmlData);
+
         // console.log(JSON.stringify(result,null,2));
         expect(result).toEqual(expected);
     });
@@ -259,10 +287,12 @@ describe("XMLParser", function() {
             }
         };
 
-        //console.log(parser.getTraversalObj(xmlData));
-        const result = parser.parse(xmlData, {
+        const options = {
             ignoreAttributes: false
-        });
+        };
+        const parser = new XMLParser(options);
+        let result = parser.parse(xmlData);
+
         expect(result).toEqual(expected);
     });
 
@@ -279,7 +309,11 @@ describe("XMLParser", function() {
             }
         };
 
-        const result = parser.parse(xmlData);
+        const options = {
+
+        };
+        const parser = new XMLParser(options);
+        let result = parser.parse(xmlData);
         expect(result).toEqual(expected);
     });
 
@@ -300,7 +334,11 @@ describe("XMLParser", function() {
             }
         };
 
-        const result = parser.parse(xmlData);
+        const options = {
+
+        };
+        const parser = new XMLParser(options);
+        let result = parser.parse(xmlData);
         expect(result).toEqual(expected);
     });
 
@@ -350,9 +388,11 @@ describe("XMLParser", function() {
             }
         };
 
-        const result = parser.parse(xmlData, {
+        const options = {
             ignoreAttributes: false
-        });
+        };
+        const parser = new XMLParser(options);
+        let result = parser.parse(xmlData);
         expect(result).toEqual(expected);
     });
 
@@ -366,10 +406,12 @@ describe("XMLParser", function() {
             }
         };
 
-        const result = parser.parse(xmlData, {
+        const options = {
             ignoreAttributes: false,
             trimValues:       false
-        });
+        };
+        const parser = new XMLParser(options);
+        let result = parser.parse(xmlData);
         expect(result).toEqual(expected);
     });
 
@@ -383,9 +425,11 @@ describe("XMLParser", function() {
             }
         };
 
-        const result = parser.parse(xmlData, {
+        const options = {
             ignoreAttributes: false
-        });
+        };
+        const parser = new XMLParser(options);
+        let result = parser.parse(xmlData);
         expect(result).toEqual(expected);
     });
 
@@ -396,9 +440,12 @@ describe("XMLParser", function() {
             "tag.2": "val2"
         };
 
-        const result = parser.getTraversalObj(xmlData);
-        // const result = parser.parse(xmlData);
-        console.log(JSON.stringify(result,null,4));
+        const options = {
+
+        };
+        const parser = new XMLParser(options);
+        let result = parser.parse(xmlData);
+        // console.log(JSON.stringify(result,null,4));
         expect(result).toEqual(expected);
     });
 
@@ -413,11 +460,12 @@ describe("XMLParser", function() {
             }
         };
 
-        const result = parser.parse(xmlData, {
+        const options = {
             textNodeName:     "_text",
             ignoreAttributes: false
-        });
-
+        };
+        const parser = new XMLParser(options);
+        let result = parser.parse(xmlData);
         expect(result).toEqual(expected);
     });
 
@@ -449,11 +497,12 @@ describe("XMLParser", function() {
             }
         };
 
-        const result = parser.parse(xmlData, {
+        const options = {
             ignoreAttributes:      false,
             ignoreNonTextNodeAttr: false
-        });
-
+        };
+        const parser = new XMLParser(options);
+        let result = parser.parse(xmlData);
         expect(result).toEqual(expected);
     });
 
@@ -492,13 +541,14 @@ describe("XMLParser", function() {
             }
         };
 
-        const result = parser.parse(xmlData, {
+        const options = {
             attributeNamePrefix: "",
             attributesGroupName:        "$",
             removeNSPrefix:     true,
             ignoreAttributes:    false
-        });
-
+        };
+        const parser = new XMLParser(options);
+        let result = parser.parse(xmlData);
         //console.log(JSON.stringify(result,null,4));
         expect(result).toEqual(expected);
     });
@@ -577,8 +627,9 @@ describe("XMLParser", function() {
             attributeNamePrefix:   "@",
             textNodeName:          "#_text"
         };
-        // const result = parser.getTraversalObj(xmlData, options);
-        const result = parser.parse(xmlData, options);
+        const parser = new XMLParser(options);
+        let result = parser.parse(xmlData);
+        
         // console.log(JSON.stringify(result,null,4));
         expect(result).toEqual(expected);
     });
@@ -688,7 +739,11 @@ describe("XMLParser", function() {
             }
         };
 
-        const result = parser.parse(xmlData, {removeNSPrefix: true});
+        const options = {
+            removeNSPrefix: true
+        };
+        const parser = new XMLParser(options);
+        let result = parser.parse(xmlData);
         expect(result).toEqual(expected);
     });
 
@@ -697,10 +752,13 @@ describe("XMLParser", function() {
         const expected = {
             "rootNode": "       123        "
         };
-        const result = parser.parse(xmlData, {
+        
+        const options = {
             parseTagValue: false,
             trimValues:     false
-        });
+        };
+        const parser = new XMLParser(options);
+        let result = parser.parse(xmlData);
         //console.log(JSON.stringify(result,null,4));
         expect(result).toEqual(expected);
     });
@@ -710,9 +768,12 @@ describe("XMLParser", function() {
         const expected = {
             "rootNode": "123"
         };
-        const result = parser.parse(xmlData, {
+        
+        const options = {
             parseTagValue: false
-        });
+        };
+        const parser = new XMLParser(options);
+        let result = parser.parse(xmlData);
         //console.log(JSON.stringify(result,null,4));
         expect(result).toEqual(expected);
     });
@@ -722,9 +783,12 @@ describe("XMLParser", function() {
         const expected = {
             "rootNode": "foo&ampbar&apos;"
         };
-        const result = parser.parse(xmlData, {
+        
+        const options = {
             parseTagValue: false
-        });
+        };
+        const parser = new XMLParser(options);
+        let result = parser.parse(xmlData);
         //console.log(JSON.stringify(result,null,4));
         expect(result).toEqual(expected);
     });
@@ -743,10 +807,12 @@ describe("XMLParser", function() {
         const expected = {
             foo: "Hello World."
         };
-        const result = parser.parse(xmlData, {
-            //parseTagValue: false,
-            //trimValues: false
-        });
+        
+        const options = {
+
+        };
+        const parser = new XMLParser(options);
+        let result = parser.parse(xmlData);
         //console.log(JSON.stringify(result,null,4));
         expect(result).toEqual(expected);
     });
@@ -769,7 +835,11 @@ describe("XMLParser", function() {
                 }
             }
         };
-        const result = parser.parse(xmlData);
+        const options = {
+
+        };
+        const parser = new XMLParser(options);
+        let result = parser.parse(xmlData);
         //console.log(JSON.stringify(result,null,4));
         expect(result).toEqual(expected);
     });
@@ -794,10 +864,14 @@ describe("XMLParser", function() {
             }
         };
 
-        let result = validator.validate(xmlData);
+        let result = XMLValidator.validate(xmlData);
         expect(result).toBe(true);
 
-        result = parser.parse(xmlData,{trimValues:false});
+        const options = {
+            trimValues:false
+        };
+        const parser = new XMLParser(options);
+        result = parser.parse(xmlData);
         //console.log(JSON.stringify(result,null,4));
         expect(result).toEqual(expected);
     });
@@ -807,9 +881,12 @@ describe("XMLParser", function() {
         + "<tag>"
         + "    <subtag2>subtag text</subtag2>"
         + "</tag";
-
+        const options = {
+            trimValues:true
+        };
+        const parser = new XMLParser(options);
         expect(() => {
-            parser.parse(xmlData,{trimValues:true}, true);
+            let result = parser.parse(xmlData, true);
         }).toThrowError(`Closing tag 'tag' doesn't have proper closing.`)
 
     });
@@ -826,7 +903,12 @@ describe("XMLParser", function() {
             }
         };
 
-        let result = parser.parse(xmlData,{trimValues:true}, { allowBooleanAttributes: true });
+        const options = {
+            trimValues:true,
+            allowBooleanAttributes: true
+        };
+        const parser = new XMLParser(options);
+        let result = parser.parse(xmlData);
         //console.log(JSON.stringify(result,null,4));
         expect(result).toEqual(expected);
     });
@@ -841,13 +923,16 @@ describe("XMLParser", function() {
             }
         };
 
-        const result = parser.parse(xmlData, {
+        const options = {
             ignoreAttributes: false,
             parseAttributeValue: true,
-            numParseOptions: {
+            numberParseOptions: {
                 leadingZeros: false
             }
-        });
+            
+        };
+        const parser = new XMLParser(options);
+        let result = parser.parse(xmlData);
         expect(result).toEqual(expected);
     });
     it("should parse numbers with leading zeros when `leadingZeros: true`", function() {
@@ -860,13 +945,15 @@ describe("XMLParser", function() {
             }
         };
 
-        const result = parser.parse(xmlData, {
+        const options = {            
             ignoreAttributes: false,
             parseAttributeValue: true,
-            numParseOptions: {
+            numberParseOptions: {
                 leadingZeros: true
             }
-        });
+        };
+        const parser = new XMLParser(options);
+        let result = parser.parse(xmlData);
         expect(result).toEqual(expected);
     });
 
@@ -880,14 +967,16 @@ describe("XMLParser", function() {
             }
         };
 
-        const result = parser.parse(xmlData, {
+        const options = {
             ignoreAttributes: false,
             parseAttributeValue: true,
-            numParseOptions: {
+            numberParseOptions: {
                 leadingZeros: true,
                 skipLike: /[0-9]{10}/
             }
-        });
+        };
+        const parser = new XMLParser(options);
+        let result = parser.parse(xmlData);
         expect(result).toEqual(expected);
     });
 
@@ -908,11 +997,13 @@ describe("XMLParser", function() {
             }
         };
 
-        const result = parser.parse(xmlData, {
+        const options = {
             alwaysCreateTextNode : true,
             ignoreAttributes: false,
             parseAttributeValue: true
-        });
+        };
+        const parser = new XMLParser(options);
+        let result = parser.parse(xmlData);
         expect(result).toEqual(expected);
     });
 });

@@ -67,7 +67,7 @@ exports.getValue = function(v) {
 // const fakeCall = function(a) {return a;};
 // const fakeCallNoReturn = function() {};
 
-exports.buildOptions = function(options, defaultOptions, props) {
+const buildOptions = function(options, defaultOptions, props) {
   let newOptions = {};
   if (!options) {
     return defaultOptions; //if there are not options
@@ -83,6 +83,7 @@ exports.buildOptions = function(options, defaultOptions, props) {
   return newOptions;
 };
 
+exports.buildOptions = buildOptions;
 exports.isName = isName;
 exports.getAllMatches = getAllMatches;
 exports.nameRegexp = nameRegexp;

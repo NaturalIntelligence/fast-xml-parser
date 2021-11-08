@@ -1,4 +1,5 @@
 type X2jOptions = {
+  preserveOrder: boolean;
   attributeNamePrefix: string;
   attributesGroupName: false | string;
   textNodeName: string;
@@ -9,11 +10,9 @@ type X2jOptions = {
   parseAttributeValue: boolean;
   trimValues: boolean;
   cdataTagName: false | string;
-  cdataPositionChar: string;
-  parseTrueNumberOnly: boolean;
-  numParseOptions: strnumOptions;
   tagValueProcessor: (tagValue: string, tagName: string) => string;
   attrValueProcessor: (attrValue: string, attrName: string) => string;
+  numberParseOptions: strnumOptions;
   stopNodes: string[];
   alwaysCreateTextNode: boolean;
   isArray: (tagName: string, jpath: string, isLeafNode: boolean, isAttribute: boolean) => boolean;
@@ -28,7 +27,8 @@ type validationOptions = {
   allowBooleanAttributes: boolean;
 };
 type validationOptionsOptional = Partial<validationOptions>;
-type J2xOptions = {
+
+type XmlBuilderOptions = {
   attributeNamePrefix: string;
   attributesGroupName: false | string;
   textNodeName: string;
@@ -41,7 +41,7 @@ type J2xOptions = {
   tagValueProcessor: (tagValue: string) => string;
   attrValueProcessor: (attrValue: string) => string;
 };
-type J2xOptionsOptional = Partial<J2xOptions>;
+type XmlBuilderOptionsOptional = Partial<XmlBuilderOptions>;
 
 type ESchema = string | object | Array<string|object>;
 
@@ -49,21 +49,17 @@ type ValidationError = {
   err: { code: string; msg: string, line: number, col: number };
 };
 
-export function parse(xmlData: string, options?: X2jOptionsOptional, validationOptions?: validationOptionsOptional | boolean): any;
-export function getTraversalObj(
-  xmlData: string,
-  options?: X2jOptionsOptional
-): any;
-export function convertToJson(node: any, options?: X2jOptionsOptional): any;
-export function convertToJsonString(
-  node: any,
-  options?: X2jOptionsOptional
-): string;
-export function validate(
+export class XMLParser {
+  constructor(options?: X2jOptionsOptional);
+  parse(xmlData: string | Buffer ,validationOptions?: validationOptionsOptional | boolean);
+}
+
+export function XMLValidator(
   xmlData: string,
   options?: validationOptionsOptional
 ): true | ValidationError;
-export class j2xParser {
-  constructor(options: J2xOptionsOptional);
+
+export class XMLBuilder {
+  constructor(options: XmlBuilderOptionsOptional);
   parse(options: any): any;
 }

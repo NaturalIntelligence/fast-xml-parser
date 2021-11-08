@@ -1,7 +1,6 @@
 "use strict";
 
-const parser = require("../src/parser");
-const validator = require("../src/validator");
+const {XMLParser, XMLValidator} = require("../src/fxp");
 const he = require("he");
 
 describe("XMLParser", function() {
@@ -14,17 +13,18 @@ describe("XMLParser", function() {
                 "version":     1
             }
         };
-
-        let result = parser.parse(xmlData, {
+        const options = {
             attributeNamePrefix: "",
             ignoreAttributes:    false,
             parseAttributeValue: true
-        });
+        };
+        const parser = new XMLParser(options);
+        let result = parser.parse(xmlData);
 
         //console.log(JSON.stringify(result,null,4));
         expect(result).toEqual(expected);
 
-        result = validator.validate(xmlData);
+        result = XMLValidator.validate(xmlData);
         expect(result).toBe(true);
     });
 
@@ -38,16 +38,18 @@ describe("XMLParser", function() {
             }
         };
 
-        let result = parser.parse(xmlData, {
+        const options = {
             attributeNamePrefix: "",
             ignoreAttributes:    false,
             parseAttributeValue: true
-        });
+        };
+        const parser = new XMLParser(options);
+        let result = parser.parse(xmlData);
 
         //console.log(JSON.stringify(result,null,4));
         expect(result).toEqual(expected);
 
-        result = validator.validate(xmlData);
+        result = XMLValidator.validate(xmlData);
         expect(result).toBe(true);
     });
 
@@ -61,16 +63,18 @@ describe("XMLParser", function() {
             }
         };
 
-        let result = parser.parse(xmlData, {
+        const options =  {
             attributeNamePrefix: "",
             ignoreAttributes:    false,
             parseAttributeValue: true
-        });
+        };
+        const parser = new XMLParser(options);
+        let result = parser.parse(xmlData);
 
         //console.log(JSON.stringify(result,null,4));
         expect(result).toEqual(expected);
 
-        result = validator.validate(xmlData);
+        result = XMLValidator.validate(xmlData);
         expect(result).toBe(true);
     });
 
@@ -91,17 +95,19 @@ describe("XMLParser", function() {
             }
         };
 
-        let result = parser.parse(xmlData, {
+        const options =  {
             attributeNamePrefix:    "",
             ignoreAttributes:       false,
             parseAttributeValue:    true,
             allowBooleanAttributes: true
-        });
+        };
+        const parser = new XMLParser(options);
+        let result = parser.parse(xmlData);
 
         //console.log(JSON.stringify(result,null,4));
         expect(result).toEqual(expected);
 
-        result = validator.validate(xmlData, {
+        result = XMLValidator.validate(xmlData, {
             allowBooleanAttributes: true
         });
         expect(result).toBe(true);
@@ -117,15 +123,17 @@ describe("XMLParser", function() {
             }
         };
 
-        let result = parser.parse(xmlData, {
+        const options =  {
             attributeNamePrefix: "",
             ignoreAttributes:    false
-        });
+        };
+        const parser = new XMLParser(options);
+        let result = parser.parse(xmlData);
 
         //console.log(JSON.stringify(result,null,4));
         expect(result).toEqual(expected);
 
-        result = validator.validate(xmlData, {
+        result = XMLValidator.validate(xmlData, {
             allowBooleanAttributes: true
         });
         expect(result).toBe(true);
@@ -141,16 +149,18 @@ describe("XMLParser", function() {
             }
         };
 
-        let result = parser.parse(xmlData, {
+        const options =  {
             attributeNamePrefix: "",
             ignoreAttributes:    false,
             removeNSPrefix:     true
-        });
+        }
+        const parser = new XMLParser(options);
+        let result = parser.parse(xmlData);
 
         //console.log(JSON.stringify(result,null,4));
         expect(result).toEqual(expected);
 
-        result = validator.validate(xmlData, {
+        result = XMLValidator.validate(xmlData, {
             allowBooleanAttributes: true
         });
         expect(result).toBe(true);
@@ -167,7 +177,7 @@ describe("XMLParser", function() {
                 "col": 8
             }
         };
-        const result = validator.validate(xmlData);
+        const result = XMLValidator.validate(xmlData);
 
         expect(result).toEqual(expected);
     });
@@ -183,7 +193,7 @@ describe("XMLParser", function() {
             }
         };
 
-        const result = validator.validate(xmlData);
+        const result = XMLValidator.validate(xmlData);
 
         expect(result).toEqual(expected);
     });
@@ -198,7 +208,7 @@ describe("XMLParser", function() {
                 "col": 8
             }
         };
-        const result = validator.validate(xmlData);
+        const result = XMLValidator.validate(xmlData);
 
         expect(result).toEqual(expected);
     });
@@ -213,21 +223,21 @@ describe("XMLParser", function() {
                 "col": 12
             }
         };
-        const result = validator.validate(xmlData);
+        const result = XMLValidator.validate(xmlData);
         expect(result).toEqual(expected);
     });
 
     it("should validate xml with atributes", function() {
         const xmlData = `<rootNode attr="123"><tag></tag><tag>1</tag><tag>val</tag></rootNode>`;
 
-        const result = validator.validate(xmlData);
+        const result = XMLValidator.validate(xmlData);
         expect(result).toBe(true);
     });
 
     it("should validate xml atribute has '>' in value", function() {
         const xmlData = `<rootNode attr="123>234"><tag></tag><tag>1</tag><tag>val</tag></rootNode>`;
 
-        const result = validator.validate(xmlData);
+        const result = XMLValidator.validate(xmlData);
         expect(result).toBe(true);
     });
 
@@ -241,7 +251,7 @@ describe("XMLParser", function() {
                 "col": 10
             }
         };
-        const result = validator.validate(xmlData);
+        const result = XMLValidator.validate(xmlData);
         expect(result).toEqual(expected);
     });
 
@@ -255,7 +265,7 @@ describe("XMLParser", function() {
                 "col": 22
             }
         };
-        const result = validator.validate(xmlData);
+        const result = XMLValidator.validate(xmlData);
         //console.log(JSON.stringify(result,null,4));
         expect(result).toEqual(expected);
     });
@@ -270,7 +280,7 @@ describe("XMLParser", function() {
                 "col": 21
             }
         };
-        const result = validator.validate(xmlData);
+        const result = XMLValidator.validate(xmlData);
         expect(result).toEqual(expected);
     });
 
@@ -284,7 +294,7 @@ describe("XMLParser", function() {
                 "col": 11
             }
         };
-        const result = validator.validate(xmlData);
+        const result = XMLValidator.validate(xmlData);
         expect(result).toEqual(expected);
     });
 
@@ -299,7 +309,7 @@ describe("XMLParser", function() {
                 "col": 12
             }
         };
-        const result = validator.validate(xmlData);
+        const result = XMLValidator.validate(xmlData);
         //console.log(JSON.stringify(result,null,4));
         expect(result).toEqual(expected);
     });
@@ -315,7 +325,7 @@ describe("XMLParser", function() {
                 "col": 12
             }
         };
-        const result = validator.validate(xmlData);
+        const result = XMLValidator.validate(xmlData);
         //console.log(JSON.stringify(result,null,4));
         expect(result).toEqual(expected);
     });

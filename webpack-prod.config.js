@@ -3,13 +3,13 @@
 module.exports = [
     {
         context: __dirname,
-        entry: "./src/parser.js",
+        entry: "./src/fxp.js",
         mode: "production",
         devtool: "source-map",
         output: {
             path: __dirname,
-            filename: "./lib/parser.min.js",
-            library: "parser",
+            filename: "./lib/fxparser.min.js",
+            library: "fxparser",
             libraryTarget: "var"
         },
         module: {

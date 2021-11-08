@@ -1,8 +1,8 @@
 {
   "name": "fast-xml-parser",
-  "version": "3.21.1",
+  "version": "4.0.0",
   "description": "Validate XML or Parse XML to JS/JSON very fast without C/C++ based libraries",
-  "main": "./src/parser.js",
+  "main": "./src/fxp.js",
   "scripts": {
     "test": "nyc --reporter=lcov --reporter=text jasmine spec/*spec.js",
     "unit": "jasmine",
@@ -15,7 +15,7 @@
     "checkReadiness": "publish-please --dry-run"
   },
   "bin": {
-    "xml2js": "./cli.js"
+    "fxparser": "./cli.js"
   },
   "repository": {
     "type": "git",
@@ -47,25 +47,6 @@
     "html"
   ],
   "author": "Amit Gupta (https://amitkumargupta.work/)",
-  "contributors": [
-    {
-      "name": "Alfonso Muñoz-Pomer Fuentes",
-      "email": "amunoz@ebi.ac.uk",
-      "url": "https://github.com/alfonsomunozpomer"
-    },
-    {
-      "name": "Steve Reichenbach",
-      "url": "https://github.com/EyesOnlyNet"
-    },
-    {
-      "name": "Vohmyanin Sergey Vasilevich",
-      "url": "http://delagen.livejournal.com"
-    },
-    {
-      "name": "Andrew Udvare",
-      "url": "https://github.com/Tatsh"
-    }
-  ],
   "license": "MIT",
   "devDependencies": {
     "@babel/core": "^7.13.10",

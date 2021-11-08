@@ -1,6 +1,6 @@
 'use strict';
 //parse Empty Node as self closing node
-const buildOptions = require('./util').buildOptions;
+const buildOptions = require('../util').buildOptions;
 
 const defaultOptions = {
   attributeNamePrefix: '@_',
@@ -35,7 +35,7 @@ const props = [
   'rootNodeName', //when array as root
 ];
 
-function Parser(options) {
+function Builder(options) {
   this.options = buildOptions(options, defaultOptions, props);
   if (this.options.ignoreAttributes || this.options.attrNodeName) {
     this.isAttribute = function(/*a*/) {
@@ -81,7 +81,7 @@ function Parser(options) {
   this.buildObjectNode = buildObjectNode;
 }
 
-Parser.prototype.parse = function(jObj) {
+Builder.prototype.build = function(jObj) {
   if(Array.isArray(jObj) && this.options.rootNodeName && this.options.rootNodeName.length > 1){
     jObj = {
       [this.options.rootNodeName] : jObj
@@ -90,7 +90,7 @@ Parser.prototype.parse = function(jObj) {
   return this.j2x(jObj, 0).val;
 };
 
-Parser.prototype.j2x = function(jObj, level) {
+Builder.prototype.j2x = function(jObj, level) {
   let attrStr = '';
   let val = '';
   for (let key in jObj) {
@@ -277,4 +277,4 @@ function isCDATA(name) {
 //indentation
 //\n after each closing or self closing tag
 
-module.exports = Parser;
+module.exports = Builder;
