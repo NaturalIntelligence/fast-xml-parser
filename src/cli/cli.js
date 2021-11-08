@@ -3,26 +3,19 @@
 /*eslint-disable no-console*/
 const fs = require('fs');
 const path = require('path');
-const parser = require('./src/parser');
-const readToEnd = require('./src/read').readToEnd;
+const {XMLParser, XMLValidator} = require("../fxp");
+const readToEnd = require('./read').readToEnd;
 
+const version = require('./../../package.json').version;
 if (process.argv[2] === '--help' || process.argv[2] === '-h') {
-  console.log('Fast XML Parser ' + require(path.join(__dirname + '/package.json')).version);
-  console.log('----------------');
-  console.log('xml2js [-ns|-a|-c|-v|-V] <filename> [-o outputfile.json]');
-  console.log('cat xmlfile.xml | xml2js [-ns|-a|-c|-v|-V] [-o outputfile.json]');
-  console.log('-ns: remove namespace from tag and atrribute name.');
-  console.log("-a: don't parse attributes.");
-  console.log('-c: parse values to premitive type.');
-  console.log('-v: validate before parsing.');
-  console.log('-V: validate only.');
+  console.log(require("./man"));
 } else if (process.argv[2] === '--version') {
-  console.log(require(path.join(__dirname + '/package.json')).version);
+  console.log(version);
 } else {
   const options = {
-    ignoreNameSpace: true,
+    removeNSPrefix: true,
     ignoreAttributes: false,
-    parseNodeValue: true,
+    parseTagValue: true,
     parseAttributeValue: true,
   };
   let fileName = '';
@@ -31,11 +24,11 @@ if (process.argv[2] === '--help' || process.argv[2] === '-h') {
   let validateOnly = false;
   for (let i = 2; i < process.argv.length; i++) {
     if (process.argv[i] === '-ns') {
-      options.ignoreNameSpace = false;
+      options.removeNSPrefix = false;
     } else if (process.argv[i] === '-a') {
       options.ignoreAttributes = true;
     } else if (process.argv[i] === '-c') {
-      options.parseNodeValue = false;
+      options.parseTagValue = false;
       options.parseAttributeValue = false;
     } else if (process.argv[i] === '-o') {
       outputFileName = process.argv[++i];
@@ -48,20 +41,18 @@ if (process.argv[2] === '--help' || process.argv[2] === '-h') {
       fileName = process.argv[i];
     }
   }
+  
   const callback = function(xmlData) {
     let output = '';
     if (validate) {
-      const result = parser.validate(xmlData);
-      if (result === true) {
-        output = JSON.stringify(parser.parse(xmlData, options), null, 4);
-      } else {
-        output = result;
-      }
+      const parser = new XMLParser(options);
+      output = parser.parse(xmlData,validate);
     } else if (validateOnly) {
-      output = parser.validate(xmlData);
+      output = XMLValidator.validate(xmlData);
       process.exitCode = output === true ? 0 : 1;
     } else {
-      output = JSON.stringify(parser.parse(xmlData, options), null, 4);
+      const parser = new XMLParser(options);
+      output = JSON.stringify(parser.parse(xmlData,validate), null, 4);
     }
     if (outputFileName) {
       writeToFile(outputFileName, output);
@@ -71,6 +62,7 @@ if (process.argv[2] === '--help' || process.argv[2] === '-h') {
   };
 
   try {
+    
     if (!fileName) {
       readToEnd(process.stdin, function(err, data) {
         if (err) {

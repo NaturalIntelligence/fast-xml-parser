@@ -3,5 +3,6 @@
     "lib/**",
     "static/**",
     "tasks"
+    "spec/**"
     ]
 }

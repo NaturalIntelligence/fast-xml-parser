@@ -15,7 +15,7 @@
     "checkReadiness": "publish-please --dry-run"
   },
   "bin": {
-    "fxparser": "./cli.js"
+    "fxparser": "./src/cli/cli.js"
   },
   "repository": {
     "type": "git",
