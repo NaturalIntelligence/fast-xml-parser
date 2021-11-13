@@ -74,16 +74,16 @@ function Builder(options) {
 }
 
 Builder.prototype.build = function(jObj) {
-  // if(this.options.preserveOrder){
-  //   return buildFromOrderedJs(jObj, this.options);
-  // }else {
+  if(this.options.preserveOrder){
+    return buildFromOrderedJs(jObj, this.options);
+  }else {
     if(Array.isArray(jObj) && this.options.rootNodeName && this.options.rootNodeName.length > 1){
       jObj = {
         [this.options.rootNodeName] : jObj
       }
     }
     return this.j2x(jObj, 0).val;
-  // }
+  }
 };
 
 Builder.prototype.j2x = function(jObj, level) {
