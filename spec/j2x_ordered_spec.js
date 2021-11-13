@@ -54,18 +54,24 @@ describe("XMLBuilder", function() {
                 <![CDATA[Small]]>alpha
             </size>
             <function>24x7</function>
+            <empty></empty>
+            <empty attr='ibute'></empty>
         </type>
     </store>`;
     
     const options = {
+      ignoreAttributes: false,
       preserveOrder: true,
-      cdataTagName: "#CDATA"
+      cdataTagName: "#CDATA",
+      allowBooleanAttributes: true,
+    //   format: true,
+
     }
     const parser = new XMLParser(options);
     let result = parser.parse(XMLdata);
     // console.log(JSON.stringify(result, null,4));
 
-    const builder = new XMLBuilder(parser.options);
+    const builder = new XMLBuilder(options);
     result = builder.build(result);
     // console.log(result);
 
@@ -124,6 +130,27 @@ describe("XMLBuilder", function() {
         XMLdata = XMLdata.replace(/<!\[CDATA\[/g, "");
         XMLdata = XMLdata.replace(/\]\]>/g, "");
         expect(result.replace(/\s+/g, "")).toEqual(XMLdata.replace(/\s+/g, ""));
+    });
+    
+    it("should build XML by supressing empty nodes", function() {
+        let XMLdata = `<store>
+            <![CDATA[albha]]>beta <a/><b></b>
+    </store>`;
+    
+        const options = {
+            preserveOrder: true,
+            suppressEmptyNode: true
+        }
+        const parser = new XMLParser(options);
+        let result = parser.parse(XMLdata);
+        // console.log(JSON.stringify(result, null,4));
+
+        const expected = "<store>albhabeta<a/><b/></store>"
+        const builder = new XMLBuilder(options);
+        result = builder.build(result);
+        console.log(result);
+
+        expect(result).toEqual(expected);
     });
 
     it("should build formatted XML", function() {
