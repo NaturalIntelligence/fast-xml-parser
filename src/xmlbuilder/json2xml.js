@@ -9,7 +9,6 @@ const defaultOptions = {
   textNodeName: '#text',
   ignoreAttributes: true,
   cdataTagName: false,
-  cdataPositionChar: '\\c', //TODO: remove
   format: false,
   indentBy: '  ',
   suppressEmptyNode: false,
@@ -28,7 +27,6 @@ const props = [
   'textNodeName',
   'ignoreAttributes',
   'cdataTagName',
-  'cdataPositionChar',
   'format',
   'indentBy',
   'suppressEmptyNode',
@@ -48,15 +46,6 @@ function Builder(options) {
     this.attrPrefixLen = this.options.attributeNamePrefix.length;
     this.isAttribute = isAttribute;
   }
-  if (this.options.cdataTagName) {
-    this.isCDATA = isCDATA;
-  } else {
-    this.isCDATA = function(/*a*/) {
-      return false;
-    };
-  }
-  this.replaceCDATAstr = replaceCDATAstr;
-  this.replaceCDATAarr = replaceCDATAarr;
 
   this.processTextOrObjNode = processTextOrObjNode
 
@@ -112,47 +101,27 @@ Builder.prototype.j2x = function(jObj, level) {
       const attr = this.isAttribute(key);
       if (attr) {
         attrStr += ' ' + attr + '="' + this.options.attrValueProcessor('' + jObj[key]) + '"';
-      } else if (this.isCDATA(key)) {
-        if (jObj[this.options.textNodeName]) {
-          val += this.replaceCDATAstr(jObj[this.options.textNodeName], jObj[key]);
-        } else {
-          val += this.replaceCDATAstr('', jObj[key]);
-        }
-      } else {
+      }else {
         //tag value
         if (key === this.options.textNodeName) {
-          if (jObj[this.options.cdataTagName]) {
-            //value will added while processing cdata
-          } else {
-            val += this.options.tagValueProcessor('' + jObj[key]);
-          }
+          val += this.options.tagValueProcessor('' + jObj[key]);
         } else {
           val += this.buildTextNode(jObj[key], key, '', level);
         }
       }
     } else if (Array.isArray(jObj[key])) {
       //repeated nodes
-      if (this.isCDATA(key)) {
-        val += this.indentate(level);
-        if (jObj[this.options.textNodeName]) {
-          val += this.replaceCDATAarr(jObj[this.options.textNodeName], jObj[key]);
+      const arrLen = jObj[key].length;
+      for (let j = 0; j < arrLen; j++) {
+        const item = jObj[key][j];
+        if (typeof item === 'undefined') {
+          // supress undefined node
+        } else if (item === null) {
+          val += this.indentate(level) + '<' + key + '/' + this.tagEndChar;
+        } else if (typeof item === 'object') {
+          val += this.processTextOrObjNode(item, key, level)
         } else {
-          val += this.replaceCDATAarr('', jObj[key]);
-        }
-      } else {
-        //nested nodes
-        const arrLen = jObj[key].length;
-        for (let j = 0; j < arrLen; j++) {
-          const item = jObj[key][j];
-          if (typeof item === 'undefined') {
-            // supress undefined node
-          } else if (item === null) {
-            val += this.indentate(level) + '<' + key + '/' + this.tagEndChar;
-          } else if (typeof item === 'object') {
-            val += this.processTextOrObjNode(item, key, level)
-          } else {
-            val += this.buildTextNode(item, key, '', level);
-          }
+          val += this.buildTextNode(item, key, '', level);
         }
       }
     } else {
@@ -177,28 +146,6 @@ function processTextOrObjNode (object, key, level) {
     return this.buildTextNode(result.val, key, result.attrStr, level);
   } else {
     return this.buildObjNode(result.val, key, result.attrStr, level);
-  }
-}
-
-//TODO: cdataPositionChar are no more supported
-function replaceCDATAstr(str, cdata) {
-  str = this.options.tagValueProcessor('' + str);
-  if (this.options.cdataPositionChar === '' || str === '') {
-    return str + '<![CDATA[' + cdata + ']]' + this.tagEndChar;
-  } else {
-    return str.replace(this.options.cdataPositionChar, '<![CDATA[' + cdata + ']]' + this.tagEndChar);
-  }
-}
-
-function replaceCDATAarr(str, cdata) {
-  str = this.options.tagValueProcessor('' + str);
-  if (this.options.cdataPositionChar === '' || str === '') {
-    return str + '<![CDATA[' + cdata.join(']]><![CDATA[') + ']]' + this.tagEndChar;
-  } else {
-    for (let v in cdata) {
-      str = str.replace(this.options.cdataPositionChar, '<![CDATA[' + cdata[v] + ']]>');
-    }
-    return str + this.newLine;
   }
 }
 
@@ -275,10 +222,6 @@ function isAttribute(name /*, options*/) {
   } else {
     return false;
   }
-}
-
-function isCDATA(name) {
-  return name === this.options.cdataTagName;
 }
 
 //formatting
