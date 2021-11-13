@@ -3,7 +3,7 @@
 const {XMLBuilder} = require("../src/fxp");
 const he = require("he");
 
-describe("XMLParser", function() {
+describe("XMLBuilder", function() {
 
     it("should parse to XML with nested tags", function() {
         const jObj = {
@@ -16,7 +16,7 @@ describe("XMLParser", function() {
         };
         const builder = new XMLBuilder;
         const result = builder.build(jObj);
-        console.log(result);
+        // console.log(result);
         const expected = `<a><b><c>val1</c><d>val2</d></b></a>`;
         expect(result).toEqual(expected);
     });
@@ -190,11 +190,11 @@ describe("XMLParser", function() {
                                       attributesGroupName:     "@",
                                       encodeHTMLchar:   true,
                                       suppressEmptyNode: true,
-                                      tagValueProcessor: a=> { a= ''+ a; return he.encode(a, { useNamedReferences: true}) },
-                                      attrValueProcessor: a=> he.encode(a, {isAttributeValue: true, useNamedReferences: true})
+                                      tagValueProcessor: (tagName,a)=> { a= ''+ a; return he.encode(a, { useNamedReferences: true}) },
+                                      attrValueProcessor: (attrName, a) => he.encode(a, {isAttributeValue: true, useNamedReferences: true})
                                   });
         const result = builder.build(jObj);
-        console.log(result);
+        // console.log(result);
         const expected = `<a b="val&gt;1" c="val&lt;2"><notattr>val</notattr>textvalue&gt;<tag><k>34</k><g/><nested b="val&gt;1" c="val&lt;2"/></tag></a>`;
         expect(result).toEqual(expected);
     });
@@ -225,8 +225,8 @@ describe("XMLParser", function() {
                                       attributesGroupName:   "@",
                                       encodeHTMLchar: true,
                                       format:         true,
-                                      tagValueProcessor: a=> { a= ''+ a; return he.encode(a, { useNamedReferences: true}) },
-                                      attrValueProcessor: a=> he.encode(a, {isAttributeValue: true, useNamedReferences: true})
+                                      tagValueProcessor: (tagName,a)=> { a= ''+ a; return he.encode(a, { useNamedReferences: true}) },
+                                      attrValueProcessor: (attrName, a)=> he.encode(a, {isAttributeValue: true, useNamedReferences: true})
                                   });
         const result = builder.build(jObj);
         const expected = `<a b="val&gt;1" c="val&lt;2">
@@ -277,8 +277,8 @@ textvalue&gt;  <tag>
       attributesGroupName: "@",
       encodeHTMLchar: true,
       format: true,
-      tagValueProcessor: a => { a= ''+ a; return he.encode(a, { useNamedReferences: true }) },
-      attrValueProcessor: a => he.encode(a, { isAttributeValue: true, useNamedReferences: true })
+      tagValueProcessor: (tagName,a) => { a= ''+ a; return he.encode(a, { useNamedReferences: true }) },
+      attrValueProcessor: (attrName, a) => he.encode(a, { isAttributeValue: true, useNamedReferences: true })
     });
     const result = builder.build(jObj);
     const expected = `<a b="val&gt;1" c="val&lt;2">
@@ -294,7 +294,7 @@ textvalue&gt;  <tag>
   <only_text_obj>another text val</only_text_obj>
 </a>
 `;
-console.log(result);
+// console.log(result);
     expect(result).toEqual(expected);
   });
 
@@ -362,7 +362,7 @@ console.log(result);
             format:              false,
             indentBy:            "\t",
             suppressEmptyNode:    true,
-            tagValueProcessor: function(a) {
+            tagValueProcessor: function(tagName,a) {
                 return a;
             },
         });

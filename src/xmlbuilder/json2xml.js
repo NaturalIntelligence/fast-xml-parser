@@ -12,10 +12,10 @@ const defaultOptions = {
   format: false,
   indentBy: '  ',
   suppressEmptyNode: false,
-  tagValueProcessor: function(a) {
+  tagValueProcessor: function(key, a) {
     return a;
   },
-  attrValueProcessor: function(a) {
+  attrValueProcessor: function(attrName, a) {
     return a;
   },
   preserveOrder: false
@@ -100,11 +100,11 @@ Builder.prototype.j2x = function(jObj, level) {
       //premitive type
       const attr = this.isAttribute(key);
       if (attr) {
-        attrStr += ' ' + attr + '="' + this.options.attrValueProcessor('' + jObj[key]) + '"';
+        attrStr += ' ' + attr + '="' + this.options.attrValueProcessor(attr, '' + jObj[key]) + '"';
       }else {
         //tag value
         if (key === this.options.textNodeName) {
-          val += this.options.tagValueProcessor('' + jObj[key]);
+          val += this.options.tagValueProcessor(key, '' + jObj[key]);
         } else {
           val += this.buildTextNode(jObj[key], key, '', level);
         }
@@ -130,7 +130,7 @@ Builder.prototype.j2x = function(jObj, level) {
         const Ks = Object.keys(jObj[key]);
         const L = Ks.length;
         for (let j = 0; j < L; j++) {
-          attrStr += ' ' + Ks[j] + '="' + this.options.attrValueProcessor('' + jObj[key][Ks[j]]) + '"';
+          attrStr += ' ' + Ks[j] + '="' + this.options.attrValueProcessor(Ks[j], '' + jObj[key][Ks[j]]) + '"';
         }
       } else {
         val += this.processTextOrObjNode(jObj[key], key, level)
@@ -197,7 +197,7 @@ function buildTextValNode(val, key, attrStr, level) {
     key +
     attrStr +
     '>' +
-    this.options.tagValueProcessor(val) +
+    this.options.tagValueProcessor(key, val) +
     '</' +
     key +
     this.tagEndChar
