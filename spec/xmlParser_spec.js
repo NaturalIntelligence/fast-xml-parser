@@ -984,6 +984,8 @@ describe("XMLParser", function() {
         const xmlData = `<rootNode>
         <tag>value</tag>
         <tag2 some="attribute">12345</tag2>
+        <empty></empty>
+        <empty/>
         </rootNode>`;
         const expected = {
             "rootNode": {
@@ -994,6 +996,10 @@ describe("XMLParser", function() {
                     "#text": 12345,
                     "@_some": "attribute"
                 },
+                "empty": [
+                    {   "#text": "" },
+                    {   "#text": "" }
+                ]
             }
         };
 
@@ -1004,6 +1010,7 @@ describe("XMLParser", function() {
         };
         const parser = new XMLParser(options);
         let result = parser.parse(xmlData);
+        // console.log(JSON.stringify(result,null,4));
         expect(result).toEqual(expected);
     });
 });
