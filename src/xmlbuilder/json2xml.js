@@ -1,14 +1,15 @@
 'use strict';
 //parse Empty Node as self closing node
 const buildOptions = require('../util').buildOptions;
+const buildFromOrderedJs = require('./orderedJs2Xml');
 
 const defaultOptions = {
   attributeNamePrefix: '@_',
-  attrNodeName: false,
+  attributesGroupName: false,
   textNodeName: '#text',
   ignoreAttributes: true,
   cdataTagName: false,
-  cdataPositionChar: '\\c',
+  cdataPositionChar: '\\c', //TODO: remove
   format: false,
   indentBy: '  ',
   suppressEmptyNode: false,
@@ -18,11 +19,12 @@ const defaultOptions = {
   attrValueProcessor: function(a) {
     return a;
   },
+  preserveOrder: false
 };
 
 const props = [
   'attributeNamePrefix',
-  'attrNodeName',
+  'attributesGroupName',
   'textNodeName',
   'ignoreAttributes',
   'cdataTagName',
@@ -33,11 +35,12 @@ const props = [
   'tagValueProcessor',
   'attrValueProcessor',
   'rootNodeName', //when array as root
+  'preserveOrder',
 ];
 
 function Builder(options) {
   this.options = buildOptions(options, defaultOptions, props);
-  if (this.options.ignoreAttributes || this.options.attrNodeName) {
+  if (this.options.ignoreAttributes || this.options.attributesGroupName) {
     this.isAttribute = function(/*a*/) {
       return false;
     };
@@ -82,12 +85,16 @@ function Builder(options) {
 }
 
 Builder.prototype.build = function(jObj) {
-  if(Array.isArray(jObj) && this.options.rootNodeName && this.options.rootNodeName.length > 1){
-    jObj = {
-      [this.options.rootNodeName] : jObj
+  // if(this.options.preserveOrder){
+  //   return buildFromOrderedJs(jObj, this.options);
+  // }else {
+    if(Array.isArray(jObj) && this.options.rootNodeName && this.options.rootNodeName.length > 1){
+      jObj = {
+        [this.options.rootNodeName] : jObj
+      }
     }
-  }
-  return this.j2x(jObj, 0).val;
+    return this.j2x(jObj, 0).val;
+  // }
 };
 
 Builder.prototype.j2x = function(jObj, level) {
@@ -150,7 +157,7 @@ Builder.prototype.j2x = function(jObj, level) {
       }
     } else {
       //nested node
-      if (this.options.attrNodeName && key === this.options.attrNodeName) {
+      if (this.options.attributesGroupName && key === this.options.attributesGroupName) {
         const Ks = Object.keys(jObj[key]);
         const L = Ks.length;
         for (let j = 0; j < L; j++) {
@@ -173,6 +180,7 @@ function processTextOrObjNode (object, key, level) {
   }
 }
 
+//TODO: cdataPositionChar are no more supported
 function replaceCDATAstr(str, cdata) {
   str = this.options.tagValueProcessor('' + str);
   if (this.options.cdataPositionChar === '' || str === '') {

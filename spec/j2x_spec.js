@@ -16,7 +16,7 @@ describe("XMLParser", function() {
         };
         const builder = new XMLBuilder;
         const result = builder.build(jObj);
-        //console.log(result);
+        console.log(result);
         const expected = `<a><b><c>val1</c><d>val2</d></b></a>`;
         expect(result).toEqual(expected);
     });
@@ -123,7 +123,7 @@ describe("XMLParser", function() {
         const builder = new XMLBuilder({
                                       ignoreAttributes:    false,
                                       attributeNamePrefix: "@_",
-                                      attrNodeName:        "@"
+                                      attributesGroupName:        "@"
                                   });
         const result = builder.build(jObj);
         //console.log(result);
@@ -247,7 +247,7 @@ describe("XMLParser", function() {
         };
         const builder = new XMLBuilder({
                                       cdataTagName:   "__cdata",
-                                      attrNodeName:   "@",
+                                      attributesGroupName:   "@",
                                       encodeHTMLchar: true,
                                       tagValueProcessor: a=> { a= ''+ a; return he.encode(a, { useNamedReferences: true}) },
                                       attrValueProcessor: a=> he.encode(a, {isAttributeValue: true, useNamedReferences: true})
@@ -297,7 +297,7 @@ describe("XMLParser", function() {
         const builder = new XMLBuilder({
                                       cdataTagName:     "__cdata",
                                       attributeNamePrefix: "",
-                                      attrNodeName:     "@",
+                                      attributesGroupName:     "@",
                                       encodeHTMLchar:   true,
                                       suppressEmptyNode: true,
                                       tagValueProcessor: a=> { a= ''+ a; return he.encode(a, { useNamedReferences: true}) },
@@ -335,7 +335,7 @@ describe("XMLParser", function() {
         };
         const builder = new XMLBuilder({
                                       cdataTagName:   "__cdata",
-                                      attrNodeName:   "@",
+                                      attributesGroupName:   "@",
                                       encodeHTMLchar: true,
                                       format:         true,
                                       tagValueProcessor: a=> { a= ''+ a; return he.encode(a, { useNamedReferences: true}) },
@@ -392,7 +392,7 @@ describe("XMLParser", function() {
     };
     const builder = new XMLBuilder({
       cdataTagName: "__cdata",
-      attrNodeName: "@",
+      attributesGroupName: "@",
       encodeHTMLchar: true,
       format: true,
       tagValueProcessor: a => { a= ''+ a; return he.encode(a, { useNamedReferences: true }) },
@@ -438,19 +438,19 @@ describe("XMLParser", function() {
         };
         const builder = new XMLBuilder({
             attributeNamePrefix: "",
-            attrNodeName:        "$",
+            attributesGroupName:        "$",
             textNodeName:        "_",
             ignoreAttributes:    false,
+            // ignoreAttributes:    true,
             cdataTagName:        "$cdata",
-            cdataPositionChar:   "\\c",
             format:              false,
             indentBy:            "\t",
             suppressEmptyNode:    true
         });
         const result = builder.build(jObj);
         const expected = '<root><element aaa="aaa" bbb="bbb">1</element><element2 aaa="aaa2" bbb="bbb2"><subelement aaa="sub_aaa"/></element2><date>test</date></root>';
-        //console.log(result);
-        //console.log(expected);
+        console.log(result);
+        console.log(expected);
         expect(result).toEqual(expected);
     });
 
@@ -473,7 +473,7 @@ describe("XMLParser", function() {
         };
         const builder = new XMLBuilder({
             attributeNamePrefix: "",
-            attrNodeName:        "$",
+            attributesGroupName:        "$",
             textNodeName:        "_",
             ignoreAttributes:    false,
             cdataTagName:        "$cdata",
