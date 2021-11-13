@@ -148,7 +148,7 @@ describe("XMLBuilder", function() {
         const expected = "<store>albhabeta<a/><b/></store>"
         const builder = new XMLBuilder(options);
         result = builder.build(result);
-        console.log(result);
+        // console.log(result);
 
         expect(result).toEqual(expected);
     });

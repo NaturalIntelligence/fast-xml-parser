@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<any_name attr="https://example.com/somepath">
+    <person id="101">
+        <phone>+122233344550</phone>
+        <name>Jack</name>
+        <phone>+122233344551</phone>
+        <age>33</age>
+        <emptyNode></emptyNode>
+        <booleanNode>false</booleanNode>
+        <booleanNode>true</booleanNode>
+        <selfclosing with="value" />
+    </person>
+    <person id="102">
+        <phone>+122233344553</phone>
+        <name>Boris</name>
+        <phone>+122233344554</phone>
+    </person>
+</any_name>

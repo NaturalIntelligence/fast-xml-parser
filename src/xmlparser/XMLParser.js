@@ -28,7 +28,7 @@ class XMLParser{
             }
           }
         const orderedResult = parseToOrderedJsObj(xmlData, this.options);
-        if(this.options.preserveOrder) return orderedResult;
+        if(this.options.preserveOrder || orderedResult === undefined) return orderedResult;
         else return prettify(orderedResult, this.options);
     }
 }
