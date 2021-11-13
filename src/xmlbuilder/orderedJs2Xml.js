@@ -17,21 +17,19 @@ function arrToStr(arr, options, level){
         const tagName = propName(tagObj);
 
         if(tagName === options.textNodeName){
-            xmlStr += options.tagValueProcessor( tagName, tagObj[tagName]);
+            xmlStr += indentation + options.tagValueProcessor( tagName, tagObj[tagName]);
             continue;
         }else if( tagName === options.cdataTagName){
-            xmlStr += `<![CDATA[${tagObj[tagName][0][options.textNodeName]}]]>`;
+            xmlStr += indentation + `<![CDATA[${tagObj[tagName][0][options.textNodeName]}]]>`;
             continue;
         }
         const attStr = attr_to_str(tagObj.attributes, options);
-        let leafNode = false;
         let tagStart =  indentation + `<${tagName}${attStr}`;
         let tagValue = arrToStr(tagObj[tagName], options, level + 1);
         if( (!tagValue || tagValue.length === 0) && options.suppressEmptyNode){ 
             xmlStr += tagStart + "/>"; 
-        }else if(leafNode) { 
-            xmlStr += tagStart + `>${tagValue}</${tagName}>`; 
         }else{ 
+            //TODO: node with only text value should not parse the text value in next line
             xmlStr += tagStart + `>${tagValue}${indentation}</${tagName}>` ;
         }
     }

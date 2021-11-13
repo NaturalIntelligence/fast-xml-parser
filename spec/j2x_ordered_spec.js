@@ -71,4 +71,126 @@ describe("XMLBuilder", function() {
 
     expect(result.replace(/\s+/g, "")).toEqual(XMLdata.replace(/\s+/g, ""));
     });
+    
+    it("should build XML by merging CDATA to text property when CDATA tag name is not set", function() {
+        let XMLdata = `<store>
+        <location>
+            <![CDATA[locates in]]>
+            <region>US</region>
+            <![CDATA[and]]>
+            <region>JAPAN</region>
+            --finish--
+        </location>
+        <type>
+            <size>
+                <![CDATA[Small]]>alpha
+            </size>
+            <function>24x7</function>
+        </type>
+    </store>`;
+    
+        const options = {
+        preserveOrder: true,
+        }
+        const parser = new XMLParser(options);
+        let result = parser.parse(XMLdata);
+        // console.log(JSON.stringify(result, null,4));
+
+        const builder = new XMLBuilder(parser.options);
+        result = builder.build(result);
+        // console.log(result);
+
+        XMLdata = XMLdata.replace(/<!\[CDATA\[/g, "");
+        XMLdata = XMLdata.replace(/\]\]>/g, "");
+        expect(result.replace(/\s+/g, "")).toEqual(XMLdata.replace(/\s+/g, ""));
+    });
+
+    it("should build XML having only text", function() {
+        let XMLdata = `<store>
+            <![CDATA[albha]]>beta
+    </store>`;
+    
+        const options = {
+            preserveOrder: true,
+        }
+        const parser = new XMLParser(options);
+        let result = parser.parse(XMLdata);
+        // console.log(JSON.stringify(result, null,4));
+
+        const builder = new XMLBuilder(parser.options);
+        result = builder.build(result);
+        // console.log(result);
+
+        XMLdata = XMLdata.replace(/<!\[CDATA\[/g, "");
+        XMLdata = XMLdata.replace(/\]\]>/g, "");
+        expect(result.replace(/\s+/g, "")).toEqual(XMLdata.replace(/\s+/g, ""));
+    });
+
+    it("should build formatted XML", function() {
+        let XMLdata = `<store>
+        <location>
+            <![CDATA[locates in]]>
+            <region>US</region>
+            <![CDATA[and]]>
+            <region>JAPAN</region>
+            --finish--
+        </location>
+        <type>
+            <size>
+                <![CDATA[Small]]>alpha
+            </size>
+            <function>24x7</function>
+        </type>
+    </store>`;
+    
+        const options = {
+            preserveOrder: true,
+            format: true,
+            // cdataTagName: "#CDATA"
+        }
+        const parser = new XMLParser(options);
+        let result = parser.parse(XMLdata);
+        // console.log(JSON.stringify(result, null,4));
+
+        const builder = new XMLBuilder(options);
+        result = builder.build(result);
+        // console.log(result);
+
+        XMLdata = XMLdata.replace(/<!\[CDATA\[/g, "");
+        XMLdata = XMLdata.replace(/\]\]>/g, "");
+        expect(result.replace(/\s+/g, "")).toEqual(XMLdata.replace(/\s+/g, ""));
+    });
+    
+    it("should build formatted XML with CDATA", function() {
+        let XMLdata = `<store>
+        <location>
+            <![CDATA[locates in]]>
+            <region>US</region>
+            <![CDATA[and]]>
+            <region>JAPAN</region>
+            --finish--
+        </location>
+        <type>
+            <size>
+                <![CDATA[Small]]>alpha
+            </size>
+            <function>24x7</function>
+        </type>
+    </store>`;
+    
+        const options = {
+            preserveOrder: true,
+            format: true,
+            cdataTagName: "#CDATA"
+        }
+        const parser = new XMLParser(options);
+        let result = parser.parse(XMLdata);
+        // console.log(JSON.stringify(result, null,4));
+
+        const builder = new XMLBuilder(options);
+        result = builder.build(result);
+        // console.log(result);
+
+        expect(result.replace(/\s+/g, "")).toEqual(XMLdata.replace(/\s+/g, ""));
+    });
 });
