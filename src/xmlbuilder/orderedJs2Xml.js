@@ -49,7 +49,7 @@ function attr_to_str(attrMap, options){
     let attrStr = "";
     if(attrMap && !options.ignoreAttributes){
         for( attr in attrMap){
-            attrStr+= ` ${attr.substr(options.attributeNamePrefix.length)}='${options.attrValueProcessor(attr, attrMap[attr])}'`;
+            attrStr+= ` ${attr.substr(options.attributeNamePrefix.length)}="${options.attrValueProcessor(attr, attrMap[attr])}"`;
         }
     }
     return attrStr;

@@ -55,7 +55,7 @@ describe("XMLBuilder", function() {
             </size>
             <function>24x7</function>
             <empty></empty>
-            <empty attr='ibute'></empty>
+            <empty attr="ibute"></empty>
         </type>
     </store>`;
     
@@ -218,6 +218,54 @@ describe("XMLBuilder", function() {
         result = builder.build(result);
         // console.log(result);
 
+        expect(result.replace(/\s+/g, "")).toEqual(XMLdata.replace(/\s+/g, ""));
+    });
+
+    it("should build XML when leaf nodes or attributes are parsed to array", function () {
+        const XMLdata = `<report>
+        <store>
+            <region>US</region>
+            <inventory>
+                <item grade="A">
+                    <name>Banana</name>
+                    <count>200</count>
+                </item>
+                <item grade="B">
+                    <name>Apple</name>
+                    <count>100</count>
+                </item>
+            </inventory>
+        </store>
+        <store>
+            <region>EU</region>
+            <inventory>
+                <item>
+                    <name>Banana</name>
+                    <count>100</count>
+                </item>
+            </inventory>
+        </store>
+    </report>`;
+    
+        const options = {
+            ignoreAttributes: false,
+            isArray: (tagName, jpath, isLeafNode, isAttribute) => { 
+                if(isLeafNode === true) return true;
+            },
+            preserveOrder: true
+        }
+        const parser = new XMLParser(options);
+        let result = parser.parse(XMLdata);
+        // console.log(JSON.stringify(result,null,4));
+
+        const builder = new XMLBuilder({
+            attributeNamePrefix: "@_",
+            ignoreAttributes: false,
+            format: true,
+            preserveOrder: true
+        });
+        result = builder.build(result);
+        // console.log(result);
         expect(result.replace(/\s+/g, "")).toEqual(XMLdata.replace(/\s+/g, ""));
     });
 });

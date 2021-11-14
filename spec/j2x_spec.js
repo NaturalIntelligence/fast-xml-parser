@@ -86,6 +86,7 @@ describe("XMLBuilder", function() {
         expect(result).toEqual(expected);
     });
 
+    //Note: attribute should not be set to an array
     it("should parse to XML with attributes", function() {
         const jObj = {
             a: {
