@@ -1,0 +1,127 @@
+{
+    "any_name": [
+        {
+            "person": [
+                {
+                    "phone": [ { "#text": 122233344550 } ]
+                },
+                {
+                    "name": [ { "#text": "Jack" } ]
+                },
+                {
+                    "phone": [ { "#text": 122233344551 } ]
+                },
+                {
+                    "age": [ { "#text": 33 } ]
+                },
+                {
+                    "emptyNode": []
+                },
+                {
+                    "booleanNode": [ { "#text": false } ]
+                },
+                {
+                    "booleanNode": [ { "#text": true } ]
+                },
+                {
+                    "selfclosing": []
+                },
+                {
+                    "selfclosing": []
+                },
+                {
+                    "married": [ { "#text": "Yes" } ]
+                },
+                {
+                    "birthday": [ { "#text": "Wed, 28 Mar 1979 12:13:14 +0300" } ]
+                },
+                {
+                    "address": [
+                        {
+                            "city": [ { "#text": "New York" } ]
+                        },
+                        {
+                            "street": [ { "#text": "Park Ave" } ]
+                        },
+                        {
+                            "buildingNo": [ { "#text": 1 } ]
+                        },
+                        {
+                            "flatNo": [ { "#text": 1 } ]
+                        }
+                    ]
+                },
+                {
+                    "address": [
+                        {
+                            "city": [ { "#text": "Boston" } ]
+                        },
+                        {
+                            "street": [ { "#text": "Centre St" } ]
+                        },
+                        {
+                            "buildingNo": [ { "#text": 33 } ]
+                        },
+                        {
+                            "flatNo": [ { "#text": 24 } ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "person": [
+                {
+                    "phone": [ { "#text": 122233344553 } ]
+                },
+                {
+                    "name": [ { "#text": "Boris" } ]
+                },
+                {
+                    "phone": [ { "#text": 122233344554 } ]
+                },
+                {
+                    "age": [ { "#text": 34 } ]
+                },
+                {
+                    "married": [ { "#text": "Yes" } ]
+                },
+                {
+                    "birthday": [ { "#text": "Mon, 31 Aug 1970 02:03:04 +0300" } ]
+                },
+                {
+                    "address": [
+                        {
+                            "city": [ { "#text": "Moscow" } ]
+                        },
+                        {
+                            "street": [ { "#text": "Kahovka" } ]
+                        },
+                        {
+                            "buildingNo": [ { "#text": 1 } ]
+                        },
+                        {
+                            "flatNo": [ { "#text": 2 } ]
+                        }
+                    ]
+                },
+                {
+                    "address": [
+                        {
+                            "city": [ { "#text": "Tula" } ]
+                        },
+                        {
+                            "street": [ { "#text": "Lenina" } ]
+                        },
+                        {
+                            "buildingNo": [ { "#text": 3 } ]
+                        },
+                        {
+                            "flatNo": [ { "#text": 78 } ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
