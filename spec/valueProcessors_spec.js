@@ -204,4 +204,117 @@ describe("XMLParser", function() {
             ]
         });
     });
+
+    it("should call tagValue processor without CDATA with correct parameters", function() {
+
+        const expectedValues = [
+            "a wow root.a true true",
+            "a text root.a false true",
+            "a after root.a true false",
+            "a wow again root.a true false",
+            "c unlimited root.a.c true true",
+            "b wow phir se root.b true true",
+        ];
+
+        const XMLdata = `
+        <root a="nice" checked>
+          <a a="2" >wow</a>
+          <a a="2" ><![CDATA[text]]>after </a>
+          <a a="2" >
+            wow again
+            <c a="2" > unlimited </c>
+          </a>
+          <b a="2" >wow phir se</b>
+      </root>`;
+  
+      const tagValueProcessorCalls = [];
+      const options = {
+        ignoreAttributes: false,
+        preserveOrder: true,
+        tagValueProcessor: (tagName, tagValue, jPath, hasAttributes, isLeafNode) => {
+        //   console.log(tagName, tagValue, jPath, hasAttributes, isLeafNode);
+        tagValueProcessorCalls.push(`${tagName} ${tagValue} ${jPath} ${hasAttributes} ${isLeafNode}`);
+          // if(isLeafNode) return tagValue;
+          // else return "";
+          return tagValue;
+        }
+      }
+      const parser = new XMLParser(options);
+      let result = parser.parse(XMLdata);
+    //   console.log(JSON.stringify(result, null,4));
+    
+    expect(tagValueProcessorCalls).toEqual(expectedValues);
+    });
+    
+    it("should call tagValue processor with CDATA with correct parameters", function() {
+
+        const expectedValues = [
+            
+            "a wow root.a true true",
+            "#CDATA text root.a.#CDATA false true",
+            "a after root.a true false",
+            "a wow again root.a true false",
+            "c unlimited root.a.c true true",
+            "b wow phir se root.b true true",
+        ];
+
+        const XMLdata = `
+        <root a="nice" checked>
+          <a a="2" >wow</a>
+          <a a="2" ><![CDATA[text]]>after </a>
+          <a a="2" >
+            wow again
+            <c a="2" > unlimited </c>
+          </a>
+          <b a="2" >wow phir se</b>
+      </root>`;
+  
+      const tagValueProcessorCalls = [];
+      const options = {
+        ignoreAttributes: false,
+        preserveOrder: true,
+        cdataTagName: "#CDATA",
+        tagValueProcessor: (tagName, tagValue, jPath, hasAttributes, isLeafNode) => {
+        //   console.log(tagName, tagValue, jPath, hasAttributes, isLeafNode);
+        tagValueProcessorCalls.push(`${tagName} ${tagValue} ${jPath} ${hasAttributes} ${isLeafNode}`);
+          // if(isLeafNode) return tagValue;
+          // else return "";
+          return tagValue;
+        }
+      }
+      const parser = new XMLParser(options);
+      let result = parser.parse(XMLdata);
+    //   console.log(JSON.stringify(result, null,4));
+  
+      expect(tagValueProcessorCalls).toEqual(expectedValues);
+    });
+
+    it("should call tagValue processor for whitespace only values but not empty when trimValues:false", function() {
+
+        const expectedValues = [
+            "root    root true false"
+        ];
+
+        const XMLdata = `<root a="nice" checked>  <a a="2" ></a></root>`;
+  
+      const tagValueProcessorCalls = [];
+      const options = {
+        ignoreAttributes: false,
+        preserveOrder: true,
+        cdataTagName: "#CDATA",
+        tagValueProcessor: (tagName, tagValue, jPath, hasAttributes, isLeafNode) => {
+        //   console.log(tagName, tagValue, jPath, hasAttributes, isLeafNode);
+        tagValueProcessorCalls.push(`${tagName} ${tagValue} ${jPath} ${hasAttributes} ${isLeafNode}`);
+          // if(isLeafNode) return tagValue;
+          // else return "";
+          return tagValue;
+        },
+        trimValues: false
+      }
+      const parser = new XMLParser(options);
+      let result = parser.parse(XMLdata);
+    //   console.log(JSON.stringify(result, null,4));
+  
+      expect(tagValueProcessorCalls).toEqual(expectedValues);
+    });
 });

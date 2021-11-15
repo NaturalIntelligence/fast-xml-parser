@@ -23,14 +23,19 @@ if (!Number.parseFloat && window.parseFloat) {
 /**
  * @param {string} val
  * @param {object} options
+ * @param {string} tagName
+ * @param {string} jPath
+ * @param {boolean} dontTrim
+ * @param {boolean} hasAttributes
+ * @param {boolean} isLeafNode
  */
-function parseValue(val, options, tagName, jPath, dontTrim) {
+function parseValue(val, options, tagName, jPath, dontTrim, hasAttributes, isLeafNode) {
   if (val !== undefined) {
     if (options.trimValues && !dontTrim) {
       val = val.trim();
     }
     if(val.length > 0){
-      const newval = options.tagValueProcessor(tagName, val, jPath);
+      const newval = options.tagValueProcessor(tagName, val, jPath, hasAttributes, isLeafNode);
       if(newval === null || newval === undefined){
         //don't parse
         return val;
@@ -160,7 +165,13 @@ const parseToOrderedJsObj = function(xmlData, options) {
         }
         
         if(currentNode){
-          textData = parseValue(textData, options, currentNode.tagname, jPath)
+          textData = parseValue(textData
+            , options
+            , currentNode.tagname
+            , jPath
+            ,false
+            , currentNode.attrsMap ? Object.keys(currentNode.attrsMap).length !== 0 : false
+            , Object.keys(currentNode.child).length === 0);
           if(textData !== undefined &&  textData !== "") currentNode.add(options.textNodeName, textData);
           textData = "";
         }
@@ -193,18 +204,25 @@ const parseToOrderedJsObj = function(xmlData, options) {
         const tagExp = xmlData.substring(i + 9,closeIndex);
 
         if(textData){ //store previously collected data as textNode
-          textData = parseValue(textData, options, currentNode.tagname, jPath);
+          textData = parseValue(textData
+            , options
+            , currentNode.tagname
+            , jPath
+            ,false
+            , currentNode.attrsMap ? Object.keys(currentNode.attrsMap).length !== 0 : false
+            , Object.keys(currentNode.child).length === 0);
+
           if(textData !== undefined &&  textData !== "") currentNode.add(options.textNodeName, textData);
           textData = "";
         }
 
         //cdata should be set even if it is 0 length string
         if(options.cdataTagName){
-          let val = parseValue(tagExp, options, options.cdataTagName, jPath + "." + options.cdataTagName, true);
+          let val = parseValue(tagExp, options, options.cdataTagName, jPath + "." + options.cdataTagName, true, false, true);
           if(!val) val = "";
           currentNode.add(options.cdataTagName, [ { [options.textNodeName] : val } ]);
         }else{
-          let val = parseValue(tagExp, options, currentNode.tagname, jPath, true);
+          let val = parseValue(tagExp, options, currentNode.tagname, jPath, true, false, true);
           if(!val) val = "";
           currentNode.add(options.textNodeName, val);
         }
@@ -229,18 +247,27 @@ const parseToOrderedJsObj = function(xmlData, options) {
             shouldBuildAttributesMap = tagName !== result.data.substr(colonIndex + 1);
           }
         }
-        if(tagName !== xmlObj.tagname){
-          jPath += jPath ? "." + tagName : tagName;
-        }
+        
         //save text as child node
         if (currentNode && textData) {
           if(currentNode.tagname !== '!xml'){
-            textData = parseValue(textData, options, currentNode.tagname, jPath );
+            //when nested tag is found
+            textData = parseValue(textData
+              , options
+              , currentNode.tagname
+              , jPath
+              , false
+              , currentNode.attrsMap ? Object.keys(currentNode.attrsMap).length !== 0 : false
+              , false);
             if(textData !== undefined &&  textData !== "") currentNode.add(options.textNodeName, textData);
             textData = "";
           }
         }
 
+        if(tagName !== xmlObj.tagname){
+          jPath += jPath ? "." + tagName : tagName;
+        }
+        
         if(tagExp.length > 0 && tagExp.lastIndexOf("/") === tagExp.length - 1){//selfClosing tag
           
           if(tagName[tagName.length - 1] === "/"){ //remove trailing '/'

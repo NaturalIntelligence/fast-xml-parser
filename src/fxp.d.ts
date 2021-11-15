@@ -10,7 +10,7 @@ type X2jOptions = {
   parseAttributeValue: boolean;
   trimValues: boolean;
   cdataTagName: false | string;
-  tagValueProcessor: (tagName: string, tagValue: string, jPath: string) => string;
+  tagValueProcessor: (tagName: string, tagValue: string, jPath: string, hasAttributes: boolean, isLeafNode: boolean) => string;
   attrValueProcessor: (attrName: string, attrValue: string, jPath: string) => string;
   numberParseOptions: strnumOptions;
   stopNodes: string[];
