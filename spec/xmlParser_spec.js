@@ -887,7 +887,7 @@ describe("XMLParser", function() {
         const parser = new XMLParser(options);
         expect(() => {
             let result = parser.parse(xmlData, true);
-        }).toThrowError(`Closing tag 'tag' doesn't have proper closing.`)
+        }).toThrowError(`Closing tag 'tag' doesn't have proper closing.:1:66`)
 
     });
 
@@ -1012,5 +1012,79 @@ describe("XMLParser", function() {
         let result = parser.parse(xmlData);
         // console.log(JSON.stringify(result,null,4));
         expect(result).toEqual(expected);
+    });
+
+    it("should not parse value when trimValues: false && tag value has white spaces", function() {
+        const XMLdata = `
+        <root attri="   ibu  te   ">
+        35       <nested>34</nested>
+      </root>`;
+        
+        const expected = {
+            "root": {
+                "nested": 34,
+                "#text": "\n      35       \n    ",
+                "@_attri": "   ibu  te   "
+            }
+        };
+      const options = {
+        ignoreAttributes: false,
+        // parseTagValue: false,
+        trimValues: false
+      }
+      const parser = new XMLParser(options);
+      let result = parser.parse(XMLdata);
+    //   console.log(JSON.stringify(result, null,4));
+  
+      expect(result).toEqual(expected);
+    });
+    
+    it("should parse value when trimValues: true && value has white spaces", function() {
+        const XMLdata = `
+        <root attri="   ibu  te   ">
+        35       <nested>34</nested>
+      </root>`;
+        
+        const expected = {
+            "root": {
+                "nested": 34,
+                "#text": 35,
+                "@_attri": "ibu  te"
+            }
+        };
+      const options = {
+        ignoreAttributes: false,
+        // parseTagValue: false,
+        trimValues: true
+      }
+      const parser = new XMLParser(options);
+      let result = parser.parse(XMLdata);
+    //   console.log(JSON.stringify(result, null,4));
+  
+      expect(result).toEqual(expected);
+    });
+    it("should remove white spaces from values when trimValues: true && parseTagValue: false", function() {
+        const XMLdata = `
+        <root attri="   ibu  te   ">
+        35       <nested>34</nested>
+      </root>`;
+        
+        const expected = {
+            "root": {
+                "nested": "34",
+                "#text": "35",
+                "@_attri": "ibu  te"
+            }
+        };
+      const options = {
+        ignoreAttributes: false,
+        parseTagValue: false,
+        // trimValues: false
+      }
+      const parser = new XMLParser(options);
+      let result = parser.parse(XMLdata);
+    //   console.log(JSON.stringify(result, null,4));
+  
+      expect(result).toEqual(expected);
     });
 });

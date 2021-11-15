@@ -37,8 +37,15 @@ function parseValue(val, options, tagName, jPath, dontTrim) {
       }else if(typeof newval !== typeof val || newval !== val){
         //overwrite
         return newval;
-      }else{
+      }else if(options.trimValues){
         return _parseValue(val, options.parseTagValue, options.numberParseOptions);
+      }else{
+        const trimmedVal = val.trim();
+        if(trimmedVal === val){
+          return _parseValue(val, options.parseTagValue, options.numberParseOptions);
+        }else{
+          return val;
+        }
       }
     }
   }
