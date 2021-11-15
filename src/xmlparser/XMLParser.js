@@ -24,7 +24,7 @@ class XMLParser{
             
             const result = validator.validate(xmlData, validationOption);
             if (result !== true) {
-              throw Error( result.err.msg)
+              throw Error( `${result.err.msg}:${result.err.line}:${result.err.col}` )
             }
           }
         const orderedResult = parseToOrderedJsObj(xmlData, this.options);
