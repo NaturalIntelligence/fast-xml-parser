@@ -10,12 +10,12 @@ type X2jOptions = {
   parseAttributeValue: boolean;
   trimValues: boolean;
   cdataTagName: false | string;
-  tagValueProcessor: (tagValue: string, tagName: string) => string;
-  attrValueProcessor: (attrValue: string, attrName: string) => string;
+  tagValueProcessor: (tagName: string, tagValue: string, jPath: string) => string;
+  attrValueProcessor: (attrName: string, attrValue: string, jPath: string) => string;
   numberParseOptions: strnumOptions;
   stopNodes: string[];
   alwaysCreateTextNode: boolean;
-  isArray: (tagName: string, jpath: string, isLeafNode: boolean, isAttribute: boolean) => boolean;
+  isArray: (tagName: string, jPath: string, isLeafNode: boolean, isAttribute: boolean) => boolean;
 };
 type strnumOptions = {
   hex: boolean;
