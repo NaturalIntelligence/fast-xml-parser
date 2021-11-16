@@ -88,11 +88,11 @@ function _parseValue(val, shouldParse, options) {
 
 //TODO: change regex to capture NS
 //const attrsRegx = new RegExp("([\\w\\-\\.\\:]+)\\s*=\\s*(['\"])((.|\n)*?)\\2","gm");
-const attrsRegx = new RegExp('([^\\s=]+)\\s*(=\\s*([\'"])(.*?)\\3)?', 'g');
+const attrsRegx = new RegExp('([^\\s=]+)\\s*(=\\s*([\'"])([\\s\\S]*?)\\3)?', 'gm');
 
 function buildAttributesMap(attrStr, jPath, options) {
   if (!options.ignoreAttributes && typeof attrStr === 'string') {
-    attrStr = attrStr.replace(/\r?\n/g, ' ');
+    // attrStr = attrStr.replace(/\r?\n/g, ' ');
     //attrStr = attrStr || attrStr.trim();
 
     const matches = util.getAllMatches(attrStr, attrsRegx);
@@ -232,7 +232,7 @@ const parseToOrderedJsObj = function(xmlData, options) {
         const result = tagExpWithClosingIndex(xmlData, i+1)
         let tagExp = result.data;
         const closeIndex = result.index;
-        const separatorIndex = tagExp.indexOf(" ");
+        const separatorIndex = tagExp.search(/\s/);
         let tagName = tagExp;
         let shouldBuildAttributesMap = true;
         if(separatorIndex !== -1){//separate tag name and attributes expression

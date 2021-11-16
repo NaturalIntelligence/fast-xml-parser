@@ -23,7 +23,7 @@ describe("XMLParser", function() {
     });
 
     it("should decode HTML entities / char", function() {
-        const xmlData = `<element id="7" data="foo\r\nbar" bug="foo&ampbar&apos;"/>`;
+        const xmlData = `<element id="7" data="foo bar" bug="foo&ampbar&apos;"/>`;
         const expected = {
             "element": {
                 "id":   7,
