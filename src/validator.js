@@ -25,7 +25,7 @@ exports.validate = function (xmlData, options) {
     // check for byte order mark (BOM)
     xmlData = xmlData.substr(1);
   }
-
+  
   for (let i = 0; i < xmlData.length; i++) {
 
     if (xmlData[i] === '<' && xmlData[i+1] === '?') {
@@ -156,6 +156,10 @@ exports.validate = function (xmlData, options) {
             if (afterAmp == -1)
               return getErrorObject('InvalidChar', "char '&' is not expected.", getLineNumberForPosition(xmlData, i));
             i = afterAmp;
+          }else{
+            if (reachedRoot === true && !isWhiteSpace(xmlData[i])) {
+              return getErrorObject('InvalidXml', "Extra text at the end", getLineNumberForPosition(xmlData, i));
+            }
           }
         } //end of reading tag text value
         if (xmlData[i] === '<') {
@@ -163,7 +167,7 @@ exports.validate = function (xmlData, options) {
         }
       }
     } else {
-      if (xmlData[i] === ' ' || xmlData[i] === '\t' || xmlData[i] === '\n' || xmlData[i] === '\r') {
+      if ( isWhiteSpace(xmlData[i])) {
         continue;
       }
       return getErrorObject('InvalidChar', "char '"+xmlData[i]+"' is not expected.", getLineNumberForPosition(xmlData, i));
@@ -183,6 +187,9 @@ exports.validate = function (xmlData, options) {
   return true;
 };
 
+function isWhiteSpace(char){
+  return char === ' ' || char === '\t' || char === '\n'  || char === '\r';
+}
 /**
  * Read Processing insstructions and skip
  * @param {*} xmlData

@@ -6,6 +6,7 @@ const {XMLParser, XMLValidator} = require("../src/fxp");
 
 function validate(xmlData, error, line = 1, col) {
     const result = XMLValidator.validate(xmlData);
+    // console.log(result);
     if (error) {
 
         const keys = Object.keys(error);
@@ -426,4 +427,9 @@ describe("should report correct line numbers for unclosed tags", () => {
                     <empty/>
                   </parent>`,
                  {InvalidTag: "Expected closing tag 'self' (opened in line 4, col 24) instead of closing tag 'incorrect'."}, 5, 21));
+    
+    it('- Extra text', () =>
+        validate(`<parent>
+                  </parent>extra`,
+                 {InvalidXml: "Extra text at the end"}, 2, 28));
 });
