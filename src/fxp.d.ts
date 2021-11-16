@@ -11,7 +11,7 @@ type X2jOptions = {
   trimValues: boolean;
   cdataTagName: false | string;
   tagValueProcessor: (tagName: string, tagValue: string, jPath: string, hasAttributes: boolean, isLeafNode: boolean) => string;
-  attrValueProcessor: (attrName: string, attrValue: string, jPath: string) => string;
+  attributeValueProcessor: (attrName: string, attrValue: string, jPath: string) => string;
   numberParseOptions: strnumOptions;
   stopNodes: string[];
   alwaysCreateTextNode: boolean;
@@ -34,12 +34,11 @@ type XmlBuilderOptions = {
   textNodeName: string;
   ignoreAttributes: boolean;
   cdataTagName: false | string;
-  cdataPositionChar: string;
   format: boolean;
   indentBy: string;
   suppressEmptyNode: boolean;
-  tagValueProcessor: (tagValue: string) => string;
-  attrValueProcessor: (attrValue: string) => string;
+  tagValueProcessor: (name: string, value: string) => string;
+  attributeValueProcessor: (name: string, value: string) => string;
 };
 type XmlBuilderOptionsOptional = Partial<XmlBuilderOptions>;
 
