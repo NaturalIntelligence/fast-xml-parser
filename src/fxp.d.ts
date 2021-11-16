@@ -36,7 +36,9 @@ type XmlBuilderOptions = {
   cdataTagName: false | string;
   format: boolean;
   indentBy: string;
+  arrayNodeName: string;
   suppressEmptyNode: boolean;
+  preserveOrder: boolean;
   tagValueProcessor: (name: string, value: string) => string;
   attributeValueProcessor: (name: string, value: string) => string;
 };
@@ -45,7 +47,12 @@ type XmlBuilderOptionsOptional = Partial<XmlBuilderOptions>;
 type ESchema = string | object | Array<string|object>;
 
 type ValidationError = {
-  err: { code: string; msg: string, line: number, col: number };
+  err: { 
+    code: string;
+    msg: string,
+    line: number,
+    col: number 
+  };
 };
 
 export class XMLParser {

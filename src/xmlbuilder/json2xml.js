@@ -32,8 +32,9 @@ const props = [
   'suppressEmptyNode',
   'tagValueProcessor',
   'attributeValueProcessor',
-  'rootNodeName', //when array as root
+  'arrayNodeName', //when array as root
   'preserveOrder',
+  // 'rootNodeName', //when jsObject have multiple properties on root level
 ];
 
 function Builder(options) {
@@ -77,9 +78,9 @@ Builder.prototype.build = function(jObj) {
   if(this.options.preserveOrder){
     return buildFromOrderedJs(jObj, this.options);
   }else {
-    if(Array.isArray(jObj) && this.options.rootNodeName && this.options.rootNodeName.length > 1){
+    if(Array.isArray(jObj) && this.options.arrayNodeName && this.options.arrayNodeName.length > 1){
       jObj = {
-        [this.options.rootNodeName] : jObj
+        [this.options.arrayNodeName] : jObj
       }
     }
     return this.j2x(jObj, 0).val;

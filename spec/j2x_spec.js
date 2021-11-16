@@ -397,7 +397,7 @@ textvalue&gt;  <tag>
         
         ];
         const builder = new XMLBuilder({
-          rootNodeName: "car"
+          arrayNodeName: "car"
         });
         const result = builder.build(cars);
         const expected = '<car><color>purple</color><type>minivan</type><registration>2020-02-03</registration><capacity>7</capacity></car><car><color>orange</color><type>SUV</type><registration>2021-05-17</registration><capacity>4</capacity></car><car><color>green</color><type>coupe</type><registration>2019-11-13</registration><capacity>2</capacity></car>';
