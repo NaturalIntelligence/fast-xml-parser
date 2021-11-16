@@ -37,7 +37,7 @@ describe("XMLParser", function() {
             ignoreAttributes:    false,
             parseAttributeValue: true,
             decodeHTMLchar:      true,
-            attrValueProcessor: (name, a) => he.decode(a, {isAttributeValue: true})
+            attributeValueProcessor: (name, a) => he.decode(a, {isAttributeValue: true})
         };
         const parser = new XMLParser(options);
         let result = parser.parse(xmlData);
@@ -178,7 +178,7 @@ describe("XMLParser", function() {
             ignoreAttributes:    false,
             parseAttributeValue: true,
             decodeHTMLchar:      true,
-            attrValueProcessor: (name, val) => {
+            attributeValueProcessor: (name, val) => {
                 if(resultMap[name]){
                     resultMap[name].push(val)
                 }else{

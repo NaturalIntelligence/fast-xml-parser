@@ -192,7 +192,7 @@ describe("XMLBuilder", function() {
                                       encodeHTMLchar:   true,
                                       suppressEmptyNode: true,
                                       tagValueProcessor: (tagName,a)=> { a= ''+ a; return he.encode(a, { useNamedReferences: true}) },
-                                      attrValueProcessor: (attrName, a) => he.encode(a, {isAttributeValue: true, useNamedReferences: true})
+                                      attributeValueProcessor: (attrName, a) => he.encode(a, {isAttributeValue: true, useNamedReferences: true})
                                   });
         const result = builder.build(jObj);
         // console.log(result);
@@ -227,7 +227,7 @@ describe("XMLBuilder", function() {
                                       encodeHTMLchar: true,
                                       format:         true,
                                       tagValueProcessor: (tagName,a)=> { a= ''+ a; return he.encode(a, { useNamedReferences: true}) },
-                                      attrValueProcessor: (attrName, a)=> he.encode(a, {isAttributeValue: true, useNamedReferences: true})
+                                      attributeValueProcessor: (attrName, a)=> he.encode(a, {isAttributeValue: true, useNamedReferences: true})
                                   });
         const result = builder.build(jObj);
         const expected = `<a b="val&gt;1" c="val&lt;2">
@@ -279,7 +279,7 @@ textvalue&gt;  <tag>
       encodeHTMLchar: true,
       format: true,
       tagValueProcessor: (tagName,a) => { a= ''+ a; return he.encode(a, { useNamedReferences: true }) },
-      attrValueProcessor: (attrName, a) => he.encode(a, { isAttributeValue: true, useNamedReferences: true })
+      attributeValueProcessor: (attrName, a) => he.encode(a, { isAttributeValue: true, useNamedReferences: true })
     });
     const result = builder.build(jObj);
     const expected = `<a b="val&gt;1" c="val&lt;2">

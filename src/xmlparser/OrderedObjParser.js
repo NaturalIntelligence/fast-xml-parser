@@ -108,7 +108,7 @@ function buildAttributesMap(attrStr, jPath, options) {
             oldVal = oldVal.trim();
           }
           
-          const newVal = options.attrValueProcessor(attrName, oldVal, jPath);
+          const newVal = options.attributeValueProcessor(attrName, oldVal, jPath);
           if(newVal === null || newVal === undefined){
             //don't parse
             attrs[aName] = oldVal;
@@ -267,7 +267,7 @@ const parseToOrderedJsObj = function(xmlData, options) {
         if(tagName !== xmlObj.tagname){
           jPath += jPath ? "." + tagName : tagName;
         }
-        
+
         if(tagExp.length > 0 && tagExp.lastIndexOf("/") === tagExp.length - 1){//selfClosing tag
           
           if(tagName[tagName.length - 1] === "/"){ //remove trailing '/'
@@ -307,6 +307,7 @@ const parseToOrderedJsObj = function(xmlData, options) {
   return xmlObj.child[0];
 }
 
+//TODO: use jPath to simplify the logic
 /**
  * 
  * @param {string[]} stopNodes 

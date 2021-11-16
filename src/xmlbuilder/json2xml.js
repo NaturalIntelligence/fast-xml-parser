@@ -15,7 +15,7 @@ const defaultOptions = {
   tagValueProcessor: function(key, a) {
     return a;
   },
-  attrValueProcessor: function(attrName, a) {
+  attributeValueProcessor: function(attrName, a) {
     return a;
   },
   preserveOrder: false
@@ -31,7 +31,7 @@ const props = [
   'indentBy',
   'suppressEmptyNode',
   'tagValueProcessor',
-  'attrValueProcessor',
+  'attributeValueProcessor',
   'rootNodeName', //when array as root
   'preserveOrder',
 ];
@@ -100,7 +100,7 @@ Builder.prototype.j2x = function(jObj, level) {
       //premitive type
       const attr = this.isAttribute(key);
       if (attr) {
-        attrStr += ' ' + attr + '="' + this.options.attrValueProcessor(attr, '' + jObj[key]) + '"';
+        attrStr += ' ' + attr + '="' + this.options.attributeValueProcessor(attr, '' + jObj[key]) + '"';
       }else {
         //tag value
         if (key === this.options.textNodeName) {
@@ -130,7 +130,7 @@ Builder.prototype.j2x = function(jObj, level) {
         const Ks = Object.keys(jObj[key]);
         const L = Ks.length;
         for (let j = 0; j < L; j++) {
-          attrStr += ' ' + Ks[j] + '="' + this.options.attrValueProcessor(Ks[j], '' + jObj[key][Ks[j]]) + '"';
+          attrStr += ' ' + Ks[j] + '="' + this.options.attributeValueProcessor(Ks[j], '' + jObj[key][Ks[j]]) + '"';
         }
       } else {
         val += this.processTextOrObjNode(jObj[key], key, level)

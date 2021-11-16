@@ -19,7 +19,7 @@ const defaultOptions = {
     tagValueProcessor: function(tagName, val) {
       return val;
     },
-    attrValueProcessor: function(attrName, val) {
+    attributeValueProcessor: function(attrName, val) {
       return val;
     },
     stopNodes: [], //nested tags will not be parsed even for errors
@@ -40,7 +40,7 @@ const props = [
     'trimValues',
     'cdataTagName',
     'tagValueProcessor',
-    'attrValueProcessor',
+    'attributeValueProcessor',
     'numberParseOptions',
     'stopNodes',
     'alwaysCreateTextNode',
