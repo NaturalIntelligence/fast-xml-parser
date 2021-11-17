@@ -54,4 +54,5 @@ Please raise an issue or PR (recommended) to add your name to our User's list
 <a href="https://stoplight.io/" title="Stoplight" > <img src="https://avatars1.githubusercontent.com/u/10767217" width="80px" ></a>
 <a href="http://www.fda.gov/" title="Food and Drug Administration " > <img src="https://avatars2.githubusercontent.com/u/6471964" width="80px" ></a>
 <a href="http://www.magento.com/" title="Magento" > <img src="https://avatars2.githubusercontent.com/u/168457" width="80px" ></a>
+<a href="https://www.incoined.com/" title="Incoined" > <img src="https://avatars.githubusercontent.com/u/93137853?v=4" width="80px" ></a>
 

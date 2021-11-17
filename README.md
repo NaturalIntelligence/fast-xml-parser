@@ -1,5 +1,3 @@
-
-
 # [fast-xml-parser](https://www.npmjs.com/package/fast-xml-parser)
 [![Backers on Open Collective](https://opencollective.com/fast-xml-parser/backers/badge.svg)](#backers) [![Sponsors on Open Collective](https://opencollective.com/fast-xml-parser/sponsors/badge.svg)](#sponsors) [![Known Vulnerabilities](https://snyk.io/test/github/naturalintelligence/fast-xml-parser/badge.svg)](https://snyk.io/test/github/naturalintelligence/fast-xml-parser)
 [![NPM quality][quality-image]][quality-url]
@@ -64,6 +62,7 @@ To use as system command
 To use it on a **webpage** include it from a [CDN](https://cdnjs.com/libraries/fast-xml-parser)
 
 **Example**
+
 As CLI command
 ```bash
 $ fxparser some.xml
