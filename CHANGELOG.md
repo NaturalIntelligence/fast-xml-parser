@@ -1,5 +1,23 @@
 Note: If you find missing information about particular minor version, that version must have been changed without any functional change in this library.
 
+**⚠️ 4.0.0-beta.0 / 2021-11-16**
+* Name change of many configuration properties.
+  * `attrNodeName` to `attributesGroupName`
+  * `attrValueProcessor` to `attributeValueProcessor`
+  * `parseNodeValue` to `parseTagValue`
+  * `ignoreNameSpace` to `removeNSPrefix`
+  * `numParseOptions` to `numberParseOptions`
+  * spelling correction for `suppressEmptyNode`
+* Name change of cli and browser bundle to **fxparser**
+* `isArray` option is added to parse a tag into array
+* `preserveOrder` option is added to render XML in such a way that the result js Object maintains the order of properties same as in XML.
+* Processing behaviour of `tagValueProcessor` and `attributeValueProcessor` are changes with extra input parameters
+* j2xparser is renamed to XMLBuilder.
+* You need to build XML parser instance for given options first before parsing XML.
+* fix #327, #336: throw error when extra text after XML content
+* fix #330: attribute value can have '\n', 
+* fix #350: attrbiutes can be separated by '\n' from tagname
+
 3.21.1 / 2021-10-31
 * Correctly format JSON elements with a text prop but no attribute props ( By [haddadnj](https://github.com/haddadnj) )
 
