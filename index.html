@@ -26,7 +26,7 @@
         <!-- <script src="static/js/prettify.min.js"></script> -->
         <link rel="stylesheet" type="text/css" href="static/css/animate3.5.2.min.css">
 
-        <script src="lib/parser.js"></script>
+        <script src="lib/fxparser.js"></script>
         <script src="static/js/jquery-confirm.min.js"></script>
         <style>
             .CodeMirror{
@@ -53,23 +53,21 @@
                                 <p style="color:white;" class="text-center">The fastest parser for browsers <!-- Place this tag where you want the button to render. -->
                                     </p>
                         </div>
-                        <div style="border: 1px dashed grey; margin: 5px; padding: 5px;">
-                            <h2>Note!!</h2>
-                            <p>We are not interested in your data. But we use Google analytics to improve the quality of our work and add new features.</p>
-                            <p>You can use this application offline. Or stop google analytics using browser plugins. We're still happy to serve our services.</p>
-                        </div>
+                        
                         <div style="border: 1px dashed grey; margin: 5px; padding: 5px;">
                             <h2>Parsing options</h2>
-                            <p><small>* Parser will not validate the XML</small></p>
-                            <input type="checkbox" id="attrNodeName"> Group all the attributes  <br>
-                            <input type="checkbox" id="ignoreAttributes" checked="true"> Ignore attributes <br>
-                            <input type="checkbox" id="ignoreNameSpace"> Remove namespace string from tag and attribute names. <br>
-                            <input type="checkbox" id="parseNodeValue" checked="true"> Parse text-node's value to float / integer / boolean.<br>
-                            <input type="checkbox" id="ParseAttributeValue"> Parse attribute's value to float / integer / boolean.<br>
-                            <input type ="checkbox" id="allowBooleanAttributes"> Allow Boolean Attributes <br>
+                            <input type ="checkbox" id="preserveOrder" > Preserve Order<br>
+                            <input type ="checkbox" id="parseCDATA" checked="true" > Parse CDATA as separate property<br>
+                            <input type ="checkbox" id="alwaysCreateTextNode" > Always create a separate property for text value of a tag. <br>
                             <input type ="checkbox" id="trimValues" checked="true" > Trim<br>
-                            <span class="clearfix">TagName to parse CDATA as separate property <input type="text" id="cdataTagName" style=" color: black; float:right;" ><br></span>
-                            <span class="clearfix">Locale range <input type="text" id="localeRange" style=" color: black; float:right;" placeholder="Try with your mother tongue"><br></span>
+                            <input type="checkbox" id="ignoreAttributes" checked="true"> Ignore attributes <br>
+                            <input type="checkbox" id="attributesGroupName"> Group all the attributes  <br>
+                            <input type ="checkbox" id="allowBooleanAttributes"> Allow Boolean Attributes <br>
+                            <input type="checkbox" id="parseAttributeValue"> Parse attribute's value to float / integer / boolean.<br>
+                            <input type="checkbox" id="parseNodeValue" checked="true"> Parse text-node's value to float / integer / boolean.<br>
+                            <input type="checkbox" id="removeNSPrefix" checked="true"> Remove namespace string from tag and attribute names. <br>
+                            <input type ="checkbox" id="leadingZeros" checked="true"> Parse Number with leading zeros<br>
+                            <!-- <span class="clearfix">TagName to parse CDATA as separate property <input type="text" id="cdataTagName" style=" color: black; float:right;" ><br></span> -->
                             <div class="text-center" style="margin: 15px">
                                 <button id="toJson" class="btn btn-primary" type="button">Parse to JSON >> </button>
                                 <button id="toXml" class="btn btn-primary" type="button"> << Parse to XML</button>
@@ -78,13 +76,16 @@
                         <div style="border: 1px dashed grey; margin: 5px; padding: 5px;">
                             <h2>Validator options</h2>
                             <input type="checkbox" id="allowBooleanAttributes_v"> Allow Boolean Attributes<br>
-                            <span class="clearfix">Locale range <input type="text" id="localeRange_v" style=" color: black; float:right;" placeholder="Try with your mother tongue"><br></span>
                             <div class="text-center" style="margin: 15px">
                                 <button id="validate" class="btn btn-primary" type="button">Validate XML >> </button>
                             </div>
                             
                         </div>
-                        
+                        <div style="border: 1px dashed grey; margin: 5px; padding: 5px;">
+                            <h2>Note!!</h2>
+                            <p>We are not interested in your data. But we use Google analytics to improve the quality of our work and add new features.</p>
+                            <p>You can use this application offline. Or stop google analytics using browser plugins. We're still happy to serve our services.</p>
+                        </div>
                 </div>
                 <div class="col-md-4">
                         <span class="float-right" style="color: white"><span id="lengthoutput" style="margin:5px">0</span> bytes</span>
@@ -144,22 +145,35 @@
 
             $('#toJson').on('click', function() {
                 $('#result').val('');
-                const result = parser.parse(editor.getValue(),buildParsingConfig());
-                updateOutputLength(JSON.stringify(result));
-                $('#result').val(JSON.stringify(result,null,4));
+                const parser = new fxparser.XMLParser(buildParsingConfig());
+                let result;
+                try{
+                    result = parser.parse(editor.getValue(),{
+                        allowBooleanAttributes: $("#allowBooleanAttributes").prop("checked")
+                    });
+                    updateOutputLength(JSON.stringify(result));
+                    $('#result').val(JSON.stringify(result,null,4));
+                }catch(err){
+                    $('#result').val(err);
+                }
             });
 
             $('#toXml').on('click', function() {
-                editor.setValue('');
-                const result = buildJ2XParser().parse(JSON.parse( $('#result').val() ));
-                editor.setValue('<?xml version="1.0"?>\n'+result);
+                let input = $('#result').val().trim() ;
+                if(input.length){
+                    editor.setValue('');
+                    const builder = new fxparser.XMLBuilder(xmlBuilderOptions());
+                    const result = builder.build(JSON.parse( $('#result').val() ));
+                    editor.setValue('<?xml version="1.0"?>\n'+result);
+                }else{
+                    console.error("Empty input");
+                }
             });
 
             $('#validate').on('click', function() {
                 $('#result').val('');
                 const config = {
                     allowBooleanAttributes: $("#allowBooleanAttributes_v").prop("checked"),
-                    localeRange : $("#localeRange_v").val() === "" ? "a-zA-Z" : $("#cdataTagName").val(),
                 };
                 const val = parser.validate(editor.getValue(), config);
                 if(val === true){
@@ -177,50 +191,52 @@
 
             function buildParsingConfig(){
                 const config = {
+                    alwaysCreateTextNode: $("#alwaysCreateTextNode").prop("checked"),
                     attributeNamePrefix : "@_",
-                    attrNodeName: $("#attrNodeName").prop("checked") ? "@" : false,
+                    attributesGroupName: $("#attributesGroupName").prop("checked") ? "@" : false,
                     textNodeName : "#text",
                     ignoreAttributes : $("#ignoreAttributes").prop("checked"),
-                    ignoreNameSpace : $("#ignoreNameSpace").prop("checked"),
+                    removeNSPrefix : $("#removeNSPrefix").prop("checked"),
                     parseNodeValue : $("#parseNodeValue").prop("checked"),
                     parseAttributeValue : $("#parseAttributeValue").prop("checked"),
                     allowBooleanAttributes: $("#allowBooleanAttributes").prop("checked"),
                     trimValues: $('#trimValues').prop("checked"), //Trim string values of tag and attributes
-                    decodeHTMLchar: false,
-                    cdataTagName: $("#cdataTagName").val() === "" ? false : $("#cdataTagName").val(),
-                    cdataPositionChar: "\\c",
-                    localeRange : $("#localeRange_v").val(),
-                    //arrayMode : $("#arrayMode").prop("checked")
+                    cdataTagName: $("#parseCDATA").prop("checked") ? "#cdata" : false,
+                    preserveOrder: $("#preserveOrder").prop("checked"),
+                    numberParseOptions:  {
+                        hex: false,
+                        leadingZeros: $("#leadingZeros").prop("checked")
+                    }
                 };
 
                 return config;
             }
 
-            function buildJ2XParser(){
+            function xmlBuilderOptions(){
                 const defaultOptions = {
                     attributeNamePrefix : "@_",
-                    attrNodeName: $("#attrNodeName").prop("checked") ? "@" : false,
+                    attributesGroupName: $("#attributesGroupName").prop("checked") ? "@" : false,
                     textNodeName : "#text",
                     ignoreAttributes : $("#ignoreAttributes").prop("checked"),
-                    cdataTagName: $("#cdataTagName").val() === "" ? false : $("#cdataTagName").val(),
-                    cdataPositionChar: "\\c",
+                    cdataTagName: $("#parseCDATA").prop("checked") ? "#cdata" : false,
                     format: true,
                     indentBy: "  ",
                     suppressEmptyNode: false,
+                    preserveOrder: $("#preserveOrder").prop("checked"),
                 }
 
-                return new parser.j2xParser(defaultOptions);
+                return defaultOptions;
             }
             
             function optionsLogic(){
                 const ignoreAttr = $('#ignoreAttributes').prop('checked');
                 if(ignoreAttr){
-                    $('#attrNodeName').prop('checked', !ignoreAttr);
-                    $('#ParseAttributeValue').prop('checked', !ignoreAttr);
+                    $('#attributesGroupName').prop('checked', !ignoreAttr);
+                    $('#parseAttributeValue').prop('checked', !ignoreAttr);
                     $('#allowBooleanAttributes').prop('checked', !ignoreAttr);
                 }
-                $('#attrNodeName').attr('disabled', ignoreAttr);
-                $('#ParseAttributeValue').attr('disabled', ignoreAttr);
+                $('#attributesGroupName').attr('disabled', ignoreAttr);
+                $('#parseAttributeValue').attr('disabled', ignoreAttr);
                 $('#allowBooleanAttributes').attr('disabled', ignoreAttr);
 
                 return;
