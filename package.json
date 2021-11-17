@@ -1,7 +1,7 @@
 {
   "name": "fast-xml-parser",
   "version": "4.0.0-beta.0",
-  "description": "Validate XML or Parse XML to JS/JSON very fast without C/C++ based libraries",
+  "description": "Validate XML, Parse XML, Build XML without C/C++ based libraries",
   "main": "./src/fxp.js",
   "scripts": {
     "test": "nyc --reporter=lcov --reporter=text jasmine spec/*spec.js",
@@ -30,20 +30,13 @@
     "x2js",
     "xml2json",
     "js",
-    "traversable",
     "cli",
-    "command",
     "validator",
     "validate",
     "transformer",
-    "checker",
     "assert",
-    "big",
     "js2xml",
     "json2xml",
-    "nimn",
-    "xml2nimn",
-    "locale",
     "html"
   ],
   "author": "Amit Gupta (https://amitkumargupta.work/)",
@@ -63,7 +56,7 @@
     "webpack": "^4.46.0",
     "webpack-cli": "^3.3.12"
   },
-  "typings": "src/parser.d.ts",
+  "typings": "src/fxp.d.ts",
   "funding": {
     "type": "paypal",
     "url": "https://paypal.me/naturalintelligence"

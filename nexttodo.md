@@ -1,8 +1,21 @@
-* check test coverage and write necessary tests
-* validate XML stream data
-* Fix jTox for json array. Not sure if a bug exist.
-* generate separate and combined browser bundle for xml -> nimn, xml -> json , json -> xml
-* Es6 to es5 migration without workaround.
+P0
+* README
+
+P1
+* special characters such as '&amp;'
+    https://github.com/NaturalIntelligence/fast-xml-parser/issues/297
+    https://github.com/NaturalIntelligence/fast-xml-parser/issues/343
+    https://github.com/NaturalIntelligence/fast-xml-parser/issues/342
+* Multiple roots
+* Es6 modules
 * Parse JSON string to XML. Currently it transforms JSON object to XML. Partially done. Need to work on performance.
-* build properties only once
 * XML to JSON ML : https://en.wikipedia.org/wiki/JsonML
+
+P2
+* skip parsing of particular tag
+* boolean tag to support HTML parsing
+* Generating comments and build them back
+    https://github.com/NaturalIntelligence/fast-xml-parser/issues/372
+* validate XML stream data
+* Accept streams, arrayBuffer
+    https://github.com/NaturalIntelligence/fast-xml-parser/issues/347
