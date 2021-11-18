@@ -1,5 +1,13 @@
 Note: If you find missing information about particular minor version, that version must have been changed without any functional change in this library.
 
+**⚠️ 4.0.0-beta.1 / 2021-11-18**
+* Parser returns an array now
+  * to make the structure common
+  * and to return root level detail
+* renamed `cdataTagName` to `cdataPropName`
+* Added `commentPropName`
+* fix typings
+
 **⚠️ 4.0.0-beta.0 / 2021-11-16**
 * Name change of many configuration properties.
   * `attrNodeName` to `attributesGroupName`
