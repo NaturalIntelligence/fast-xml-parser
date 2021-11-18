@@ -59,14 +59,12 @@ type ValidationError = {
 
 export class XMLParser {
   constructor(options?: X2jOptionsOptional);
-  parse(xmlData: string | Buffer ,validationOptions?: validationOptionsOptional | boolean);
+  parse(xmlData: string | Buffer ,validationOptions?: validationOptionsOptional | boolean): any;
 }
 
-export function XMLValidator(
-  xmlData: string,
-  options?: validationOptionsOptional
-): true | ValidationError;
-
+export class XMLValidator{
+  static validate(  xmlData: string,  options?: validationOptionsOptional): true | ValidationError;
+}
 export class XMLBuilder {
   constructor(options: XmlBuilderOptionsOptional);
   parse(options: any): any;
