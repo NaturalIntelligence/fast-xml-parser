@@ -1,7 +1,13 @@
 const {EOL} = require('os');
 
-function toXml(jObj, options){
-    return arrToStr( [jObj], options, 0);
+/**
+ * 
+ * @param {array} jArray 
+ * @param {any} options 
+ * @returns 
+ */
+function toXml(jArray, options){
+    return arrToStr( jArray, options, 0);
 }
 
 function arrToStr(arr, options, level){
@@ -19,8 +25,11 @@ function arrToStr(arr, options, level){
         if(tagName === options.textNodeName){
             xmlStr += indentation + options.tagValueProcessor( tagName, tagObj[tagName]);
             continue;
-        }else if( tagName === options.cdataTagName){
+        }else if( tagName === options.cdataPropName){
             xmlStr += indentation + `<![CDATA[${tagObj[tagName][0][options.textNodeName]}]]>`;
+            continue;
+        }else if( tagName === options.commentPropName){
+            xmlStr += indentation + `<!--${tagObj[tagName][0][options.textNodeName]}-->`;
             continue;
         }
         const attStr = attr_to_str(tagObj.attributes, options);

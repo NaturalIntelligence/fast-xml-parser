@@ -1,7 +1,13 @@
 'use strict';
 
+/**
+ * 
+ * @param {array} node 
+ * @param {any} options 
+ * @returns 
+ */
 function prettify(node, options){
-  return compress( [node], options);
+  return compress( node, options);
 }
 
 /**

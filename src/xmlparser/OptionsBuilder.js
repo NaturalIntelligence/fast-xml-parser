@@ -11,7 +11,7 @@ const defaultOptions = {
     parseTagValue: true,
     parseAttributeValue: false,
     trimValues: true, //Trim string values of tag and attributes
-    cdataTagName: false,
+    cdataPropName: false,
     numberParseOptions: {
       hex: true,
       leadingZeros: true
@@ -24,7 +24,8 @@ const defaultOptions = {
     },
     stopNodes: [], //nested tags will not be parsed even for errors
     alwaysCreateTextNode: false,
-    isArray: () => false
+    isArray: () => false,
+    commentPropName: false,
 };
    
 const props = [
@@ -38,13 +39,14 @@ const props = [
     'parseTagValue',
     'parseAttributeValue',
     'trimValues',
-    'cdataTagName',
+    'cdataPropName',
     'tagValueProcessor',
     'attributeValueProcessor',
     'numberParseOptions',
     'stopNodes',
     'alwaysCreateTextNode',
     'isArray',
+    'commentPropName'
 ];
   
 const util = require('../util');

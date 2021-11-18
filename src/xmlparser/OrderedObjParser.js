@@ -190,7 +190,26 @@ const parseToOrderedJsObj = function(xmlData, options) {
       } else if( xmlData[i+1] === '?') {
         i = findClosingIndex(xmlData, "?>", i, "Pi Tag is not closed.")
       } else if(xmlData.substr(i + 1, 3) === '!--') {
-        i = findClosingIndex(xmlData, "-->", i, "Comment is not closed.")
+        const endIndex = findClosingIndex(xmlData, "-->", i, "Comment is not closed.")
+        if(options.commentPropName){
+          const comment = xmlData.substring(i + 4, endIndex - 2);
+
+          //TODO: remove repeated code
+          if(textData){ //store previously collected data as textNode
+            textData = parseValue(textData
+              , options
+              , currentNode.tagname
+              , jPath
+              ,false
+              , currentNode.attrsMap ? Object.keys(currentNode.attrsMap).length !== 0 : false
+              , Object.keys(currentNode.child).length === 0);
+  
+            if(textData !== undefined &&  textData !== "") currentNode.add(options.textNodeName, textData);
+            textData = "";
+          }
+          currentNode.add(options.commentPropName, [ { [options.textNodeName] : comment } ]);
+        }
+        i = endIndex;
       } else if( xmlData.substr(i + 1, 2) === '!D') {
         const closeIndex = findClosingIndex(xmlData, ">", i, "DOCTYPE is not closed.")
         const tagExp = xmlData.substring(i, closeIndex);
@@ -217,10 +236,10 @@ const parseToOrderedJsObj = function(xmlData, options) {
         }
 
         //cdata should be set even if it is 0 length string
-        if(options.cdataTagName){
-          let val = parseValue(tagExp, options, options.cdataTagName, jPath + "." + options.cdataTagName, true, false, true);
+        if(options.cdataPropName){
+          let val = parseValue(tagExp, options, options.cdataPropName, jPath + "." + options.cdataPropName, true, false, true);
           if(!val) val = "";
-          currentNode.add(options.cdataTagName, [ { [options.textNodeName] : val } ]);
+          currentNode.add(options.cdataPropName, [ { [options.textNodeName] : val } ]);
         }else{
           let val = parseValue(tagExp, options, currentNode.tagname, jPath, true, false, true);
           if(!val) val = "";
@@ -304,7 +323,7 @@ const parseToOrderedJsObj = function(xmlData, options) {
       textData += xmlData[i];
     }
   }
-  return xmlObj.child[0];
+  return xmlObj.child;
 }
 
 //TODO: use jPath to simplify the logic

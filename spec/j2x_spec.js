@@ -222,7 +222,7 @@ describe("XMLBuilder", function() {
             }
         };
         const builder = new XMLBuilder({
-                                      cdataTagName:   "__cdata",
+                                      cdataPropName:   "__cdata",
                                       attributesGroupName:   "@",
                                       encodeHTMLchar: true,
                                       format:         true,
@@ -274,7 +274,7 @@ textvalue&gt;  <tag>
       }
     };
     const builder = new XMLBuilder({
-      cdataTagName: "__cdata",
+      cdataPropName: "__cdata",
       attributesGroupName: "@",
       encodeHTMLchar: true,
       format: true,
@@ -358,7 +358,7 @@ textvalue&gt;  <tag>
             attributesGroupName:        "$",
             textNodeName:        "_",
             ignoreAttributes:    false,
-            cdataTagName:        "$cdata",
+            cdataPropName:        "$cdata",
             cdataPositionChar:   "\\c",
             format:              false,
             indentBy:            "\t",

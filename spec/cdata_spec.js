@@ -261,7 +261,7 @@ patronymic</person></root>`;
 
         const options = {
             ignoreAttributes: false,
-            cdataTagName:     "__cdata"
+            cdataPropName:     "__cdata"
         };
         const parser = new XMLParser(options);
         let result = parser.parse(xmlData);
@@ -297,7 +297,7 @@ patronymic</person></root>`;
 
         const options = {
             ignoreAttributes: false,
-            cdataTagName:     "__cdata"
+            cdataPropName:     "__cdata"
         };
         const parser = new XMLParser(options);
         let result = parser.parse(xmlData);

@@ -273,7 +273,7 @@ describe("XMLParser", function() {
       const options = {
         ignoreAttributes: false,
         preserveOrder: true,
-        cdataTagName: "#CDATA",
+        cdataPropName: "#CDATA",
         tagValueProcessor: (tagName, tagValue, jPath, hasAttributes, isLeafNode) => {
         //   console.log(tagName, tagValue, jPath, hasAttributes, isLeafNode);
         tagValueProcessorCalls.push(`${tagName} ${tagValue} ${jPath} ${hasAttributes} ${isLeafNode}`);
@@ -301,7 +301,7 @@ describe("XMLParser", function() {
       const options = {
         ignoreAttributes: false,
         preserveOrder: true,
-        cdataTagName: "#CDATA",
+        cdataPropName: "#CDATA",
         tagValueProcessor: (tagName, tagValue, jPath, hasAttributes, isLeafNode) => {
         //   console.log(tagName, tagValue, jPath, hasAttributes, isLeafNode);
         tagValueProcessorCalls.push(`${tagName} ${tagValue} ${jPath} ${hasAttributes} ${isLeafNode}`);
