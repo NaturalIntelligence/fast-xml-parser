@@ -62,7 +62,7 @@ describe("XMLBuilder", function() {
     const options = {
       ignoreAttributes: false,
       preserveOrder: true,
-      cdataTagName: "#CDATA",
+      cdataPropName: "#CDATA",
       allowBooleanAttributes: true,
     //   format: true,
 
@@ -173,7 +173,7 @@ describe("XMLBuilder", function() {
         const options = {
             preserveOrder: true,
             format: true,
-            // cdataTagName: "#CDATA"
+            // cdataPropName: "#CDATA"
         }
         const parser = new XMLParser(options);
         let result = parser.parse(XMLdata);
@@ -208,7 +208,7 @@ describe("XMLBuilder", function() {
         const options = {
             preserveOrder: true,
             format: true,
-            cdataTagName: "#CDATA"
+            cdataPropName: "#CDATA"
         }
         const parser = new XMLParser(options);
         let result = parser.parse(XMLdata);

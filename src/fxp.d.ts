@@ -9,7 +9,8 @@ type X2jOptions = {
   parseTagValue: boolean;
   parseAttributeValue: boolean;
   trimValues: boolean;
-  cdataTagName: false | string;
+  cdataPropName: false | string;
+  commentPropName: false | string;
   tagValueProcessor: (tagName: string, tagValue: string, jPath: string, hasAttributes: boolean, isLeafNode: boolean) => string;
   attributeValueProcessor: (attrName: string, attrValue: string, jPath: string) => string;
   numberParseOptions: strnumOptions;
@@ -33,7 +34,8 @@ type XmlBuilderOptions = {
   attributesGroupName: false | string;
   textNodeName: string;
   ignoreAttributes: boolean;
-  cdataTagName: false | string;
+  cdataPropName: false | string;
+  commentPropName: false | string;
   format: boolean;
   indentBy: string;
   arrayNodeName: string;

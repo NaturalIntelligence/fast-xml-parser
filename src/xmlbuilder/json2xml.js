@@ -8,7 +8,7 @@ const defaultOptions = {
   attributesGroupName: false,
   textNodeName: '#text',
   ignoreAttributes: true,
-  cdataTagName: false,
+  cdataPropName: false,
   format: false,
   indentBy: '  ',
   suppressEmptyNode: false,
@@ -18,7 +18,8 @@ const defaultOptions = {
   attributeValueProcessor: function(attrName, a) {
     return a;
   },
-  preserveOrder: false
+  preserveOrder: false,
+  commentPropName: false
 };
 
 const props = [
@@ -26,7 +27,7 @@ const props = [
   'attributesGroupName',
   'textNodeName',
   'ignoreAttributes',
-  'cdataTagName',
+  'cdataPropName',
   'format',
   'indentBy',
   'suppressEmptyNode',
@@ -34,6 +35,7 @@ const props = [
   'attributeValueProcessor',
   'arrayNodeName', //when array as root
   'preserveOrder',
+  "commentPropName",
   // 'rootNodeName', //when jsObject have multiple properties on root level
 ];
 

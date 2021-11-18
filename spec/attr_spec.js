@@ -46,7 +46,7 @@ describe("XMLParser", function() {
         const parser = new XMLParser(options);
         let result = parser.parse(xmlData);
 
-        console.log(JSON.stringify(result,null,4));
+        // console.log(JSON.stringify(result,null,4));
         // expect(result).toEqual(expected);
 
         result = XMLValidator.validate(xmlData);
