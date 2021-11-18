@@ -24,7 +24,7 @@ Here is the check list to publish any change
 * Don't forget to write tests for negative cases
 * Don't comment existing test cases.
 
-Changes need to do be done by maintainers and should not to be the part of PR by other contributors;
+Changes that need to be done by maintainers and should not to be the part of PR by other contributors;
 * Increase the version number
 * Update the change log & README if required
 * Generate the browser bundle
