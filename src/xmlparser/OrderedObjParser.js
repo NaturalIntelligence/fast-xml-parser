@@ -141,7 +141,7 @@ function buildAttributesMap(attrStr, jPath, options) {
 }
 
 const parseToOrderedJsObj = function(xmlData, options) {
-  xmlData = xmlData.replace(/\r\n?/g, "\n");
+  xmlData = xmlData.replace(/\r\n?/g, "\n"); //TODO: remove this line
   const xmlObj = new xmlNode('!xml');
   let currentNode = xmlObj;
   let textData = "";
@@ -170,7 +170,7 @@ const parseToOrderedJsObj = function(xmlData, options) {
             , currentNode.tagname
             , jPath
             ,false
-            , currentNode.attrsMap ? Object.keys(currentNode.attrsMap).length !== 0 : false
+            , currentNode.attributes ? Object.keys(currentNode.attributes).length !== 0 : false
             , Object.keys(currentNode.child).length === 0);
           if(textData !== undefined &&  textData !== "") currentNode.add(options.textNodeName, textData);
           textData = "";
@@ -201,7 +201,7 @@ const parseToOrderedJsObj = function(xmlData, options) {
               , currentNode.tagname
               , jPath
               ,false
-              , currentNode.attrsMap ? Object.keys(currentNode.attrsMap).length !== 0 : false
+              , currentNode.attributes ? Object.keys(currentNode.attributes).length !== 0 : false
               , Object.keys(currentNode.child).length === 0);
   
             if(textData !== undefined &&  textData !== "") currentNode.add(options.textNodeName, textData);
@@ -228,7 +228,7 @@ const parseToOrderedJsObj = function(xmlData, options) {
             , currentNode.tagname
             , jPath
             ,false
-            , currentNode.attrsMap ? Object.keys(currentNode.attrsMap).length !== 0 : false
+            , currentNode.attributes ? Object.keys(currentNode.attributes).length !== 0 : false
             , Object.keys(currentNode.child).length === 0);
 
           if(textData !== undefined &&  textData !== "") currentNode.add(options.textNodeName, textData);
@@ -276,7 +276,7 @@ const parseToOrderedJsObj = function(xmlData, options) {
               , currentNode.tagname
               , jPath
               , false
-              , currentNode.attrsMap ? Object.keys(currentNode.attrsMap).length !== 0 : false
+              , currentNode.attributes ? Object.keys(currentNode.attributes).length !== 0 : false
               , false);
             if(textData !== undefined &&  textData !== "") currentNode.add(options.textNodeName, textData);
             textData = "";
@@ -287,7 +287,8 @@ const parseToOrderedJsObj = function(xmlData, options) {
           jPath += jPath ? "." + tagName : tagName;
         }
 
-        if(tagExp.length > 0 && tagExp.lastIndexOf("/") === tagExp.length - 1){//selfClosing tag
+  //selfClosing tag
+        if(tagExp.length > 0 && tagExp.lastIndexOf("/") === tagExp.length - 1){
           
           if(tagName[tagName.length - 1] === "/"){ //remove trailing '/'
             tagName = tagName.substr(0, tagName.length - 1);
@@ -298,12 +299,14 @@ const parseToOrderedJsObj = function(xmlData, options) {
 
           const childNode = new xmlNode(tagName);
           if(tagName !== tagExp && shouldBuildAttributesMap){
-            childNode.attrsMap = buildAttributesMap(tagExp, jPath , options);
+            childNode.attributes = buildAttributesMap(tagExp, jPath , options);
           }
           jPath = jPath.substr(0, jPath.lastIndexOf("."));
           // tagsNodeStack.push(currentNode);
           currentNode.addChild(childNode);
-        }else{//opening tag
+        }
+  //opening tag
+        else{
           
           const childNode = new xmlNode( tagName);
           tagsNodeStack.push(currentNode);
@@ -311,7 +314,7 @@ const parseToOrderedJsObj = function(xmlData, options) {
           childNode.startIndex=closeIndex; //for further processing
           
           if(tagName !== tagExp && shouldBuildAttributesMap){
-            childNode.attrsMap = buildAttributesMap(tagExp, jPath, options);
+            childNode.attributes = buildAttributesMap(tagExp, jPath, options);
           }
           currentNode.addChild(childNode);
           currentNode = childNode;
