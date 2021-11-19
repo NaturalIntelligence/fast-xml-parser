@@ -36,7 +36,11 @@ function arrToStr(arr, options, level){
         let tagStart =  indentation + `<${tagName}${attStr}`;
         let tagValue = arrToStr(tagObj[tagName], options, level + 1);
         if( (!tagValue || tagValue.length === 0) && options.suppressEmptyNode){ 
-            xmlStr += tagStart + "/>"; 
+            if(options.unpairedTags.indexOf(tagName) !== -1){
+                xmlStr += tagStart + ">"; 
+            }else{
+                xmlStr += tagStart + "/>"; 
+            }
         }else{ 
             //TODO: node with only text value should not parse the text value in next line
             xmlStr += tagStart + `>${tagValue}${indentation}</${tagName}>` ;

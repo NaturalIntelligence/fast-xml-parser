@@ -19,7 +19,8 @@ const defaultOptions = {
     return a;
   },
   preserveOrder: false,
-  commentPropName: false
+  commentPropName: false,
+  unpairedTags: [],
 };
 
 const props = [
@@ -36,6 +37,7 @@ const props = [
   'arrayNodeName', //when array as root
   'preserveOrder',
   "commentPropName",
+  "unpairedTags",
   // 'rootNodeName', //when jsObject have multiple properties on root level
 ];
 
@@ -208,7 +210,9 @@ function buildTextValNode(val, key, attrStr, level) {
 }
 
 function buildEmptyTextNode(val, key, attrStr, level) {
-  if (val !== '') {
+  if( val === '' && this.options.unpairedTags.indexOf(key) !== -1){
+    return this.indentate(level) + '<' + key + attrStr + this.tagEndChar;
+  }else if (val !== '') {
     return this.buildTextValNode(val, key, attrStr, level);
   } else {
     return this.indentate(level) + '<' + key + attrStr + '/' + this.tagEndChar;
@@ -226,9 +230,5 @@ function isAttribute(name /*, options*/) {
     return false;
   }
 }
-
-//formatting
-//indentation
-//\n after each closing or self closing tag
 
 module.exports = Builder;

@@ -1,5 +1,9 @@
 Note: If you find missing information about particular minor version, that version must have been changed without any functional change in this library.
 
+**⚠️ 4.0.0-beta.2 / 2021-11-19**
+* rename `attrMap` to `attibutes` in parser output when `preserveOrder:true`
+* supports unpairedTags
+
 **⚠️ 4.0.0-beta.1 / 2021-11-18**
 * Parser returns an array now
   * to make the structure common

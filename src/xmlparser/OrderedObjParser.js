@@ -305,6 +305,18 @@ const parseToOrderedJsObj = function(xmlData, options) {
           // tagsNodeStack.push(currentNode);
           currentNode.addChild(childNode);
         }
+  //boolean tags
+        else if(options.unpairedTags.indexOf(tagName) !== -1){
+            // tagExp = tagExp.substr(0, tagExp.length - 1);
+
+          const childNode = new xmlNode(tagName);
+          if(tagName !== tagExp && shouldBuildAttributesMap){
+            childNode.attributes = buildAttributesMap(tagExp, jPath , options);
+          }
+          jPath = jPath.substr(0, jPath.lastIndexOf("."));
+          // tagsNodeStack.push(currentNode);
+          currentNode.addChild(childNode);
+        }
   //opening tag
         else{
           

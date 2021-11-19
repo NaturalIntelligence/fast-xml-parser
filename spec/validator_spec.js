@@ -433,3 +433,28 @@ describe("should report correct line numbers for unclosed tags", () => {
                   </parent>extra`,
                  {InvalidXml: "Extra text at the end"}, 2, 28));
 });
+
+describe("XML Validator with options", function () {
+    it('- Unpaired tags', () =>
+        validate(`<parent><extra></parent>`,
+        {InvalidTag: "Expected closing tag 'extra' (opened in line 1, col 9) instead of closing tag 'parent'."}, 1, 16));
+    
+    it('- Maarked Unpaired tags', () =>{
+        const result = XMLValidator.validate(`<parent><extra></parent>`, {
+            unpairedTags: ["extra"]
+        });
+        // console.log(result);
+        expect(result).toBeTrue();
+    });
+    it('- allowBooleanAttributes:false', () =>
+        validate(`<parent extra></parent>`,
+        {InvalidAttr: "boolean attribute 'extra' is not allowed."}, 1, 9));
+
+    it('- allowBooleanAttributes:true', () =>{
+        const result = XMLValidator.validate(`<parent extra></parent>`, {
+            allowBooleanAttributes: true
+        });
+        expect(result).toBeTrue();
+    });
+
+});

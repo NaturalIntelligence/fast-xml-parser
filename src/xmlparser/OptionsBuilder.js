@@ -26,6 +26,7 @@ const defaultOptions = {
     alwaysCreateTextNode: false,
     isArray: () => false,
     commentPropName: false,
+    unpairedTags: [],
 };
    
 const props = [
@@ -46,7 +47,8 @@ const props = [
     'stopNodes',
     'alwaysCreateTextNode',
     'isArray',
-    'commentPropName'
+    'commentPropName',
+    'unpairedTags',
 ];
   
 const util = require('../util');

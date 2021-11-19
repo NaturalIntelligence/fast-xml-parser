@@ -15,6 +15,7 @@ type X2jOptions = {
   attributeValueProcessor: (attrName: string, attrValue: string, jPath: string) => string;
   numberParseOptions: strnumOptions;
   stopNodes: string[];
+  unpairedTags: string[];
   alwaysCreateTextNode: boolean;
   isArray: (tagName: string, jPath: string, isLeafNode: boolean, isAttribute: boolean) => boolean;
 };
@@ -26,6 +27,7 @@ type strnumOptions = {
 type X2jOptionsOptional = Partial<X2jOptions>;
 type validationOptions = {
   allowBooleanAttributes: boolean;
+  unpairedTags: string[];
 };
 type validationOptionsOptional = Partial<validationOptions>;
 
@@ -41,6 +43,7 @@ type XmlBuilderOptions = {
   arrayNodeName: string;
   suppressEmptyNode: boolean;
   preserveOrder: boolean;
+  unpairedTags: string[];
   tagValueProcessor: (name: string, value: string) => string;
   attributeValueProcessor: (name: string, value: string) => string;
 };
