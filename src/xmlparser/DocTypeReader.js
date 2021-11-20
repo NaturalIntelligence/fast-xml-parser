@@ -83,7 +83,10 @@ const entityRegex = RegExp("^\\s([a-zA-z0-0]+)[ \t](['\"])([^&]+)\\2");
 function parseEntityExp(exp, entities){
     const match = entityRegex.exec(exp);
     if(match){
-        entities[ `&${match[1]};` ] = match[3];
+        entities[ match[1] ] = {
+            regx : RegExp( `&${match[1]};`,"g"),
+            val: match[3]
+        };
     }
 }
 module.exports = readDocType;

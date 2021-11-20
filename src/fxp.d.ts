@@ -18,6 +18,7 @@ type X2jOptions = {
   unpairedTags: string[];
   alwaysCreateTextNode: boolean;
   isArray: (tagName: string, jPath: string, isLeafNode: boolean, isAttribute: boolean) => boolean;
+  processEntities: boolean;
 };
 type strnumOptions = {
   hex: boolean;

@@ -18,11 +18,19 @@ class OrderedObjParser{
     this.currentNode = null;
     this.tagsNodeStack = [];
     this.docTypeEntities = {};
+    this.lastEntities = {
+      "amp" : { regex: /&(amp|#38|#x26);/g, val : "&"},
+      "apos" : { regex: /&(apos|#39|#x27);/g, val : "'"},
+      "gt" : { regex: /&(gt|#62|#x3E);/g, val : ">"},
+      "lt" : { regex: /&(lt|#60|#x3C);/g, val : "<"},
+      "quot" : { regex: /&(quot|#34|#x22);/g, val : "\""},
+    };
     this.parseXml = parseXml;
     this.parseTextData = parseTextData;
     this.resolveNameSpace = resolveNameSpace;
     this.buildAttributesMap = buildAttributesMap;
     this.isItStopNode = isItStopNode;
+    this.replaceEntitiesValue = replaceEntitiesValue;
   }
 
 }
@@ -42,6 +50,8 @@ function parseTextData(val, tagName, jPath, dontTrim, hasAttributes, isLeafNode)
       val = val.trim();
     }
     if(val.length > 0){
+      if(this.options.processEntities) val = this.replaceEntitiesValue(val);
+      
       const newval = this.options.tagValueProcessor(tagName, val, jPath, hasAttributes, isLeafNode);
       if(newval === null || newval === undefined){
         //don't parse
@@ -98,7 +108,7 @@ function buildAttributesMap(attrStr, jPath) {
           if (this.options.trimValues) {
             oldVal = oldVal.trim();
           }
-          
+          if(this.options.processEntities) oldVal = this.replaceEntitiesValue(oldVal);
           const newVal = this.options.attributeValueProcessor(attrName, oldVal, jPath);
           if(newVal === null || newVal === undefined){
             //don't parse
@@ -320,6 +330,17 @@ const parseXml = function(xmlData) {
   return xmlObj.child;
 }
 
+const replaceEntitiesValue = function(val){
+  for(let entityName in this.docTypeEntities){
+    const entity = this.docTypeEntities[entityName];
+    val = val.replace( entity.regx, entity.val);
+  }
+  for(let entityName in this.lastEntities){
+    const entity = this.lastEntities[entityName];
+    val = val.replace( entity.regex, entity.val);
+  }
+  return val;
+}
 //TODO: use jPath to simplify the logic
 /**
  * 

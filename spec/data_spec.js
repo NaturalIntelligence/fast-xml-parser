@@ -113,6 +113,7 @@ describe("XMLParser", function() {
         const options = {
             allowBooleanAttributes: true,
             ignoreAttributes:    false,
+            processEntities: false
         };
         const parser = new XMLParser(options);
         let result = parser.parse(xmlData, true);
@@ -267,9 +268,11 @@ describe("XMLParser", function() {
         const options = {
             allowBooleanAttributes: true,
             ignoreAttributes:    false,
+            // processEntities: false
         };
         const parser = new XMLParser(options);
         let result = parser.parse(xmlData, true);
+        // console.log(JSON.stringify(result,null,4));
         expect(result).toEqual(expected);
     });
 });
