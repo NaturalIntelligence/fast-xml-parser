@@ -47,6 +47,7 @@ type XmlBuilderOptions = {
   unpairedTags: string[];
   tagValueProcessor: (name: string, value: string) => string;
   attributeValueProcessor: (name: string, value: string) => string;
+  processEntities: boolean;
 };
 type XmlBuilderOptionsOptional = Partial<XmlBuilderOptions>;
 

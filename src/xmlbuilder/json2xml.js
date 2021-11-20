@@ -21,6 +21,11 @@ const defaultOptions = {
   preserveOrder: false,
   commentPropName: false,
   unpairedTags: [],
+  entities: {
+    ">" : { regex: new RegExp(">", "g"), val: "&gt;" },
+    "<" : { regex: new RegExp("<", "g"), val: "&lt;" }
+  },
+  processEntities: true
 };
 
 const props = [
@@ -38,6 +43,8 @@ const props = [
   'preserveOrder',
   "commentPropName",
   "unpairedTags",
+  "entities",
+  "processEntities",
   // 'rootNodeName', //when jsObject have multiple properties on root level
 ];
 
@@ -76,6 +83,8 @@ function Builder(options) {
 
   this.buildTextValNode = buildTextValNode;
   this.buildObjectNode = buildObjectNode;
+
+  this.replaceEntitiesValue = replaceEntitiesValue;
 }
 
 Builder.prototype.build = function(jObj) {
@@ -109,7 +118,8 @@ Builder.prototype.j2x = function(jObj, level) {
       }else {
         //tag value
         if (key === this.options.textNodeName) {
-          val += this.options.tagValueProcessor(key, '' + jObj[key]);
+          let newval = this.options.tagValueProcessor(key, '' + jObj[key]);
+          val += this.replaceEntitiesValue(newval);
         } else {
           val += this.buildTextNode(jObj[key], key, '', level);
         }
@@ -196,17 +206,30 @@ function buildEmptyObjNode(val, key, attrStr, level) {
 }
 
 function buildTextValNode(val, key, attrStr, level) {
+  let textValue = this.options.tagValueProcessor(key, val);
+  textValue = this.replaceEntitiesValue(textValue);
+  
   return (
     this.indentate(level) +
     '<' +
     key +
     attrStr +
     '>' +
-    this.options.tagValueProcessor(key, val) +
+     textValue +
     '</' +
     key +
     this.tagEndChar
   );
+}
+
+function replaceEntitiesValue(textValue){
+  if(textValue && textValue.length > 0 && this.options.processEntities){
+    for (const entityName in this.options.entities) {
+      const entity = this.options.entities[entityName];
+      textValue = textValue.replace(entity.regex, entity.val);
+    }
+  }
+  return textValue;
 }
 
 function buildEmptyTextNode(val, key, attrStr, level) {

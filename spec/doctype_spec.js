@@ -1,4 +1,4 @@
-const {XMLParser, XMLValidator} = require("../src/fxp");
+const {XMLParser, XMLBuilder} = require("../src/fxp");
 
 describe("XMLParser Entities", function() {
 
@@ -159,5 +159,34 @@ describe("XMLParser Entities", function() {
         // console.log(JSON.stringify(result,null,4));
 
         expect(result).toEqual(expected);
+    });
+
+    it("should parse attributes having '>' in value", function() {
+        const jsObj = {
+            "note": {
+                "@heading": "Reminder > Alert",
+                "body": {
+                    "#text": " 3 < 4",
+                    "attr": "Writer: Donald Duck."
+                },
+            }
+        };
+
+        const expected = `
+        <note heading="Reminder > Alert">
+            <body>
+             3 &lt; 4
+             <attr>Writer: Donald Duck.</attr>
+            </body>
+        </note>`;
+
+        const options = {
+            attributeNamePrefix: "@",
+            ignoreAttributes:    false,
+            // processEntities: true
+        };
+        const builder = new XMLBuilder(options);
+        const result = builder.build(jsObj);
+        expect(result.replace(/\s+/g, "")).toEqual(expected.replace(/\s+/g, ""));
     });
 });

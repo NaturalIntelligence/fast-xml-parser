@@ -778,10 +778,10 @@ describe("XMLParser", function() {
         expect(result).toEqual(expected);
     });
 
-    it("should not decode HTML entities by default", function() {
+    it("should encode  HTML entities by default", function() {
         const xmlData = "<rootNode>       foo&ampbar&apos;        </rootNode>";
         const expected = {
-            "rootNode": "foo&ampbar&apos;"
+            "rootNode": "foo&ampbar'"
         };
         
         const options = {
