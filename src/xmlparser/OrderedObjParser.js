@@ -2,6 +2,7 @@
 
 const util = require('../util');
 const xmlNode = require('./xmlNode');
+const readDocType = require("./DocTypeReader");
 const toNumber = require("strnum");
 
 const regx =
@@ -11,14 +12,20 @@ const regx =
 //const tagsRegx = new RegExp("<(\\/?[\\w:\\-\._]+)([^>]*)>(\\s*"+cdataRegx+")*([^<]+)?","g");
 //const tagsRegx = new RegExp("<(\\/?)((\\w*:)?([\\w:\\-\._]+))([^>]*)>([^<]*)("+cdataRegx+"([^<]*))*([^<]+)?","g");
 
-//polyfill
-if (!Number.parseInt && window.parseInt) {
-  Number.parseInt = window.parseInt;
-}
-if (!Number.parseFloat && window.parseFloat) {
-  Number.parseFloat = window.parseFloat;
-}
+class OrderedObjParser{
+  constructor(options){
+    this.options = options;
+    this.currentNode = null;
+    this.tagsNodeStack = [];
+    this.docTypeEntities = {};
+    this.parseXml = parseXml;
+    this.parseTextData = parseTextData;
+    this.resolveNameSpace = resolveNameSpace;
+    this.buildAttributesMap = buildAttributesMap;
+    this.isItStopNode = isItStopNode;
+  }
 
+}
 
 /**
  * @param {string} val
@@ -29,25 +36,25 @@ if (!Number.parseFloat && window.parseFloat) {
  * @param {boolean} hasAttributes
  * @param {boolean} isLeafNode
  */
-function parseValue(val, options, tagName, jPath, dontTrim, hasAttributes, isLeafNode) {
+function parseTextData(val, tagName, jPath, dontTrim, hasAttributes, isLeafNode) {
   if (val !== undefined) {
-    if (options.trimValues && !dontTrim) {
+    if (this.options.trimValues && !dontTrim) {
       val = val.trim();
     }
     if(val.length > 0){
-      const newval = options.tagValueProcessor(tagName, val, jPath, hasAttributes, isLeafNode);
+      const newval = this.options.tagValueProcessor(tagName, val, jPath, hasAttributes, isLeafNode);
       if(newval === null || newval === undefined){
         //don't parse
         return val;
       }else if(typeof newval !== typeof val || newval !== val){
         //overwrite
         return newval;
-      }else if(options.trimValues){
-        return _parseValue(val, options.parseTagValue, options.numberParseOptions);
+      }else if(this.options.trimValues){
+        return parseValue(val, this.options.parseTagValue, this.options.numberParseOptions);
       }else{
         const trimmedVal = val.trim();
         if(trimmedVal === val){
-          return _parseValue(val, options.parseTagValue, options.numberParseOptions);
+          return parseValue(val, this.options.parseTagValue, this.options.numberParseOptions);
         }else{
           return val;
         }
@@ -56,8 +63,8 @@ function parseValue(val, options, tagName, jPath, dontTrim, hasAttributes, isLea
   }
 }
 
-function resolveNameSpace(tagname, options) {
-  if (options.removeNSPrefix) {
+function resolveNameSpace(tagname) {
+  if (this.options.removeNSPrefix) {
     const tags = tagname.split(':');
     const prefix = tagname.charAt(0) === '/' ? '/' : '';
     if (tags[0] === 'xmlns') {
@@ -70,28 +77,12 @@ function resolveNameSpace(tagname, options) {
   return tagname;
 }
 
-function _parseValue(val, shouldParse, options) {
-  if (shouldParse && typeof val === 'string') {
-    //console.log(options)
-    const newval = val.trim();
-    if(newval === 'true' ) return true;
-    else if(newval === 'false' ) return false;
-    else return toNumber(val, options);
-  } else {
-    if (util.isExist(val)) {
-      return val;
-    } else {
-      return '';
-    }
-  }
-}
-
 //TODO: change regex to capture NS
 //const attrsRegx = new RegExp("([\\w\\-\\.\\:]+)\\s*=\\s*(['\"])((.|\n)*?)\\2","gm");
 const attrsRegx = new RegExp('([^\\s=]+)\\s*(=\\s*([\'"])([\\s\\S]*?)\\3)?', 'gm');
 
-function buildAttributesMap(attrStr, jPath, options) {
-  if (!options.ignoreAttributes && typeof attrStr === 'string') {
+function buildAttributesMap(attrStr, jPath) {
+  if (!this.options.ignoreAttributes && typeof attrStr === 'string') {
     // attrStr = attrStr.replace(/\r?\n/g, ' ');
     //attrStr = attrStr || attrStr.trim();
 
@@ -99,16 +90,16 @@ function buildAttributesMap(attrStr, jPath, options) {
     const len = matches.length; //don't make it inline
     const attrs = {};
     for (let i = 0; i < len; i++) {
-      const attrName = resolveNameSpace(matches[i][1], options);
+      const attrName = this.resolveNameSpace(matches[i][1]);
       let oldVal = matches[i][4];
-      const aName = options.attributeNamePrefix + attrName;
+      const aName = this.options.attributeNamePrefix + attrName;
       if (attrName.length) {
         if (oldVal !== undefined) {
-          if (options.trimValues) {
+          if (this.options.trimValues) {
             oldVal = oldVal.trim();
           }
           
-          const newVal = options.attributeValueProcessor(attrName, oldVal, jPath);
+          const newVal = this.options.attributeValueProcessor(attrName, oldVal, jPath);
           if(newVal === null || newVal === undefined){
             //don't parse
             attrs[aName] = oldVal;
@@ -117,13 +108,13 @@ function buildAttributesMap(attrStr, jPath, options) {
             attrs[aName] = newVal;
           }else{
             //parse
-            attrs[aName] = _parseValue(
+            attrs[aName] = parseValue(
               oldVal,
-              options.parseAttributeValue,
-              options.numberParseOptions
+              this.options.parseAttributeValue,
+              this.options.numberParseOptions
             );
           }
-        } else if (options.allowBooleanAttributes) {
+        } else if (this.options.allowBooleanAttributes) {
           attrs[aName] = true;
         }
       }
@@ -131,23 +122,21 @@ function buildAttributesMap(attrStr, jPath, options) {
     if (!Object.keys(attrs).length) {
       return;
     }
-    if (options.attributesGroupName) {
+    if (this.options.attributesGroupName) {
       const attrCollection = {};
-      attrCollection[options.attributesGroupName] = attrs;
+      attrCollection[this.options.attributesGroupName] = attrs;
       return attrCollection;
     }
     return attrs;
   }
 }
 
-const parseToOrderedJsObj = function(xmlData, options) {
+const parseXml = function(xmlData) {
   xmlData = xmlData.replace(/\r\n?/g, "\n"); //TODO: remove this line
   const xmlObj = new xmlNode('!xml');
   let currentNode = xmlObj;
   let textData = "";
-  const tagsNodeStack = [];
   let jPath = "";
-
   for(let i=0; i< xmlData.length; i++){//for each char in XML data
     const ch = xmlData[i];
     if(ch === '<'){
@@ -157,7 +146,7 @@ const parseToOrderedJsObj = function(xmlData, options) {
         const closeIndex = findClosingIndex(xmlData, ">", i, "Closing Tag is not closed.")
         let tagName = xmlData.substring(i+2,closeIndex).trim();
 
-        if(options.removeNSPrefix){
+        if(this.options.removeNSPrefix){
           const colonIndex = tagName.indexOf(":");
           if(colonIndex !== -1){
             tagName = tagName.substr(colonIndex+1);
@@ -165,85 +154,78 @@ const parseToOrderedJsObj = function(xmlData, options) {
         }
         
         if(currentNode){
-          textData = parseValue(textData
-            , options
+          textData = this.parseTextData(textData
             , currentNode.tagname
             , jPath
             ,false
             , currentNode.attributes ? Object.keys(currentNode.attributes).length !== 0 : false
             , Object.keys(currentNode.child).length === 0);
-          if(textData !== undefined &&  textData !== "") currentNode.add(options.textNodeName, textData);
+          if(textData !== undefined &&  textData !== "") currentNode.add(this.options.textNodeName, textData);
           textData = "";
         }
 
-        if (isItStopNode(options.stopNodes, tagsNodeStack, currentNode.tagname)) { //TODO: namespace
-          const top = tagsNodeStack[tagsNodeStack.length - 1];
+        if (this.isItStopNode(this.options.stopNodes, currentNode.tagname)) { //TODO: namespace
+          const top = this.tagsNodeStack[ this.tagsNodeStack.length - 1];
           const stopNode = top.child[ top.child.length -1 ];
-          stopNode[currentNode.tagname] = [ { [options.textNodeName] :xmlData.substr(currentNode.startIndex + 1, i - currentNode.startIndex - 1) }];
+          stopNode[currentNode.tagname] = [ { [this.options.textNodeName] :xmlData.substr(currentNode.startIndex + 1, i - currentNode.startIndex - 1) }];
         }
         
         jPath = jPath.substr(0, jPath.lastIndexOf("."));
         
-        currentNode = tagsNodeStack.pop();//avoid recurssion, set the parent tag scope
+        currentNode = this.tagsNodeStack.pop();//avoid recurssion, set the parent tag scope
         textData = "";
         i = closeIndex;
       } else if( xmlData[i+1] === '?') {
         i = findClosingIndex(xmlData, "?>", i, "Pi Tag is not closed.")
       } else if(xmlData.substr(i + 1, 3) === '!--') {
         const endIndex = findClosingIndex(xmlData, "-->", i, "Comment is not closed.")
-        if(options.commentPropName){
+        if(this.options.commentPropName){
           const comment = xmlData.substring(i + 4, endIndex - 2);
 
           //TODO: remove repeated code
           if(textData){ //store previously collected data as textNode
-            textData = parseValue(textData
-              , options
+            textData = this.parseTextData(textData
               , currentNode.tagname
               , jPath
               ,false
               , currentNode.attributes ? Object.keys(currentNode.attributes).length !== 0 : false
               , Object.keys(currentNode.child).length === 0);
   
-            if(textData !== undefined &&  textData !== "") currentNode.add(options.textNodeName, textData);
+            if(textData !== undefined &&  textData !== "") currentNode.add(this.options.textNodeName, textData);
             textData = "";
           }
-          currentNode.add(options.commentPropName, [ { [options.textNodeName] : comment } ]);
+          currentNode.add(this.options.commentPropName, [ { [this.options.textNodeName] : comment } ]);
         }
         i = endIndex;
       } else if( xmlData.substr(i + 1, 2) === '!D') {
-        const closeIndex = findClosingIndex(xmlData, ">", i, "DOCTYPE is not closed.")
-        const tagExp = xmlData.substring(i, closeIndex);
-        if(tagExp.indexOf("[") >= 0){
-          i = xmlData.indexOf("]>", i) + 1;
-        }else{
-          i = closeIndex;
-        }
+        const result = readDocType(xmlData, i);
+        this.docTypeEntities = result.entities;
+        i = result.i;
       }else if(xmlData.substr(i + 1, 2) === '![') {
         const closeIndex = findClosingIndex(xmlData, "]]>", i, "CDATA is not closed.") - 2;
         const tagExp = xmlData.substring(i + 9,closeIndex);
 
         if(textData){ //store previously collected data as textNode
-          textData = parseValue(textData
-            , options
+          textData = this.parseTextData(textData
             , currentNode.tagname
             , jPath
             ,false
             , currentNode.attributes ? Object.keys(currentNode.attributes).length !== 0 : false
             , Object.keys(currentNode.child).length === 0);
 
-          if(textData !== undefined &&  textData !== "") currentNode.add(options.textNodeName, textData);
+          if(textData !== undefined &&  textData !== "") currentNode.add(this.options.textNodeName, textData);
           textData = "";
         }
 
         //cdata should be set even if it is 0 length string
-        if(options.cdataPropName){
-          let val = parseValue(tagExp, options, options.cdataPropName, jPath + "." + options.cdataPropName, true, false, true);
+        if(this.options.cdataPropName){
+          let val = this.parseTextData(tagExp, this.options.cdataPropName, jPath + "." + this.options.cdataPropName, true, false, true);
           if(!val) val = "";
-          currentNode.add(options.cdataPropName, [ { [options.textNodeName] : val } ]);
+          currentNode.add(this.options.cdataPropName, [ { [this.options.textNodeName] : val } ]);
         }else{
-          let val = parseValue(tagExp, options, currentNode.tagname, jPath, true, false, true);
+          let val = this.parseTextData(tagExp, currentNode.tagname, jPath, true, false, true);
           if(!val) val = "";
-          currentNode.add(options.textNodeName, val);
+          currentNode.add(this.options.textNodeName, val);
         }
         
         i = closeIndex + 2;
@@ -259,7 +241,7 @@ const parseToOrderedJsObj = function(xmlData, options) {
           tagExp = tagExp.substr(separatorIndex + 1);
         }
 
-        if(options.removeNSPrefix){
+        if(this.options.removeNSPrefix){
           const colonIndex = tagName.indexOf(":");
           if(colonIndex !== -1){
             tagName = tagName.substr(colonIndex+1);
@@ -271,14 +253,13 @@ const parseToOrderedJsObj = function(xmlData, options) {
         if (currentNode && textData) {
           if(currentNode.tagname !== '!xml'){
             //when nested tag is found
-            textData = parseValue(textData
-              , options
+            textData = this.parseTextData(textData
               , currentNode.tagname
               , jPath
               , false
               , currentNode.attributes ? Object.keys(currentNode.attributes).length !== 0 : false
               , false);
-            if(textData !== undefined &&  textData !== "") currentNode.add(options.textNodeName, textData);
+            if(textData !== undefined &&  textData !== "") currentNode.add(this.options.textNodeName, textData);
             textData = "";
           }
         }
@@ -299,34 +280,32 @@ const parseToOrderedJsObj = function(xmlData, options) {
 
           const childNode = new xmlNode(tagName);
           if(tagName !== tagExp && shouldBuildAttributesMap){
-            childNode.attributes = buildAttributesMap(tagExp, jPath , options);
+            childNode.attributes = this.buildAttributesMap(tagExp, jPath);
           }
           jPath = jPath.substr(0, jPath.lastIndexOf("."));
-          // tagsNodeStack.push(currentNode);
           currentNode.addChild(childNode);
         }
   //boolean tags
-        else if(options.unpairedTags.indexOf(tagName) !== -1){
+        else if(this.options.unpairedTags.indexOf(tagName) !== -1){
             // tagExp = tagExp.substr(0, tagExp.length - 1);
 
           const childNode = new xmlNode(tagName);
           if(tagName !== tagExp && shouldBuildAttributesMap){
-            childNode.attributes = buildAttributesMap(tagExp, jPath , options);
+            childNode.attributes = this.buildAttributesMap(tagExp, jPath);
           }
           jPath = jPath.substr(0, jPath.lastIndexOf("."));
-          // tagsNodeStack.push(currentNode);
           currentNode.addChild(childNode);
         }
   //opening tag
         else{
           
           const childNode = new xmlNode( tagName);
-          tagsNodeStack.push(currentNode);
+          this.tagsNodeStack.push(currentNode);
           
           childNode.startIndex=closeIndex; //for further processing
           
           if(tagName !== tagExp && shouldBuildAttributesMap){
-            childNode.attributes = buildAttributesMap(tagExp, jPath, options);
+            childNode.attributes = this.buildAttributesMap(tagExp, jPath);
           }
           currentNode.addChild(childNode);
           currentNode = childNode;
@@ -345,9 +324,9 @@ const parseToOrderedJsObj = function(xmlData, options) {
 /**
  * 
  * @param {string[]} stopNodes 
- * @param {XmlNode[]} tagsNodeStack 
+ * @param {string} currentTagName 
  */
-function isItStopNode(stopNodes, tagsNodeStack, currentTagName){
+function isItStopNode(stopNodes, currentTagName){
   const matchingStopNodes = [];
   //filter the list of stopNodes as per current tag
   stopNodes.forEach( jPath => {
@@ -356,8 +335,8 @@ function isItStopNode(stopNodes, tagsNodeStack, currentTagName){
 
   if(matchingStopNodes.length > 0){
     let jPath = "";
-    for (let i = 1; i < tagsNodeStack.length; i++) {
-      const node = tagsNodeStack[i];
+    for (let i = 1; i < this.tagsNodeStack.length; i++) {
+      const node = this.tagsNodeStack[i];
       jPath += "." + node.tagname;
     }
     jPath += "." + currentTagName;
@@ -404,4 +383,22 @@ function findClosingIndex(xmlData, str, i, errMsg){
   }
 }
 
-exports.parseToOrderedJsObj = parseToOrderedJsObj;
+
+function parseValue(val, shouldParse, options) {
+  if (shouldParse && typeof val === 'string') {
+    //console.log(options)
+    const newval = val.trim();
+    if(newval === 'true' ) return true;
+    else if(newval === 'false' ) return false;
+    else return toNumber(val, options);
+  } else {
+    if (util.isExist(val)) {
+      return val;
+    } else {
+      return '';
+    }
+  }
+}
+
+
+module.exports = OrderedObjParser;

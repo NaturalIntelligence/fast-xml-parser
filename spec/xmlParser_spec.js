@@ -793,30 +793,6 @@ describe("XMLParser", function() {
         expect(result).toEqual(expected);
     });
 
-    it("should parse XML with DOCTYPE", function() {
-        const xmlData = "<?xml version=\"1.0\" standalone=\"yes\" ?>" +
-                        "<!--open the DOCTYPE declaration -" +
-                        "  the open square bracket indicates an internal DTD-->" +
-                        "<!DOCTYPE foo [" +
-                        "<!--define the internal DTD-->" +
-                        "<!ELEMENT foo (#PCDATA)>" +
-                        "<!--close the DOCTYPE declaration-->" +
-                        "]>" +
-                        "<foo>Hello World.</foo>";
-
-        const expected = {
-            foo: "Hello World."
-        };
-        
-        const options = {
-
-        };
-        const parser = new XMLParser(options);
-        let result = parser.parse(xmlData);
-        //console.log(JSON.stringify(result,null,4));
-        expect(result).toEqual(expected);
-    });
-
     //Issue #77
     it("should parse node with space in closing node", function() {
         const xmlData = "<?xml version='1.0'?>"

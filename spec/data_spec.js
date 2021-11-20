@@ -144,46 +144,6 @@ describe("XMLParser", function() {
         expect(result).toEqual(expected);
     });
 
-    it("should parse XML with DOCTYPE without internal DTD", function() {
-        const xmlData = "<?xml version='1.0' standalone='no'?><!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.1//EN\" \"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd\" ><svg><metadata>test</metadata></svg>";
-        const expected = {
-            "svg" : {
-                "metadata": "test"
-            }
-        };
-
-        const options = {
-            allowBooleanAttributes: true,
-            ignoreAttributes:    false,
-        };
-        const parser = new XMLParser(options);
-        let result = parser.parse(xmlData, true);
-
-        expect(result).toEqual(expected);
-    });
-
-    it("should parse XML with DOCTYPE without internal DTD", function() {
-        const xmlData = `<?xml version='1.0' standalone='no'?>
-        <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" >
-        <svg>
-            <metadata>[test]</metadata>
-        </svg>`;
-        const expected = {
-            "svg" : {
-                "metadata": "[test]"
-            }
-        };
-
-        const options = {
-            allowBooleanAttributes: true,
-            ignoreAttributes:    false,
-        };
-        const parser = new XMLParser(options);
-        let result = parser.parse(xmlData, true);
-
-        expect(result).toEqual(expected);
-    });
-
     it("should parse XML when namespaced ignored", function() {
         const xmlData = `<root><a:b>c</a:b><a:d/><a:e atr="sasa" boolean></root>`;
         const expected = {
@@ -286,13 +246,7 @@ describe("XMLParser", function() {
             parser.parse(xmlData);
         }).toThrowError("CDATA is not closed.")
     })
-    it("should error for when any tag is left to close", function(){
-        const xmlData = `<?xml version="1.0"?><!DOCTYPE `;
-        expect(() =>{
-            const parser = new XMLParser();
-            parser.parse(xmlData);
-        }).toThrowError("DOCTYPE is not closed.")
-    })
+
     it("should error for when any tag is left to close", function(){
         const xmlData = `<?xml version="1.0"?><?pi  `;
         expect(() =>{

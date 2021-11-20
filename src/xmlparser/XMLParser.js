@@ -1,5 +1,5 @@
 const { buildOptions} = require("./OptionsBuilder");
-const { parseToOrderedJsObj} = require("./OrderedObjParser");
+const OrderedObjParser = require("./OrderedObjParser");
 const { prettify} = require("./node2json");
 const validator = require('../validator');
 
@@ -27,7 +27,8 @@ class XMLParser{
               throw Error( `${result.err.msg}:${result.err.line}:${result.err.col}` )
             }
           }
-        const orderedResult = parseToOrderedJsObj(xmlData, this.options);
+        const orderedObjParser = new OrderedObjParser(this.options);
+        const orderedResult = orderedObjParser.parseXml(xmlData);
         if(this.options.preserveOrder || orderedResult === undefined) return orderedResult;
         else return prettify(orderedResult, this.options);
     }
