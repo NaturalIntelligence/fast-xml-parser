@@ -50,7 +50,7 @@ function parseTextData(val, tagName, jPath, dontTrim, hasAttributes, isLeafNode)
       val = val.trim();
     }
     if(val.length > 0){
-      if(this.options.processEntities) val = this.replaceEntitiesValue(val);
+      val = this.replaceEntitiesValue(val);
       
       const newval = this.options.tagValueProcessor(tagName, val, jPath, hasAttributes, isLeafNode);
       if(newval === null || newval === undefined){
@@ -108,7 +108,7 @@ function buildAttributesMap(attrStr, jPath) {
           if (this.options.trimValues) {
             oldVal = oldVal.trim();
           }
-          if(this.options.processEntities) oldVal = this.replaceEntitiesValue(oldVal);
+          oldVal = this.replaceEntitiesValue(oldVal);
           const newVal = this.options.attributeValueProcessor(attrName, oldVal, jPath);
           if(newVal === null || newVal === undefined){
             //don't parse
@@ -331,13 +331,15 @@ const parseXml = function(xmlData) {
 }
 
 const replaceEntitiesValue = function(val){
-  for(let entityName in this.docTypeEntities){
-    const entity = this.docTypeEntities[entityName];
-    val = val.replace( entity.regx, entity.val);
-  }
-  for(let entityName in this.lastEntities){
-    const entity = this.lastEntities[entityName];
-    val = val.replace( entity.regex, entity.val);
+  if(this.options.processEntities){
+    for(let entityName in this.docTypeEntities){
+      const entity = this.docTypeEntities[entityName];
+      val = val.replace( entity.regx, entity.val);
+    }
+    for(let entityName in this.lastEntities){
+      const entity = this.lastEntities[entityName];
+      val = val.replace( entity.regex, entity.val);
+    }
   }
   return val;
 }
