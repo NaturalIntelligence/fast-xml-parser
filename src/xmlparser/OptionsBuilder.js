@@ -27,7 +27,8 @@ const defaultOptions = {
     isArray: () => false,
     commentPropName: false,
     unpairedTags: [],
-    processEntities: true
+    processEntities: true,
+    htmlEntities: false,
 };
    
 const props = [
@@ -50,7 +51,8 @@ const props = [
     'isArray',
     'commentPropName',
     'unpairedTags',
-    'processEntities'
+    'processEntities',
+    'htmlEntities'
 ];
   
 const util = require('../util');
