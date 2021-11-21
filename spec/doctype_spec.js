@@ -160,6 +160,44 @@ describe("XMLParser Entities", function() {
 
         expect(result).toEqual(expected);
     });
+    it("should parse dynamic entity", function() {
+        const xmlData = `
+        <?xml version="1.0" encoding="UTF-8"?>
+
+        <!DOCTYPE note [
+        <!ENTITY nbsp "writer;">
+        <!ENTITY writer "Writer: Donald Duck.">
+        <!ENTITY copyright "Copyright: W3Schools.">
+        ]>
+        
+        <note>
+            <heading>Reminder</heading>
+            <body attr="&writer;">Don't forget me this weekend!</body>
+            <footer>&writer;&&nbsp;&copyright;</footer>
+        </note> `;
+
+        const expected = {
+            "note": {
+                "heading": "Reminder",
+                "body": {
+                    "#text": "Don't forget me this weekend!",
+                    "attr": "Writer: Donald Duck."
+                },
+                "footer": "Writer: Donald Duck.Writer: Donald Duck.Copyright: W3Schools."
+            }
+        };
+
+        const options = {
+            attributeNamePrefix: "",
+            ignoreAttributes:    false,
+            processEntities: true
+        };
+        const parser = new XMLParser(options);
+        let result = parser.parse(xmlData);
+        // console.log(JSON.stringify(result,null,4));
+
+        expect(result).toEqual(expected);
+    });
 
     it("should build by decoding defaul entities", function() {
         const jsObj = {
@@ -237,5 +275,45 @@ describe("XMLParser Entities", function() {
         result = builder.build(jsObj);
         // console.log(result);
         expect(result.replace(/\s+/g, "")).toEqual(expected.replace(/\s+/g, ""));
+    });
+
+    it("should parse HTML entities when htmlEntities:true", function() {
+        const xmlData = `
+        <?xml version="1.0" encoding="UTF-8"?>
+
+        <!DOCTYPE note [
+        <!ENTITY nbsp "writer;">
+        <!ENTITY writer "Writer: Donald Duck.">
+        <!ENTITY copyright "Copyright: W3Schools.">
+        ]>
+        
+        <note>
+            <heading>Reminder</heading>
+            <body attr="&writer;">Don't forget me this weekend!&reg;</body>
+            <footer>&writer;&&nbsp;&copyright;&inr;</footer>
+        </note> `;
+
+        const expected = {
+            "note": {
+                "heading": "Reminder",
+                "body": {
+                    "#text": "Don't forget me this weekend!®",
+                    "attr": "Writer: Donald Duck."
+                },
+                "footer": "Writer: Donald Duck.Writer: Donald Duck.Copyright: W3Schools.₹"
+            }
+        };
+
+        const options = {
+            attributeNamePrefix: "",
+            ignoreAttributes:    false,
+            processEntities: true,
+            htmlEntities: true
+        };
+        const parser = new XMLParser(options);
+        let result = parser.parse(xmlData);
+        // console.log(JSON.stringify(result,null,4));
+
+        expect(result).toEqual(expected);
     });
 });
