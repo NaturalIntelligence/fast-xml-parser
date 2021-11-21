@@ -23,7 +23,9 @@ const defaultOptions = {
   unpairedTags: [],
   entities: {
     ">" : { regex: new RegExp(">", "g"), val: "&gt;" },
-    "<" : { regex: new RegExp("<", "g"), val: "&lt;" }
+    "<" : { regex: new RegExp("<", "g"), val: "&lt;" },
+    "sQuot" : { regex: new RegExp("\'", "g"), val: "&apos;" },
+    "dQuot" : { regex: new RegExp("\"", "g"), val: "&quot;" }
   },
   processEntities: true
 };
@@ -114,7 +116,9 @@ Builder.prototype.j2x = function(jObj, level) {
       //premitive type
       const attr = this.isAttribute(key);
       if (attr) {
-        attrStr += ' ' + attr + '="' + this.options.attributeValueProcessor(attr, '' + jObj[key]) + '"';
+        let val = this.options.attributeValueProcessor(attr, '' + jObj[key]);
+        val = this.replaceEntitiesValue(val);
+        attrStr += ' ' + attr + '="' + val + '"';
       }else {
         //tag value
         if (key === this.options.textNodeName) {
@@ -145,7 +149,9 @@ Builder.prototype.j2x = function(jObj, level) {
         const Ks = Object.keys(jObj[key]);
         const L = Ks.length;
         for (let j = 0; j < L; j++) {
-          attrStr += ' ' + Ks[j] + '="' + this.options.attributeValueProcessor(Ks[j], '' + jObj[key][Ks[j]]) + '"';
+          let val = this.options.attributeValueProcessor(Ks[j], '' + jObj[key][Ks[j]]);
+          val = this.replaceEntitiesValue(val);
+          attrStr += ' ' + Ks[j] + '="' + val + '"';
         }
       } else {
         val += this.processTextOrObjNode(jObj[key], key, level)

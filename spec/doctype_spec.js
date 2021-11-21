@@ -161,10 +161,10 @@ describe("XMLParser Entities", function() {
         expect(result).toEqual(expected);
     });
 
-    it("should parse attributes having '>' in value", function() {
+    it("should build by decoding defaul entities", function() {
         const jsObj = {
             "note": {
-                "@heading": "Reminder > Alert",
+                "@heading": "Reminder > \"Alert",
                 "body": {
                     "#text": " 3 < 4",
                     "attr": "Writer: Donald Duck."
@@ -173,7 +173,7 @@ describe("XMLParser Entities", function() {
         };
 
         const expected = `
-        <note heading="Reminder > Alert">
+        <note heading="Reminder &gt; &quot;Alert">
             <body>
              3 &lt; 4
              <attr>Writer: Donald Duck.</attr>
@@ -187,6 +187,55 @@ describe("XMLParser Entities", function() {
         };
         const builder = new XMLBuilder(options);
         const result = builder.build(jsObj);
+        expect(result.replace(/\s+/g, "")).toEqual(expected.replace(/\s+/g, ""));
+    });
+    it("should build by decoding defaul entities in prserve mode", function() {
+        const jsObj = [
+            {
+                "note": [
+                    {
+                        "body": [
+                            {
+                                "#text": "3 < 4"
+                            },
+                            {
+                                "attr": [
+                                    {
+                                        "#text": "Writer: Donald Duck."
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ],
+                "attributes": {
+                    "@heading": "Reminder > \"Alert"
+                }
+            }
+        ];
+
+        const expected = `
+        <note heading="Reminder &gt; &quot;Alert">
+            <body>
+             3 &lt; 4
+             <attr>Writer: Donald Duck.</attr>
+            </body>
+        </note>`;
+
+        const options = {
+            attributeNamePrefix: "@",
+            ignoreAttributes:    false,
+            preserveOrder: true,
+            // processEntities: false
+        };
+
+        const parser = new XMLParser(options);
+        let result = parser.parse(expected);
+        // console.log(JSON.stringify(result,null,4));
+
+        const builder = new XMLBuilder(options);
+        result = builder.build(jsObj);
+        // console.log(result);
         expect(result.replace(/\s+/g, "")).toEqual(expected.replace(/\s+/g, ""));
     });
 });

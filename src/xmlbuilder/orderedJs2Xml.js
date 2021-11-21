@@ -23,7 +23,9 @@ function arrToStr(arr, options, level){
         const tagName = propName(tagObj);
 
         if(tagName === options.textNodeName){
-            xmlStr += indentation + options.tagValueProcessor( tagName, tagObj[tagName]);
+            let tagText = options.tagValueProcessor( tagName, tagObj[tagName]);
+            tagText = replaceEntitiesValue(tagText, options);
+            xmlStr += indentation + tagText;
             continue;
         }else if( tagName === options.cdataPropName){
             xmlStr += indentation + `<![CDATA[${tagObj[tagName][0][options.textNodeName]}]]>`;
@@ -62,10 +64,21 @@ function attr_to_str(attrMap, options){
     let attrStr = "";
     if(attrMap && !options.ignoreAttributes){
         for( attr in attrMap){
-            attrStr+= ` ${attr.substr(options.attributeNamePrefix.length)}="${options.attributeValueProcessor(attr, attrMap[attr])}"`;
+            let attrVal = options.attributeValueProcessor(attr, attrMap[attr]);
+            attrVal = replaceEntitiesValue(attrVal, options);
+            attrStr+= ` ${attr.substr(options.attributeNamePrefix.length)}="${attrVal}"`;
         }
     }
     return attrStr;
 }
 
+function replaceEntitiesValue(textValue, options){
+    if(textValue && textValue.length > 0 && options.processEntities){
+      for (const entityName in options.entities) {
+        const entity = options.entities[entityName];
+        textValue = textValue.replace(entity.regex, entity.val);
+      }
+    }
+    return textValue;
+  }
 module.exports = toXml;
