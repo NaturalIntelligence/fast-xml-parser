@@ -98,6 +98,7 @@ In a HTML page
 2.  [XML Parser](./docs/v4/2.XMLparseOptions.md)
 3.  [XML Builder](./docs/v4/3.XMLBuilder.md)
 4.  [XML Validator](./docs/v4/4.XMLValidator.md)
+5.  [Entites](./docs/5.Entities.md)
 
 ## Performance
 
