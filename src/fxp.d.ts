@@ -70,5 +70,5 @@ export class XMLValidator{
 }
 export class XMLBuilder {
   constructor(options: XmlBuilderOptionsOptional);
-  parse(options: any): any;
+  build(jObj: any): any;
 }
