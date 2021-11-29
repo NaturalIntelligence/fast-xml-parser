@@ -46,13 +46,14 @@ class OrderedObjParser{
     this.buildAttributesMap = buildAttributesMap;
     this.isItStopNode = isItStopNode;
     this.replaceEntitiesValue = replaceEntitiesValue;
+    this.readTagExp = readTagExp;
+    this.readStopNodeData = readStopNodeData;
   }
 
 }
 
 /**
  * @param {string} val
- * @param {object} options
  * @param {string} tagName
  * @param {string} jPath
  * @param {boolean} dontTrim
@@ -189,12 +190,6 @@ const parseXml = function(xmlData) {
           textData = "";
         }
 
-        if (this.isItStopNode(this.options.stopNodes, currentNode.tagname)) { //TODO: namespace
-          const top = this.tagsNodeStack[ this.tagsNodeStack.length - 1];
-          const stopNode = top.child[ top.child.length -1 ];
-          stopNode[currentNode.tagname] = [ { [this.options.textNodeName] :xmlData.substr(currentNode.startIndex + 1, i - currentNode.startIndex - 1) }];
-        }
-        
         jPath = jPath.substr(0, jPath.lastIndexOf("."));
         
         currentNode = this.tagsNodeStack.pop();//avoid recurssion, set the parent tag scope
@@ -255,24 +250,12 @@ const parseXml = function(xmlData) {
         
         i = closeIndex + 2;
       }else {//Opening tag
-        const result = tagExpWithClosingIndex(xmlData, i+1)
-        let tagExp = result.data;
-        const closeIndex = result.index;
-        const separatorIndex = tagExp.search(/\s/);
-        let tagName = tagExp;
-        let shouldBuildAttributesMap = true;
-        if(separatorIndex !== -1){//separate tag name and attributes expression
-          tagName = tagExp.substr(0, separatorIndex).replace(/\s\s*$/, '');
-          tagExp = tagExp.substr(separatorIndex + 1);
-        }
-
-        if(this.options.removeNSPrefix){
-          const colonIndex = tagName.indexOf(":");
-          if(colonIndex !== -1){
-            tagName = tagName.substr(colonIndex+1);
-            shouldBuildAttributesMap = tagName !== result.data.substr(colonIndex + 1);
-          }
-        }
+       
+        let result = this.readTagExp(xmlData,i);
+        let tagName= result.tagName;
+        let tagExp = result.tagExp;
+        let attrExpPresent = result.attrExpPresent;
+        let closeIndex = result.closeIndex;
         
         //save text as child node
         if (currentNode && textData) {
@@ -293,50 +276,72 @@ const parseXml = function(xmlData) {
           jPath += jPath ? "." + tagName : tagName;
         }
 
+        if (this.isItStopNode(this.options.stopNodes, jPath, tagName)) { //TODO: namespace
+          let tagContent = "";
+          //self-closing tag
+          if(tagExp.length > 0 && tagExp.lastIndexOf("/") === tagExp.length - 1){}
+          //boolean tag
+          else if(this.options.unpairedTags.indexOf(tagName) !== -1){}
+          //normal tag
+          else{
+            //read until closing tag is found
+            const result = this.readStopNodeData(xmlData, tagName, closeIndex + 1);
+            if(!result) throw new Error(`Unexpected end of ${tagName}`);
+            i = result.i;
+            tagContent = result.tagContent;
+          }
+
+          const childNode = new xmlNode(tagName);
+          if(tagName !== tagExp && attrExpPresent){
+            childNode.attributes = this.buildAttributesMap(tagExp, jPath);
+          }
+          jPath = jPath.substr(0, jPath.lastIndexOf("."));
+          childNode.add(this.options.textNodeName, tagContent);
+          
+          currentNode.addChild(childNode);
+        }else{
   //selfClosing tag
-        if(tagExp.length > 0 && tagExp.lastIndexOf("/") === tagExp.length - 1){
-          
-          if(tagName[tagName.length - 1] === "/"){ //remove trailing '/'
-            tagName = tagName.substr(0, tagName.length - 1);
-            tagExp = tagName;
-          }else{
-            tagExp = tagExp.substr(0, tagExp.length - 1);
-          }
+          if(tagExp.length > 0 && tagExp.lastIndexOf("/") === tagExp.length - 1){
+            
+            if(tagName[tagName.length - 1] === "/"){ //remove trailing '/'
+              tagName = tagName.substr(0, tagName.length - 1);
+              tagExp = tagName;
+            }else{
+              tagExp = tagExp.substr(0, tagExp.length - 1);
+            }
 
-          const childNode = new xmlNode(tagName);
-          if(tagName !== tagExp && shouldBuildAttributesMap){
-            childNode.attributes = this.buildAttributesMap(tagExp, jPath);
+            const childNode = new xmlNode(tagName);
+            if(tagName !== tagExp && attrExpPresent){
+              childNode.attributes = this.buildAttributesMap(tagExp, jPath);
+            }
+            jPath = jPath.substr(0, jPath.lastIndexOf("."));
+            currentNode.addChild(childNode);
           }
-          jPath = jPath.substr(0, jPath.lastIndexOf("."));
-          currentNode.addChild(childNode);
-        }
-  //boolean tags
-        else if(this.options.unpairedTags.indexOf(tagName) !== -1){
-            // tagExp = tagExp.substr(0, tagExp.length - 1);
+    //boolean tags
+          else if(this.options.unpairedTags.indexOf(tagName) !== -1){
+              // tagExp = tagExp.substr(0, tagExp.length - 1);
 
-          const childNode = new xmlNode(tagName);
-          if(tagName !== tagExp && shouldBuildAttributesMap){
-            childNode.attributes = this.buildAttributesMap(tagExp, jPath);
+            const childNode = new xmlNode(tagName);
+            if(tagName !== tagExp && attrExpPresent){
+              childNode.attributes = this.buildAttributesMap(tagExp, jPath);
+            }
+            jPath = jPath.substr(0, jPath.lastIndexOf("."));
+            currentNode.addChild(childNode);
           }
-          jPath = jPath.substr(0, jPath.lastIndexOf("."));
-          currentNode.addChild(childNode);
-        }
-  //opening tag
-        else{
-          
-          const childNode = new xmlNode( tagName);
-          this.tagsNodeStack.push(currentNode);
-          
-          childNode.startIndex=closeIndex; //for further processing
-          
-          if(tagName !== tagExp && shouldBuildAttributesMap){
-            childNode.attributes = this.buildAttributesMap(tagExp, jPath);
+    //opening tag
+          else{
+            const childNode = new xmlNode( tagName);
+            this.tagsNodeStack.push(currentNode);
+            
+            if(tagName !== tagExp && attrExpPresent){
+              childNode.attributes = this.buildAttributesMap(tagExp, jPath);
+            }
+            currentNode.addChild(childNode);
+            currentNode = childNode;
           }
-          currentNode.addChild(childNode);
-          currentNode = childNode;
+          textData = "";
+          i = closeIndex;
         }
-        textData = "";
-        i = closeIndex;
       }
     }else{
       textData += xmlData[i];
@@ -368,27 +373,16 @@ const replaceEntitiesValue = function(val){
 /**
  * 
  * @param {string[]} stopNodes 
+ * @param {string} jPath
  * @param {string} currentTagName 
  */
-function isItStopNode(stopNodes, currentTagName){
-  const matchingStopNodes = [];
-  //filter the list of stopNodes as per current tag
-  stopNodes.forEach( jPath => {
-    if( jPath.substr( jPath.length - currentTagName.length) === currentTagName) matchingStopNodes.push(jPath);
-  });
-
-  if(matchingStopNodes.length > 0){
-    let jPath = "";
-    for (let i = 1; i < this.tagsNodeStack.length; i++) {
-      const node = this.tagsNodeStack[i];
-      jPath += "." + node.tagname;
-    }
-    jPath += "." + currentTagName;
-    jPath = jPath.substr(1);
-    for (let i = 0; i < matchingStopNodes.length; i++) {
-      if(matchingStopNodes[i] === jPath) return true;
-    }
-  }else return false;
+function isItStopNode(stopNodes, jPath, currentTagName){
+  const allNodesExp = "*." + currentTagName;
+  for (const stopNodePath in stopNodes) {
+    const stopNodeExp = stopNodes[stopNodePath];
+    if( allNodesExp === stopNodeExp || jPath === stopNodeExp  ) return true;
+  }
+  return false;
 }
 
 /**
@@ -427,6 +421,55 @@ function findClosingIndex(xmlData, str, i, errMsg){
   }
 }
 
+function readTagExp(xmlData,i){
+  const result = tagExpWithClosingIndex(xmlData, i+1);
+  let tagExp = result.data;
+  const closeIndex = result.index;
+  const separatorIndex = tagExp.search(/\s/);
+  let tagName = tagExp;
+  let attrExpPresent = true;
+  if(separatorIndex !== -1){//separate tag name and attributes expression
+    tagName = tagExp.substr(0, separatorIndex).replace(/\s\s*$/, '');
+    tagExp = tagExp.substr(separatorIndex + 1);
+  }
+
+  if(this. options.removeNSPrefix){
+    const colonIndex = tagName.indexOf(":");
+    if(colonIndex !== -1){
+      tagName = tagName.substr(colonIndex+1);
+      attrExpPresent = tagName !== result.data.substr(colonIndex + 1);
+    }
+  }
+
+  return {
+    tagName: tagName,
+    tagExp: tagExp,
+    closeIndex: closeIndex,
+    attrExpPresent: attrExpPresent,
+  }
+}
+/**
+ * find paired tag for a stop node
+ * @param {string} xmlData 
+ * @param {string} tagName 
+ * @param {number} i 
+ */
+function readStopNodeData(xmlData, tagName, i){
+  const startIndex = i;
+  for (; i < xmlData.length; i++) {
+    if( xmlData[i] === "<" && xmlData[i+1] === "/"){ 
+        const closeIndex = findClosingIndex(xmlData, ">", i, `${tagName} is not closed`);
+        let closeTagName = xmlData.substring(i+2,closeIndex).trim();
+        if(closeTagName === tagName){
+          return {
+            tagContent: xmlData.substring(startIndex, i),
+            i : closeIndex
+          }
+        }
+        i=closeIndex;
+      }
+  }//end for loop
+}
 
 function parseValue(val, shouldParse, options) {
   if (shouldParse && typeof val === 'string') {
