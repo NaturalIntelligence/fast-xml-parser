@@ -239,9 +239,9 @@ const parseXml = function(xmlData) {
 
         //cdata should be set even if it is 0 length string
         if(this.options.cdataPropName){
-          let val = this.parseTextData(tagExp, this.options.cdataPropName, jPath + "." + this.options.cdataPropName, true, false, true);
-          if(!val) val = "";
-          currentNode.add(this.options.cdataPropName, [ { [this.options.textNodeName] : val } ]);
+          // let val = this.parseTextData(tagExp, this.options.cdataPropName, jPath + "." + this.options.cdataPropName, true, false, true);
+          // if(!val) val = "";
+          currentNode.add(this.options.cdataPropName, [ { [this.options.textNodeName] : tagExp } ]);
         }else{
           let val = this.parseTextData(tagExp, currentNode.tagname, jPath, true, false, true);
           if(!val) val = "";

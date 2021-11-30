@@ -337,4 +337,21 @@ patronymic</person></root>`;
         // console.log(JSON.stringify(result,null,4));
         expect(result).toEqual(expected);
     });
+    
+    it("should parse CDATA with 0", function() {
+        const xmlData = `<a> <![CDATA[0]]> </a>`;
+
+        const expected = { a: { '##cdata': '0' } };
+
+        const options = {
+            cdataPropName: "##cdata",
+            // preserveOrder: true
+        };
+
+        const parser = new XMLParser(options);
+        let result = parser.parse(xmlData);
+        
+        // console.log(JSON.stringify(result,null,4));
+        expect(result).toEqual(expected);
+    });
 });
