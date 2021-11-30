@@ -111,67 +111,29 @@ describe("XMLParser StopNodes", function() {
         expect(result).toBe(true);
     });
 
-  it("2b. stop node is self-closing", function() {
-    const xmlData = `<issue><title>test 1</title><fix1/></issue>`;
-    const expected = {
-      "issue": {
-        "title": "test 1",
-        "fix1": ""
-      }
-    };
-
-    const options = {
-      attributeNamePrefix: "",
-        ignoreAttributes:    false,
-        parseAttributeValue: true,
-        stopNodes: ["issue.fix1", "issue.fix2"]
-  };
-  const parser = new XMLParser(options);
-  let result = parser.parse(xmlData);
-
-    //console.log(JSON.stringify(result,null,4));
-    expect(result).toEqual(expected);
-
-    result = XMLValidator.validate(xmlData);
-    expect(result).toBe(true);
-  });
-
-    xit("4. cdata", function() {
-        const xmlData = `<?xml version='1.0'?>
-<issue>
-    <fix1>
-        <phone>+122233344550</phone>
-        <fix2><![CDATA[<fix1>Jack</fix1>]]><![CDATA[Jack]]></fix2>
-        <name><![CDATA[<some>Mohan</some>]]></name>
-        <blank><![CDATA[]]></blank>
-        <regx><![CDATA[^[ ].*$]]></regx>
-    </fix1>
-    <fix2>
-		<![CDATA[<some>Mohan</some>]]>
-	</fix2>
-</issue>`;
-        const expected = {
-            "issue": {
-				"fix1": "\n        <phone>+122233344550</phone>\n        <fix2><![CDATA[<fix1>Jack</fix1>]]><![CDATA[Jack]]></fix2>\n        <name><![CDATA[<some>Mohan</some>]]></name>\n        <blank><![CDATA[]]></blank>\n        <regx><![CDATA[^[ ].*$]]></regx>\n    ",
-				"fix2": "\n\t\t<![CDATA[<some>Mohan</some>]]>\n\t"
-			}
-        };
-        const options = {
-          attributeNamePrefix: "",
-            ignoreAttributes:    false,
-            parseAttributeValue: true,
-            stopNodes: ["issue.fix1", "issue.fix2"]
+    it("2b. stop node is self-closing", function() {
+      const xmlData = `<issue><title>test 1</title><fix1/></issue>`;
+      const expected = {
+        "issue": {
+          "title": "test 1",
+          "fix1": ""
+        }
       };
-      const parser = new XMLParser(options);
-      let result = parser.parse(xmlData);
 
-        // console.log(JSON.st  ringify(result,null,4));
-        expect(result).toEqual(expected);
+      const options = {
+        attributeNamePrefix: "",
+          ignoreAttributes:    false,
+          parseAttributeValue: true,
+          stopNodes: ["issue.fix1", "issue.fix2"]
+    };
+    const parser = new XMLParser(options);
+    let result = parser.parse(xmlData);
 
-        result = XMLValidator.validate(xmlData, {
-            allowBooleanAttributes: true
-        });
-        expect(result).toBe(true);
+      //console.log(JSON.stringify(result,null,4));
+      expect(result).toEqual(expected);
+
+      result = XMLValidator.validate(xmlData);
+      expect(result).toBe(true);
     });
 
     it("5. stopNode at root level", function() {

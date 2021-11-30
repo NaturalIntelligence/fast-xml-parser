@@ -178,7 +178,7 @@ const parseXml = function(xmlData) {
             tagName = tagName.substr(colonIndex+1);
           }
         }
-        
+
         if(currentNode){
           textData = this.parseTextData(textData
             , currentNode.tagname
@@ -276,6 +276,12 @@ const parseXml = function(xmlData) {
           jPath += jPath ? "." + tagName : tagName;
         }
 
+        //check if last tag was unpaired tag
+        const lastTag = currentNode;
+        if(lastTag && this.options.unpairedTags.indexOf(lastTag.tagname) !== -1 ){
+          currentNode = this.tagsNodeStack.pop();
+        }
+
         if (this.isItStopNode(this.options.stopNodes, jPath, tagName)) { //TODO: namespace
           let tagContent = "";
           //self-closing tag
@@ -309,17 +315,6 @@ const parseXml = function(xmlData) {
             }else{
               tagExp = tagExp.substr(0, tagExp.length - 1);
             }
-
-            const childNode = new xmlNode(tagName);
-            if(tagName !== tagExp && attrExpPresent){
-              childNode.attributes = this.buildAttributesMap(tagExp, jPath);
-            }
-            jPath = jPath.substr(0, jPath.lastIndexOf("."));
-            currentNode.addChild(childNode);
-          }
-    //boolean tags
-          else if(this.options.unpairedTags.indexOf(tagName) !== -1){
-              // tagExp = tagExp.substr(0, tagExp.length - 1);
 
             const childNode = new xmlNode(tagName);
             if(tagName !== tagExp && attrExpPresent){
