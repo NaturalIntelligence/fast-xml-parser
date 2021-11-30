@@ -1,5 +1,12 @@
 Note: If you find missing information about particular minor version, that version must have been changed without any functional change in this library.
 
+** 4.0.0-beta.3 / 2021-11-30**
+* support global stopNodes expression like "*.stop"
+* support self-closing and paired unpaired tags
+* fix: CDATA should not be parsed.
+* Fix typings for XMLBuilder (#396)(By [Anders Emil Salvesen](https://github.com/andersem))
+* supports XML entities, HTML entities, DOCTYPE entities
+
 **⚠️ 4.0.0-beta.2 / 2021-11-19**
 * rename `attrMap` to `attibutes` in parser output when `preserveOrder:true`
 * supports unpairedTags

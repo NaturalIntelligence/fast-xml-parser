@@ -48,6 +48,13 @@ Check the list of all known users [here](./USERs.md);
 * Faster than any pure JS implementation.
 * It can handle big files (tested up to 100mb).
 * Controlled parsing using various options
+* XML Entities, HTML entities, and DOCTYPE entites are supported.
+* unpaired tags (Eg `<br>` in HTML), stop nodes (Eg `<script>` in HTML) are supported.
+* You can restore almost same XML from JSON
+* Supports comments
+* It can preserve Order of tags in JS object
+* You can control if a single tag should be parsed into array.
+* And many more other features.
 
 ## How to use
 
