@@ -46,6 +46,7 @@ type XmlBuilderOptions = {
   suppressEmptyNode: boolean;
   preserveOrder: boolean;
   unpairedTags: string[];
+  stopNodes: string[];
   tagValueProcessor: (name: string, value: string) => string;
   attributeValueProcessor: (name: string, value: string) => string;
   processEntities: boolean;

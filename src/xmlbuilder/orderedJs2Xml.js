@@ -7,10 +7,10 @@ const {EOL} = require('os');
  * @returns 
  */
 function toXml(jArray, options){
-    return arrToStr( jArray, options, 0);
+    return arrToStr( jArray, options, "", 0);
 }
 
-function arrToStr(arr, options, level){
+function arrToStr(arr, options, jPath, level){
     let xmlStr = "";
 
     let indentation = "";
@@ -21,10 +21,16 @@ function arrToStr(arr, options, level){
     for (let i = 0; i < arr.length; i++) {
         const tagObj = arr[i];
         const tagName = propName(tagObj);
+        let newJPath = "";
+        if(jPath.length === 0) newJPath = tagName
+        else newJPath = `${jPath}.${tagName}`;
 
         if(tagName === options.textNodeName){
-            let tagText = options.tagValueProcessor( tagName, tagObj[tagName]);
-            tagText = replaceEntitiesValue(tagText, options);
+            let tagText = tagObj[tagName];
+            if(!isStopNode(newJPath, options)){
+                tagText = options.tagValueProcessor( tagName, tagText);
+                tagText = replaceEntitiesValue(tagText, options);
+            }
             xmlStr += indentation + tagText;
             continue;
         }else if( tagName === options.cdataPropName){
@@ -36,7 +42,7 @@ function arrToStr(arr, options, level){
         }
         const attStr = attr_to_str(tagObj.attributes, options);
         let tagStart =  indentation + `<${tagName}${attStr}`;
-        let tagValue = arrToStr(tagObj[tagName], options, level + 1);
+        let tagValue = arrToStr(tagObj[tagName], options, newJPath, level + 1);
         if( (!tagValue || tagValue.length === 0) && options.suppressEmptyNode){ 
             if(options.unpairedTags.indexOf(tagName) !== -1){
                 xmlStr += tagStart + ">"; 
@@ -70,6 +76,15 @@ function attr_to_str(attrMap, options){
         }
     }
     return attrStr;
+}
+
+function isStopNode(jPath, options){
+    jPath = jPath.substr(0,jPath.length - options.textNodeName.length - 1);
+    let tagName = jPath.substr(jPath.lastIndexOf(".") + 1);
+    for(let index in options.stopNodes){
+        if(options.stopNodes[index] === jPath || options.stopNodes[index] === "*."+tagName) return true;
+    }
+    return false;
 }
 
 function replaceEntitiesValue(textValue, options){

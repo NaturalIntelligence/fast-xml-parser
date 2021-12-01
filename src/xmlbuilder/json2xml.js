@@ -27,7 +27,8 @@ const defaultOptions = {
     "sQuot" : { regex: new RegExp("\'", "g"), val: "&apos;" },
     "dQuot" : { regex: new RegExp("\"", "g"), val: "&quot;" }
   },
-  processEntities: true
+  processEntities: true,
+  stopNodes: []
 };
 
 const props = [
@@ -47,6 +48,7 @@ const props = [
   "unpairedTags",
   "entities",
   "processEntities",
+  "stopNodes",
   // 'rootNodeName', //when jsObject have multiple properties on root level
 ];
 
