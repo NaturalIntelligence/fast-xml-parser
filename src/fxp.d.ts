@@ -67,6 +67,12 @@ type ValidationError = {
 export class XMLParser {
   constructor(options?: X2jOptionsOptional);
   parse(xmlData: string | Buffer ,validationOptions?: validationOptionsOptional | boolean): any;
+  /**
+   * Add Entity which is not by default supported by this library
+   * @param entityIndentifier {string} Eg: 'ent' for &ent;
+   * @param entityValue {string} Eg: '\r'
+   */
+  addEntity(entityIndentifier: string, entityValue: string): void;
 }
 
 export class XMLValidator{

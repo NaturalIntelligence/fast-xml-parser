@@ -4,8 +4,11 @@ const { prettify} = require("./node2json");
 const validator = require('../validator');
 
 class XMLParser{
+    
     constructor(options){
+        this.externalEntities = {};
         this.options = buildOptions(options);
+        
     }
     /**
      * Parse XML dats to JS object 
@@ -28,9 +31,25 @@ class XMLParser{
             }
           }
         const orderedObjParser = new OrderedObjParser(this.options);
+        orderedObjParser.addExternalEntities(this.externalEntities);
         const orderedResult = orderedObjParser.parseXml(xmlData);
         if(this.options.preserveOrder || orderedResult === undefined) return orderedResult;
         else return prettify(orderedResult, this.options);
+    }
+
+    /**
+     * Add Entity which is not by default supported by this library
+     * @param {string} key 
+     * @param {string} value 
+     */
+    addEntity(key, value){
+        if(value.indexOf("&") !== -1){
+            throw new Error("Entity value can't have '&'")
+        }else if(key.indexOf("&") !== -1 || key.indexOf(";") !== -1){
+            throw new Error("An entity must be set without '&' and ';'. Eg. use '#xD' for '&#xD;'")
+        }else{
+            this.externalEntities[key] = value;
+        }
     }
 }
 

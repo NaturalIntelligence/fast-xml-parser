@@ -317,3 +317,61 @@ describe("XMLParser Entities", function() {
         expect(result).toEqual(expected);
     });
 });
+
+describe("XMLParser External Entites", function() {
+    it("should throw error when an entity value has '&'", function() {
+        const parser = new XMLParser();
+        expect( () => {
+            parser.addEntity("#xD", "&\r");
+        }).toThrowError("Entity value can't have '&'");
+    });
+
+    it("should throw error when an entity identifier has '&'", function() {
+        const parser = new XMLParser();
+        expect( () => {
+            parser.addEntity("&#xD", "\r");
+        }).toThrowError("An entity must be set without '&' and ';'. Eg. use '#xD' for '&#xD;'");
+    });
+    
+    it("should throw error when an entity identifier has ';'", function() {
+        const parser = new XMLParser();
+        expect( () => {
+            parser.addEntity("#xD;", "\r");
+        }).toThrowError("An entity must be set without '&' and ';'. Eg. use '#xD' for '&#xD;'");
+    });
+    
+    it("should set and parse for valid entity set externally", function() {
+        const xmlData = `<note>&unknown;&#xD;last</note> `;
+
+        const parser = new XMLParser();
+        parser.addEntity("#xD", "\r\n");
+        let result = parser.parse(xmlData);
+        // console.log(JSON.stringify(result,null,4));
+
+        expect(result.note).toEqual(`&unknown;\r\nlast`);
+    });
+    
+    it("External Entity can change the behaviour of default entites", function() {
+        const xmlData = `<note>&gt;last</note> `;
+
+        const parser = new XMLParser();
+        parser.addEntity("gt", "<>");
+        let result = parser.parse(xmlData);
+        // console.log(JSON.stringify(result,null,4));
+
+        expect(result.note).toEqual(`<>last`);
+    });
+    
+    it("Same external Entity can be set by multiple times", function() {
+        const xmlData = `<note>&gt;last</note> `;
+
+        const parser = new XMLParser();
+        parser.addEntity("gt", "<>");
+        parser.addEntity("gt", "><");
+        let result = parser.parse(xmlData);
+        // console.log(JSON.stringify(result,null,4));
+
+        expect(result.note).toEqual(`><last`);
+    });
+    
+});
