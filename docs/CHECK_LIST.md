@@ -1,6 +1,7 @@
 Pre release
 * [ ] npm audit and yarn audit is done
 * [ ] Change log has been updated
+* [ ] Added/updated documentation for new properties/features
 * [ ] `package-lock.json` reflects the right version : `npm install`
 * [ ] Browser bundle are generated `npm run bundle`
 * [ ] `npm run checkReadiness` is used to check the files being published

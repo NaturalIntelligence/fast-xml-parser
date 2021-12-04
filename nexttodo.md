@@ -1,15 +1,13 @@
 P0
-* OptionsBuilder: replace by Object.assign
-* Support setting entities externally as option configuration
-    * &#xD; : https://github.com/NaturalIntelligence/fast-xml-parser/issues/342
-* Write UT for nested stop node
-* support stop nodes expression like head.*.meta
 
 P1
+* Write UT for nested stop node
+* OptionsBuilder: replace by Object.assign
 * Es6 modules
 
 P2
 * Multiple roots
+* support stop nodes expression like head.*.meta
 * skip parsing of after some tag
 * validate XML stream data
 * Parse JSON string to XML. Currently it transforms JSON object to XML. Partially done. Need to work on performance.

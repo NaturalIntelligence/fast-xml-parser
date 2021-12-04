@@ -71,7 +71,7 @@ describe("XMLParser", function() {
         expect(() => {
             parser.parse(null);
             // console.log(result);
-        }).toThrowError("Cannot read property 'toString' of null");
+        }).toThrowError("Cannot read properties of null (reading 'toString')");
     });
 
     it("should not parse when undefined", function() {
@@ -79,7 +79,7 @@ describe("XMLParser", function() {
         expect(() => {
             parser.parse();
             // console.log(result);
-        }).toThrowError("Cannot read property 'toString' of undefined");
+        }).toThrowError("Cannot read properties of undefined (reading 'toString')");
     });
     
     

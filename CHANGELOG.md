@@ -1,5 +1,10 @@
 Note: If you find missing information about particular minor version, that version must have been changed without any functional change in this library.
 
+** 4.0.0-beta.4 / 2021-12-02**
+* Support HTML document parsing
+* skip stop nodes parsing when building the XML from JS object
+* Support external entites without DOCTYPE
+
 ** 4.0.0-beta.3 / 2021-11-30**
 * support global stopNodes expression like "*.stop"
 * support self-closing and paired unpaired tags
