@@ -4,6 +4,7 @@ Note: If you find missing information about particular minor version, that versi
 * Support HTML document parsing
 * skip stop nodes parsing when building the XML from JS object
 * Support external entites without DOCTYPE
+* update dev dependency: strnum v1.0.5 to fix long number issue
 
 ** 4.0.0-beta.3 / 2021-11-30**
 * support global stopNodes expression like "*.stop"
