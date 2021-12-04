@@ -4,15 +4,15 @@ class XmlNode{
   constructor(tagname) {
     this.tagname = tagname;
     this.child = []; //nested tags, text, cdata, comments in order
-    this.attributes = {}; //attributes map
+    this[":@"] = {}; //attributes map
   }
   add(key,val){
     // this.child.push( {name : key, val: val, isCdata: isCdata });
     this.child.push( {[key]: val });
   }
   addChild(node) {
-    if(node.attributes && Object.keys(node.attributes).length > 0){
-      this.child.push( { [node.tagname]: node.child, attributes: node.attributes });
+    if(node[":@"] && Object.keys(node[":@"]).length > 0){
+      this.child.push( { [node.tagname]: node.child, [":@"]: node[":@"] });
     }else{
       this.child.push( { [node.tagname]: node.child });
     }

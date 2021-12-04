@@ -37,8 +37,8 @@ function compress(arr, options, jPath){
       let val = compress(tagObj[property], options, newJpath);
       const isLeaf = isLeafTag(val, options);
 
-      if(tagObj.attributes){
-        assignAttributes( val, tagObj.attributes, newJpath, options);
+      if(tagObj[":@"]){
+        assignAttributes( val, tagObj[":@"], newJpath, options);
       }else if(Object.keys(val).length === 1 && val[options.textNodeName] !== undefined && !options.alwaysCreateTextNode){
         val = val[options.textNodeName];
       }else if(Object.keys(val).length === 0){
@@ -74,7 +74,7 @@ function propName(obj){
   const keys = Object.keys(obj);
   for (let i = 0; i < keys.length; i++) {
     const key = keys[i];
-    if(key !== "attributes") return key;
+    if(key !== ":@") return key;
   }
 }
 

@@ -196,7 +196,7 @@ const parseXml = function(xmlData) {
             , currentNode.tagname
             , jPath
             ,false
-            , currentNode.attributes ? Object.keys(currentNode.attributes).length !== 0 : false
+            , currentNode[":@"] ? Object.keys(currentNode[":@"]).length !== 0 : false
             , Object.keys(currentNode.child).length === 0);
           if(textData !== undefined &&  textData !== "") currentNode.add(this.options.textNodeName, textData);
           textData = "";
@@ -220,7 +220,7 @@ const parseXml = function(xmlData) {
               , currentNode.tagname
               , jPath
               ,false
-              , currentNode.attributes ? Object.keys(currentNode.attributes).length !== 0 : false
+              , currentNode[":@"] ? Object.keys(currentNode[":@"]).length !== 0 : false
               , Object.keys(currentNode.child).length === 0);
   
             if(textData !== undefined &&  textData !== "") currentNode.add(this.options.textNodeName, textData);
@@ -242,7 +242,7 @@ const parseXml = function(xmlData) {
             , currentNode.tagname
             , jPath
             ,false
-            , currentNode.attributes ? Object.keys(currentNode.attributes).length !== 0 : false
+            , currentNode[":@"] ? Object.keys(currentNode[":@"]).length !== 0 : false
             , Object.keys(currentNode.child).length === 0);
 
           if(textData !== undefined &&  textData !== "") currentNode.add(this.options.textNodeName, textData);
@@ -277,7 +277,7 @@ const parseXml = function(xmlData) {
               , currentNode.tagname
               , jPath
               , false
-              , currentNode.attributes ? Object.keys(currentNode.attributes).length !== 0 : false
+              , currentNode[":@"] ? Object.keys(currentNode[":@"]).length !== 0 : false
               , false);
             if(textData !== undefined &&  textData !== "") currentNode.add(this.options.textNodeName, textData);
             textData = "";
@@ -311,7 +311,7 @@ const parseXml = function(xmlData) {
 
           const childNode = new xmlNode(tagName);
           if(tagName !== tagExp && attrExpPresent){
-            childNode.attributes = this.buildAttributesMap(tagExp, jPath);
+            childNode[":@"] = this.buildAttributesMap(tagExp, jPath);
           }
           jPath = jPath.substr(0, jPath.lastIndexOf("."));
           childNode.add(this.options.textNodeName, tagContent);
@@ -330,7 +330,7 @@ const parseXml = function(xmlData) {
 
             const childNode = new xmlNode(tagName);
             if(tagName !== tagExp && attrExpPresent){
-              childNode.attributes = this.buildAttributesMap(tagExp, jPath);
+              childNode[":@"] = this.buildAttributesMap(tagExp, jPath);
             }
             jPath = jPath.substr(0, jPath.lastIndexOf("."));
             currentNode.addChild(childNode);
@@ -341,7 +341,7 @@ const parseXml = function(xmlData) {
             this.tagsNodeStack.push(currentNode);
             
             if(tagName !== tagExp && attrExpPresent){
-              childNode.attributes = this.buildAttributesMap(tagExp, jPath);
+              childNode[":@"] = this.buildAttributesMap(tagExp, jPath);
             }
             currentNode.addChild(childNode);
             currentNode = childNode;

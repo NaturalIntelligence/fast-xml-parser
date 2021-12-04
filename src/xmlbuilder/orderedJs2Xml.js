@@ -40,7 +40,7 @@ function arrToStr(arr, options, jPath, level){
             xmlStr += indentation + `<!--${tagObj[tagName][0][options.textNodeName]}-->`;
             continue;
         }
-        const attStr = attr_to_str(tagObj.attributes, options);
+        const attStr = attr_to_str(tagObj[":@"], options);
         let tagStart =  indentation + `<${tagName}${attStr}`;
         let tagValue = arrToStr(tagObj[tagName], options, newJPath, level + 1);
         if( (!tagValue || tagValue.length === 0) && options.suppressEmptyNode){ 
@@ -62,7 +62,7 @@ function propName(obj){
     const keys = Object.keys(obj);
     for (let i = 0; i < keys.length; i++) {
       const key = keys[i];
-      if(key !== "attributes") return key;
+      if(key !== ":@") return key;
     }
   }
 

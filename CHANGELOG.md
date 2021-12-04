@@ -1,5 +1,8 @@
 Note: If you find missing information about particular minor version, that version must have been changed without any functional change in this library.
 
+** 4.0.0-beta.5 / 2021-12-04**
+* fix: when a tag with name "attributes"
+
 ** 4.0.0-beta.4 / 2021-12-02**
 * Support HTML document parsing
 * skip stop nodes parsing when building the XML from JS object

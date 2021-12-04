@@ -246,7 +246,7 @@ describe("XMLParser Entities", function() {
                         ]
                     }
                 ],
-                "attributes": {
+                ":@": {
                     "@heading": "Reminder > \"Alert"
                 }
             }
