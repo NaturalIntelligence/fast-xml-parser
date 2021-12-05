@@ -12,6 +12,7 @@ const defaultOptions = {
   format: false,
   indentBy: '  ',
   suppressEmptyNode: false,
+  suppressBooleanAttributes: true,
   tagValueProcessor: function(key, a) {
     return a;
   },
@@ -40,6 +41,7 @@ const props = [
   'format',
   'indentBy',
   'suppressEmptyNode',
+  'suppressBooleanAttributes',
   'tagValueProcessor',
   'attributeValueProcessor',
   'arrayNodeName', //when array as root
