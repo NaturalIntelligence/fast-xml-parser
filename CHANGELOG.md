@@ -1,5 +1,9 @@
 Note: If you find missing information about particular minor version, that version must have been changed without any functional change in this library.
 
+** 4.0.0-beta.6 / 2021-12-05**
+* Support PI Tags processing
+* Support `suppressBooleanAttributes` by XML Builder for attributes with value `true`.
+
 ** 4.0.0-beta.5 / 2021-12-04**
 * fix: when a tag with name "attributes"
 
