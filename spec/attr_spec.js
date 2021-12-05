@@ -333,14 +333,13 @@ id="7" data="foo bar" bug="true"/>`;
 
     it("should parse and build with tag name 'attributes' ", function() {
         const XMLdata = `
-        <?xml version = "1.0" encoding = "UTF-8" ?>
         <test attr="test bug">
           <a name="a">123</a>
           <b name="b"/>
           <attributes>
-            <attribute datatype='string' name='DebugRemoteType'>dev</attribute>
-            <attribute datatype='string' name='DebugWireType'>2</attribute>
-            <attribute datatype='string' name='TypeIsVarchar'>1</attribute>
+            <attribute datatype="string" name="DebugRemoteType">dev</attribute>
+            <attribute datatype="string" name="DebugWireType">2</attribute>
+            <attribute datatype="string" name="TypeIsVarchar">1</attribute>
           </attributes>
         </test>`;
     
@@ -358,6 +357,6 @@ id="7" data="foo bar" bug="true"/>`;
           const builder = new XMLBuilder(options);
           const output = builder.build(result);
         //   console.log(output);
-          expect(result.replace(/\s+/g, "")).toEqual(XMLdata.replace(/\s+/g, ""));
+          expect(output.replace(/\s+/g, "")).toEqual(XMLdata.replace(/\s+/g, ""));
     });
 });

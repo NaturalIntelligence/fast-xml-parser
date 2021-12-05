@@ -4,7 +4,7 @@ const {XMLParser, XMLValidator} = require("../src/fxp");
 
 describe("XMLParser", function() {
     it("should parse multiline tag value when tags without spaces", function() {
-        const xmlData = `<?xml version='1.0'?><root><person>lastname
+        const xmlData = `<root><person>lastname
 firstname
 patronymic</person></root>`;
 
@@ -27,7 +27,7 @@ patronymic</person></root>`;
         expect(result).toBe(true);
     });
     it("should parse tag having CDATA", function() {
-        const xmlData = `<?xml version='1.0'?>
+        const xmlData = `
 <any_name>
     <person>
         <phone>+122233344550</phone>
@@ -313,6 +313,10 @@ patronymic</person></root>`;
         const xmlData = fs.readFileSync(fileNamePath).toString();
 
         const expected = {
+            "?xml": {
+                "@_version": "1.0",
+                "@_standalone": "yes"
+            },
             "ns:root": {
                 "ptag":         [
                     {

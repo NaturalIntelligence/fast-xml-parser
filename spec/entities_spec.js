@@ -49,6 +49,10 @@ describe("XMLParser Entities", function() {
     it("should parse XML with DOCTYPE without internal DTD", function() {
         const xmlData = "<?xml version='1.0' standalone='no'?><!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.1//EN\" \"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd\" ><svg><metadata>test</metadata></svg>";
         const expected = {
+            "?xml": {
+                "@_version": "1.0",
+                "@_standalone": "no"
+            },
             "svg" : {
                 "metadata": "test"
             }
@@ -71,6 +75,10 @@ describe("XMLParser Entities", function() {
             <metadata>[test]</metadata>
         </svg>`;
         const expected = {
+            "?xml": {
+                "@_version": "1.0",
+                "@_standalone": "no"
+            },
             "svg" : {
                 "metadata": "[test]"
             }
@@ -82,6 +90,7 @@ describe("XMLParser Entities", function() {
         };
         const parser = new XMLParser(options);
         let result = parser.parse(xmlData, true);
+        // console.log(JSON.stringify(result,null,4));
 
         expect(result).toEqual(expected);
     });
@@ -106,6 +115,7 @@ describe("XMLParser Entities", function() {
             "<foo>Hello World.</foo>";
 
         const expected = {
+            "?xml": "",
             foo: "Hello World."
         };
         
@@ -137,6 +147,10 @@ describe("XMLParser Entities", function() {
         </note> `;
 
         const expected = {
+            "?xml": {
+                "version": "1.0",
+                "encoding": "UTF-8"
+            },
             "note": {
                 "to": "Tove",
                 "from": "Jani",
@@ -177,6 +191,10 @@ describe("XMLParser Entities", function() {
         </note> `;
 
         const expected = {
+            "?xml": {
+                "version": "1.0",
+                "encoding": "UTF-8"
+            },
             "note": {
                 "heading": "Reminder",
                 "body": {
@@ -294,6 +312,10 @@ describe("XMLParser Entities", function() {
         </note> `;
 
         const expected = {
+            "?xml": {
+                "version": "1.0",
+                "encoding": "UTF-8"
+            },
             "note": {
                 "heading": "Reminder",
                 "body": {

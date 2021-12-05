@@ -13,6 +13,7 @@ describe("XMLParser", function() {
         const xmlData = fs.readFileSync(fileNamePath);
 
         const expected = {
+            "?xml": '',
             "any_name": {
                 "person": [
                     {

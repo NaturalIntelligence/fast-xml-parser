@@ -39,6 +39,10 @@ function arrToStr(arr, options, jPath, level){
         }else if( tagName === options.commentPropName){
             xmlStr += indentation + `<!--${tagObj[tagName][0][options.textNodeName]}-->`;
             continue;
+        }else if( tagName[0] === "?"){
+            const attStr = attr_to_str(tagObj[":@"], options);
+            xmlStr += indentation + `<${tagName} ${tagObj[tagName][0][options.textNodeName]} ${attStr}?>`;
+            continue;
         }
         const attStr = attr_to_str(tagObj[":@"], options);
         let tagStart =  indentation + `<${tagName}${attStr}`;
@@ -75,7 +79,8 @@ function attr_to_str(attrMap, options){
             if(attrVal === true && options.suppressBooleanAttributes){
                 attrStr+= ` ${attr.substr(options.attributeNamePrefix.length)}`;
             }else{
-            attrStr+= ` ${attr.substr(options.attributeNamePrefix.length)}="${attrVal}"`;
+                attrStr+= ` ${attr.substr(options.attributeNamePrefix.length)}="${attrVal}"`;
+            }
         }
     }
     return attrStr;

@@ -61,6 +61,7 @@ describe("XMLParser", function() {
         </any_name>`;
 
         const expected = {
+            "?xml": '',
             "any_name": {
                 "person": {
                     "#text": "startmiddleend",
@@ -114,6 +115,7 @@ describe("XMLParser", function() {
         </any_name>`;
 
         const expected = {
+            "?xml": '',
             "any_name": {
                 "person": {
                     "name1": "Jack 1",
@@ -142,6 +144,7 @@ describe("XMLParser", function() {
         </any_name>`;
 
         const expected = {
+            "?xml": '',
             "any_name": {
                 "person": {
                     "name1": "fxp",

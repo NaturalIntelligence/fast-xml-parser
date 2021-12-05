@@ -1,4 +1,5 @@
 'use strict';
+///@ts-check
 
 const util = require('../util');
 const xmlNode = require('./xmlNode');
@@ -47,7 +48,6 @@ class OrderedObjParser{
     this.buildAttributesMap = buildAttributesMap;
     this.isItStopNode = isItStopNode;
     this.replaceEntitiesValue = replaceEntitiesValue;
-    this.readTagExp = readTagExp;
     this.readStopNodeData = readStopNodeData;
   }
 
@@ -208,7 +208,36 @@ const parseXml = function(xmlData) {
         textData = "";
         i = closeIndex;
       } else if( xmlData[i+1] === '?') {
-        i = findClosingIndex(xmlData, "?>", i, "Pi Tag is not closed.")
+        let result = readTagExp(xmlData,i, false, "?>");
+        if(!result) throw new Error("Pi Tag is not closed.");
+        
+        let tagName= result.tagName;
+        let tagExp = result.tagExp;
+        let attrExpPresent = result.attrExpPresent;
+        let closeIndex = result.closeIndex;
+
+          //TODO: remove repeated code
+          if(textData){ //store previously collected data as textNode
+            textData = this.parseTextData(textData
+              , currentNode.tagname
+              , jPath
+              ,false
+              , currentNode[":@"] ? Object.keys(currentNode[":@"]).length !== 0 : false
+              , Object.keys(currentNode.child).length === 0);
+
+            if(textData !== undefined &&  textData !== "") currentNode.add(this.options.textNodeName, textData);
+            textData = "";
+          }
+
+          const childNode = new xmlNode(tagName);
+          childNode.add(this.options.textNodeName, "");
+          
+          if(tagName !== tagExp && attrExpPresent){
+            childNode[":@"] = this.buildAttributesMap(tagExp, jPath);
+          }
+          currentNode.addChild(childNode);
+
+        i = closeIndex + 1;
       } else if(xmlData.substr(i + 1, 3) === '!--') {
         const endIndex = findClosingIndex(xmlData, "-->", i, "Comment is not closed.")
         if(this.options.commentPropName){
@@ -263,7 +292,7 @@ const parseXml = function(xmlData) {
         i = closeIndex + 2;
       }else {//Opening tag
        
-        let result = this.readTagExp(xmlData,i);
+        let result = readTagExp(xmlData,i, this. options.removeNSPrefix);
         let tagName= result.tagName;
         let tagExp = result.tagExp;
         let attrExpPresent = result.attrExpPresent;
@@ -398,7 +427,7 @@ function isItStopNode(stopNodes, jPath, currentTagName){
  * @param {number} i starting index
  * @returns 
  */
-function tagExpWithClosingIndex(xmlData, i){
+function tagExpWithClosingIndex(xmlData, i, closingChar = ">"){
   let attrBoundary;
   let tagExp = "";
   for (let index = i; index < xmlData.length; index++) {
@@ -407,11 +436,20 @@ function tagExpWithClosingIndex(xmlData, i){
         if (ch === attrBoundary) attrBoundary = "";//reset
     } else if (ch === '"' || ch === "'") {
         attrBoundary = ch;
-    } else if (ch === '>') {
+    } else if (ch === closingChar[0]) {
+      if(closingChar[1]){
+        if(xmlData[index + 1] === closingChar[1]){
+          return {
+            data: tagExp,
+            index: index
+          }
+        }
+      }else{
         return {
           data: tagExp,
           index: index
         }
+      }
     } else if (ch === '\t') {
       ch = " "
     }
@@ -428,8 +466,9 @@ function findClosingIndex(xmlData, str, i, errMsg){
   }
 }
 
-function readTagExp(xmlData,i){
-  const result = tagExpWithClosingIndex(xmlData, i+1);
+function readTagExp(xmlData,i, removeNSPrefix, closingChar = ">"){
+  const result = tagExpWithClosingIndex(xmlData, i+1, closingChar);
+  if(!result) return;
   let tagExp = result.data;
   const closeIndex = result.index;
   const separatorIndex = tagExp.search(/\s/);
@@ -440,7 +479,7 @@ function readTagExp(xmlData,i){
     tagExp = tagExp.substr(separatorIndex + 1);
   }
 
-  if(this. options.removeNSPrefix){
+  if(removeNSPrefix){
     const colonIndex = tagName.indexOf(":");
     if(colonIndex !== -1){
       tagName = tagName.substr(colonIndex+1);

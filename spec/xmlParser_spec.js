@@ -560,6 +560,9 @@ describe("XMLParser", function() {
         const xmlData = fs.readFileSync(fileNamePath).toString();
 
         const expected = {
+            "?xml": {
+                "@version": "1.0"
+            },
             "any_name": {
                 "@attr":  "https://example.com/somepath",
                 "person": [
@@ -804,6 +807,7 @@ describe("XMLParser", function() {
         + "</any_name>";
 
         const expected = {
+            "?xml": "",
             "any_name": {
                 "person": {
                     "name1": "Jack 1",
@@ -816,13 +820,12 @@ describe("XMLParser", function() {
         };
         const parser = new XMLParser(options);
         let result = parser.parse(xmlData);
-        //console.log(JSON.stringify(result,null,4));
+        // console.log(JSON.stringify(result,null,4));
         expect(result).toEqual(expected);
     });
 
     it("should parse node with text before, after and between of subtags", function() {
-        const xmlData = "<?xml version='1.0'?>"
-        + "<tag>before"
+        const xmlData = "<tag>before"
         + "    <subtag>subtag text</subtag>"
         + "    middle"
         + "    <self />"
@@ -853,8 +856,7 @@ describe("XMLParser", function() {
     });
 
     it("should validate before parsing", function() {
-        const xmlData = "<?xml version='1.0'?>"
-        + "<tag>"
+        const xmlData ="<tag>"
         + "    <subtag2>subtag text</subtag2>"
         + "</tag";
         const options = {
@@ -863,7 +865,7 @@ describe("XMLParser", function() {
         const parser = new XMLParser(options);
         expect(() => {
             let result = parser.parse(xmlData, true);
-        }).toThrowError(`Closing tag 'tag' doesn't have proper closing.:1:66`)
+        }).toThrowError(`Closing tag 'tag' doesn't have proper closing.:1:45`)
 
     });
 
@@ -874,6 +876,7 @@ describe("XMLParser", function() {
         + "</tag>";
 
         const expected = {
+            "?xml": "",
             "tag": {
                 "subtag2": "subtag text"
             }
@@ -885,7 +888,7 @@ describe("XMLParser", function() {
         };
         const parser = new XMLParser(options);
         let result = parser.parse(xmlData);
-        //console.log(JSON.stringify(result,null,4));
+        // console.log(JSON.stringify(result,null,4));
         expect(result).toEqual(expected);
     });
 

@@ -55,6 +55,7 @@ Check the list of all known users [here](./USERs.md);
 * Supports comments
 * It can preserve Order of tags in JS object
 * You can control if a single tag should be parsed into array.
+* Supports parsing of PI (Processing Instruction) tags with XML declaration tags
 * And many more other features.
 
 ## How to use
@@ -108,6 +109,7 @@ In a HTML page
 4.  [XML Validator](./docs/v4/4.XMLValidator.md)
 5.  [Entites](./docs/5.Entities.md)
 6.  [HTML Document Parsing](./docs/6.HTMLParsing.md)
+7. [PI Tag processing](./docs/7.PITags.md)
 ## Performance
 
 ### XML Parser

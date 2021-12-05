@@ -6,7 +6,7 @@ const he = require("he");
 describe("XMLParser", function() {
     
     it("should parse attributes having '>' in value", function() {
-        const xmlData = `<? xml version = "1.0" encoding = "UTF - 8" ?>
+        const xmlData = `
         <testStep type="restrequest" name="test step name (bankId -> Error)" id="90e453d3-30cd-4958-a3be-61ecfe7a7cbe">
               <settings/>
               <encoding>UTF-8</encoding>
@@ -200,6 +200,12 @@ describe("XMLParser", function() {
         "\t</Period>\n" +
         "</MPD>";
         const expected = {
+            "?xml": {
+                "$": {
+                    "version": "1.0",
+                    "encoding": "UTF-8"
+                }
+            },
             "MPD": {
                 "$": {
                   "availabilityStartTime": "2020-02-16T10:52:03.119Z",
@@ -221,7 +227,7 @@ describe("XMLParser", function() {
         };
         const parser = new XMLParser(options);
         let result = parser.parse(xmlData);
-        //console.log(JSON.stringify(result,null,4));
+        // console.log(JSON.stringify(result,null,4));
         expect(result).toEqual(expected);
     });
 
