@@ -57,7 +57,8 @@ const parsingOptions = {
     unpairedTags: ["hr", "br", "link", "meta"],
     stopNodes : [ "*.pre", "*.script"],
     processEntities: true,
-    htmlEntities: true
+    htmlEntities: true,
+    
   };
   const parser = new XMLParser(parsingOptions);
   let result = parser.parse(html);
@@ -67,7 +68,7 @@ const parsingOptions = {
     ignoreAttributes: false,
     format: true,
     preserveOrder: true,
-    suppressEmptyNode: true,
+    suppressEmptyNode: false,
     unpairedTags: ["hr", "br", "link", "meta"],
     stopNodes : [ "*.pre", "*.script"],
   }
