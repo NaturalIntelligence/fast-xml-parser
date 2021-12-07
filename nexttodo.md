@@ -1,6 +1,7 @@
 P0
 
 P1
+* Support external entities in XML Builder
 * Write UT for nested stop node
 * OptionsBuilder: replace by Object.assign
 * Es6 modules

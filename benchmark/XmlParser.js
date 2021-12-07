@@ -6,6 +6,7 @@ const suite = new Benchmark.Suite("XML Parser benchmark");
 const {XMLParser} = require("../src/fxp");
 const xml2js = require("xml2js");
 const fxpv3 = require("fast-xml-parser");
+const { convert } = require('xmlbuilder2');
 
 const fs = require("fs");
 const path = require("path");
@@ -28,6 +29,9 @@ suite
     })
     .add("fxp - preserve order", function() {
         fxpParserForOrderedJs.parse(xmlData);
+    })
+    .add("xmlbuilder2", function() {
+        convert(xmlData);
     })
     .add('xml2js ', function() {
       xml2js.parseString(xmlData,function(err,result){

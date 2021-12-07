@@ -12,6 +12,7 @@
   },
   "typings": "src/parser.d.ts",
   "dependencies": {
-    "fast-xml-parser": "^3.21.1"
+    "fast-xml-parser": "^3.21.1",
+    "xmlbuilder2": "^3.0.2"
   }
 }
