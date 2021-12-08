@@ -172,6 +172,7 @@
 
             $('#validate').on('click', function() {
                 $('#result').val('');
+                const parser = fxparser.XMLValidator;
                 const config = {
                     allowBooleanAttributes: $("#allowBooleanAttributes_v").prop("checked"),
                 };
