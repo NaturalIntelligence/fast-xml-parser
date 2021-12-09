@@ -1,6 +1,5 @@
 'use strict';
 //parse Empty Node as self closing node
-const buildOptions = require('../util').buildOptions;
 const buildFromOrderedJs = require('./orderedJs2Xml');
 
 const defaultOptions = {
@@ -32,30 +31,8 @@ const defaultOptions = {
   stopNodes: []
 };
 
-const props = [
-  'attributeNamePrefix',
-  'attributesGroupName',
-  'textNodeName',
-  'ignoreAttributes',
-  'cdataPropName',
-  'format',
-  'indentBy',
-  'suppressEmptyNode',
-  'suppressBooleanAttributes',
-  'tagValueProcessor',
-  'attributeValueProcessor',
-  'arrayNodeName', //when array as root
-  'preserveOrder',
-  "commentPropName",
-  "unpairedTags",
-  "entities",
-  "processEntities",
-  "stopNodes",
-  // 'rootNodeName', //when jsObject have multiple properties on root level
-];
-
 function Builder(options) {
-  this.options = buildOptions(options, defaultOptions, props);
+  this.options = Object.assign({}, defaultOptions, options);
   if (this.options.ignoreAttributes || this.options.attributesGroupName) {
     this.isAttribute = function(/*a*/) {
       return false;
