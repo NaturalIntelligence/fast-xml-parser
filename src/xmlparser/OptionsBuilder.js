@@ -31,36 +31,9 @@ const defaultOptions = {
     htmlEntities: false,
 };
    
-const props = [
-    'preserveOrder',
-    'attributeNamePrefix',
-    'attributesGroupName',
-    'textNodeName',
-    'ignoreAttributes',
-    'removeNSPrefix',
-    'allowBooleanAttributes',
-    'parseTagValue',
-    'parseAttributeValue',
-    'trimValues',
-    'cdataPropName',
-    'tagValueProcessor',
-    'attributeValueProcessor',
-    'numberParseOptions',
-    'stopNodes',
-    'alwaysCreateTextNode',
-    'isArray',
-    'commentPropName',
-    'unpairedTags',
-    'processEntities',
-    'htmlEntities'
-];
-  
-const util = require('../util');
-
 const buildOptions = function(options) {
-    return util.buildOptions(options, defaultOptions, props);
+    return Object.assign({}, defaultOptions, options);
 };
 
 exports.buildOptions = buildOptions;
 exports.defaultOptions = defaultOptions;
-exports.props = props;
