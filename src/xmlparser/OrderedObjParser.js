@@ -49,6 +49,7 @@ class OrderedObjParser{
     this.isItStopNode = isItStopNode;
     this.replaceEntitiesValue = replaceEntitiesValue;
     this.readStopNodeData = readStopNodeData;
+    this.saveTextToParentTag = saveTextToParentTag;
   }
 
 }
@@ -208,53 +209,32 @@ const parseXml = function(xmlData) {
         textData = "";
         i = closeIndex;
       } else if( xmlData[i+1] === '?') {
-        let result = readTagExp(xmlData,i, false, "?>");
-        if(!result) throw new Error("Pi Tag is not closed.");
+        let tagData = readTagExp(xmlData,i, false, "?>");
+        if(!tagData) throw new Error("Pi Tag is not closed.");
         
-        let tagName= result.tagName;
-        let tagExp = result.tagExp;
-        let attrExpPresent = result.attrExpPresent;
-        let closeIndex = result.closeIndex;
+        let tagName= tagData.tagName;
+        let tagExp = tagData.tagExp;
+        let attrExpPresent = tagData.attrExpPresent;
+        let closeIndex = tagData.closeIndex;
 
-          //TODO: remove repeated code
-          if(textData){ //store previously collected data as textNode
-            textData = this.parseTextData(textData
-              , currentNode.tagname
-              , jPath
-              ,false
-              , currentNode[":@"] ? Object.keys(currentNode[":@"]).length !== 0 : false
-              , Object.keys(currentNode.child).length === 0);
-
-            if(textData !== undefined &&  textData !== "") currentNode.add(this.options.textNodeName, textData);
-            textData = "";
-          }
+          textData = this.saveTextToParentTag(textData, currentNode, jPath);
 
           const childNode = new xmlNode(tagName);
           childNode.add(this.options.textNodeName, "");
           
-          if(tagName !== tagExp && attrExpPresent){
+          if(tagName !== tagExp && tagData.attrExpPresent){
             childNode[":@"] = this.buildAttributesMap(tagExp, jPath);
           }
           currentNode.addChild(childNode);
 
-        i = closeIndex + 1;
+        i = tagData.closeIndex + 1;
       } else if(xmlData.substr(i + 1, 3) === '!--') {
         const endIndex = findClosingIndex(xmlData, "-->", i, "Comment is not closed.")
         if(this.options.commentPropName){
           const comment = xmlData.substring(i + 4, endIndex - 2);
 
-          //TODO: remove repeated code
-          if(textData){ //store previously collected data as textNode
-            textData = this.parseTextData(textData
-              , currentNode.tagname
-              , jPath
-              ,false
-              , currentNode[":@"] ? Object.keys(currentNode[":@"]).length !== 0 : false
-              , Object.keys(currentNode.child).length === 0);
-  
-            if(textData !== undefined &&  textData !== "") currentNode.add(this.options.textNodeName, textData);
-            textData = "";
-          }
+          textData = this.saveTextToParentTag(textData, currentNode, jPath);
+
           currentNode.add(this.options.commentPropName, [ { [this.options.textNodeName] : comment } ]);
         }
         i = endIndex;
@@ -266,17 +246,7 @@ const parseXml = function(xmlData) {
         const closeIndex = findClosingIndex(xmlData, "]]>", i, "CDATA is not closed.") - 2;
         const tagExp = xmlData.substring(i + 9,closeIndex);
 
-        if(textData){ //store previously collected data as textNode
-          textData = this.parseTextData(textData
-            , currentNode.tagname
-            , jPath
-            ,false
-            , currentNode[":@"] ? Object.keys(currentNode[":@"]).length !== 0 : false
-            , Object.keys(currentNode.child).length === 0);
-
-          if(textData !== undefined &&  textData !== "") currentNode.add(this.options.textNodeName, textData);
-          textData = "";
-        }
+        textData = this.saveTextToParentTag(textData, currentNode, jPath);
 
         //cdata should be set even if it is 0 length string
         if(this.options.cdataPropName){
@@ -405,6 +375,22 @@ const replaceEntitiesValue = function(val){
   }
   return val;
 }
+function saveTextToParentTag(textData, currentNode, jPath) {
+  if (textData) { //store previously collected data as textNode
+    textData = this.parseTextData(textData,
+      currentNode.tagname,
+      jPath,
+      false,
+      currentNode[":@"] ? Object.keys(currentNode[":@"]).length !== 0 : false,
+      Object.keys(currentNode.child).length === 0);
+
+    if (textData !== undefined && textData !== "")
+      currentNode.add(this.options.textNodeName, textData);
+    textData = "";
+  }
+  return textData;
+}
+
 //TODO: use jPath to simplify the logic
 /**
  * 
