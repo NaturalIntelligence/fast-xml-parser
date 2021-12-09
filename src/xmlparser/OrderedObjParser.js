@@ -211,21 +211,15 @@ const parseXml = function(xmlData) {
       } else if( xmlData[i+1] === '?') {
         let tagData = readTagExp(xmlData,i, false, "?>");
         if(!tagData) throw new Error("Pi Tag is not closed.");
+        textData = this.saveTextToParentTag(textData, currentNode, jPath);
+
+        const childNode = new xmlNode(tagData.tagName);
+        childNode.add(this.options.textNodeName, "");
         
-        let tagName= tagData.tagName;
-        let tagExp = tagData.tagExp;
-        let attrExpPresent = tagData.attrExpPresent;
-        let closeIndex = tagData.closeIndex;
-
-          textData = this.saveTextToParentTag(textData, currentNode, jPath);
-
-          const childNode = new xmlNode(tagName);
-          childNode.add(this.options.textNodeName, "");
-          
-          if(tagName !== tagExp && tagData.attrExpPresent){
-            childNode[":@"] = this.buildAttributesMap(tagExp, jPath);
-          }
-          currentNode.addChild(childNode);
+        if(tagData.tagName !== tagData.tagExp && tagData.attrExpPresent){
+          childNode[":@"] = this.buildAttributesMap(tagData.tagExp, jPath);
+        }
+        currentNode.addChild(childNode);
 
         i = tagData.closeIndex + 1;
       } else if(xmlData.substr(i + 1, 3) === '!--') {
