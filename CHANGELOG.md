@@ -1,5 +1,12 @@
 Note: If you find missing information about particular minor version, that version must have been changed without any functional change in this library.
 
+** 4.0.0-beta.7 / 2021-12-09**
+* fix Validator bug when an attribute has no value but '=' only
+* XML Builder should suppress unpaired tags by default.
+* documents update for missing features
+* refactoring to use Object.assign
+* refactoring to remove repeated code
+
 ** 4.0.0-beta.6 / 2021-12-05**
 * Support PI Tags processing
 * Support `suppressBooleanAttributes` by XML Builder for attributes with value `true`.
