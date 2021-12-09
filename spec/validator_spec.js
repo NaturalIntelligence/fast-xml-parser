@@ -432,6 +432,10 @@ describe("should report correct line numbers for unclosed tags", () => {
         validate(`<parent>
                   </parent>extra`,
                  {InvalidXml: "Extra text at the end"}, 2, 28));
+    
+    it('- Extra text', () =>
+        validate(`<parent><child attri= bute="true" /></parent>`,
+            {InvalidAttr: "Attribute 'attri' is without value."}, 1, 16));
 });
 
 describe("XML Validator with options", function () {
