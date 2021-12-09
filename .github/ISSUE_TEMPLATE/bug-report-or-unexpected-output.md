@@ -34,3 +34,7 @@ Include the code being used for parsing
 - [ ] No
 
 [Bookmark](https://github.com/NaturalIntelligence/fast-xml-parser/stargazers) this repository for further updates.
+
+<!-- Love Fast-XML-Parser? Please consider supporting us:
+👉  https://opencollective.com/fast-xml-parser/donate
+👉  https://paypal.me/naturalintelligence -->
