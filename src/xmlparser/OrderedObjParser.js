@@ -72,14 +72,15 @@ function addExternalEntities(externalEntities){
  * @param {boolean} dontTrim
  * @param {boolean} hasAttributes
  * @param {boolean} isLeafNode
+ * @param {boolean} escapeEntities
  */
-function parseTextData(val, tagName, jPath, dontTrim, hasAttributes, isLeafNode) {
+function parseTextData(val, tagName, jPath, dontTrim, hasAttributes, isLeafNode, escapeEntities) {
   if (val !== undefined) {
     if (this.options.trimValues && !dontTrim) {
       val = val.trim();
     }
     if(val.length > 0){
-      val = this.replaceEntitiesValue(val);
+      if(!escapeEntities) val = this.replaceEntitiesValue(val);
       
       const newval = this.options.tagValueProcessor(tagName, val, jPath, hasAttributes, isLeafNode);
       if(newval === null || newval === undefined){
@@ -292,6 +293,10 @@ const parseXml = function(xmlData) {
           if(tagName !== tagExp && attrExpPresent){
             childNode[":@"] = this.buildAttributesMap(tagExp, jPath);
           }
+          if(tagContent) {
+            tagContent = this.parseTextData(tagContent, tagName, jPath, true, attrExpPresent, true, true);
+          }
+          
           jPath = jPath.substr(0, jPath.lastIndexOf("."));
           childNode.add(this.options.textNodeName, tagContent);
           

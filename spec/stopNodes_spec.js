@@ -197,4 +197,58 @@ describe("XMLParser StopNodes", function() {
         });
         expect(result).toBe(true);
     });
+
+    it("should call tagValueProcessor for stop Node", function() {
+      const XMLdata = `
+      <products capture-installed="true">
+      <script/>
+      <product>
+      <pid>8</pid>
+      <modelno>6273033</modelno>
+      <name>
+      <![CDATA[ Big Red Truck ]]>
+      </name>
+      <category>
+      <![CDATA[ Toys]]>
+      </category>
+      <currency>USD</currency>
+      <price>
+        <actualprice>19.20</actualprice>
+      </price>
+    </product>
+      `;
+  
+      const expected = {
+            "products": {
+                "script": "",
+                "product": {
+                    "pid": "8",
+                    "modelno": "6273033",
+                    "name": " Big Red Truck ",
+                    "category": " Toys",
+                    "currency": "USD",
+                    "price": "19.20"
+                }
+            }
+        };
+    
+        const options = {
+          ignoreAttributes: true,
+          stopNodes: [
+            "products.product.price"
+          ],
+          tagValueProcessor: (tagName, tagValue, jPath, hasAttributes, isLeafNode) => {
+            if(jPath === 'products.product.price'){
+              // console.log(tagName, tagValue, jPath, hasAttributes, isLeafNode);
+              return /([0-9]+\.[0-9]+)/.exec(tagValue)[1]
+            }
+          },
+          // preserveOrder: true,
+        };
+        const parser = new XMLParser(options);
+        let result = parser.parse(XMLdata);
+        // console.log(JSON.stringify(result, null,4));
+  
+        expect(expected).toEqual(result);
+  });
 });
