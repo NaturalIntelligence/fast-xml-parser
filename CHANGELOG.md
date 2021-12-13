@@ -1,5 +1,8 @@
 Note: If you find missing information about particular minor version, that version must have been changed without any functional change in this library.
 
+** 4.0.0-beta.8 / 2021-12-13**
+* call tagValueProcessor for stop nodes
+
 ** 4.0.0-beta.7 / 2021-12-09**
 * fix Validator bug when an attribute has no value but '=' only
 * XML Builder should suppress unpaired tags by default.
