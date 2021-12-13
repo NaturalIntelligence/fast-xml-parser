@@ -193,14 +193,7 @@ const parseXml = function(xmlData) {
         }
 
         if(currentNode){
-          textData = this.parseTextData(textData
-            , currentNode.tagname
-            , jPath
-            ,false
-            , currentNode[":@"] ? Object.keys(currentNode[":@"]).length !== 0 : false
-            , Object.keys(currentNode.child).length === 0);
-          if(textData !== undefined &&  textData !== "") currentNode.add(this.options.textNodeName, textData);
-          textData = "";
+          textData = this.saveTextToParentTag(textData, currentNode, jPath);
         }
 
         jPath = jPath.substr(0, jPath.lastIndexOf("."));
@@ -266,14 +259,7 @@ const parseXml = function(xmlData) {
         if (currentNode && textData) {
           if(currentNode.tagname !== '!xml'){
             //when nested tag is found
-            textData = this.parseTextData(textData
-              , currentNode.tagname
-              , jPath
-              , false
-              , currentNode[":@"] ? Object.keys(currentNode[":@"]).length !== 0 : false
-              , false);
-            if(textData !== undefined &&  textData !== "") currentNode.add(this.options.textNodeName, textData);
-            textData = "";
+            textData = this.saveTextToParentTag(textData, currentNode, jPath, false);
           }
         }
 
@@ -369,14 +355,16 @@ const replaceEntitiesValue = function(val){
   }
   return val;
 }
-function saveTextToParentTag(textData, currentNode, jPath) {
+function saveTextToParentTag(textData, currentNode, jPath, isLeafNode) {
   if (textData) { //store previously collected data as textNode
+    if(isLeafNode === undefined) isLeafNode = Object.keys(currentNode.child).length === 0
+    
     textData = this.parseTextData(textData,
       currentNode.tagname,
       jPath,
       false,
       currentNode[":@"] ? Object.keys(currentNode[":@"]).length !== 0 : false,
-      Object.keys(currentNode.child).length === 0);
+      isLeafNode);
 
     if (textData !== undefined && textData !== "")
       currentNode.add(this.options.textNodeName, textData);
