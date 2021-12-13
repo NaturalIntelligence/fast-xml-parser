@@ -1,29 +1,29 @@
 Note: If you find missing information about particular minor version, that version must have been changed without any functional change in this library.
 
-** 4.0.0-beta.8 / 2021-12-13**
+**4.0.0-beta.8 / 2021-12-13**
 * call tagValueProcessor for stop nodes
 
-** 4.0.0-beta.7 / 2021-12-09**
+**4.0.0-beta.7 / 2021-12-09**
 * fix Validator bug when an attribute has no value but '=' only
 * XML Builder should suppress unpaired tags by default.
 * documents update for missing features
 * refactoring to use Object.assign
 * refactoring to remove repeated code
 
-** 4.0.0-beta.6 / 2021-12-05**
+**4.0.0-beta.6 / 2021-12-05**
 * Support PI Tags processing
 * Support `suppressBooleanAttributes` by XML Builder for attributes with value `true`.
 
-** 4.0.0-beta.5 / 2021-12-04**
+**4.0.0-beta.5 / 2021-12-04**
 * fix: when a tag with name "attributes"
 
-** 4.0.0-beta.4 / 2021-12-02**
+**4.0.0-beta.4 / 2021-12-02**
 * Support HTML document parsing
 * skip stop nodes parsing when building the XML from JS object
 * Support external entites without DOCTYPE
 * update dev dependency: strnum v1.0.5 to fix long number issue
 
-** 4.0.0-beta.3 / 2021-11-30**
+**4.0.0-beta.3 / 2021-11-30**
 * support global stopNodes expression like "*.stop"
 * support self-closing and paired unpaired tags
 * fix: CDATA should not be parsed.
