@@ -9,7 +9,7 @@
     "coverage": "nyc report --reporter html --reporter text -t .nyc_output --report-dir .nyc_output/summary",
     "perf": "node ./benchmark/perfTest3.js",
     "lint": "eslint src/*.js spec/*.js",
-    "bundle": "webpack && webpack --config webpack-prod.config.js",
+    "bundle": "webpack --config webpack-prod.config.js",
     "prettier": "prettier --write src/**/*.js",
     "publish-please": "publish-please",
     "checkReadiness": "publish-please --dry-run"

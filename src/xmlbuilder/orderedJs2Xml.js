@@ -1,4 +1,4 @@
-const {EOL} = require('os');
+const EOL = "\n";
 
 /**
  * 
