@@ -1,4 +1,4 @@
-'use strict';
+
 ///@ts-check
 
 import * as util from '../util.js';

@@ -1,4 +1,4 @@
-'use strict';
+
 
 import  * as XMLValidator from './validator.js';
 import  XMLParser from './xmlparser/XMLParser.js';

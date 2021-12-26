@@ -1,4 +1,4 @@
-'use strict';
+
 //parse Empty Node as self closing node
 import  buildFromOrderedJs from './orderedJs2Xml.js';
 

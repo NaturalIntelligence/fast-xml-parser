@@ -1,4 +1,4 @@
-'use strict';
+
 
 // Copyright 2013 Timothy J Fontaine <tjfontaine@gmail.com>
 //
