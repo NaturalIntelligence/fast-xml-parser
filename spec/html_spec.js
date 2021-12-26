@@ -1,5 +1,5 @@
-
-const {XMLParser, XMLBuilder} = require("../src/fxp");
+import {XMLParser, XMLBuilder} from "../src/fxp.js";
+import {expect} from "chai";
 
 describe("XMLParser", function() {
 
@@ -76,6 +76,6 @@ const parsingOptions = {
   let output = builder.build(result);
 //   console.log(output);
     output = output.replace('₹','&inr;');
-  expect(output.replace(/\s+/g, "")).toEqual(html.replace(/\s+/g, ""));
+  expect(output.replace(/\s+/g, "")).to.deep.equal(html.replace(/\s+/g, ""));
     });
 });

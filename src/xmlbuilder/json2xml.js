@@ -1,6 +1,6 @@
 'use strict';
 //parse Empty Node as self closing node
-const buildFromOrderedJs = require('./orderedJs2Xml');
+import  buildFromOrderedJs from './orderedJs2Xml.js';
 
 const defaultOptions = {
   attributeNamePrefix: '@_',
@@ -241,4 +241,4 @@ function isAttribute(name /*, options*/) {
   }
 }
 
-module.exports = Builder;
+export default Builder;

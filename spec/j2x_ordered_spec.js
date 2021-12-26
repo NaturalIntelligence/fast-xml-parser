@@ -1,5 +1,5 @@
-const {XMLParser, XMLBuilder} = require("../src/fxp");
-const he = require("he");
+import {XMLParser, XMLBuilder} from "../src/fxp.js";
+import {expect} from "chai";
 
 describe("XMLBuilder", function() {
 
@@ -37,7 +37,7 @@ describe("XMLBuilder", function() {
     result = builder.build(result);
     // console.log(result);
 
-    expect(result.replace(/\s+/g, "")).toEqual(XMLdata.replace(/\s+/g, ""));
+    expect(result.replace(/\s+/g, "")).to.deep.equal(XMLdata.replace(/\s+/g, ""));
     });
 
     it("should build XML for CDATA, text property, repeated tags", function() {
@@ -75,7 +75,7 @@ describe("XMLBuilder", function() {
     result = builder.build(result);
     // console.log(result);
 
-    expect(result.replace(/\s+/g, "")).toEqual(XMLdata.replace(/\s+/g, ""));
+    expect(result.replace(/\s+/g, "")).to.deep.equal(XMLdata.replace(/\s+/g, ""));
     });
     
     it("should build XML by merging CDATA to text property when CDATA tag name is not set", function() {
@@ -108,7 +108,7 @@ describe("XMLBuilder", function() {
 
         XMLdata = XMLdata.replace(/<!\[CDATA\[/g, "");
         XMLdata = XMLdata.replace(/\]\]>/g, "");
-        expect(result.replace(/\s+/g, "")).toEqual(XMLdata.replace(/\s+/g, ""));
+        expect(result.replace(/\s+/g, "")).to.deep.equal(XMLdata.replace(/\s+/g, ""));
     });
 
     it("should build XML having only text", function() {
@@ -129,7 +129,7 @@ describe("XMLBuilder", function() {
 
         XMLdata = XMLdata.replace(/<!\[CDATA\[/g, "");
         XMLdata = XMLdata.replace(/\]\]>/g, "");
-        expect(result.replace(/\s+/g, "")).toEqual(XMLdata.replace(/\s+/g, ""));
+        expect(result.replace(/\s+/g, "")).to.deep.equal(XMLdata.replace(/\s+/g, ""));
     });
     
     it("should build XML by supressing empty nodes", function() {
@@ -150,7 +150,7 @@ describe("XMLBuilder", function() {
         result = builder.build(result);
         // console.log(result);
 
-        expect(result).toEqual(expected);
+        expect(result).to.deep.equal(expected);
     });
 
     it("should build formatted XML", function() {
@@ -185,7 +185,7 @@ describe("XMLBuilder", function() {
 
         XMLdata = XMLdata.replace(/<!\[CDATA\[/g, "");
         XMLdata = XMLdata.replace(/\]\]>/g, "");
-        expect(result.replace(/\s+/g, "")).toEqual(XMLdata.replace(/\s+/g, ""));
+        expect(result.replace(/\s+/g, "")).to.deep.equal(XMLdata.replace(/\s+/g, ""));
     });
     
     it("should build formatted XML with CDATA", function() {
@@ -218,7 +218,7 @@ describe("XMLBuilder", function() {
         result = builder.build(result);
         // console.log(result);
 
-        expect(result.replace(/\s+/g, "")).toEqual(XMLdata.replace(/\s+/g, ""));
+        expect(result.replace(/\s+/g, "")).to.deep.equal(XMLdata.replace(/\s+/g, ""));
     });
 
     it("should build XML when leaf nodes or attributes are parsed to array", function () {
@@ -266,6 +266,6 @@ describe("XMLBuilder", function() {
         });
         result = builder.build(result);
         // console.log(result);
-        expect(result.replace(/\s+/g, "")).toEqual(XMLdata.replace(/\s+/g, ""));
+        expect(result.replace(/\s+/g, "")).to.deep.equal(XMLdata.replace(/\s+/g, ""));
     });
 });

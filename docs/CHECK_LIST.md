@@ -1,4 +1,5 @@
 Pre release
+* [ ] update version in cli.mjs, package.json
 * [ ] npm audit and yarn audit is done
 * [ ] Change log has been updated
 * [ ] Added/updated documentation for new properties/features

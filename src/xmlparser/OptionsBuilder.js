@@ -31,9 +31,6 @@ const defaultOptions = {
     htmlEntities: false,
 };
    
-const buildOptions = function(options) {
+export const buildOptions = function(options) {
     return Object.assign({}, defaultOptions, options);
 };
-
-exports.buildOptions = buildOptions;
-exports.defaultOptions = defaultOptions;

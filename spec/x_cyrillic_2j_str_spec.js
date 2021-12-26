@@ -1,6 +1,7 @@
 "use strict";
 
-const {XMLParser, XMLValidator} = require("../src/fxp");
+import {XMLParser, XMLValidator} from "../src/fxp.js";
+import {expect} from "chai";
 
 describe("XMLParser", function() {
 
@@ -17,7 +18,7 @@ describe("XMLParser", function() {
         const parser = new XMLParser(options);
         let result = parser.parse(xmlData);
         
-        expect(result).toEqual(expected);
+        expect(result).to.deep.equal(expected);
         // console.log({ expected})
         // console.log({ result })
     });

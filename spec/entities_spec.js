@@ -1,4 +1,5 @@
-const {XMLParser, XMLBuilder} = require("../src/fxp");
+import {XMLParser, XMLBuilder} from "../src/fxp.js";
+import {expect} from "chai";
 
 describe("XMLParser Entities", function() {
 
@@ -43,7 +44,7 @@ describe("XMLParser Entities", function() {
         let result = parser.parse(xmlData, true);
 
         //console.log(JSON.stringify(result,null,4));
-        expect(result).toEqual(expected);
+        expect(result).to.deep.equal(expected);
     });
 
     it("should parse XML with DOCTYPE without internal DTD", function() {
@@ -65,7 +66,7 @@ describe("XMLParser Entities", function() {
         const parser = new XMLParser(options);
         let result = parser.parse(xmlData, true);
 
-        expect(result).toEqual(expected);
+        expect(result).to.deep.equal(expected);
     });
 
     it("should parse XML with DOCTYPE without internal DTD", function() {
@@ -92,7 +93,7 @@ describe("XMLParser Entities", function() {
         let result = parser.parse(xmlData, true);
         // console.log(JSON.stringify(result,null,4));
 
-        expect(result).toEqual(expected);
+        expect(result).to.deep.equal(expected);
     });
 
     it("should error for when any tag is left to close", function(){
@@ -100,7 +101,7 @@ describe("XMLParser Entities", function() {
         expect(() =>{
             const parser = new XMLParser();
             parser.parse(xmlData);
-        }).toThrowError("Unclosed DOCTYPE")
+        }).to.throw("Unclosed DOCTYPE")
     })
 
     it("should parse XML with DOCTYPE", function() {
@@ -125,7 +126,7 @@ describe("XMLParser Entities", function() {
         const parser = new XMLParser(options);
         let result = parser.parse(xmlData);
         //console.log(JSON.stringify(result,null,4));
-        expect(result).toEqual(expected);
+        expect(result).to.deep.equal(expected);
     });
 
     it("should parse attributes having '>' in value", function() {
@@ -172,7 +173,7 @@ describe("XMLParser Entities", function() {
         let result = parser.parse(xmlData);
         // console.log(JSON.stringify(result,null,4));
 
-        expect(result).toEqual(expected);
+        expect(result).to.deep.equal(expected);
     });
     it("should parse dynamic entity", function() {
         const xmlData = `
@@ -214,7 +215,7 @@ describe("XMLParser Entities", function() {
         let result = parser.parse(xmlData);
         // console.log(JSON.stringify(result,null,4));
 
-        expect(result).toEqual(expected);
+        expect(result).to.deep.equal(expected);
     });
 
     it("should build by decoding defaul entities", function() {
@@ -243,7 +244,7 @@ describe("XMLParser Entities", function() {
         };
         const builder = new XMLBuilder(options);
         const result = builder.build(jsObj);
-        expect(result.replace(/\s+/g, "")).toEqual(expected.replace(/\s+/g, ""));
+        expect(result.replace(/\s+/g, "")).to.deep.equal(expected.replace(/\s+/g, ""));
     });
     it("should build by decoding defaul entities in prserve mode", function() {
         const jsObj = [
@@ -292,7 +293,7 @@ describe("XMLParser Entities", function() {
         const builder = new XMLBuilder(options);
         result = builder.build(jsObj);
         // console.log(result);
-        expect(result.replace(/\s+/g, "")).toEqual(expected.replace(/\s+/g, ""));
+        expect(result.replace(/\s+/g, "")).to.deep.equal(expected.replace(/\s+/g, ""));
     });
 
     it("should parse HTML entities when htmlEntities:true", function() {
@@ -336,7 +337,7 @@ describe("XMLParser Entities", function() {
         let result = parser.parse(xmlData);
         // console.log(JSON.stringify(result,null,4));
 
-        expect(result).toEqual(expected);
+        expect(result).to.deep.equal(expected);
     });
 });
 
@@ -345,21 +346,21 @@ describe("XMLParser External Entites", function() {
         const parser = new XMLParser();
         expect( () => {
             parser.addEntity("#xD", "&\r");
-        }).toThrowError("Entity value can't have '&'");
+        }).to.throw("Entity value can't have '&'");
     });
 
     it("should throw error when an entity identifier has '&'", function() {
         const parser = new XMLParser();
         expect( () => {
             parser.addEntity("&#xD", "\r");
-        }).toThrowError("An entity must be set without '&' and ';'. Eg. use '#xD' for '&#xD;'");
+        }).to.throw("An entity must be set without '&' and ';'. Eg. use '#xD' for '&#xD;'");
     });
     
     it("should throw error when an entity identifier has ';'", function() {
         const parser = new XMLParser();
         expect( () => {
             parser.addEntity("#xD;", "\r");
-        }).toThrowError("An entity must be set without '&' and ';'. Eg. use '#xD' for '&#xD;'");
+        }).to.throw("An entity must be set without '&' and ';'. Eg. use '#xD' for '&#xD;'");
     });
     
     it("should set and parse for valid entity set externally", function() {
@@ -370,7 +371,7 @@ describe("XMLParser External Entites", function() {
         let result = parser.parse(xmlData);
         // console.log(JSON.stringify(result,null,4));
 
-        expect(result.note).toEqual(`&unknown;\r\nlast`);
+        expect(result.note).to.deep.equal(`&unknown;\r\nlast`);
     });
     
     it("External Entity can change the behaviour of default entites", function() {
@@ -381,7 +382,7 @@ describe("XMLParser External Entites", function() {
         let result = parser.parse(xmlData);
         // console.log(JSON.stringify(result,null,4));
 
-        expect(result.note).toEqual(`<>last`);
+        expect(result.note).to.deep.equal(`<>last`);
     });
     
     it("Same external Entity can be set by multiple times", function() {
@@ -393,7 +394,7 @@ describe("XMLParser External Entites", function() {
         let result = parser.parse(xmlData);
         // console.log(JSON.stringify(result,null,4));
 
-        expect(result.note).toEqual(`><last`);
+        expect(result.note).to.deep.equal(`><last`);
     });
     
 });

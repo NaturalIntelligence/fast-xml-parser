@@ -89,4 +89,4 @@ function parseEntityExp(exp, entities){
         };
     }
 }
-module.exports = readDocType;
+export default  readDocType;

@@ -24,9 +24,9 @@
 
 Read any stream all the way to the end and trigger a single cb
 
-const http = require('http');
+import http from 'http';
 
-const rte = require('readtoend');
+import rte from 'readtoend';
 
 http.get('http://nodejs.org', function(response) {
   rte.readToEnd(response, function(err, body) {
@@ -36,11 +36,12 @@ http.get('http://nodejs.org', function(response) {
 
 */
 
-let stream = require('stream');
-const util = require('util');
+import * as stream from 'stream';
+import * as util from 'util';
+import * as readableStream from 'readable-stream'
 
 if (!stream.Transform) {
-  stream = require('readable-stream');
+  stream = readableStream;
 }
 
 function ReadToEnd(opts) {
@@ -55,7 +56,7 @@ function ReadToEnd(opts) {
   this._buff = '';
 }
 
-module.exports = ReadToEnd;
+export default ReadToEnd;
 util.inherits(ReadToEnd, stream.Transform);
 
 ReadToEnd.prototype._transform = function(chunk, encoding, done) {

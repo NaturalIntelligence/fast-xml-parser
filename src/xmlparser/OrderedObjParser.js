@@ -1,10 +1,10 @@
 'use strict';
 ///@ts-check
 
-const util = require('../util');
-const xmlNode = require('./xmlNode');
-const readDocType = require("./DocTypeReader");
-const toNumber = require("strnum");
+import * as util from '../util.js';
+import  xmlNode from './xmlNode.js';
+import  readDocType from "./DocTypeReader.js";
+import toNumber from "strnum";
 
 const regx =
   '<((!\\[CDATA\\[([\\s\\S]*?)(]]>))|((NAME:)?(NAME))([^>]*)>|((\\/)(NAME)\\s*>))([^<]*)'
@@ -506,5 +506,4 @@ function parseValue(val, shouldParse, options) {
   }
 }
 
-
-module.exports = OrderedObjParser;
+export default OrderedObjParser;

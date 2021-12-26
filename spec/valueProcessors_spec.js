@@ -1,7 +1,8 @@
 "use strict";
 
-const {XMLParser, XMLValidator} = require("../src/fxp");
-const he = require("he");
+import {XMLParser, XMLValidator} from "../src/fxp.js";
+import {expect} from "chai";
+import he from "he";
 
 describe("XMLParser", function() {
 
@@ -19,7 +20,7 @@ describe("XMLParser", function() {
         const parser = new XMLParser(options);
         let result = parser.parse(xmlData);
         //console.log(JSON.stringify(result,null,4));
-        expect(result).toEqual(expected);
+        expect(result).to.deep.equal(expected);
     });
 
     it("should decode HTML entities / char", function() {
@@ -42,10 +43,10 @@ describe("XMLParser", function() {
         const parser = new XMLParser(options);
         let result = parser.parse(xmlData);
         //console.log(JSON.stringify(result,null,4));
-        expect(result).toEqual(expected);
+        expect(result).to.deep.equal(expected);
 
         result = XMLValidator.validate(xmlData);
-        expect(result).toBe(true);
+        expect(result).to.be.true;
     });
 
     it("tag value processor should be called with value and tag name", function() {
@@ -86,8 +87,8 @@ describe("XMLParser", function() {
         let result = parser.parse(xmlData);
         // console.log(JSON.stringify(result,null,4));
         // console.log(JSON.stringify(resultMap,null,4));
-        expect(result).toEqual(expected);
-        expect(resultMap).toEqual({
+        expect(result).to.deep.equal(expected);
+        expect(resultMap).to.deep.equal({
             "person": [
                 "start",
                 "middle",
@@ -131,7 +132,7 @@ describe("XMLParser", function() {
         const parser = new XMLParser(options);
         let result = parser.parse(xmlData);
         // console.log(JSON.stringify(result,null,4));
-        expect(result).toEqual(expected);
+        expect(result).to.deep.equal(expected);
     });
 
     it("result should have constant value returned by tag processor", function() {
@@ -161,7 +162,7 @@ describe("XMLParser", function() {
         const parser = new XMLParser(options);
         let result = parser.parse(xmlData);
         // console.log(JSON.stringify(result,null,4));
-        expect(result).toEqual(expected);
+        expect(result).to.deep.equal(expected);
     });
 
     it("attribute parser should be called with  atrribute name and value", function() {
@@ -193,9 +194,9 @@ describe("XMLParser", function() {
         const parser = new XMLParser(options);
         let result = parser.parse(xmlData);
         //console.log(JSON.stringify(resultMap,null,4));
-        expect(result).toEqual(expected);
+        expect(result).to.deep.equal(expected);
 
-        expect(resultMap).toEqual({
+        expect(resultMap).to.deep.equal({
             "id": [
                 "7"
             ],
@@ -246,7 +247,7 @@ describe("XMLParser", function() {
       let result = parser.parse(XMLdata);
     //   console.log(JSON.stringify(result, null,4));
     
-    expect(tagValueProcessorCalls).toEqual(expectedValues);
+    expect(tagValueProcessorCalls).to.deep.equal(expectedValues);
     });
     
     // it("should call tagValue processor with CDATA with correct parameters", function() {
@@ -289,7 +290,7 @@ describe("XMLParser", function() {
     //   let result = parser.parse(XMLdata);
     // //   console.log(JSON.stringify(result, null,4));
   
-    //   expect(tagValueProcessorCalls).toEqual(expectedValues);
+    //   expect(tagValueProcessorCalls).to.deep.equal(expectedValues);
     // });
 
     it("should call tagValue processor for whitespace only values but not empty when trimValues:false", function() {
@@ -318,6 +319,6 @@ describe("XMLParser", function() {
       let result = parser.parse(XMLdata);
     //   console.log(JSON.stringify(result, null,4));
   
-      expect(tagValueProcessorCalls).toEqual(expectedValues);
+      expect(tagValueProcessorCalls).to.deep.equal(expectedValues);
     });
 });

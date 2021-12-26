@@ -1,15 +1,13 @@
-"use strict";
+import * as fs from "fs";
+import * as path from "path";
 
-const fs = require("fs");
-const path = require("path");
-
-const {XMLParser, XMLValidator} = require("../src/fxp");
+import {XMLParser, XMLValidator} from "../src/fxp.js";
+import {expect} from "chai";
 
 describe("XMLParser", function() {
 
     it("should parse when Buffer is given as input", function() {
-        
-        const fileNamePath = path.join(__dirname, "assets/mini-sample.xml");
+        const fileNamePath = path.resolve("./spec/assets/mini-sample.xml");
         const xmlData = fs.readFileSync(fileNamePath);
 
         const expected = {
@@ -44,43 +42,43 @@ describe("XMLParser", function() {
         const parser = new XMLParser();
         let result = parser.parse(xmlData);
         // console.log(JSON.stringify(result,null,4));
-        expect(result).toEqual(expected);
+        expect(result).to.deep.equal(expected);
     });
 
-    xit("should not parse when invalid value is given", function() {
+    it.skip("should not parse when invalid value is given", function() {
         const parser = new XMLParser();
         const result = parser.parse(23);
         // console.log(result)
-        expect(result).toBeUndefined();
+        expect(result).to.be.undefined;
     });
 
-    xit("should not parse when invalid value is given", function() {
+    it.skip("should not parse when invalid value is given", function() {
         const parser = new XMLParser();
         const result = parser.parse([]);
         // console.log(result)
-        expect(result).toBeUndefined();
+        expect(result).to.be.undefined();
     });
 
-    xit("should not parse when invalid value is given", function() {
+    it.skip("should not parse when invalid value is given", function() {
         const parser = new XMLParser( { preserveOrder: true});
         const result = parser.parse([]);
-        expect(result).toBeUndefined();
+        expect(result).to.be.undefined();
     });
 
-    xit("should not parse when null", function() {
+    it.skip("should not parse when null", function() {
         const parser = new XMLParser( { preserveOrder: true});
         expect(() => {
             parser.parse(null);
             // console.log(result);
-        }).toThrowError("Cannot read properties of null (reading 'toString')");
+        }).to.throw("Cannot read properties of null (reading 'toString')");
     });
 
-    xit("should not parse when undefined", function() {
+    it.skip("should not parse when undefined", function() {
         const parser = new XMLParser( { preserveOrder: true});
         expect(() => {
             parser.parse();
             // console.log(result);
-        }).toThrowError("Cannot read properties of undefined (reading 'toString')");
+        }).to.throw("Cannot read properties of undefined (reading 'toString')");
     });
     
     

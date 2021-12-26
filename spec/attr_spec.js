@@ -1,7 +1,7 @@
 "use strict";
 
-const {XMLParser, XMLBuilder, XMLValidator} = require("../src/fxp");
-const he = require("he");
+import {XMLParser, XMLBuilder, XMLValidator} from "../src/fxp.js";
+import {expect} from "chai";
 
 describe("XMLParser", function() {
     it("should parse attributes with valid names", function() {
@@ -22,10 +22,10 @@ describe("XMLParser", function() {
         let result = parser.parse(xmlData);
 
         //console.log(JSON.stringify(result,null,4));
-        expect(result).toEqual(expected);
+        expect(result).to.deep.equal(expected);
 
         result = XMLValidator.validate(xmlData);
-        expect(result).toBe(true);
+        expect(result).to.be.true;
     });
 
     it("should parse attributes with newline char", function() {
@@ -47,10 +47,10 @@ describe("XMLParser", function() {
         let result = parser.parse(xmlData);
 
         // console.log(JSON.stringify(result,null,4));
-        // expect(result).toEqual(expected);
+        // expect(result).to.deep.equal(expected);
 
         result = XMLValidator.validate(xmlData);
-        expect(result).toBe(true);
+        expect(result).to.be.true;
     });
 
     it("should parse attributes separated by newline char", function() {
@@ -73,10 +73,10 @@ id="7" data="foo bar" bug="true"/>`;
         let result = parser.parse(xmlData);
 
         //console.log(JSON.stringify(result,null,4));
-        expect(result).toEqual(expected);
+        expect(result).to.deep.equal(expected);
 
         result = XMLValidator.validate(xmlData);
-        expect(result).toBe(true);
+        expect(result).to.be.true;
     });
 
     it("should parse Boolean Attributes", function() {
@@ -106,12 +106,12 @@ id="7" data="foo bar" bug="true"/>`;
         let result = parser.parse(xmlData);
 
         //console.log(JSON.stringify(result,null,4));
-        expect(result).toEqual(expected);
+        expect(result).to.deep.equal(expected);
 
         result = XMLValidator.validate(xmlData, {
             allowBooleanAttributes: true
         });
-        expect(result).toBe(true);
+        expect(result).to.be.true;
     });
 
     it("should not remove xmlns when namespaces are not set to be ignored", function() {
@@ -132,12 +132,12 @@ id="7" data="foo bar" bug="true"/>`;
         let result = parser.parse(xmlData);
 
         //console.log(JSON.stringify(result,null,4));
-        expect(result).toEqual(expected);
+        expect(result).to.deep.equal(expected);
 
         result = XMLValidator.validate(xmlData, {
             allowBooleanAttributes: true
         });
-        expect(result).toBe(true);
+        expect(result).to.be.true;
     });
 
     it("should remove xmlns when namespaces are set to be ignored", function() {
@@ -159,12 +159,12 @@ id="7" data="foo bar" bug="true"/>`;
         let result = parser.parse(xmlData);
 
         //console.log(JSON.stringify(result,null,4));
-        expect(result).toEqual(expected);
+        expect(result).to.deep.equal(expected);
 
         result = XMLValidator.validate(xmlData, {
             allowBooleanAttributes: true
         });
-        expect(result).toBe(true);
+        expect(result).to.be.true;
     });
 
     it("should not parse attributes with name start with number", function() {
@@ -180,7 +180,7 @@ id="7" data="foo bar" bug="true"/>`;
         };
         const result = XMLValidator.validate(xmlData);
 
-        expect(result).toEqual(expected);
+        expect(result).to.deep.equal(expected);
     });
 
     it("should not parse attributes with invalid char", function() {
@@ -196,7 +196,7 @@ id="7" data="foo bar" bug="true"/>`;
 
         const result = XMLValidator.validate(xmlData);
 
-        expect(result).toEqual(expected);
+        expect(result).to.deep.equal(expected);
     });
 
     it("should not parse attributes in closing tag", function() {
@@ -211,7 +211,7 @@ id="7" data="foo bar" bug="true"/>`;
         };
         const result = XMLValidator.validate(xmlData);
 
-        expect(result).toEqual(expected);
+        expect(result).to.deep.equal(expected);
     });
 
     it("should err for invalid atributes", function() {
@@ -225,21 +225,21 @@ id="7" data="foo bar" bug="true"/>`;
             }
         };
         const result = XMLValidator.validate(xmlData);
-        expect(result).toEqual(expected);
+        expect(result).to.deep.equal(expected);
     });
 
     it("should validate xml with atributes", function() {
         const xmlData = `<rootNode attr="123"><tag></tag><tag>1</tag><tag>val</tag></rootNode>`;
 
         const result = XMLValidator.validate(xmlData);
-        expect(result).toBe(true);
+        expect(result).to.be.true;
     });
 
     it("should validate xml atribute has '>' in value", function() {
         const xmlData = `<rootNode attr="123>234"><tag></tag><tag>1</tag><tag>val</tag></rootNode>`;
 
         const result = XMLValidator.validate(xmlData);
-        expect(result).toBe(true);
+        expect(result).to.be.true;
     });
 
     it("should not validate xml with invalid atributes", function() {
@@ -253,7 +253,7 @@ id="7" data="foo bar" bug="true"/>`;
             }
         };
         const result = XMLValidator.validate(xmlData);
-        expect(result).toEqual(expected);
+        expect(result).to.deep.equal(expected);
     });
 
     it("should not validate xml with invalid attributes when duplicate attributes present", function() {
@@ -268,7 +268,7 @@ id="7" data="foo bar" bug="true"/>`;
         };
         const result = XMLValidator.validate(xmlData);
         //console.log(JSON.stringify(result,null,4));
-        expect(result).toEqual(expected);
+        expect(result).to.deep.equal(expected);
     });
 
     it("should not validate xml with invalid attributes when no space between 2 attributes", function() {
@@ -282,7 +282,7 @@ id="7" data="foo bar" bug="true"/>`;
             }
         };
         const result = XMLValidator.validate(xmlData);
-        expect(result).toEqual(expected);
+        expect(result).to.deep.equal(expected);
     });
 
     it("should not validate a tag with attribute presents without value ", function() {
@@ -296,7 +296,7 @@ id="7" data="foo bar" bug="true"/>`;
             }
         };
         const result = XMLValidator.validate(xmlData);
-        expect(result).toEqual(expected);
+        expect(result).to.deep.equal(expected);
     });
 
     it("should not validate xml with invalid attributes presents without value", function() {
@@ -312,7 +312,7 @@ id="7" data="foo bar" bug="true"/>`;
         };
         const result = XMLValidator.validate(xmlData);
         //console.log(JSON.stringify(result,null,4));
-        expect(result).toEqual(expected);
+        expect(result).to.deep.equal(expected);
     });
 
     it("should validate xml with attributeshaving openquote in value", function () {
@@ -328,7 +328,7 @@ id="7" data="foo bar" bug="true"/>`;
         };
         const result = XMLValidator.validate(xmlData);
         //console.log(JSON.stringify(result,null,4));
-        expect(result).toEqual(expected);
+        expect(result).to.deep.equal(expected);
     });
 
     it("should parse and build with tag name 'attributes' ", function() {
@@ -357,6 +357,6 @@ id="7" data="foo bar" bug="true"/>`;
           const builder = new XMLBuilder(options);
           const output = builder.build(result);
         //   console.log(output);
-          expect(output.replace(/\s+/g, "")).toEqual(XMLdata.replace(/\s+/g, ""));
+          expect(output.replace(/\s+/g, "")).to.deep.equal(XMLdata.replace(/\s+/g, ""));
     });
 });

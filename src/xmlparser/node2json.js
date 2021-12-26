@@ -6,7 +6,7 @@
  * @param {any} options 
  * @returns 
  */
-function prettify(node, options){
+export function prettify(node, options){
   return compress( node, options);
 }
 
@@ -98,4 +98,3 @@ function isLeafTag(obj, options){
   if( propCount === 0 || (propCount === 1 && obj[options.textNodeName]) ) return true;
   return false;
 }
-exports.prettify = prettify;

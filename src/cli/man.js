@@ -1,4 +1,4 @@
-module.exports = `Fast XML Parser 4.0.0
+export default `Fast XML Parser 4.0.0
 ----------------
 $ fxparser [-ns|-a|-c|-v|-V] <filename> [-o outputfile.json]
 $ cat xmlfile.xml | fxparser [-ns|-a|-c|-v|-V] [-o outputfile.json]

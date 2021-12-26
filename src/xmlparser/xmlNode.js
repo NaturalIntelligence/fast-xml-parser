@@ -20,4 +20,4 @@ class XmlNode{
 };
 
 
-module.exports = XmlNode;
+export default XmlNode;

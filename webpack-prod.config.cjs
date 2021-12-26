@@ -81,5 +81,23 @@ module.exports = [
             ]
         },
         target: "web"
+    },{
+        context: __dirname,
+        entry: "./src/fxp.js",
+        mode: "production",
+        output: {
+            path: __dirname,
+            filename: "./lib/fxp-es5.js",
+            library: "fxp",
+        },
+        // module: {
+        //     rules: [
+        //         {
+        //             test: /\.js$/,
+        //             loader: "babel-loader"
+        //         }
+        //     ]
+        // },
+        target: "node"
     }
 ];

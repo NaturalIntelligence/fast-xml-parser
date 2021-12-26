@@ -1,8 +1,9 @@
 "use strict";
 
-const fs = require("fs");
-const path = require("path");
-const {XMLParser, XMLValidator} = require("../src/fxp");
+import * as fs from "fs";
+import * as path from "path";
+import {XMLParser, XMLValidator} from "../src/fxp.js";
+import {expect} from "chai";
 
 function validate(xmlData, error, line = 1, col) {
     const result = XMLValidator.validate(xmlData);
@@ -22,14 +23,15 @@ function validate(xmlData, error, line = 1, col) {
             delete expected.col;
             delete result.err.col;
         }
-        expect(result.err).toEqual(expected);
+        expect(result.err).to.deep.equal(expected);
     } else {
-        expect(result).toBe(true);
+        expect(result).to.be.true;
     }
 }
 
 function validateFile(fileName, ...args) {
-    const fileNamePath = path.join(__dirname, "assets/" + fileName);
+    const fileNamePath = path.resolve(`./spec/assets/${fileName}`);
+    // const fileNamePath = path.join(__dirname, "assets/" + fileName);
     validate(fs.readFileSync(fileNamePath).toString(), ...args);
 }
 
@@ -448,7 +450,7 @@ describe("XML Validator with options", function () {
             unpairedTags: ["extra"]
         });
         // console.log(result);
-        expect(result).toBeTrue();
+        expect(result).to.be.true;
     });
     it('- allowBooleanAttributes:false', () =>
         validate(`<parent extra></parent>`,
@@ -458,7 +460,7 @@ describe("XML Validator with options", function () {
         const result = XMLValidator.validate(`<parent extra></parent>`, {
             allowBooleanAttributes: true
         });
-        expect(result).toBeTrue();
+        expect(result).to.be.true;
     });
 
 });

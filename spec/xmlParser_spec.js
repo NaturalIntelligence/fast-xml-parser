@@ -1,6 +1,7 @@
-"use strict";
-
-const {XMLParser, XMLValidator} = require("../src/fxp");
+import {XMLParser, XMLValidator} from "../src/fxp.js";
+import {expect} from "chai";
+import * as fs from "fs";
+import * as path from "path";
 
 describe("XMLParser", function() {
 
@@ -25,7 +26,7 @@ describe("XMLParser", function() {
         const parser = new XMLParser();
         let result = parser.parse(xmlData);
         //console.log(JSON.stringify(result,null,4));
-        expect(result).toEqual(expected);
+        expect(result).to.deep.equal(expected);
     });
 
 
@@ -55,7 +56,7 @@ describe("XMLParser", function() {
         const parser = new XMLParser(options);
         let result = parser.parse(xmlData);
         //console.log(JSON.stringify(result,null,4));
-        expect(result).toEqual(expected);
+        expect(result).to.deep.equal(expected);
     });
 
 
@@ -88,7 +89,7 @@ describe("XMLParser", function() {
         let result = parser.parse(xmlData);
 
         // console.log(JSON.stringify(result,null,4));
-        expect(result).toEqual(expected);
+        expect(result).to.deep.equal(expected);
     });
 
     it("should parse number ending in .0 for parseTrueNumberOnly:true", function () {
@@ -120,7 +121,7 @@ describe("XMLParser", function() {
         let result = parser.parse(xmlData);
         
         // console.log(JSON.stringify(result,null,4));
-        expect(result).toEqual(expected);
+        expect(result).to.deep.equal(expected);
     });
 
 
@@ -141,7 +142,7 @@ describe("XMLParser", function() {
         };
         const parser = new XMLParser(options);
         let result = parser.parse(xmlData);
-        expect(result).toEqual(expected);
+        expect(result).to.deep.equal(expected);
     });
 
     it("should parse number values of attributes as number", function() {
@@ -164,7 +165,7 @@ describe("XMLParser", function() {
         };
         const parser = new XMLParser(options);
         let result = parser.parse(xmlData);
-        expect(result).toEqual(expected);
+        expect(result).to.deep.equal(expected);
     });
 
     it("should parse number values as number if flag is set", function() {
@@ -182,7 +183,7 @@ describe("XMLParser", function() {
         };
         const parser = new XMLParser(options);
         let result = parser.parse(xmlData);
-        expect(result).toEqual(expected);
+        expect(result).to.deep.equal(expected);
     });
 
     it("should skip tag arguments", function() {
@@ -200,7 +201,7 @@ describe("XMLParser", function() {
         };
         const parser = new XMLParser(options);
         let result = parser.parse(xmlData);
-        expect(result).toEqual(expected);
+        expect(result).to.deep.equal(expected);
     });
 
     it("should ignore namespace and text node attributes", function() {
@@ -240,7 +241,7 @@ describe("XMLParser", function() {
         const parser = new XMLParser(options);
         let result = parser.parse(xmlData);
 
-        expect(result).toEqual(expected);
+        expect(result).to.deep.equal(expected);
     });
 
     it("should parse empty text Node", function() {
@@ -256,7 +257,7 @@ describe("XMLParser", function() {
         };
         const parser = new XMLParser(options);
         let result = parser.parse(xmlData);
-        expect(result).toEqual(expected);
+        expect(result).to.deep.equal(expected);
     });
 
     it("should parse self closing tags", function() {
@@ -276,7 +277,7 @@ describe("XMLParser", function() {
         let result = parser.parse(xmlData);
 
         // console.log(JSON.stringify(result,null,2));
-        expect(result).toEqual(expected);
+        expect(result).to.deep.equal(expected);
     });
 
     it("should parse single self closing tag", function() {
@@ -293,7 +294,7 @@ describe("XMLParser", function() {
         const parser = new XMLParser(options);
         let result = parser.parse(xmlData);
 
-        expect(result).toEqual(expected);
+        expect(result).to.deep.equal(expected);
     });
 
     it("should parse repeated nodes in array", function() {
@@ -314,7 +315,7 @@ describe("XMLParser", function() {
         };
         const parser = new XMLParser(options);
         let result = parser.parse(xmlData);
-        expect(result).toEqual(expected);
+        expect(result).to.deep.equal(expected);
     });
 
     it("should parse nested nodes in nested properties", function() {
@@ -339,7 +340,7 @@ describe("XMLParser", function() {
         };
         const parser = new XMLParser(options);
         let result = parser.parse(xmlData);
-        expect(result).toEqual(expected);
+        expect(result).to.deep.equal(expected);
     });
 
     it("should parse non-text nodes with value for repeated nodes", function() {
@@ -393,7 +394,7 @@ describe("XMLParser", function() {
         };
         const parser = new XMLParser(options);
         let result = parser.parse(xmlData);
-        expect(result).toEqual(expected);
+        expect(result).to.deep.equal(expected);
     });
 
     it("should preserve node value", function() {
@@ -412,7 +413,7 @@ describe("XMLParser", function() {
         };
         const parser = new XMLParser(options);
         let result = parser.parse(xmlData);
-        expect(result).toEqual(expected);
+        expect(result).to.deep.equal(expected);
     });
 
     it("should parse with attributes and value when there is single node", function() {
@@ -430,10 +431,10 @@ describe("XMLParser", function() {
         };
         const parser = new XMLParser(options);
         let result = parser.parse(xmlData);
-        expect(result).toEqual(expected);
+        expect(result).to.deep.equal(expected);
     });
 
-    xit("should parse different tags", function() {
+    it.skip("should parse different tags", function() {
         const xmlData = `<tag.1>val1</tag.1><tag.2>val2</tag.2>`;
         const expected = {
             "tag.1": "val1",
@@ -446,7 +447,7 @@ describe("XMLParser", function() {
         const parser = new XMLParser(options);
         let result = parser.parse(xmlData);
         // console.log(JSON.stringify(result,null,4));
-        expect(result).toEqual(expected);
+        expect(result).to.deep.equal(expected);
     });
 
     it("should not parse text value with tag", function() {
@@ -466,7 +467,7 @@ describe("XMLParser", function() {
         };
         const parser = new XMLParser(options);
         let result = parser.parse(xmlData);
-        expect(result).toEqual(expected);
+        expect(result).to.deep.equal(expected);
     });
 
     it("should parse nested elements with attributes", function() {
@@ -503,7 +504,7 @@ describe("XMLParser", function() {
         };
         const parser = new XMLParser(options);
         let result = parser.parse(xmlData);
-        expect(result).toEqual(expected);
+        expect(result).to.deep.equal(expected);
     });
 
     it("should parse nested elements with attributes wrapped in object", function() {
@@ -550,13 +551,11 @@ describe("XMLParser", function() {
         const parser = new XMLParser(options);
         let result = parser.parse(xmlData);
         //console.log(JSON.stringify(result,null,4));
-        expect(result).toEqual(expected);
+        expect(result).to.deep.equal(expected);
     });
 
     it("should parse all type of nodes", function() {
-        const fs = require("fs");
-        const path = require("path");
-        const fileNamePath = path.join(__dirname, "assets/sample.xml");
+        const fileNamePath = path.resolve("./spec/assets/sample.xml");
         const xmlData = fs.readFileSync(fileNamePath).toString();
 
         const expected = {
@@ -634,12 +633,12 @@ describe("XMLParser", function() {
         let result = parser.parse(xmlData);
         
         // console.log(JSON.stringify(result,null,4));
-        expect(result).toEqual(expected);
+        expect(result).to.deep.equal(expected);
     });
 
     /* it("should parse nodes as arrays", function () {
-      const fs = require("fs");
-      const path = require("path");
+      import fs from "fs";
+      import path from "path";
       const fileNamePath = path.join(__dirname, "assets/sample.xml");
       const xmlData = fs.readFileSync(fileNamePath).toString();
 
@@ -708,7 +707,7 @@ describe("XMLParser", function() {
         textNodeName: "#_text",
         arrayMode: true
       });
-      expect(result).toEqual(expected);
+      expect(result).to.deep.equal(expected);
     }); */
 
     it("should skip namespace", function() {
@@ -747,7 +746,7 @@ describe("XMLParser", function() {
         };
         const parser = new XMLParser(options);
         let result = parser.parse(xmlData);
-        expect(result).toEqual(expected);
+        expect(result).to.deep.equal(expected);
     });
 
     it("should not trim tag value if not allowed ", function() {
@@ -763,7 +762,7 @@ describe("XMLParser", function() {
         const parser = new XMLParser(options);
         let result = parser.parse(xmlData);
         //console.log(JSON.stringify(result,null,4));
-        expect(result).toEqual(expected);
+        expect(result).to.deep.equal(expected);
     });
 
     it("should not trim tag value but not parse if not allowed ", function() {
@@ -778,7 +777,7 @@ describe("XMLParser", function() {
         const parser = new XMLParser(options);
         let result = parser.parse(xmlData);
         //console.log(JSON.stringify(result,null,4));
-        expect(result).toEqual(expected);
+        expect(result).to.deep.equal(expected);
     });
 
     it("should encode  HTML entities by default", function() {
@@ -793,7 +792,7 @@ describe("XMLParser", function() {
         const parser = new XMLParser(options);
         let result = parser.parse(xmlData);
         //console.log(JSON.stringify(result,null,4));
-        expect(result).toEqual(expected);
+        expect(result).to.deep.equal(expected);
     });
 
     //Issue #77
@@ -821,7 +820,7 @@ describe("XMLParser", function() {
         const parser = new XMLParser(options);
         let result = parser.parse(xmlData);
         // console.log(JSON.stringify(result,null,4));
-        expect(result).toEqual(expected);
+        expect(result).to.deep.equal(expected);
     });
 
     it("should parse node with text before, after and between of subtags", function() {
@@ -844,7 +843,7 @@ describe("XMLParser", function() {
         };
 
         let result = XMLValidator.validate(xmlData);
-        expect(result).toBe(true);
+        expect(result).to.be.true;
 
         const options = {
             trimValues:false
@@ -852,7 +851,7 @@ describe("XMLParser", function() {
         const parser = new XMLParser(options);
         result = parser.parse(xmlData);
         //console.log(JSON.stringify(result,null,4));
-        expect(result).toEqual(expected);
+        expect(result).to.deep.equal(expected);
     });
 
     it("should validate before parsing", function() {
@@ -865,7 +864,7 @@ describe("XMLParser", function() {
         const parser = new XMLParser(options);
         expect(() => {
             let result = parser.parse(xmlData, true);
-        }).toThrowError(`Closing tag 'tag' doesn't have proper closing.:1:45`)
+        }).to.throw(`Closing tag 'tag' doesn't have proper closing.:1:45`)
 
     });
 
@@ -889,7 +888,7 @@ describe("XMLParser", function() {
         const parser = new XMLParser(options);
         let result = parser.parse(xmlData);
         // console.log(JSON.stringify(result,null,4));
-        expect(result).toEqual(expected);
+        expect(result).to.deep.equal(expected);
     });
 
     it("should not parse numbers with leading zeros when `leadingZeros: false`", function() {
@@ -912,7 +911,7 @@ describe("XMLParser", function() {
         };
         const parser = new XMLParser(options);
         let result = parser.parse(xmlData);
-        expect(result).toEqual(expected);
+        expect(result).to.deep.equal(expected);
     });
     it("should parse numbers with leading zeros when `leadingZeros: true`", function() {
         const xmlData = `<rootNode attr1='0045' name='004.5'>.005</rootNode>`;
@@ -933,7 +932,7 @@ describe("XMLParser", function() {
         };
         const parser = new XMLParser(options);
         let result = parser.parse(xmlData);
-        expect(result).toEqual(expected);
+        expect(result).to.deep.equal(expected);
     });
 
     it("should not parse number of specific format if skipLike is set", function() {
@@ -956,7 +955,7 @@ describe("XMLParser", function() {
         };
         const parser = new XMLParser(options);
         let result = parser.parse(xmlData);
-        expect(result).toEqual(expected);
+        expect(result).to.deep.equal(expected);
     });
 
     it("should create text node even if there are no attributes or node children", function() {
@@ -990,7 +989,7 @@ describe("XMLParser", function() {
         const parser = new XMLParser(options);
         let result = parser.parse(xmlData);
         // console.log(JSON.stringify(result,null,4));
-        expect(result).toEqual(expected);
+        expect(result).to.deep.equal(expected);
     });
 
     it("should not parse value when trimValues: false && tag value has white spaces", function() {
@@ -1015,7 +1014,7 @@ describe("XMLParser", function() {
       let result = parser.parse(XMLdata);
     //   console.log(JSON.stringify(result, null,4));
   
-      expect(result).toEqual(expected);
+      expect(result).to.deep.equal(expected);
     });
     
     it("should parse value when trimValues: true && value has white spaces", function() {
@@ -1040,7 +1039,7 @@ describe("XMLParser", function() {
       let result = parser.parse(XMLdata);
     //   console.log(JSON.stringify(result, null,4));
   
-      expect(result).toEqual(expected);
+      expect(result).to.deep.equal(expected);
     });
     it("should remove white spaces from values when trimValues: true && parseTagValue: false", function() {
         const XMLdata = `
@@ -1064,6 +1063,6 @@ describe("XMLParser", function() {
       let result = parser.parse(XMLdata);
     //   console.log(JSON.stringify(result, null,4));
   
-      expect(result).toEqual(expected);
+      expect(result).to.deep.equal(expected);
     });
 });

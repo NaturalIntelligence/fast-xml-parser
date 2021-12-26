@@ -1,5 +1,6 @@
 
-const {XMLParser, XMLBuilder, XMLValidator} = require("../src/fxp");
+import {XMLParser, XMLBuilder, XMLValidator} from "../src/fxp.js";
+import {expect} from "chai";
 
 describe("XMLParser", function() {
 
@@ -8,7 +9,7 @@ describe("XMLParser", function() {
         expect(() =>{
             const parser = new XMLParser();
             parser.parse(xmlData);
-        }).toThrowError("Pi Tag is not closed.")
+        }).to.throw("Pi Tag is not closed.")
     });
 
     it("should process PI tag without attributes", function(){
@@ -29,7 +30,7 @@ describe("XMLParser", function() {
           const builder = new XMLBuilder(options);
           const output = builder.build(result);
         //   console.log(output);
-          expect(output.replace(/\s+/g, "")).toEqual(xmlData.replace(/\s+/g, ""));
+          expect(output.replace(/\s+/g, "")).to.deep.equal(xmlData.replace(/\s+/g, ""));
     });
 
     it("should process PI tag with attributes", function(){
@@ -51,7 +52,7 @@ describe("XMLParser", function() {
           const builder = new XMLBuilder(options);
           const output = builder.build(result);
         //   console.log(output);
-          expect(output.replace(/\s+/g, "")).toEqual(xmlData.replace(/\s+/g, ""));
+          expect(output.replace(/\s+/g, "")).to.deep.equal(xmlData.replace(/\s+/g, ""));
     });
     
     it("should process PI tag with boolean attributes", function(){
@@ -74,7 +75,7 @@ describe("XMLParser", function() {
           const builder = new XMLBuilder(options);
           const output = builder.build(result);
           // console.log(output);
-          expect(output.replace(/\s+/g, "")).toEqual(xmlData.replace(/\s+/g, ""));
+          expect(output.replace(/\s+/g, "")).to.deep.equal(xmlData.replace(/\s+/g, ""));
     });
     
     it("should process PI tag with tag attributes", function(){
@@ -95,6 +96,6 @@ describe("XMLParser", function() {
           const builder = new XMLBuilder(options);
           const output = builder.build(result);
         //   console.log(output);
-          expect(output.replace(/\s+/g, "")).toEqual(xmlData.replace(/\s+/g, ""));
+          expect(output.replace(/\s+/g, "")).to.deep.equal(xmlData.replace(/\s+/g, ""));
     });
 });

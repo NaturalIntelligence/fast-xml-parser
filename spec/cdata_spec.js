@@ -1,6 +1,9 @@
 "use strict";
 
-const {XMLParser, XMLValidator} = require("../src/fxp");
+import {XMLParser, XMLValidator} from "../src/fxp.js";
+import {expect} from "chai";
+import * as fs from "fs";
+import * as path from "path";
 
 describe("XMLParser", function() {
     it("should parse multiline tag value when tags without spaces", function() {
@@ -21,10 +24,10 @@ patronymic</person></root>`;
             }
         };
 
-        expect(result).toEqual(expected);
+        expect(result).to.deep.equal(expected);
 
         result = XMLValidator.validate(xmlData);
-        expect(result).toBe(true);
+        expect(result).to.be.true;
     });
     it("should parse tag having CDATA", function() {
         const xmlData = `
@@ -63,10 +66,10 @@ patronymic</person></root>`;
 
         //console.log(JSON.stringify(result,null,4));
 
-        expect(result).toEqual(expected);
+        expect(result).to.deep.equal(expected);
 
         result = XMLValidator.validate(xmlData);
-        expect(result).toBe(true);
+        expect(result).to.be.true;
     });
 
     it("should parse tag having CDATA 2", function() {
@@ -100,11 +103,11 @@ patronymic</person></root>`;
         let result = parser.parse(xmlData);
         
         // console.log(JSON.stringify(result,null,4));
-        expect(result).toEqual(expected);
+        expect(result).to.deep.equal(expected);
 
         result = XMLValidator.validate(xmlData);
 
-        expect(result).toBe(true);
+        expect(result).to.be.true;
     });
 
     it("should parse tag having whitespaces before / after CDATA", function() {
@@ -131,10 +134,10 @@ patronymic</person></root>`;
         let result = parser.parse(xmlData);
 
         //console.log(JSON.stringify(result,null,4));
-        expect(result).toEqual(expected);
+        expect(result).to.deep.equal(expected);
 
         result = XMLValidator.validate(xmlData);
-        expect(result).toBe(true);
+        expect(result).to.be.true;
     });
 
     it("should ignore comment", function() {
@@ -152,10 +155,10 @@ patronymic</person></root>`;
         const parser = new XMLParser(options);
         let result = parser.parse(xmlData);
 
-        expect(result).toEqual(expected);
+        expect(result).to.deep.equal(expected);
 
         result = XMLValidator.validate(xmlData);
-        expect(result).toBe(true);
+        expect(result).to.be.true;
     });
 
     it("should ignore multiline comments", function() {
@@ -173,10 +176,10 @@ patronymic</person></root>`;
         const parser = new XMLParser(options);
         let result = parser.parse(xmlData);
 
-        expect(result).toEqual(expected);
+        expect(result).to.deep.equal(expected);
 
         result = XMLValidator.validate(xmlData);
-        expect(result).toBe(true);
+        expect(result).to.be.true;
     });
 
     it("should parse tag having text before / after CDATA", function() {
@@ -203,7 +206,7 @@ patronymic</person></root>`;
         let result = parser.parse(xmlData);
 
         //console.log(JSON.stringify(result,null,4));
-        expect(result).toEqual(expected);
+        expect(result).to.deep.equal(expected);
     });
 
     it("should not parse tag value if having CDATA", function() {
@@ -231,7 +234,7 @@ patronymic</person></root>`;
         let result = parser.parse(xmlData);
 
         // console.log(JSON.stringify(result,null,4));
-        expect(result).toEqual(expected);
+        expect(result).to.deep.equal(expected);
     });
 
     it("should parse CDATA as separate tag", function() {
@@ -267,7 +270,7 @@ patronymic</person></root>`;
         let result = parser.parse(xmlData);
 
         // console.log(JSON.stringify(result,null,4));
-        expect(result).toEqual(expected);
+        expect(result).to.deep.equal(expected);
     });
 
     it("should parse CDATA as separate tag without preserving cdata position", function() {
@@ -303,13 +306,14 @@ patronymic</person></root>`;
         let result = parser.parse(xmlData);
 
         //console.log(JSON.stringify(result,null,4));
-        expect(result).toEqual(expected);
+        expect(result).to.deep.equal(expected);
     });
 
     it("should validate XML with repeated multiline CDATA and comments", function() {
-        const fs = require("fs");
-        const path = require("path");
-        const fileNamePath = path.join(__dirname, "assets/mixed.xml");
+        
+        //__dirname is not being resolved by mocha
+        // const fileNamePath = path.join(__dirname, "assets/mixed.xml"); 
+        const fileNamePath = path.resolve("./spec/assets/mixed.xml");
         const xmlData = fs.readFileSync(fileNamePath).toString();
 
         const expected = {
@@ -339,7 +343,7 @@ patronymic</person></root>`;
         let result = parser.parse(xmlData);
         
         // console.log(JSON.stringify(result,null,4));
-        expect(result).toEqual(expected);
+        expect(result).to.deep.equal(expected);
     });
     
     it("should parse CDATA with 0", function() {
@@ -356,6 +360,6 @@ patronymic</person></root>`;
         let result = parser.parse(xmlData);
         
         // console.log(JSON.stringify(result,null,4));
-        expect(result).toEqual(expected);
+        expect(result).to.deep.equal(expected);
     });
 });

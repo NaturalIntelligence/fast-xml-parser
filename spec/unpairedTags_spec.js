@@ -1,6 +1,7 @@
 "use strict";
 
-const {XMLParser, XMLBuilder} = require("../src/fxp");
+import {XMLParser, XMLBuilder} from "../src/fxp.js";
+import {expect} from "chai";
 
 describe("unpaired and empty tags", function() {
 
@@ -29,7 +30,7 @@ describe("unpaired and empty tags", function() {
           const builder = new XMLBuilder(options);
           const output = builder.build(result);
         //   console.log(output);
-          expect(output.replace(/\s+/g, "")).toEqual(expectedXmlData.replace(/\s+/g, ""));
+          expect(output.replace(/\s+/g, "")).to.deep.equal(expectedXmlData.replace(/\s+/g, ""));
     });
 
     it("should be parsed without paired tag when suppressEmptyNode:true", function() {
@@ -52,7 +53,7 @@ describe("unpaired and empty tags", function() {
           const builder = new XMLBuilder(options);
           const output = builder.build(result);
         //   console.log(output);
-        expect(output.replace(/\s+/g, "")).toEqual(xmlData.replace(/\s+/g, ""));
+        expect(output.replace(/\s+/g, "")).to.deep.equal(xmlData.replace(/\s+/g, ""));
     });
     
     it("should be parsed without paired tag when suppressEmptyNode:true and tags order is preserved", function() {
@@ -75,7 +76,7 @@ describe("unpaired and empty tags", function() {
           const builder = new XMLBuilder(options);
           const output = builder.build(result);
           // console.log(output);
-        expect(output.replace(/\s+/g, "")).toEqual(xmlData.replace(/\s+/g, ""));
+        expect(output.replace(/\s+/g, "")).to.deep.equal(xmlData.replace(/\s+/g, ""));
     });
     
     it("should be parsed when unpaired tag is self-closing or paired closing tag", function() {
@@ -111,7 +112,7 @@ describe("unpaired and empty tags", function() {
           const builder = new XMLBuilder(options);
           const output = builder.build(result);
           // console.log(output);
-        expect(output.replace(/\s+/g, "")).toEqual(expectedXml.replace(/\s+/g, ""));
+        expect(output.replace(/\s+/g, "")).to.deep.equal(expectedXml.replace(/\s+/g, ""));
     });
 
     it("should parsed unpaired tag before stop nodes", function() {
@@ -140,6 +141,6 @@ describe("unpaired and empty tags", function() {
           const builder = new XMLBuilder(options);
           const output = builder.build(result);
           // console.log(output);
-        expect(output.replace(/\s+/g, "")).toEqual(expectedXml.replace(/\s+/g, ""));
+        expect(output.replace(/\s+/g, "")).to.deep.equal(expectedXml.replace(/\s+/g, ""));
     });
 });

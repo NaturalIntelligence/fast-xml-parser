@@ -1,11 +1,7 @@
 'use strict';
 
-const validator = require('./validator');
-const XMLParser = require('./xmlparser/XMLParser');
-const XMLBuilder = require('./xmlbuilder/json2xml');
+import  * as XMLValidator from './validator.js';
+import  XMLParser from './xmlparser/XMLParser.js';
+import  XMLBuilder from './xmlbuilder/json2xml.js';
 
-module.exports = {
-  XMLParser: XMLParser,
-  XMLValidator: validator,
-  XMLBuilder: XMLBuilder
-}
+export {XMLParser,XMLValidator, XMLBuilder};

@@ -1,7 +1,7 @@
 "use strict";
 
-const {XMLParser, XMLValidator} = require("../src/fxp");
-const he = require("he");
+import {XMLParser, XMLValidator} from "../src/fxp.js";
+import {expect} from "chai";
 
 describe("XMLParser StopNodes", function() {
     it("1a. should support single stopNode", function() {
@@ -23,10 +23,10 @@ describe("XMLParser StopNodes", function() {
       let result = parser.parse(xmlData);
 
         // console.log(JSON.stringify(result,null,4));
-        expect(result).toEqual(expected);
+        expect(result).to.deep.equal(expected);
 
         result = XMLValidator.validate(xmlData);
-        expect(result).toBe(true);
+        expect(result).to.be.true;
     });
 
     it("1b. 3. should support more than one stopNodes, with or without attr", function() {
@@ -52,10 +52,10 @@ describe("XMLParser StopNodes", function() {
       let result = parser.parse(xmlData);
 
         // console.log(JSON.stringify(result,null,4));
-        expect(result).toEqual(expected);
+        expect(result).to.deep.equal(expected);
 
         result = XMLValidator.validate(xmlData);
-        expect(result).toBe(true);
+        expect(result).to.be.true;
     });
 
   it("1c. have two stopNodes, one within the other", function() {
@@ -80,10 +80,10 @@ describe("XMLParser StopNodes", function() {
   let result = parser.parse(xmlData);
 
     //console.log(JSON.stringify(result,null,4));
-    expect(result).toEqual(expected);
+    expect(result).to.deep.equal(expected);
 
     result = XMLValidator.validate(xmlData);
-    expect(result).toBe(true);
+    expect(result).to.be.true;
   });
 
     it("2a. stop node has nothing in it", function() {
@@ -105,10 +105,10 @@ describe("XMLParser StopNodes", function() {
       let result = parser.parse(xmlData);
 
         //console.log(JSON.stringify(result,null,4));
-        expect(result).toEqual(expected);
+        expect(result).to.deep.equal(expected);
 
         result = XMLValidator.validate(xmlData);
-        expect(result).toBe(true);
+        expect(result).to.be.true;
     });
 
     it("2b. stop node is self-closing", function() {
@@ -130,10 +130,10 @@ describe("XMLParser StopNodes", function() {
     let result = parser.parse(xmlData);
 
       //console.log(JSON.stringify(result,null,4));
-      expect(result).toEqual(expected);
+      expect(result).to.deep.equal(expected);
 
       result = XMLValidator.validate(xmlData);
-      expect(result).toBe(true);
+      expect(result).to.be.true;
     });
 
     it("5. stopNode at root level", function() {
@@ -151,12 +151,12 @@ describe("XMLParser StopNodes", function() {
       let result = parser.parse(xmlData);
 
         //console.log(JSON.stringify(result,null,4));
-        expect(result).toEqual(expected);
+        expect(result).to.deep.equal(expected);
 
         result = XMLValidator.validate(xmlData, {
             allowBooleanAttributes: true
         });
-        expect(result).toBe(true);
+        expect(result).to.be.true;
     });
     
     it("should skip all nodes of given name irrespective of their level", function() {
@@ -190,12 +190,12 @@ describe("XMLParser StopNodes", function() {
       let result = parser.parse(xmlData);
 
         // console.log(JSON.stringify(result,null,4));
-        expect(result).toEqual(expected);
+        expect(result).to.deep.equal(expected);
 
         result = XMLValidator.validate(xmlData, {
             allowBooleanAttributes: true
         });
-        expect(result).toBe(true);
+        expect(result).to.be.true;
     });
 
     it("should call tagValueProcessor for stop Node", function() {
@@ -249,6 +249,6 @@ describe("XMLParser StopNodes", function() {
         let result = parser.parse(XMLdata);
         // console.log(JSON.stringify(result, null,4));
   
-        expect(expected).toEqual(result);
+        expect(expected).to.deep.equal(result);
   });
 });

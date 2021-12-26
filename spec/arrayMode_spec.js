@@ -1,6 +1,7 @@
 "use strict";
 
-const {XMLParser} = require("../src/fxp");
+import {XMLParser} from "../src/fxp.js";
+import {expect} from "chai";
 
 describe("XMLParser with arrayMode enabled", function () {
 
@@ -80,7 +81,7 @@ describe("XMLParser with arrayMode enabled", function () {
         const parser = new XMLParser(options);
         const result = parser.parse(xmlData);
         // console.log(JSON.stringify(result,null,4));
-        expect(result).toEqual(expected);
+        expect(result).to.deep.equal(expected);
     });
     it("should parse only leaf nodes as Array but not attributes if set", function () {
 
@@ -126,7 +127,7 @@ describe("XMLParser with arrayMode enabled", function () {
         const parser = new XMLParser(options);
         const result = parser.parse(xmlData);
         // console.log(JSON.stringify(result,null,4));
-        expect(result).toEqual(expected);
+        expect(result).to.deep.equal(expected);
     });
     it("should parse only leaf nodes and attributes as Array if set", function () {
 
@@ -172,7 +173,7 @@ describe("XMLParser with arrayMode enabled", function () {
         const parser = new XMLParser(options);
         const result = parser.parse(xmlData);
         // console.log(JSON.stringify(result,null,4));
-        expect(result).toEqual(expected);
+        expect(result).to.deep.equal(expected);
     });
 
     it("should parse only attributes as Array if set", function () {
@@ -218,7 +219,7 @@ describe("XMLParser with arrayMode enabled", function () {
         const parser = new XMLParser(options);
         const result = parser.parse(xmlData);
         // console.log(JSON.stringify(result,null,4));
-        expect(result).toEqual(expected);
+        expect(result).to.deep.equal(expected);
     });
 
 });

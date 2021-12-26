@@ -1,14 +1,16 @@
 #!/usr/bin/env node
 'use strict';
 /*eslint-disable no-console*/
-const fs = require('fs');
-const path = require('path');
-const {XMLParser, XMLValidator} = require("../fxp");
-const readToEnd = require('./read').readToEnd;
+import fs from 'fs';
+import path from 'path';
+import {XMLParser, XMLValidator} from "../fxp.js";
+import ReadToEnd from './read.js';
+import * as helpContent from "./man.js";
 
-const version = require('./../../package.json').version;
+// import {version} from '../../package.json';
+const version = "4.0.0-beta.9";
 if (process.argv[2] === '--help' || process.argv[2] === '-h') {
-  console.log(require("./man"));
+  console.log( helpContent.default );
 } else if (process.argv[2] === '--version') {
   console.log(version);
 } else {
@@ -64,7 +66,7 @@ if (process.argv[2] === '--help' || process.argv[2] === '-h') {
   try {
     
     if (!fileName) {
-      readToEnd(process.stdin, function(err, data) {
+      ReadToEnd.readToEnd(process.stdin, function(err, data) {
         if (err) {
           throw err;
         }

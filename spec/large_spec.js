@@ -1,15 +1,17 @@
 "use strict";
 
-const {XMLParser, XMLValidator} = require("../src/fxp");
+import {XMLParser, XMLValidator} from "../src/fxp.js";
+import {expect} from "chai";
+import * as fs from "fs";
+import * as path from "path";
 
 describe("XMLParser", function() {
     it("should validate big XML file", function() {
-        const fs = require("fs");
-        const path = require("path");
-        const fileNamePath = path.join(__dirname, "assets/large.xml");
+        this.timeout(5000);
+        const fileNamePath = path.resolve("./spec/assets/large.xml");
         const svgData = fs.readFileSync(fileNamePath).toString();
 
         const result = XMLValidator.validate(svgData);
-        expect(result).toBe(true);
+        expect(result).to.be.true;
     });
 });

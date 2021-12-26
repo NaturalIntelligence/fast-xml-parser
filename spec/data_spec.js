@@ -1,7 +1,7 @@
 "use strict";
 
-const {XMLParser, XMLValidator} = require("../src/fxp");
-const he = require("he");
+import {XMLParser, XMLValidator} from "../src/fxp.js";
+import {expect} from "chai";
 
 describe("XMLParser", function() {
     
@@ -30,10 +30,10 @@ describe("XMLParser", function() {
         let result = parser.parse(xmlData);
 
         //console.log(JSON.stringify(result,null,4));
-        expect(result).toEqual(expected);
+        expect(result).to.deep.equal(expected);
 
         result = XMLValidator.validate(xmlData);
-        expect(result).toBe(true);
+        expect(result).to.be.true;
     });
 
     it("should parse attributes with valid names", function() {
@@ -74,7 +74,7 @@ describe("XMLParser", function() {
         let result = parser.parse(xmlData);
 
         // console.log(JSON.stringify(result,null,4));
-        expect(result).toEqual(expected);
+        expect(result).to.deep.equal(expected);
     });
     
     it("should parse attributes with valid names", function() {
@@ -119,7 +119,7 @@ describe("XMLParser", function() {
         let result = parser.parse(xmlData, true);
 
         //console.log(JSON.stringify(result,null,4));
-        expect(result).toEqual(expected);
+        expect(result).to.deep.equal(expected);
     });
     
     it("should parse tagName without whitespace chars", function() {
@@ -142,7 +142,7 @@ describe("XMLParser", function() {
         let result = parser.parse(xmlData, true);
 
         //console.log(JSON.stringify(result,null,4));
-        expect(result).toEqual(expected);
+        expect(result).to.deep.equal(expected);
     });
 
     it("should parse XML when namespaced ignored", function() {
@@ -168,7 +168,7 @@ describe("XMLParser", function() {
         let result = parser.parse(xmlData);
         
         // console.log(JSON.stringify(result,null,4));
-        expect(result).toEqual(expected);
+        expect(result).to.deep.equal(expected);
     });
 
     it("should parse XML with undefined as text", function() {
@@ -187,7 +187,7 @@ describe("XMLParser", function() {
         const parser = new XMLParser(options);
         let result = parser.parse(xmlData, true);
 
-        expect(result).toEqual(expected);
+        expect(result).to.deep.equal(expected);
     });
 
     it("should trim \t or \n chars", function() {
@@ -228,7 +228,7 @@ describe("XMLParser", function() {
         const parser = new XMLParser(options);
         let result = parser.parse(xmlData);
         // console.log(JSON.stringify(result,null,4));
-        expect(result).toEqual(expected);
+        expect(result).to.deep.equal(expected);
     });
 
     it("should error for when any tag is left to close", function(){
@@ -237,21 +237,21 @@ describe("XMLParser", function() {
             const parser = new XMLParser();
             parser.parse(xmlData);
             
-        }).toThrowError("Closing Tag is not closed.")
+        }).to.throw("Closing Tag is not closed.")
     })
     it("should error for when any tag is left to close", function(){
         const xmlData = `<?xml version="1.0"?><!-- bad `;
         expect(() =>{
             const parser = new XMLParser();
             parser.parse(xmlData);
-        }).toThrowError("Comment is not closed.")
+        }).to.throw("Comment is not closed.")
     })
     it("should error for when any tag is left to close", function(){
         const xmlData = `<?xml version="1.0"?><![CDATA ]`;
         expect(() =>{
             const parser = new XMLParser();
             parser.parse(xmlData);
-        }).toThrowError("CDATA is not closed.")
+        }).to.throw("CDATA is not closed.")
     })
 
     it("should error for when any tag is left to close", function(){
@@ -259,7 +259,7 @@ describe("XMLParser", function() {
         expect(() =>{
             const parser = new XMLParser();
             parser.parse(xmlData);
-        }).toThrowError("Pi Tag is not closed.")
+        }).to.throw("Pi Tag is not closed.")
     })
     
     it("should parse XML when there is a space after tagname", function() {
@@ -279,6 +279,6 @@ describe("XMLParser", function() {
         const parser = new XMLParser(options);
         let result = parser.parse(xmlData, true);
         // console.log(JSON.stringify(result,null,4));
-        expect(result).toEqual(expected);
+        expect(result).to.deep.equal(expected);
     });
 });

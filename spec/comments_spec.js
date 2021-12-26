@@ -1,5 +1,6 @@
 
-const { XMLParser, XMLBuilder, XMLValidator} = require("../src/fxp");
+import { XMLParser, XMLBuilder, XMLValidator} from "../src/fxp.js";
+import {expect} from "chai";
 
 describe("Comments", function() {
 
@@ -28,7 +29,7 @@ describe("Comments", function() {
       const builder = new XMLBuilder(options);
       const output = builder.build(result);
     //   console.log(output);
-      expect(output.replace(/\s+/g, "")).toEqual(XMLdata.replace(/\s+/g, ""));
+      expect(output.replace(/\s+/g, "")).to.deep.equal(XMLdata.replace(/\s+/g, ""));
 });
 
 

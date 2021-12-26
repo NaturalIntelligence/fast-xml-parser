@@ -1,7 +1,6 @@
-"use strict";
-
-const {XMLBuilder} = require("../src/fxp");
-const he = require("he");
+import {XMLBuilder} from "../src/fxp.js";
+import he from "he";
+import {expect} from "chai";
 
 describe("XMLBuilder", function() {
 
@@ -18,7 +17,7 @@ describe("XMLBuilder", function() {
         const result = builder.build(jObj);
         // console.log(result);
         const expected = `<a><b><c>val1</c><d>val2</d></b></a>`;
-        expect(result).toEqual(expected);
+        expect(result).to.deep.equal(expected);
     });
 
     it("should parse text property to tag value ", function() {
@@ -34,7 +33,7 @@ describe("XMLBuilder", function() {
         const result = builder.build(jObj);
         //console.log(result);
         const expected = `<a><b>val1<d>val2</d></b></a>`;
-        expect(result).toEqual(expected);
+        expect(result).to.deep.equal(expected);
     });
 
     it("should parse to XML with array", function() {
@@ -49,7 +48,7 @@ describe("XMLBuilder", function() {
         const builder = new XMLBuilder;
         const result = builder.build(jObj);
         const expected = `<a><b>val1</b><b><c>val2</c></b></a>`;
-        expect(result).toEqual(expected);
+        expect(result).to.deep.equal(expected);
     });
 
     it("should supress undefined nodes", function() {
@@ -69,7 +68,7 @@ describe("XMLBuilder", function() {
         const builder = new XMLBuilder;
         const result = builder.build(jObj);
         const expected = "<a><b>val1</b><b><c>val2</c><e>val3</e></b></a>";
-        expect(result).toEqual(expected);
+        expect(result).to.deep.equal(expected);
     });
 
     it("should parse  attributes properties as tag when options are not given", function() {
@@ -83,7 +82,7 @@ describe("XMLBuilder", function() {
         const result = builder.build(jObj);
         //console.log(result);
         const expected = `<a><@_b>val1</@_b><@_c>val2</@_c></a>`;
-        expect(result).toEqual(expected);
+        expect(result).to.deep.equal(expected);
     });
 
     //Note: attribute should not be set to an array
@@ -105,7 +104,7 @@ describe("XMLBuilder", function() {
         const result = builder.build(jObj);
         //console.log(result);
         const expected = `<a b="val1" c="val2">textvalue<tag><k>34</k></tag></a>`;
-        expect(result).toEqual(expected);
+        expect(result).to.deep.equal(expected);
     });
 
     it("should parse to XML with attributes as separate node", function() {
@@ -129,7 +128,7 @@ describe("XMLBuilder", function() {
         const result = builder.build(jObj);
         //console.log(result);
         const expected = `<a b="val1" c="val2">textvalue<tag><k>34</k></tag></a>`;
-        expect(result).toEqual(expected);
+        expect(result).to.deep.equal(expected);
     });
 
     it("should parse grouped attributes as tag name when options are not set", function() {
@@ -151,7 +150,7 @@ describe("XMLBuilder", function() {
         const result = builder.build(jObj);
         //console.log(result);
         const expected = `<a><@><b>val1</b><c>val2</c></@>textvalue<tag><k>34</k></tag></a>`;
-        expect(result).toEqual(expected);
+        expect(result).to.deep.equal(expected);
     });
 
     it("should parse null values to self closing tag", function() {
@@ -162,7 +161,7 @@ describe("XMLBuilder", function() {
         const result = builder.build(jObj);
         //console.log(result);
         const expected = `<a/>`;
-        expect(result).toEqual(expected);
+        expect(result).to.deep.equal(expected);
     });
 
     it("should supress empty node to self closing node when parsing to XML", function() {
@@ -197,11 +196,11 @@ describe("XMLBuilder", function() {
         const result = builder.build(jObj);
         // console.log(result);
         const expected = `<a b="val&gt;1" c="val&lt;2"><notattr>val</notattr>textvalue&gt;<tag><k>34</k><g/><nested b="val&gt;1" c="val&lt;2"/></tag></a>`;
-        expect(result).toEqual(expected);
+        expect(result).to.deep.equal(expected);
     });
 
     //commented doe to format
-    xit("should format when parsing to XML", function() {
+    it.skip("should format when parsing to XML", function() {
         const jObj = {
             a: {
                 "@":       {
@@ -241,11 +240,11 @@ textvalue&gt;  <tag>
 </a>`;
         // console.log(result);
         //console.log(expected);
-        expect(result).toEqual(expected);
+        expect(result).to.deep.equal(expected);
     });
 
     //xit for format
-    xit("should format when parsing to XML when nodes have only a text prop", function() {
+    it.skip("should format when parsing to XML when nodes have only a text prop", function() {
       const jObj = {
         a: {
           "@": {
@@ -296,7 +295,7 @@ textvalue&gt;  <tag>
 </a>
 `;
 // console.log(result);
-    expect(result).toEqual(expected);
+    expect(result).to.deep.equal(expected);
   });
 
 
@@ -333,7 +332,7 @@ textvalue&gt;  <tag>
         const expected = '<root><element aaa="aaa" bbb="bbb">1</element><element2 aaa="aaa2" bbb="bbb2"><subelement aaa="sub_aaa"/></element2><date>test</date></root>';
         // console.log(result);
         // console.log(expected);
-        expect(result).toEqual(expected);
+        expect(result).to.deep.equal(expected);
     });
 
     it("should pars to XML from js object with date object", function() {
@@ -371,7 +370,7 @@ textvalue&gt;  <tag>
         const expected = '<root><element><date>'+dateVar.toString()+'</date></element><element2 aaa="aaa2" bbb="bbb2"><subelement aaa="sub_aaa"/></element2><date>'+dateVar.toString()+'</date></root>';
         //console.log(result);
         //console.log(expected);
-        expect(result).toEqual(expected);
+        expect(result).to.deep.equal(expected);
     });
 
     it("should parse js array to valid XML", function() {
@@ -403,6 +402,6 @@ textvalue&gt;  <tag>
         const expected = '<car><color>purple</color><type>minivan</type><registration>2020-02-03</registration><capacity>7</capacity></car><car><color>orange</color><type>SUV</type><registration>2021-05-17</registration><capacity>4</capacity></car><car><color>green</color><type>coupe</type><registration>2019-11-13</registration><capacity>2</capacity></car>';
         // console.log(result);
         //console.log(expected);
-        expect(result).toEqual(expected);
+        expect(result).to.deep.equal(expected);
     });
 });
