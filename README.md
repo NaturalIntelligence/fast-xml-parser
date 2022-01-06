@@ -90,13 +90,23 @@ const xmlContent = builder.build(jObj);
 
 In a HTML page
 ```html
-<script src="path/to/fxparser.js"></script>
+<script src="path/to/fxp.min.js"></script>
 :
 <script>
   const parser = new fxparser.XMLParser();
   parser.parse(xmlContent);
 </script>
 ```
+
+Check lib folder for different browser bundles
+
+| Bundle Name | Size |
+| -- | -- |
+| fxbuilder.min.js | 5.2K |
+| fxparser.js |  50K |
+| fxparser.min.js |  17K |
+| fxp.min.js |  22K |
+| fxvalidator.min.js | 5.7K |
 
 ### Documents
 **v3**
@@ -135,6 +145,7 @@ In a HTML page
   * Run tests for a route or from a route
   * Customizable reporting
   * Central dashboard for better monitoring
+  * Options to integrate E2E tests with Jira, Github etc using Central dashboard `Tian`.
 * **[Stubmatic](https://github.com/NaturalIntelligence/Stubmatic)** : Create fake webservices, DynamoDB or S3 servers, Manage fake/mock stub data, Or fake any HTTP(s) call.
 
 

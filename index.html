@@ -26,7 +26,7 @@
         <!-- <script src="static/js/prettify.min.js"></script> -->
         <link rel="stylesheet" type="text/css" href="static/css/animate3.5.2.min.css">
 
-        <script src="lib/fxparser.js"></script>
+        <script src="lib/fxp.min.js"></script>
         <script src="static/js/jquery-confirm.min.js"></script>
         <style>
             .CodeMirror{
@@ -145,7 +145,7 @@
 
             $('#toJson').on('click', function() {
                 $('#result').val('');
-                const parser = new fxparser.XMLParser(buildParsingConfig());
+                const parser = new fxp.XMLParser(buildParsingConfig());
                 let result;
                 try{
                     result = parser.parse(editor.getValue(),{
@@ -162,7 +162,7 @@
                 let input = $('#result').val().trim() ;
                 if(input.length){
                     editor.setValue('');
-                    const builder = new fxparser.XMLBuilder(xmlBuilderOptions());
+                    const builder = new fxp.XMLBuilder(xmlBuilderOptions());
                     const result = builder.build(JSON.parse( $('#result').val() ));
                     editor.setValue('<?xml version="1.0"?>\n'+result);
                 }else{
@@ -172,7 +172,7 @@
 
             $('#validate').on('click', function() {
                 $('#result').val('');
-                const parser = fxparser.XMLValidator;
+                const parser = fxp.XMLValidator;
                 const config = {
                     allowBooleanAttributes: $("#allowBooleanAttributes_v").prop("checked"),
                 };
