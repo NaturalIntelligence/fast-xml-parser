@@ -1,5 +1,9 @@
 Note: If you find missing information about particular minor version, that version must have been changed without any functional change in this library.
 
+**4.0.0 / 2022-01-06**
+* Generating different combined, parser only, builder only, validator only browser bundles
+* Keeping cjs modules as they can be imported in cjs and esm modules both. Otherwise refer `esm` branch.
+
 **4.0.0-beta.8 / 2021-12-13**
 * call tagValueProcessor for stop nodes
 
