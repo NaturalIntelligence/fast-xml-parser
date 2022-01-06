@@ -4,9 +4,9 @@ Pre release
 * [ ] Added/updated documentation for new properties/features
 * [ ] `package-lock.json` reflects the right version : `npm install`
 * [ ] Browser bundle are generated `npm run bundle`
-* [ ] `npm run checkReadiness` is used to check the files being published
-* [ ] ReadMe file or docs are updated for any change, user list, performance report, links etc.
 * [ ] TS typings are updated
+* [ ] ReadMe file or docs are updated for any change, user list, performance report, links etc.
+* [ ] `npm run checkReadiness` is used to check the files being published
 * [ ] tags are assigned to latest comit `git tag -a v3.20.0 -m "summary msg"`
 
 In general

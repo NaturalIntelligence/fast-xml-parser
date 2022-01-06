@@ -117,9 +117,9 @@ Check lib folder for different browser bundles
 2.  [XML Parser](./docs/v4/2.XMLparseOptions.md)
 3.  [XML Builder](./docs/v4/3.XMLBuilder.md)
 4.  [XML Validator](./docs/v4/4.XMLValidator.md)
-5.  [Entites](./docs/5.Entities.md)
-6.  [HTML Document Parsing](./docs/6.HTMLParsing.md)
-7. [PI Tag processing](./docs/7.PITags.md)
+5.  [Entites](./docs/v4/5.Entities.md)
+6.  [HTML Document Parsing](./docs/v4/6.HTMLParsing.md)
+7. [PI Tag processing](./docs/v4/7.PITags.md)
 ## Performance
 
 ### XML Parser
