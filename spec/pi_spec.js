@@ -94,7 +94,50 @@ describe("XMLParser", function() {
     
           const builder = new XMLBuilder(options);
           const output = builder.build(result);
-        //   console.log(output);
+          // console.log(output);
           expect(output.replace(/\s+/g, "")).toEqual(xmlData.replace(/\s+/g, ""));
+    });
+
+    it("should process PI tag with tag attributes when order is not preserved", function(){
+        const xmlData = `<?xml version="1.0"?>
+        <?elementnames <fred>, <bert>, <harry> ?>
+        <h1></h1>
+        `;
+
+          const builderOptions = {
+            allowBooleanAttributes: true,
+            attributeNamePrefix: '',
+            attributesGroupName: 'attr',
+            textNodeName: 'text',
+            ignoreAttributes: false,
+            format: true,
+            // suppressEmptyNode: true,
+            suppressBooleanAttributes: true
+          };
+        
+          const parseOptions = {
+            attributeNamePrefix: '',
+            attributesGroupName: 'attr',
+            textNodeName: 'text',
+            ignoreAttributes: false,
+            removeNSPrefix: false,
+            allowBooleanAttributes: true,
+            parseTagValue: true,
+            parseAttributeValue: false,
+            trimValues: true,
+            parseTrueNumberOnly: false,
+            arrayMode: false,
+            alwaysCreateTextNode: true,
+            numberParseOptions: {
+              hex: true,
+              leadingZeros: false
+            }
+          }
+        
+          const result = new XMLParser(parseOptions).parse(xmlData)
+          const builder = new XMLBuilder(builderOptions);
+          const output = builder.build(result);
+          expect(output.replace(/\s+/g, "")).toEqual(xmlData.replace(/\s+/g, ""));
+          // console.log(output);
     });
 });

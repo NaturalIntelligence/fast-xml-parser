@@ -161,34 +161,24 @@ function processTextOrObjNode (object, key, level) {
 }
 
 function buildObjectNode(val, key, attrStr, level) {
+  let tagEndExp = '</' + key + this.tagEndChar;
+  let piClosingChar = "";
+  
+  if(key[0] === "?") {
+    piClosingChar = "?";
+    tagEndExp = "";
+  }
+
   if (attrStr && val.indexOf('<') === -1) {
     return (
-      this.indentate(level) +
-      '<' +
-      key +
-      attrStr +
-      '>' +
+      this.indentate(level) + '<' +  key + attrStr + piClosingChar + '>' +
       val +
-      //+ this.newLine
-      // + this.indentate(level)
-      '</' +
-      key +
-      this.tagEndChar
-    );
+      tagEndExp    );
   } else {
     return (
-      this.indentate(level) +
-      '<' +
-      key +
-      attrStr +
-      this.tagEndChar +
+      this.indentate(level) + '<' + key + attrStr + piClosingChar + this.tagEndChar +
       val +
-      //+ this.newLine
-      this.indentate(level) +
-      '</' +
-      key +
-      this.tagEndChar
-    );
+      this.indentate(level) + tagEndExp    );
   }
 }
 
@@ -198,8 +188,6 @@ function buildEmptyObjNode(val, key, attrStr, level) {
   } else {
     if(key[0] === "?") return  this.indentate(level) + '<' + key + attrStr+ '?' + this.tagEndChar;
     else return  this.indentate(level) + '<' + key + attrStr + '/' + this.tagEndChar;
-    // return this.indentate(level) + '<' + key + attrStr + '/' + this.tagEndChar;
-    //+ this.newLine
   }
 }
 
@@ -208,16 +196,9 @@ function buildTextValNode(val, key, attrStr, level) {
   textValue = this.replaceEntitiesValue(textValue);
   
   return (
-    this.indentate(level) +
-    '<' +
-    key +
-    attrStr +
-    '>' +
+    this.indentate(level) + '<' + key + attrStr + '>' +
      textValue +
-    '</' +
-    key +
-    this.tagEndChar
-  );
+    '</' + key + this.tagEndChar  );
 }
 
 function replaceEntitiesValue(textValue){
@@ -238,7 +219,6 @@ function buildEmptyTextNode(val, key, attrStr, level) {
   } else {
     if(key[0] === "?") return  this.indentate(level) + '<' + key + attrStr+ '?' + this.tagEndChar;
     else return  this.indentate(level) + '<' + key + attrStr + '/' + this.tagEndChar;
-    // return this.indentate(level) + '<' + key + attrStr + '/' + this.tagEndChar;
   }
 }
 
