@@ -68,6 +68,7 @@ function Builder(options) {
   this.buildObjectNode = buildObjectNode;
 
   this.replaceEntitiesValue = replaceEntitiesValue;
+  this.buildAttrPairStr = buildAttrPairStr;
 }
 
 Builder.prototype.build = function(jObj) {
@@ -90,16 +91,16 @@ Builder.prototype.j2x = function(jObj, level) {
     if (typeof jObj[key] === 'undefined') {
       // supress undefined node
     } else if (jObj[key] === null) {
-      val += this.indentate(level) + '<' + key + '/' + this.tagEndChar;
+      if(key[0] === "?") val += this.indentate(level) + '<' + key + '?' + this.tagEndChar;
+      else val += this.indentate(level) + '<' + key + '/' + this.tagEndChar;
+      // val += this.indentate(level) + '<' + key + '/' + this.tagEndChar;
     } else if (jObj[key] instanceof Date) {
       val += this.buildTextNode(jObj[key], key, '', level);
     } else if (typeof jObj[key] !== 'object') {
       //premitive type
       const attr = this.isAttribute(key);
       if (attr) {
-        let val = this.options.attributeValueProcessor(attr, '' + jObj[key]);
-        val = this.replaceEntitiesValue(val);
-        attrStr += ' ' + attr + '="' + val + '"';
+        attrStr += this.buildAttrPairStr(attr, '' + jObj[key]);
       }else {
         //tag value
         if (key === this.options.textNodeName) {
@@ -117,7 +118,9 @@ Builder.prototype.j2x = function(jObj, level) {
         if (typeof item === 'undefined') {
           // supress undefined node
         } else if (item === null) {
-          val += this.indentate(level) + '<' + key + '/' + this.tagEndChar;
+          if(key[0] === "?") val += this.indentate(level) + '<' + key + '?' + this.tagEndChar;
+          else val += this.indentate(level) + '<' + key + '/' + this.tagEndChar;
+          // val += this.indentate(level) + '<' + key + '/' + this.tagEndChar;
         } else if (typeof item === 'object') {
           val += this.processTextOrObjNode(item, key, level)
         } else {
@@ -130,9 +133,7 @@ Builder.prototype.j2x = function(jObj, level) {
         const Ks = Object.keys(jObj[key]);
         const L = Ks.length;
         for (let j = 0; j < L; j++) {
-          let val = this.options.attributeValueProcessor(Ks[j], '' + jObj[key][Ks[j]]);
-          val = this.replaceEntitiesValue(val);
-          attrStr += ' ' + Ks[j] + '="' + val + '"';
+          attrStr += this.buildAttrPairStr(Ks[j], '' + jObj[key][Ks[j]]);
         }
       } else {
         val += this.processTextOrObjNode(jObj[key], key, level)
@@ -141,6 +142,14 @@ Builder.prototype.j2x = function(jObj, level) {
   }
   return {attrStr: attrStr, val: val};
 };
+
+function buildAttrPairStr(attrName, val){
+  val = this.options.attributeValueProcessor(attrName, '' + val);
+  val = this.replaceEntitiesValue(val);
+  if (this.options.suppressBooleanAttributes && val === "true") {
+    return ' ' + attrName;
+  } else return ' ' + attrName + '="' + val + '"';
+}
 
 function processTextOrObjNode (object, key, level) {
   const result = this.j2x(object, level + 1);
@@ -187,7 +196,9 @@ function buildEmptyObjNode(val, key, attrStr, level) {
   if (val !== '') {
     return this.buildObjectNode(val, key, attrStr, level);
   } else {
-    return this.indentate(level) + '<' + key + attrStr + '/' + this.tagEndChar;
+    if(key[0] === "?") return  this.indentate(level) + '<' + key + attrStr+ '?' + this.tagEndChar;
+    else return  this.indentate(level) + '<' + key + attrStr + '/' + this.tagEndChar;
+    // return this.indentate(level) + '<' + key + attrStr + '/' + this.tagEndChar;
     //+ this.newLine
   }
 }
@@ -225,7 +236,9 @@ function buildEmptyTextNode(val, key, attrStr, level) {
   }else if (val !== '') {
     return this.buildTextValNode(val, key, attrStr, level);
   } else {
-    return this.indentate(level) + '<' + key + attrStr + '/' + this.tagEndChar;
+    if(key[0] === "?") return  this.indentate(level) + '<' + key + attrStr+ '?' + this.tagEndChar;
+    else return  this.indentate(level) + '<' + key + attrStr + '/' + this.tagEndChar;
+    // return this.indentate(level) + '<' + key + attrStr + '/' + this.tagEndChar;
   }
 }
 
