@@ -192,8 +192,7 @@ function buildEmptyObjNode(val, key, attrStr, level) {
 }
 
 function buildTextValNode(val, key, attrStr, level) {
-  let textValue = this.options.tagValueProcessor(key, val);
-  textValue = this.replaceEntitiesValue(textValue);
+  const textValue = this.replaceEntitiesValue(val);
   
   return (
     this.indentate(level) + '<' + key + attrStr + '>' +

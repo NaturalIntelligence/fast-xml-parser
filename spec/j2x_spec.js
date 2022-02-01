@@ -299,6 +299,56 @@ textvalue&gt;  <tag>
     expect(result).toEqual(expected);
   });
 
+  it("should not double encode tag values", function() {
+    const jObj = {
+      a: {
+        element: {
+          subelement: {
+            "#text": "foo & bar",
+            "@": {"staticMessage": "bar"}
+          }
+        },
+        only_text_array: [
+          {
+            '#text': 'text & value'
+          }
+        ],
+        regular_array: [
+          {
+            '#text': 'text & value',
+            '@': {
+              'f': 'abc'
+            }
+          }
+        ],
+        only_text_obj: {
+          '#text': 'another text & val'
+        }
+      }
+    };
+    const builder = new XMLBuilder({
+      attributesGroupName: "@",
+      processEntities: false,
+      format: true,
+      tagValueProcessor: (tagName, a) => { a = '' + a; return he.encode(a, { useNamedReferences: true }) },
+      attributeValueProcessor: (attrName, a) => he.encode(a, { isAttributeValue: true, useNamedReferences: true }),
+      attributeNamePrefix: '',
+      ignoreAttributes: false,
+      suppressEmptyNode: true
+    });
+    const result = builder.build(jObj);
+    const expected = `<a>
+  <element>
+    <subelement staticMessage="bar">foo &amp; bar</subelement>
+  </element>
+  <only_text_array>text &amp; value</only_text_array>
+  <regular_array f="abc">text &amp; value</regular_array>
+  <only_text_obj>another text &amp; val</only_text_obj>
+</a>
+`;
+    expect(result).toEqual(expected);
+  });
+
 
     it("should format when parsing to XML", function() {
         const jObj = {
