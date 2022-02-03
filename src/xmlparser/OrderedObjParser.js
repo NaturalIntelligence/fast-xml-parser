@@ -203,17 +203,25 @@ const parseXml = function(xmlData) {
         textData = "";
         i = closeIndex;
       } else if( xmlData[i+1] === '?') {
+
         let tagData = readTagExp(xmlData,i, false, "?>");
         if(!tagData) throw new Error("Pi Tag is not closed.");
-        textData = this.saveTextToParentTag(textData, currentNode, jPath);
 
-        const childNode = new xmlNode(tagData.tagName);
-        childNode.add(this.options.textNodeName, "");
-        
-        if(tagData.tagName !== tagData.tagExp && tagData.attrExpPresent){
-          childNode[":@"] = this.buildAttributesMap(tagData.tagExp, jPath);
+        textData = this.saveTextToParentTag(textData, currentNode, jPath);
+        if( (this.options.ignoreDeclaration && tagData.tagName === "?xml") || this.options.ignorePiTags){
+
+        }else{
+  
+          const childNode = new xmlNode(tagData.tagName);
+          childNode.add(this.options.textNodeName, "");
+          
+          if(tagData.tagName !== tagData.tagExp && tagData.attrExpPresent){
+            childNode[":@"] = this.buildAttributesMap(tagData.tagExp, jPath);
+          }
+          currentNode.addChild(childNode);
+
         }
-        currentNode.addChild(childNode);
+
 
         i = tagData.closeIndex + 1;
       } else if(xmlData.substr(i + 1, 3) === '!--') {

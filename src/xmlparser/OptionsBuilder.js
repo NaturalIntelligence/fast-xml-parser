@@ -29,6 +29,8 @@ const defaultOptions = {
     unpairedTags: [],
     processEntities: true,
     htmlEntities: false,
+    ignoreDeclaration: false,
+    ignorePiTags: false
 };
    
 const buildOptions = function(options) {

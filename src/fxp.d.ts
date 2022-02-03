@@ -20,6 +20,8 @@ type X2jOptions = {
   isArray: (tagName: string, jPath: string, isLeafNode: boolean, isAttribute: boolean) => boolean;
   processEntities: boolean;
   htmlEntities: boolean;
+  ignoreDeclaration: boolean;
+  ignorePiTags: boolean;
 };
 type strnumOptions = {
   hex: boolean;

@@ -140,4 +140,44 @@ describe("XMLParser", function() {
           expect(output.replace(/\s+/g, "")).toEqual(xmlData.replace(/\s+/g, ""));
           // console.log(output);
     });
+
+    it("should strip xml declarion tag", function(){
+      const xmlData = `<?xml version="1.0"?>
+      <?elementnames <fred>, <bert>, <harry> ?>
+      <h1></h1>
+      `;
+
+        const options = {
+          allowBooleanAttributes: true,
+          ignoreDeclaration: true,
+        };
+      
+        const expected = {
+          "?elementnames": "",
+          "h1": ""
+        }
+        const result = new XMLParser(options).parse(xmlData);
+        // console.log(JSON.stringify(result, null,4));
+        expect(expected).toEqual(result);
+    });
+
+    it("should strip xml declarion tag", function(){
+      const xmlData = `<?xml version="1.0"?>
+      <?elementnames <fred>, <bert>, <harry> ?>
+      <h1></h1>
+      `;
+
+        const options = {
+          allowBooleanAttributes: true,
+          ignoreDeclaration: true,
+          ignorePiTags: true,
+        };
+      
+        const expected = {
+          "h1": ""
+        }
+        const result = new XMLParser(options).parse(xmlData);
+        // console.log(JSON.stringify(result, null,4));
+        expect(expected).toEqual(result);
+    });
 });
