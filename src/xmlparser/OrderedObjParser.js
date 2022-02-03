@@ -225,7 +225,7 @@ const parseXml = function(xmlData) {
 
         i = tagData.closeIndex + 1;
       } else if(xmlData.substr(i + 1, 3) === '!--') {
-        const endIndex = findClosingIndex(xmlData, "-->", i, "Comment is not closed.")
+        const endIndex = findClosingIndex(xmlData, "-->", i+4, "Comment is not closed.")
         if(this.options.commentPropName){
           const comment = xmlData.substring(i + 4, endIndex - 2);
 

@@ -10,7 +10,9 @@ describe("Comments", function() {
        <student>
          <!--Student details-->
          <!--A second comment-->
+         <!-- A third comment -->
          <name>Tanmay</name>
+         <!-->> ISO DICTIONARY TYPES <<-->
          <grade>A</grade>
        </student>
     </class_list>`;
@@ -23,13 +25,14 @@ describe("Comments", function() {
       };
       const parser = new XMLParser(options);
       let result = parser.parse(XMLdata);
-    //   console.log(JSON.stringify(result, null,4));
+      // console.log(JSON.stringify(result, null,4));
 
       const builder = new XMLBuilder(options);
       const output = builder.build(result);
     //   console.log(output);
       expect(output.replace(/\s+/g, "")).toEqual(XMLdata.replace(/\s+/g, ""));
 });
+  
 
 
 });
