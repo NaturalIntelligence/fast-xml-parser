@@ -22,12 +22,13 @@ const defaultOptions = {
   preserveOrder: false,
   commentPropName: false,
   unpairedTags: [],
-  entities: {
-    ">" : { regex: new RegExp(">", "g"), val: "&gt;" },
-    "<" : { regex: new RegExp("<", "g"), val: "&lt;" },
-    "sQuot" : { regex: new RegExp("\'", "g"), val: "&apos;" },
-    "dQuot" : { regex: new RegExp("\"", "g"), val: "&quot;" }
-  },
+  entities: [
+    { regex: new RegExp("&", "g"), val: "&amp;" },//it must be on top
+    { regex: new RegExp(">", "g"), val: "&gt;" },
+    { regex: new RegExp("<", "g"), val: "&lt;" },
+    { regex: new RegExp("\'", "g"), val: "&apos;" },
+    { regex: new RegExp("\"", "g"), val: "&quot;" }
+  ],
   processEntities: true,
   stopNodes: []
 };
@@ -211,8 +212,8 @@ function buildTextValNode(val, key, attrStr, level) {
 
 function replaceEntitiesValue(textValue){
   if(textValue && textValue.length > 0 && this.options.processEntities){
-    for (const entityName in this.options.entities) {
-      const entity = this.options.entities[entityName];
+    for (let i=0; i<this.options.entities.length; i++) {
+      const entity = this.options.entities[i];
       textValue = textValue.replace(entity.regex, entity.val);
     }
   }

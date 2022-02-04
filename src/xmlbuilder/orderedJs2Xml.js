@@ -96,8 +96,8 @@ function isStopNode(jPath, options){
 
 function replaceEntitiesValue(textValue, options){
     if(textValue && textValue.length > 0 && options.processEntities){
-      for (const entityName in options.entities) {
-        const entity = options.entities[entityName];
+      for (let i=0; i< options.entities.length; i++) {
+        const entity = options.entities[i];
         textValue = textValue.replace(entity.regex, entity.val);
       }
     }

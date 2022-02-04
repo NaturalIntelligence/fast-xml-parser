@@ -395,5 +395,79 @@ describe("XMLParser External Entites", function() {
 
         expect(result.note).toEqual(`><last`);
     });
-    
+    it("should build by decoding '&' prserve mode", function() {
+        const jsObj = [
+            {
+                "note": [
+                    {
+                        "body": [
+                            { "#text": "(3 & 4) < 5" },
+                            { "attr": [ { "#text": "Writer: Donald Duck." } ] }
+                        ]
+                    }
+                ],
+                ":@": {
+                    "@heading": "Reminder > \"Alert"
+                }
+            }
+        ];
+
+        const expected = `
+        <note heading="Reminder &gt; &quot;Alert">
+            <body>
+             (3 &amp; 4) &lt; 5
+             <attr>Writer: Donald Duck.</attr>
+            </body>
+        </note>`;
+
+        const options = {
+            attributeNamePrefix: "@",
+            ignoreAttributes:    false,
+            preserveOrder: true,
+            // processEntities: false
+        };
+
+        const parser = new XMLParser(options);
+        let result = parser.parse(expected);
+        // console.log(JSON.stringify(result,null,4));
+
+        const builder = new XMLBuilder(options);
+        result = builder.build(jsObj);
+        // console.log(result);
+        expect(result.replace(/\s+/g, "")).toEqual(expected.replace(/\s+/g, ""));
+    });
+    it("should build by decoding '&'", function() {
+        const jsObj = {
+            "note": {
+                "body": {
+                    "attr": "Writer: Donald Duck.",
+                    "#text": "(3 & 4) < 5"
+                },
+                "@heading": "Reminder > \"Alert"
+            }
+        };
+
+        const expected = `
+        <note heading="Reminder &gt; &quot;Alert">
+            <body>
+            <attr>Writer: Donald Duck.</attr>
+             (3 &amp; 4) &lt; 5
+            </body>
+        </note>`;
+
+        const options = {
+            attributeNamePrefix: "@",
+            ignoreAttributes:    false,
+        };
+
+        const parser = new XMLParser(options);
+        let result = parser.parse(expected);
+        console.log(JSON.stringify(result,null,4));
+        // expect(expected).toEqual(jsObj);
+
+        const builder = new XMLBuilder(options);
+        const output = builder.build(jsObj);
+        // console.log(output);
+        expect(output.replace(/\s+/g, "")).toEqual(expected.replace(/\s+/g, ""));
+    });
 });

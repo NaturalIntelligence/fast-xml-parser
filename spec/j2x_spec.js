@@ -191,12 +191,11 @@ describe("XMLBuilder", function() {
                                       attributesGroupName:     "@",
                                       encodeHTMLchar:   true,
                                       suppressEmptyNode: true,
-                                      tagValueProcessor: (tagName,a)=> { a= ''+ a; return he.encode(a, { useNamedReferences: true}) },
-                                      attributeValueProcessor: (attrName, a) => he.encode(a, {isAttributeValue: true, useNamedReferences: true})
+                                      processEntities:false
                                   });
         const result = builder.build(jObj);
         // console.log(result);
-        const expected = `<a b="val&gt;1" c="val&lt;2"><notattr>val</notattr>textvalue&gt;<tag><k>34</k><g/><nested b="val&gt;1" c="val&lt;2"/></tag></a>`;
+        const expected = `<a b="val>1" c="val<2"><notattr>val</notattr>textvalue><tag><k>34</k><g/><nested b="val>1" c="val<2"/></tag></a>`;
         expect(result).toEqual(expected);
     });
 
