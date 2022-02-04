@@ -13,7 +13,7 @@ describe("unpaired and empty tags", function() {
         const expectedXmlData = `<rootNode>
             <tag>value</tag>
             <empty></empty>
-            <unpaired></unpaired>
+            <unpaired>
         </rootNode>`;
 
         const options = {
@@ -142,4 +142,121 @@ describe("unpaired and empty tags", function() {
           // console.log(output);
         expect(output.replace(/\s+/g, "")).toEqual(expectedXml.replace(/\s+/g, ""));
     });
+
+    it("should supress paired tag but not unpaired tag when suppressUnpairedNode:false", function() {
+      const xmlData = `<rootNode>
+          <tag>value</tag>
+          <empty />
+          <unpaired>
+      </rootNode>`;
+      const expectedXmlData = `<rootNode>
+          <tag>value</tag>
+          <empty/>
+          <unpaired/>
+      </rootNode>`;
+
+      const options = {
+          // format: true,
+          // preserveOrder: true,
+          suppressEmptyNode: true,
+          suppressUnpairedNode: false,
+          unpairedTags: ["unpaired"]
+        };
+        const parser = new XMLParser(options);
+        let result = parser.parse(xmlData);
+      //   console.log(JSON.stringify(result, null,4));
+  
+        const builder = new XMLBuilder(options);
+        const output = builder.build(result);
+      //   console.log(output);
+        expect(output.replace(/\s+/g, "")).toEqual(expectedXmlData.replace(/\s+/g, ""));
+  });
+    
+  it("should not suppress paired tag but unpaired tag when suppressUnpairedNode:true", function() {
+      const xmlData = `<rootNode>
+          <tag>value</tag>
+          <empty />
+          <unpaired>
+      </rootNode>`;
+      const expectedXmlData = `<rootNode>
+          <tag>value</tag>
+          <empty></empty>
+          <unpaired>
+      </rootNode>`;
+
+      const options = {
+          // format: true,
+          // preserveOrder: true,
+          // suppressEmptyNode: true,
+          suppressUnpairedNode: true,
+          unpairedTags: ["unpaired"]
+        };
+        const parser = new XMLParser(options);
+        let result = parser.parse(xmlData);
+      //   console.log(JSON.stringify(result, null,4));
+  
+        const builder = new XMLBuilder(options);
+        const output = builder.build(result);
+      //   console.log(output);
+        expect(output.replace(/\s+/g, "")).toEqual(expectedXmlData.replace(/\s+/g, ""));
+  });
+
+  it("should supress paired tag but not unpaired tag when suppressUnpairedNode:false (ordered)", function() {
+      const xmlData = `<rootNode>
+          <tag>value</tag>
+          <empty />
+          <unpaired>
+      </rootNode>`;
+      const expectedXmlData = `<rootNode>
+          <tag>value</tag>
+          <empty/>
+          <unpaired/>
+      </rootNode>`;
+
+      const options = {
+          // format: true,
+          preserveOrder: true,
+          suppressEmptyNode: true,
+          suppressUnpairedNode: false,
+          unpairedTags: ["unpaired"]
+        };
+        const parser = new XMLParser(options);
+        let result = parser.parse(xmlData);
+      //   console.log(JSON.stringify(result, null,4));
+  
+        const builder = new XMLBuilder(options);
+        const output = builder.build(result);
+      //   console.log(output);
+        expect(output.replace(/\s+/g, "")).toEqual(expectedXmlData.replace(/\s+/g, ""));
+  });
+    
+  it("should not suppress paired tag but unpaired tag when suppressUnpairedNode:true  (ordered)", function() {
+      const xmlData = `<rootNode>
+          <tag>value</tag>
+          <empty />
+          <unpaired>
+      </rootNode>`;
+      const expectedXmlData = `<rootNode>
+          <tag>value</tag>
+          <empty></empty>
+          <unpaired>
+      </rootNode>`;
+
+      const options = {
+          // format: true,
+          preserveOrder: true,
+          // suppressEmptyNode: true,
+          suppressUnpairedNode: true,
+          unpairedTags: ["unpaired"]
+        };
+        const parser = new XMLParser(options);
+        let result = parser.parse(xmlData);
+      //   console.log(JSON.stringify(result, null,4));
+  
+        const builder = new XMLBuilder(options);
+        const output = builder.build(result);
+      //   console.log(output);
+        expect(output.replace(/\s+/g, "")).toEqual(expectedXmlData.replace(/\s+/g, ""));
+  });
+  
 });

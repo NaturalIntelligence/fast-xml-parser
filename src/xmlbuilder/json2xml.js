@@ -11,6 +11,7 @@ const defaultOptions = {
   format: false,
   indentBy: '  ',
   suppressEmptyNode: false,
+  suppressUnpairedNode: true,
   suppressBooleanAttributes: true,
   tagValueProcessor: function(key, a) {
     return a;
@@ -193,11 +194,19 @@ function buildEmptyObjNode(val, key, attrStr, level) {
 
 function buildTextValNode(val, key, attrStr, level) {
   const textValue = this.replaceEntitiesValue(val);
-  
-  return (
-    this.indentate(level) + '<' + key + attrStr + '>' +
-     textValue +
-    '</' + key + this.tagEndChar  );
+
+  if( textValue === '' && this.options.unpairedTags.indexOf(key) !== -1){ //unpaired
+    if(this.options.suppressUnpairedNode){
+      return this.indentate(level) + '<' + key + this.tagEndChar;
+    }else{
+      return this.indentate(level) + '<' + key + "/" + this.tagEndChar;
+    }
+  }else{
+    return (
+      this.indentate(level) + '<' + key + attrStr + '>' +
+       textValue +
+      '</' + key + this.tagEndChar  );
+  }
 }
 
 function replaceEntitiesValue(textValue){
@@ -211,13 +220,17 @@ function replaceEntitiesValue(textValue){
 }
 
 function buildEmptyTextNode(val, key, attrStr, level) {
-  if( val === '' && this.options.unpairedTags.indexOf(key) !== -1){
-    return this.indentate(level) + '<' + key + attrStr + this.tagEndChar;
-  }else if (val !== '') {
+  if( val === '' && this.options.unpairedTags.indexOf(key) !== -1){ //unpaired
+    if(this.options.suppressUnpairedNode){
+      return this.indentate(level) + '<' + key + this.tagEndChar;
+    }else{
+      return this.indentate(level) + '<' + key + "/" + this.tagEndChar;
+    }
+  }else if (val !== '') { //empty
     return this.buildTextValNode(val, key, attrStr, level);
   } else {
-    if(key[0] === "?") return  this.indentate(level) + '<' + key + attrStr+ '?' + this.tagEndChar;
-    else return  this.indentate(level) + '<' + key + attrStr + '/' + this.tagEndChar;
+    if(key[0] === "?") return  this.indentate(level) + '<' + key + attrStr+ '?' + this.tagEndChar; //PI tag
+    else return  this.indentate(level) + '<' + key + attrStr + '/' + this.tagEndChar; //normal
   }
 }
 

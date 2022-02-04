@@ -48,7 +48,8 @@ function arrToStr(arr, options, jPath, level){
         let tagStart =  indentation + `<${tagName}${attStr}`;
         let tagValue = arrToStr(tagObj[tagName], options, newJPath, level + 1);
         if(options.unpairedTags.indexOf(tagName) !== -1){
-            xmlStr += tagStart + ">"; 
+            if(options.suppressUnpairedNode)  xmlStr += tagStart + ">"; 
+            else xmlStr += tagStart + "/>"; 
         }else if( (!tagValue || tagValue.length === 0) && options.suppressEmptyNode){ 
             xmlStr += tagStart + "/>"; 
         }else{ 
