@@ -1,5 +1,11 @@
 Note: If you find missing information about particular minor version, that version must have been changed without any functional change in this library.
 
+**4.0.2 / 2022-02-04**
+* builder supports `suppressUnpairedNode`
+* parser supports `ignoreDeclaration` and `ignorePiTags`
+* fix: when comment is parsed as text value if given as `<!--> ...` #423
+* builder supports decoding `&`
+
 **4.0.1 / 2022-01-08**
 * fix builder for pi tag
 * fix: support suppressBooleanAttrs by builder

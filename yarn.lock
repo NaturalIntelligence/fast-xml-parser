@@ -1827,9 +1827,9 @@
     "unset-value" "^1.0.0"
 
 "cached-path-relative@^1.0.0", "cached-path-relative@^1.0.2":
-  "integrity" "sha512-5r2GqsoEb4qMTTN9J+WzXfjov+hjxT+j3u5K+kIVNIwAd99DLCJE9pBIMP1qVeybV6JiijL385Oz0DcYxfbOIg=="
-  "resolved" "https://registry.npmjs.org/cached-path-relative/-/cached-path-relative-1.0.2.tgz"
-  "version" "1.0.2"
+  "integrity" "sha512-WF0LihfemtesFcJgO7xfOoOcnWzY/QHR4qeDqV44jPU3HTI54+LnfXK3SA27AVVGCdZFgjjFFaqUA9Jx7dMJZA=="
+  "resolved" "https://registry.npmjs.org/cached-path-relative/-/cached-path-relative-1.1.0.tgz"
+  "version" "1.1.0"
 
 "caching-transform@^4.0.0":
   "integrity" "sha512-kpqOvwXnjjN44D89K5ccQC+RUrsy7jB/XLlRrx0D7/2HNcTPqzsb6XgYoErwko6QsV184CA2YgS1fxDiiDZMWA=="
@@ -2821,9 +2821,9 @@
   "version" "3.2.4"
 
 "follow-redirects@^1.14.0":
-  "integrity" "sha512-fhUl5EwSJbbl8AR+uYL2KQDxLkdSjZGR36xy46AO7cOMTrCMON6Sa28FmAnC2tRTDbd/Uuzz3aJBv7EBN7JH8A=="
-  "resolved" "https://registry.npmjs.org/follow-redirects/-/follow-redirects-1.14.6.tgz"
-  "version" "1.14.6"
+  "integrity" "sha512-+hbxoLbFMbRKDwohX8GkTataGqO6Jb7jGwpAlwgy2bIz25XtRm7KEzJM76R1WiNT5SwZkX4Y75SwBolkpmE7iQ=="
+  "resolved" "https://registry.npmjs.org/follow-redirects/-/follow-redirects-1.14.7.tgz"
+  "version" "1.14.7"
 
 "for-in@^1.0.2":
   "integrity" "sha1-gQaNKVqBQuwKxybG4iAMMPttXoA="
