@@ -72,7 +72,7 @@ function propName(obj){
 function attr_to_str(attrMap, options){
     let attrStr = "";
     if(attrMap && !options.ignoreAttributes){
-        for( attr in attrMap){
+        for (let attr in attrMap){
             let attrVal = options.attributeValueProcessor(attr, attrMap[attr]);
             attrVal = replaceEntitiesValue(attrVal, options);
             if(attrVal === true && options.suppressBooleanAttributes){
