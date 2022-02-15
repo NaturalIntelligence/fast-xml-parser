@@ -1,5 +1,9 @@
 Note: If you find missing information about particular minor version, that version must have been changed without any functional change in this library.
 
+**4.0.3 / 2022-02-15**
+* fix: ReferenceError when Bundled with Strict (#431) (By [Andreas Heissenberger](https://github.com/aheissenberger))
+
+
 **4.0.2 / 2022-02-04**
 * builder supports `suppressUnpairedNode`
 * parser supports `ignoreDeclaration` and `ignorePiTags`
