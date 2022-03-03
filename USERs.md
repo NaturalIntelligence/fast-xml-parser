@@ -56,4 +56,5 @@ Please raise an issue or PR (recommended) to add your name to our User's list
 <a href="http://www.magento.com/" title="Magento" > <img src="https://avatars2.githubusercontent.com/u/168457" width="80px" ></a>
 <a href="https://www.incoined.com/" title="Incoined" > <img src="https://avatars.githubusercontent.com/u/93137853?v=4" width="80px" ></a>
 <a href="https://swissdevjobs.ch" title="SwissDevJobs" > <img src="https://static.swissdevjobs.ch/logo-images/swissdev-logo-name-square-small.png" width="80px" ></a>
+<a href="https://tessapp.dev" title="Tess" > <img src="https://raw.githubusercontent.com/SquitchYT/Tess/main/src/img/default.png" width="80px" >
 
