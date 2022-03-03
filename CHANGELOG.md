@@ -1,5 +1,8 @@
 Note: If you find missing information about particular minor version, that version must have been changed without any functional change in this library.
 
+**4.0.4 / 2022-03-03**
+* fix #435: should skip unpaired and self-closing nodes when set as stopnodes
+
 **4.0.3 / 2022-02-15**
 * fix: ReferenceError when Bundled with Strict (#431) (By [Andreas Heissenberger](https://github.com/aheissenberger))
 
