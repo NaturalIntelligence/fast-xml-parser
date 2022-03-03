@@ -251,4 +251,48 @@ describe("XMLParser StopNodes", function() {
   
         expect(expected).toEqual(result);
   });
+
+  it("should skip self-closing stop nodes", function() {
+      const XMLdata = `<root><foo name="bar"></foo><bar name="bar"/></root>`;
+  
+      const expected = [{
+          root: [
+            { foo: [ { '#text': '' } ] },
+            { bar: [ { '#text': '' } ] }
+          ]
+      }];
+    
+        const options = {
+          // ignoreAttributes: true,
+          stopNodes: ["*.foo", "*.bar"],
+          preserveOrder: true,
+        };
+        const parser = new XMLParser(options);
+        let result = parser.parse(XMLdata);
+        // console.log(JSON.stringify(result, null,4));
+  
+        expect(expected).toEqual(result);
+  });
+  it("should skip unpaired stop nodes", function() {
+      const XMLdata = `<root><foo name="bar"></foo><bar name="bar"></root>`;
+  
+      const expected = [{
+          root: [
+            { foo: [ { '#text': '' } ] },
+            { bar: [ { '#text': '' } ] }
+          ]
+      }];
+    
+        const options = {
+          // ignoreAttributes: true,
+          stopNodes: ["*.foo", "*.bar"],
+          unpairedTags: ["bar"],
+          preserveOrder: true,
+        };
+        const parser = new XMLParser(options);
+        let result = parser.parse(XMLdata);
+        // console.log(JSON.stringify(result, null,4));
+  
+        expect(expected).toEqual(result);
+  });
 });
