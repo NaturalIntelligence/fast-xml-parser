@@ -1,5 +1,8 @@
 Note: If you find missing information about particular minor version, that version must have been changed without any functional change in this library.
 
+**4.0.5 / 2022-03-06**
+* fix #437: call tagValueProcessor from XML builder
+
 **4.0.4 / 2022-03-03**
 * fix #435: should skip unpaired and self-closing nodes when set as stopnodes
 
