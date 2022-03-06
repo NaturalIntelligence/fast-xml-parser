@@ -47,41 +47,41 @@ describe("XMLParser", function() {
         expect(result).toEqual(expected);
     });
 
-    xit("should not parse when invalid value is given", function() {
-        const parser = new XMLParser();
-        const result = parser.parse(23);
-        // console.log(result)
-        expect(result).toBeUndefined();
-    });
+    // xit("should not parse when invalid value is given", function() {
+    //     const parser = new XMLParser();
+    //     const result = parser.parse(23);
+    //     // console.log(result)
+    //     expect(result).toEqual({});
+    // });
 
-    xit("should not parse when invalid value is given", function() {
-        const parser = new XMLParser();
-        const result = parser.parse([]);
-        // console.log(result)
-        expect(result).toBeUndefined();
-    });
+    // xit("should not parse when invalid value is given", function() {
+    //     const parser = new XMLParser();
+    //     const result = parser.parse([]);
+    //     // console.log(result)
+    //     expect(result).toBeUndefined();
+    // });
 
-    xit("should not parse when invalid value is given", function() {
-        const parser = new XMLParser( { preserveOrder: true});
-        const result = parser.parse([]);
-        expect(result).toBeUndefined();
-    });
+    // xit("should not parse when invalid value is given", function() {
+    //     const parser = new XMLParser( { preserveOrder: true});
+    //     const result = parser.parse([]);
+    //     expect(result).toBeUndefined();
+    // });
 
-    xit("should not parse when null", function() {
-        const parser = new XMLParser( { preserveOrder: true});
-        expect(() => {
-            parser.parse(null);
-            // console.log(result);
-        }).toThrowError("Cannot read properties of null (reading 'toString')");
-    });
+    // xit("should not parse when null", function() {
+    //     const parser = new XMLParser( { preserveOrder: true});
+    //     expect(() => {
+    //         parser.parse(null);
+    //         // console.log(result);
+    //     }).toThrowError("Cannot read properties of null (reading 'toString')");
+    // });
 
-    xit("should not parse when undefined", function() {
-        const parser = new XMLParser( { preserveOrder: true});
-        expect(() => {
-            parser.parse();
-            // console.log(result);
-        }).toThrowError("Cannot read properties of undefined (reading 'toString')");
-    });
+    // xit("should not parse when undefined", function() {
+    //     const parser = new XMLParser( { preserveOrder: true});
+    //     expect(() => {
+    //         parser.parse();
+    //         // console.log(result);
+    //     }).toThrowError("Cannot read properties of undefined (reading 'toString')");
+    // });
     
     
 });

@@ -194,7 +194,8 @@ function buildEmptyObjNode(val, key, attrStr, level) {
 }
 
 function buildTextValNode(val, key, attrStr, level) {
-  const textValue = this.replaceEntitiesValue(val);
+  let textValue = this.options.tagValueProcessor(key, val);
+  textValue = this.replaceEntitiesValue(val);
 
   if( textValue === '' && this.options.unpairedTags.indexOf(key) !== -1){ //unpaired
     if(this.options.suppressUnpairedNode){

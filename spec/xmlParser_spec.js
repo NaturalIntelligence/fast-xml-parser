@@ -433,7 +433,7 @@ describe("XMLParser", function() {
         expect(result).toEqual(expected);
     });
 
-    xit("should parse different tags", function() {
+    it("should parse different tags", function() {
         const xmlData = `<tag.1>val1</tag.1><tag.2>val2</tag.2>`;
         const expected = {
             "tag.1": "val1",

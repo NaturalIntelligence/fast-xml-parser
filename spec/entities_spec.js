@@ -462,7 +462,7 @@ describe("XMLParser External Entites", function() {
 
         const parser = new XMLParser(options);
         let result = parser.parse(expected);
-        console.log(JSON.stringify(result,null,4));
+        // console.log(JSON.stringify(result,null,4));
         // expect(expected).toEqual(jsObj);
 
         const builder = new XMLBuilder(options);
