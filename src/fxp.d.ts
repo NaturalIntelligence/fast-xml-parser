@@ -86,3 +86,5 @@ export class XMLBuilder {
   constructor(options: XmlBuilderOptionsOptional);
   build(jObj: any): any;
 }
+
+export function format(xmlString: string): string;
