@@ -18,6 +18,7 @@ Validate XML, Parse XML to JS Object, or Build XML from JS Object without C/C++ 
 
 Check [ThankYouBackers](https://github.com/NaturalIntelligence/ThankYouBackers) for our contributors
 
+[![](static/img/ni_ads_ads.gif)](https://github.com/NaturalIntelligence/ads/)
 ## Users
 
 <a href="https://github.com/renovatebot/renovate" title="renovate" ><img src="https://avatars1.githubusercontent.com/u/38656520" width="60px" ></a>

@@ -1,5 +1,9 @@
 Note: If you find missing information about particular minor version, that version must have been changed without any functional change in this library.
 
+**4.0.6 / 2022-03-08**
+* fix: call tagValueProcessor only once for array items
+* fix: missing changed for #437
+
 **4.0.5 / 2022-03-06**
 * fix #437: call tagValueProcessor from XML builder
 
