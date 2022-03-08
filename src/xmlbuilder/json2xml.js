@@ -156,7 +156,7 @@ function buildAttrPairStr(attrName, val){
 function processTextOrObjNode (object, key, level) {
   const result = this.j2x(object, level + 1);
   if (object[this.options.textNodeName] !== undefined && Object.keys(object).length === 1) {
-    return this.buildTextNode(result.val, key, result.attrStr, level);
+    return this.buildTextNode(object[this.options.textNodeName], key, result.attrStr, level);
   } else {
     return this.buildObjNode(result.val, key, result.attrStr, level);
   }

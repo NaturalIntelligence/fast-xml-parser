@@ -293,7 +293,7 @@ describe("XMLBuilder", function() {
     expect(result.replace(/\s+/g, "")).toEqual(expected.replace(/\s+/g, ""));
   });
 
-  it("should not double encode tag values", function() {
+  it("should not double encode tag values for an array node", function() {
     const jObj = {
       a: {
         element: {
@@ -450,4 +450,19 @@ describe("XMLBuilder", function() {
         //console.log(expected);
         expect(result).toEqual(expected);
     });
+    it("should call tagValue processor", function() {
+
+        const xmlBuilder = new XMLBuilder({
+          format: true,
+          tagValueProcessor: (tagName, tagValue) => tagValue.toUpperCase()
+        });
+
+        const expected = `
+        <root>
+          <test>HELLO</test>
+        </root>
+        `;
+        const result = xmlBuilder.build({ root: { test: 'hello' } });
+        expect(result.replace(/\s+/g, "")).toEqual(expected.replace(/\s+/g, ""));
+      });
 });
