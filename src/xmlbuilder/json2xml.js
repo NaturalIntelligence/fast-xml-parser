@@ -173,7 +173,9 @@ function buildObjectNode(val, key, attrStr, level) {
 
   if (attrStr && val.indexOf('<') === -1) {
     return ( this.indentate(level) + '<' +  key + attrStr + piClosingChar + '>' + val + tagEndExp );
-  } else {
+  } else if (this.options.commentPropName !== false && key === this.options.commentPropName && piClosingChar.length === 0) {
+    return this.indentate(level) + `<!--${val}-->` + this.newLine;
+  }else {
     return (
       this.indentate(level) + '<' + key + attrStr + piClosingChar + this.tagEndChar +
       val +
@@ -192,8 +194,9 @@ function buildEmptyObjNode(val, key, attrStr, level) {
 
 function buildTextValNode(val, key, attrStr, level) {
   if (this.options.cdataPropName !== false && key === this.options.cdataPropName) {
-    if(this.options.format) return this.indentate(level) + `<![CDATA[${val}]]>\n`;
-    else return this.indentate(level) + `<![CDATA[${val}]]>`;
+    return this.indentate(level) + `<![CDATA[${val}]]>` +  this.newLine;
+  }else if (this.options.commentPropName !== false && key === this.options.commentPropName) {
+    return this.indentate(level) + `<!--${val}-->` +  this.newLine;
   }else{
     let textValue = this.options.tagValueProcessor(key, val);
     textValue = this.replaceEntitiesValue(textValue);
