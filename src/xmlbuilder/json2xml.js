@@ -172,10 +172,7 @@ function buildObjectNode(val, key, attrStr, level) {
   }
 
   if (attrStr && val.indexOf('<') === -1) {
-    return (
-      this.indentate(level) + '<' +  key + attrStr + piClosingChar + '>' +
-      val +
-      tagEndExp    );
+    return ( this.indentate(level) + '<' +  key + attrStr + piClosingChar + '>' + val + tagEndExp );
   } else {
     return (
       this.indentate(level) + '<' + key + attrStr + piClosingChar + this.tagEndChar +
@@ -194,20 +191,26 @@ function buildEmptyObjNode(val, key, attrStr, level) {
 }
 
 function buildTextValNode(val, key, attrStr, level) {
-  let textValue = this.options.tagValueProcessor(key, val);
-  textValue = this.replaceEntitiesValue(textValue);
-
-  if( textValue === '' && this.options.unpairedTags.indexOf(key) !== -1){ //unpaired
-    if(this.options.suppressUnpairedNode){
-      return this.indentate(level) + '<' + key + this.tagEndChar;
-    }else{
-      return this.indentate(level) + '<' + key + "/" + this.tagEndChar;
-    }
+  if (this.options.cdataPropName !== false && key === this.options.cdataPropName) {
+    if(this.options.format) return this.indentate(level) + `<![CDATA[${val}]]>\n`;
+    else return this.indentate(level) + `<![CDATA[${val}]]>`;
   }else{
-    return (
-      this.indentate(level) + '<' + key + attrStr + '>' +
-       textValue +
-      '</' + key + this.tagEndChar  );
+    let textValue = this.options.tagValueProcessor(key, val);
+    textValue = this.replaceEntitiesValue(textValue);
+  
+    if( textValue === '' && this.options.unpairedTags.indexOf(key) !== -1){ //unpaired
+      if(this.options.suppressUnpairedNode){
+        return this.indentate(level) + '<' + key + this.tagEndChar;
+      }else{
+        return this.indentate(level) + '<' + key + "/" + this.tagEndChar;
+      }
+    } else{
+      return (
+        this.indentate(level) + '<' + key + attrStr + '>' +
+         textValue +
+        '</' + key + this.tagEndChar  );
+    }
+
   }
 }
 
