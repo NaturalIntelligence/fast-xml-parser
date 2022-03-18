@@ -1,5 +1,10 @@
 Note: If you find missing information about particular minor version, that version must have been changed without any functional change in this library.
 
+**4.0.7 / 2022-03-18**
+* support CDATA even if tag order is not preserved
+* support Comments even if tag order is not preserved
+* fix #446: XMLbuilder should not indent XML declaration
+
 **4.0.6 / 2022-03-08**
 * fix: call tagValueProcessor only once for array items
 * fix: missing changed for #437

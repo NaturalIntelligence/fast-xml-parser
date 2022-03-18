@@ -18,6 +18,8 @@ Validate XML, Parse XML to JS Object, or Build XML from JS Object without C/C++ 
 
 Check [ThankYouBackers](https://github.com/NaturalIntelligence/ThankYouBackers) for our contributors
 
+>Want to focus more on opensource, further study, and family. So open for part-time good job in technical architect, node js backend developer, research assistant, or IT teacher. https://amitkumargupta.work/
+
 [![](static/img/ni_ads_ads.gif)](https://github.com/NaturalIntelligence/ads/)
 ## Users
 
