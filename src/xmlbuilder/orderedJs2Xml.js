@@ -41,7 +41,10 @@ function arrToStr(arr, options, jPath, level){
             continue;
         }else if( tagName[0] === "?"){
             const attStr = attr_to_str(tagObj[":@"], options);
-            xmlStr += indentation + `<${tagName} ${tagObj[tagName][0][options.textNodeName]} ${attStr}?>`;
+            const tempInd = tagName === "?xml" ? "" : indentation;
+            let piTextNodeName = tagObj[tagName][0][options.textNodeName];
+            piTextNodeName = piTextNodeName.length !== 0 ? " " + piTextNodeName : ""; //remove extra spacing
+            xmlStr += tempInd + `<${tagName}${piTextNodeName}${attStr}?>`;
             continue;
         }
         const attStr = attr_to_str(tagObj[":@"], options);

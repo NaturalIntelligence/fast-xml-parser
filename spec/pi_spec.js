@@ -180,4 +180,25 @@ describe("XMLParser", function() {
         // console.log(JSON.stringify(result, null,4));
         expect(expected).toEqual(result);
     });
+
+    it("should not add any empty line in the start", function(){
+      const xmlData = `
+      <?xml version="1.0"?>
+      <?mso-contentType?>
+      <h1></h1>
+      `;
+      const options = {
+          ignoreAttributes: false,
+          format: true,
+          preserveOrder: true,
+        };
+        const parser = new XMLParser(options);
+        let result = parser.parse(xmlData);
+        // console.log(JSON.stringify(result, null,4));
+  
+        const builder = new XMLBuilder(options);
+        const output = builder.build(result);
+        // console.log("something", output);
+        expect(output.replace(/\s+/g, "")).toEqual(xmlData.replace(/\s+/g, ""));
+  });
 });
