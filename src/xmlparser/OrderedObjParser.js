@@ -251,7 +251,7 @@ const parseXml = function(xmlData) {
           currentNode.add(this.options.cdataPropName, [ { [this.options.textNodeName] : tagExp } ]);
         }else{
           let val = this.parseTextData(tagExp, currentNode.tagname, jPath, true, false, true);
-          if(!val) val = "";
+          if(val == undefined) val = "";
           currentNode.add(this.options.textNodeName, val);
         }
         
