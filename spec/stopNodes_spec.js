@@ -297,11 +297,12 @@ describe("XMLParser StopNodes", function() {
   });
 
   it("should not incorrectly close the stop node if the same tag name appears inside", function() {
-        const xmlData = `<issue><title>test 1</title><fix1><p>p 1</p><div class="show">div 1</div><other><fix1>more</fix1></other></fix1></issue>`;
+        const xmlData = `<issue><title>test 1</title><fix1><p>p 1</p><div class="show">div 1</div><other><fix1>more</fix1></other></fix1><last>something</last></issue>`;
         const expected = {
           issue: {
             title: 'test 1',
             fix1: '<p>p 1</p><div class="show">div 1</div><other><fix1>more</fix1></other>',
+            last: 'something'
           },
         };
 
