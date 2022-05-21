@@ -1,4 +1,3 @@
-//TODO: handle comments
 function readDocType(xmlData, i){
     
     const entities = {};
