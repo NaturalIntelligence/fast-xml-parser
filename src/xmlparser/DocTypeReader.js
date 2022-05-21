@@ -14,7 +14,16 @@ function readDocType(xmlData, i){
         let hasBody = false, entity = false, comment = false;
         let exp = "";
         for(;i<xmlData.length;i++){
-            if (xmlData[i] === '<') {
+            if (comment) {
+                if (xmlData[i] === '-' && xmlData[i+1] === '-') {   
+                    if (xmlData[i+2] === '>') {
+                        i += 2;
+                        comment = false;
+                    }else{
+                        throw new Error(`The string "--" (double-hyphen) must not occur within XML comments`);
+                    }
+                }
+            } else if (xmlData[i] === '<') {
                 if( hasBody && 
                     xmlData[i+1] === '!' &&
                     xmlData[i+2] === 'E' &&
@@ -68,20 +77,16 @@ function readDocType(xmlData, i){
                     xmlData[i+2] === '-' &&
                     xmlData[i+3] === '-'
                 ){
+                    i += 3;
                     comment = true;
+                    continue
                 }else{
                     throw new Error("Invalid DOCTYPE");
                 }
                 angleBracketsCount++;
                 exp = "";
             } else if (xmlData[i] === '>') {
-                if(comment){
-                    if( xmlData[i - 1] === "-" && xmlData[i - 2] === "-"){
-                        comment = false;
-                    }else{
-                        throw new Error(`Invalid XML comment in DOCTYPE`);
-                    }
-                }else if(entity){
+                if(entity){
                     parseEntityExp(exp, entities);
                     entity = false;
                 }
