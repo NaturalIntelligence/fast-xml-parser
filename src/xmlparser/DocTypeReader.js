@@ -38,6 +38,31 @@ function readDocType(xmlData, i){
                 ){
                     //Not supported
                     i += 8;
+                }else if( hasBody && 
+                    xmlData[i+1] === '!' &&
+                     xmlData[i+2] === 'A' &&
+                     xmlData[i+3] === 'T' &&
+                     xmlData[i+4] === 'T' &&
+                     xmlData[i+5] === 'L' &&
+                     xmlData[i+6] === 'I' &&
+                     xmlData[i+7] === 'S' &&
+                     xmlData[i+8] === 'T'
+                ){
+                    //Not supported
+                    i += 8;
+                }else if( hasBody && 
+                    xmlData[i+1] === '!' &&
+                     xmlData[i+2] === 'N' &&
+                     xmlData[i+3] === 'O' &&
+                     xmlData[i+4] === 'T' &&
+                     xmlData[i+5] === 'A' &&
+                     xmlData[i+6] === 'T' &&
+                     xmlData[i+7] === 'I' &&
+                     xmlData[i+8] === 'O' &&
+                     xmlData[i+9] === 'N'
+                ){
+                    //Not supported
+                    i += 9;
                 }else if( //comment
                     xmlData[i+1] === '!' &&
                     xmlData[i+2] === '-' &&
