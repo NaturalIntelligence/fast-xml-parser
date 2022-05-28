@@ -46,9 +46,9 @@ function compress(arr, options, jPath){
         else val = "";
       }
 
-      if(compressedObj[property] !== undefined) {
+      if(compressedObj[property] !== undefined && compressedObj.hasOwnProperty(property)) {
         if(!Array.isArray(compressedObj[property])) {
-          compressedObj[property] = [ compressedObj[property] ];
+            compressedObj[property] = [ compressedObj[property] ];
         }
         compressedObj[property].push(val);
       }else{
