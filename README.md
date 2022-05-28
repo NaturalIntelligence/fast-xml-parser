@@ -11,6 +11,8 @@
 
 Validate XML, Parse XML to JS Object, or Build XML from JS Object without C/C++ based libraries and no callback.
 
+> Looking for maintainers
+
 <a href="https://opencollective.com/fast-xml-parser/donate" target="_blank">
   <img src="https://opencollective.com/fast-xml-parser/donate/button@2x.png?color=blue" width=200 />
 </a>
@@ -18,7 +20,7 @@ Validate XML, Parse XML to JS Object, or Build XML from JS Object without C/C++ 
 
 Check [ThankYouBackers](https://github.com/NaturalIntelligence/ThankYouBackers) for our contributors
 
->Want to focus more on opensource, further study, and family. So open for part-time good job in technical architect, node js backend developer, research assistant, or IT teacher. https://amitkumargupta.work/
+
 
 [![](static/img/ni_ads_ads.gif)](https://github.com/NaturalIntelligence/ads/)
 ## Users
@@ -102,12 +104,12 @@ In a HTML page
 
 Check lib folder for different browser bundles
 
-| Bundle Name | Size |
-| -- | -- |
-| fxbuilder.min.js | 5.2K |
-| fxparser.js |  50K |
-| fxparser.min.js |  17K |
-| fxp.min.js |  22K |
+| Bundle Name        | Size |
+| ------------------ | ---- |
+| fxbuilder.min.js   | 5.2K |
+| fxparser.js        | 50K  |
+| fxparser.min.js    | 17K  |
+| fxp.min.js         | 22K  |
 | fxvalidator.min.js | 5.7K |
 
 ### Documents
@@ -142,7 +144,7 @@ Check lib folder for different browser bundles
 * **[BigBit standard](https://github.com/amitguptagwl/bigbit)** : 
   * Single text encoding to replace UTF-8, UTF-16, UTF-32 and more with less memory.
   * Single Numeric datatype alternative of integer, float, double, long, decimal and more without precision loss.
-* **[Cytorus](https://github.com/NaturalIntelligence/cytorus)**: Now be specific and flexible while running E2E tests.
+* **[Cytorus](https://github.com/NaturalIntelligence/cytorus)**:  Be specific and flexible while running E2E tests.
   * Run tests only for a particular User Story
   * Run tests for a route or from a route
   * Customizable reporting

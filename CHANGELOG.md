@@ -1,5 +1,10 @@
 Note: If you find missing information about particular minor version, that version must have been changed without any functional change in this library.
 
+**4.0.8 / 2022-03-18**
+* Fix CDATA parsing returning empty string when value = 0 (#451) (By [ndelanou](https://github.com/ndelanou))
+* Fix stopNodes when same tag appears inside node (#456) (By [patrickshipe](https://github.com/patrickshipe))
+* fix #468: prettify own properties only
+
 **4.0.7 / 2022-03-18**
 * support CDATA even if tag order is not preserved
 * support Comments even if tag order is not preserved
