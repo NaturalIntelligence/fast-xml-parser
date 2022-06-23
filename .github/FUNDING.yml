@@ -1,7 +1,9 @@
 # These are supported funding model platforms
 
-github: amitguptagwl
+github: NaturalIntelligence
 open_collective: fast-xml-parser
+custom: ["https://paypal.me/naturalintelligence"]
+
 # ko_fi: # Replace with a single Ko-fi username
 # tidelift: # Replace with a single Tidelift platform-name/package-name e.g., npm/babel
 # community_bridge: # Replace with a single Community Bridge project-name e.g., cloud-foundry
