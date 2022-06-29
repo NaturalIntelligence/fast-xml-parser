@@ -30,7 +30,8 @@ const defaultOptions = {
     processEntities: true,
     htmlEntities: false,
     ignoreDeclaration: false,
-    ignorePiTags: false
+    ignorePiTags: false,
+    transformTagName: false,
 };
    
 const buildOptions = function(options) {

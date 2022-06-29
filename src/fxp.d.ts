@@ -22,6 +22,7 @@ type X2jOptions = {
   htmlEntities: boolean;
   ignoreDeclaration: boolean;
   ignorePiTags: boolean;
+  transformTagName: ((tagName: string) => string) | false;
 };
 type strnumOptions = {
   hex: boolean;
