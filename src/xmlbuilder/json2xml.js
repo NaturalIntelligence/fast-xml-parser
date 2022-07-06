@@ -30,7 +30,8 @@ const defaultOptions = {
     { regex: new RegExp("\"", "g"), val: "&quot;" }
   ],
   processEntities: true,
-  stopNodes: []
+  stopNodes: [],
+  transformTagName: false,
 };
 
 function Builder(options) {

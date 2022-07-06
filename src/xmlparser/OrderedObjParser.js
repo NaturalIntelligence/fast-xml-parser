@@ -193,6 +193,10 @@ const parseXml = function(xmlData) {
           }
         }
 
+        if(this.options.transformTagName) {
+          tagName = this.options.transformTagName(tagName);
+        }
+
         if(currentNode){
           textData = this.saveTextToParentTag(textData, currentNode, jPath);
         }
@@ -257,12 +261,15 @@ const parseXml = function(xmlData) {
         
         i = closeIndex + 2;
       }else {//Opening tag
-       
         let result = readTagExp(xmlData,i, this. options.removeNSPrefix);
         let tagName= result.tagName;
         let tagExp = result.tagExp;
         let attrExpPresent = result.attrExpPresent;
         let closeIndex = result.closeIndex;
+
+        if (this.options.transformTagName) {
+          tagName = this.options.transformTagName(tagName);
+        }
         
         //save text as child node
         if (currentNode && textData) {
@@ -321,6 +328,10 @@ const parseXml = function(xmlData) {
               tagExp = tagName;
             }else{
               tagExp = tagExp.substr(0, tagExp.length - 1);
+            }
+            
+            if(this.options.transformTagName) {
+              tagName = this.options.transformTagName(tagName);
             }
 
             const childNode = new xmlNode(tagName);
