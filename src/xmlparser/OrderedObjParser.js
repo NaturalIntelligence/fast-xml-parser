@@ -520,7 +520,7 @@ function readStopNodeData(xmlData, tagName, i){
 
           if (tagData) {
             const openTagName = tagData && tagData.tagName;
-            if (openTagName === tagName) {
+            if (openTagName === tagName && tagData.tagExp[tagData.tagExp.length-1] !== "/") {
               openTagCount++;
             }
             i=tagData.closeIndex;
