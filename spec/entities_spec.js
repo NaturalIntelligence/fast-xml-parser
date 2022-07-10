@@ -217,6 +217,37 @@ describe("XMLParser Entities", function() {
         expect(result).toEqual(expected);
     });
 
+    it("should allow !ATTLIST & !NOTATION", function() {
+        const xmlData = `<?xml version="1.0"?>
+        <!DOCTYPE code [
+          <!ELEMENT code (#PCDATA)>
+          <!NOTATION vrml PUBLIC "VRML 1.0">
+          <!ATTLIST code lang NOTATION (vrml) #REQUIRED>
+        ]>
+        <code lang="vrml">Some VRML instructions</code>`;
+
+        const expected = {
+            "?xml": {
+                "version": "1.0"
+            },
+            "code": {
+                "lang": 'vrml',
+                "#text": 'Some VRML instructions'
+            }
+        };
+
+        const options = {
+            attributeNamePrefix: "",
+            ignoreAttributes:    false,
+            processEntities: true
+        };
+        const parser = new XMLParser(options);
+        let result = parser.parse(xmlData);
+        // console.log(JSON.stringify(result,null,4));
+
+        expect(result).toEqual(expected);
+    });
+
     it("should build by decoding defaul entities", function() {
         const jsObj = {
             "note": {
