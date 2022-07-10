@@ -502,7 +502,7 @@ function readStopNodeData(xmlData, tagName, i){
 
   for (; i < xmlData.length; i++) {
     if( xmlData[i] === "<"){ 
-      if (xmlData[i+1] === "/") {
+      if (xmlData[i+1] === "/") {//close tag
           const closeIndex = findClosingIndex(xmlData, ">", i, `${tagName} is not closed`);
           let closeTagName = xmlData.substring(i+2,closeIndex).trim();
           if(closeTagName === tagName){
@@ -514,6 +514,15 @@ function readStopNodeData(xmlData, tagName, i){
               }
             }
           }
+          i=closeIndex;
+        } else if(xmlData[i+1] === '?') { 
+          const closeIndex = findClosingIndex(xmlData, "?>", i+1, "StopNode is not closed.")
+          i=closeIndex;
+        } else if(xmlData.substr(i + 1, 3) === '!--') { 
+          const closeIndex = findClosingIndex(xmlData, "-->", i+3, "StopNode is not closed.")
+          i=closeIndex;
+        } else if(xmlData.substr(i + 1, 2) === '![') { 
+          const closeIndex = findClosingIndex(xmlData, "]]>", i, "StopNode is not closed.") - 2;
           i=closeIndex;
         } else {
           const tagData = readTagExp(xmlData, i, '>')
