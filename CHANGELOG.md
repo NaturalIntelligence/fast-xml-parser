@@ -1,6 +1,12 @@
 Note: If you find missing information about particular minor version, that version must have been changed without any functional change in this library.
 
-**4.0.8 / 2022-03-18**
+**4.0.9 / 2022-07-10**
+* fix #470: stop-tag can have self-closing tag with same name
+* fix #472: stopNode can have any special tag inside
+* Allow !ATTLIST and !NOTATION with DOCTYPE
+* Add transformTagName option to transform tag names when parsing (#469) (By [Erik Rothoff Andersson](https://github.com/erkie))
+
+**4.0.8 / 2022-05-28**
 * Fix CDATA parsing returning empty string when value = 0 (#451) (By [ndelanou](https://github.com/ndelanou))
 * Fix stopNodes when same tag appears inside node (#456) (By [patrickshipe](https://github.com/patrickshipe))
 * fix #468: prettify own properties only
