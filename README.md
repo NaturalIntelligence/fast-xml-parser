@@ -34,7 +34,6 @@ Check [ThankYouBackers](https://github.com/NaturalIntelligence/ThankYouBackers) 
 <a href="https://github.com/prettier" title="Prettier" > <img src="https://avatars0.githubusercontent.com/u/25822731" width="60px" ></a>
 <a href="http://brain.js.org/" title="brain.js" > <img src="https://avatars2.githubusercontent.com/u/23732838" width="60px" ></a>
 <a href="https://github.com/aws" title="AWS SDK" > <img src="https://avatars.githubusercontent.com/u/2232217" width="60px" ></a>
-<a href="#" title="NHS Connect" > <img src="https://avatars3.githubusercontent.com/u/20316669" width="60px" ></a>
 <a href="http://www.fda.gov/" title="Food and Drug Administration " > <img src="https://avatars2.githubusercontent.com/u/6471964" width="60px" ></a>
 <a href="http://www.magento.com/" title="Magento" > <img src="https://avatars2.githubusercontent.com/u/168457" width="60px" ></a>
 
