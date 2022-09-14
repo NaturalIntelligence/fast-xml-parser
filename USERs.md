@@ -26,7 +26,6 @@ Please raise an issue or PR (recommended) to add your name to our User's list
 <a href="http://brownspace.org/" title="Brown Space Engineering" > <img src="https://avatars2.githubusercontent.com/u/5504507" width="80px" ></a>
 <a href="http://www.appcelerator.com/" title="Team Appcelerator" > <img src="https://avatars1.githubusercontent.com/u/82188" width="80px" ></a>
 <a href="https://xmllint.com/" title="XML Lint" > <img src="https://xmllint.com/assets/logo.png" width="80px" ></a>
-<a href="https://github.com/prettier" title="Prettier" > <img src="https://avatars0.githubusercontent.com/u/25822731" width="80px" ></a>
 <a href="https://github.com/dolanmiu/docx" title="docx" > <img src="https://i.imgur.com/37uBGhO.gif" width="80px" ></a>
 <a href="http://orange-opensource.github.io/" title="Open Source by Orange" > <img src="https://avatars3.githubusercontent.com/u/1506386" width="80px" ></a>
 <a href="http://www.ybrain.com/" title="YBRAIN Inc." > <img src="https://avatars2.githubusercontent.com/u/38232440" width="80px" ></a>
@@ -47,7 +46,6 @@ Please raise an issue or PR (recommended) to add your name to our User's list
 <a href="https://creditsense.com.au/" title="Credit Sense Australia " > <img src="https://avatars0.githubusercontent.com/u/46947118" width="80px" ></a>
 <a href="https://www.hustunique.com/" title="UniqueStudio" > <img src="https://avatars1.githubusercontent.com/u/4847684" width="80px" ></a>
 <a href="http://www.openforis.org/" title="Open Foris" > <img src="https://avatars2.githubusercontent.com/u/1212750" width="80px" ></a>
-<a href="#" title="NHS Connect" > <img src="https://avatars3.githubusercontent.com/u/20316669" width="80px" ></a>
 <a href="https://tradle.io/" title="Tradle" > <img src="https://avatars2.githubusercontent.com/u/9482126" width="80px" ></a>
 <a href="http://www.anl.gov/" title="Argonne National Laboratory" > <img src="https://avatars0.githubusercontent.com/u/10468712" width="80px" ></a>
 <a href="https://simpleicons.org/" title="Simple Icons" > <img src="https://avatars2.githubusercontent.com/u/29872746" width="80px" ></a>
