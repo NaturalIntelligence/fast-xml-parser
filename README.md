@@ -49,7 +49,7 @@ Check the list of all known users [here](./USERs.md);
 * Parse XML to JS Object
 * Build XML from JS Object
 * Works with node packages, in browser, and in CLI (press try me button above for demo)
-* Faster than any pure JS implementation.
+* Faster than any other pure JS implementation.
 * It can handle big files (tested up to 100mb).
 * Controlled parsing using various options
 * XML Entities, HTML entities, and DOCTYPE entites are supported.
