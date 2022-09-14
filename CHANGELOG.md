@@ -1,5 +1,11 @@
 Note: If you find missing information about particular minor version, that version must have been changed without any functional change in this library.
 
+**4.0.10 / 2022-09-14**
+* fix broken links in demo site (By [Yannick Lang](https://github.com/layaxx))
+* fix #491: tagValueProcessor type definition (By [Andrea Francesco Speziale](https://github.com/andreafspeziale))
+* Add jsdocs for tagValueProcessor
+
+
 **4.0.9 / 2022-07-10**
 * fix #470: stop-tag can have self-closing tag with same name
 * fix #472: stopNode can have any special tag inside

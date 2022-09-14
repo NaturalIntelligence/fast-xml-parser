@@ -15,7 +15,8 @@ type X2jOptions = {
 Control how tag value should be parsed. Called only if tag value is not empty
 
 @returns {undefined|null} `undefined` or `null` to set original value.
-@returns {unknown} 1. Different value or value with different data type to set new value. <br>
+@returns {unknown} 
+1. Different value or value with different data type to set new value. <br>
 2. Same value to set parsed value if `parseTagValue: true`.
    */
   tagValueProcessor: (tagName: string, tagValue: string, jPath: string, hasAttributes: boolean, isLeafNode: boolean) => unknown;
