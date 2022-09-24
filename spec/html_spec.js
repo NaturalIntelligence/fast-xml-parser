@@ -78,4 +78,66 @@ const parsingOptions = {
     output = output.replace('₹','&inr;');
   expect(output.replace(/\s+/g, "")).toEqual(html.replace(/\s+/g, ""));
     });
+
+
+    it("should fail to parse HTML <script> tags containing '<' without using options.ignoreTagsInNodes", function () {
+        const html = `
+            <html lang="en">
+                <body>
+                    <script>
+                        // Without options.ignoreTagsInNodes, '<' will attempt to create a new tag, throwing an error since it's missing a closing '>'
+                        if (1 < 2) {}
+                    </script>
+                </body>
+            </html>`;
+
+        const parsingOptions = {
+            ignoreAttributes: false,
+            preserveOrder: true,
+            unpairedTags: ["hr", "br", "link", "meta"],
+            stopNodes: ["*.pre", "*.script"],
+            processEntities: true,
+            htmlEntities: true,
+        };
+        const parser = new XMLParser(parsingOptions);
+        expect(function () { parser.parse(html); }).toThrow();
+    });
+
+
+    it("should parse HTML <script> tags containing '<' by using options.ignoreTagsInNodes", function () {
+        const html = `
+            <html lang="en">
+                <body>
+                    <script>
+                        // The character '<' should not create a new tag, and should not need a corresponding '>'
+                        if (1 < 2) {}
+                    </script>
+                </body>
+            </html>`;
+
+        const parsingOptions = {
+            ignoreAttributes: false,
+            preserveOrder: true,
+            unpairedTags: ["hr", "br", "link", "meta"],
+            stopNodes: ["*.pre", "*.script"],
+            ignoreTagsInNodes: ["*.script"],
+            processEntities: true,
+            htmlEntities: true,
+        };
+        const parser = new XMLParser(parsingOptions);
+        let result = parser.parse(html);
+
+        const builderOptions = {
+            ignoreAttributes: false,
+            format: true,
+            preserveOrder: true,
+            suppressEmptyNode: false,
+            unpairedTags: ["hr", "br", "link", "meta"],
+            stopNodes: ["*.pre", "*.script"],
+        }
+        const builder = new XMLBuilder(builderOptions);
+        let output = builder.build(result);
+        expect(output.replace(/\s+/g, "")).toEqual(html.replace(/\s+/g, ""));
+    });
+
 });

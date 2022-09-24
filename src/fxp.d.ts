@@ -23,6 +23,7 @@ Control how tag value should be parsed. Called only if tag value is not empty
   attributeValueProcessor: (attrName: string, attrValue: string, jPath: string) => string;
   numberParseOptions: strnumOptions;
   stopNodes: string[];
+  ignoreTagsInNodes: string[];
   unpairedTags: string[];
   alwaysCreateTextNode: boolean;
   isArray: (tagName: string, jPath: string, isLeafNode: boolean, isAttribute: boolean) => boolean;

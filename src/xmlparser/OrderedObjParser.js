@@ -46,7 +46,7 @@ class OrderedObjParser{
     this.parseTextData = parseTextData;
     this.resolveNameSpace = resolveNameSpace;
     this.buildAttributesMap = buildAttributesMap;
-    this.isItStopNode = isItStopNode;
+    this.checkNodePathMatch = checkNodePathMatch;
     this.replaceEntitiesValue = replaceEntitiesValue;
     this.readStopNodeData = readStopNodeData;
     this.saveTextToParentTag = saveTextToParentTag;
@@ -289,7 +289,7 @@ const parseXml = function(xmlData) {
           currentNode = this.tagsNodeStack.pop();
         }
 
-        if (this.isItStopNode(this.options.stopNodes, jPath, tagName)) { //TODO: namespace
+        if (this.checkNodePathMatch(this.options.stopNodes, jPath, tagName)) { //TODO: namespace
           let tagContent = "";
           //self-closing tag
           if(tagExp.length > 0 && tagExp.lastIndexOf("/") === tagExp.length - 1){
@@ -302,7 +302,7 @@ const parseXml = function(xmlData) {
           //normal tag
           else{
             //read until closing tag is found
-            const result = this.readStopNodeData(xmlData, tagName, closeIndex + 1);
+            const result = this.readStopNodeData(xmlData, tagName, closeIndex + 1, this.checkNodePathMatch(this.options.ignoreTagsInNodes, jPath, tagName));
             if(!result) throw new Error(`Unexpected end of ${tagName}`);
             i = result.i;
             tagContent = result.tagContent;
@@ -403,15 +403,15 @@ function saveTextToParentTag(textData, currentNode, jPath, isLeafNode) {
 //TODO: use jPath to simplify the logic
 /**
  * 
- * @param {string[]} stopNodes 
+ * @param {string[]} nodePaths
  * @param {string} jPath
- * @param {string} currentTagName 
+ * @param {string} currentTagName
  */
-function isItStopNode(stopNodes, jPath, currentTagName){
+function checkNodePathMatch(nodePaths, jPath, currentTagName) {
   const allNodesExp = "*." + currentTagName;
-  for (const stopNodePath in stopNodes) {
-    const stopNodeExp = stopNodes[stopNodePath];
-    if( allNodesExp === stopNodeExp || jPath === stopNodeExp  ) return true;
+  for (const nodePath in nodePaths) {
+    const nodeExp = nodePaths[nodePath];
+    if (allNodesExp === nodeExp || jPath === nodeExp) return true;
   }
   return false;
 }
@@ -494,8 +494,9 @@ function readTagExp(xmlData,i, removeNSPrefix, closingChar = ">"){
  * @param {string} xmlData 
  * @param {string} tagName 
  * @param {number} i 
+ * @param {boolean} ignoreNestedTags Ignores nested tags if true. This allows parsing of tags like <script>if (a < b) {}</script> without the < triggering a new open tag.
  */
-function readStopNodeData(xmlData, tagName, i){
+function readStopNodeData(xmlData, tagName, i, ignoreNestedTags){
   const startIndex = i;
   // Starting at 1 since we already have an open tag
   let openTagCount = 1;
@@ -524,7 +525,7 @@ function readStopNodeData(xmlData, tagName, i){
         } else if(xmlData.substr(i + 1, 2) === '![') { 
           const closeIndex = findClosingIndex(xmlData, "]]>", i, "StopNode is not closed.") - 2;
           i=closeIndex;
-        } else {
+        } else if (!ignoreNestedTags) {
           const tagData = readTagExp(xmlData, i, '>')
 
           if (tagData) {
