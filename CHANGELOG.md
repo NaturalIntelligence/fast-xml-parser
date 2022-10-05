@@ -1,5 +1,8 @@
 Note: If you find missing information about particular minor version, that version must have been changed without any functional change in this library.
 
+**4.0.11 / 2022-10-05**
+* fix #501: parse for entities only once
+
 **4.0.10 / 2022-09-14**
 * fix broken links in demo site (By [Yannick Lang](https://github.com/layaxx))
 * fix #491: tagValueProcessor type definition (By [Andrea Francesco Speziale](https://github.com/andreafspeziale))
