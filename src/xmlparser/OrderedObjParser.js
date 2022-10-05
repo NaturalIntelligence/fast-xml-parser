@@ -20,12 +20,12 @@ class OrderedObjParser{
     this.tagsNodeStack = [];
     this.docTypeEntities = {};
     this.lastEntities = {
-      "amp" : { regex: /&(amp|#38|#x26);/g, val : "&"},
       "apos" : { regex: /&(apos|#39|#x27);/g, val : "'"},
       "gt" : { regex: /&(gt|#62|#x3E);/g, val : ">"},
       "lt" : { regex: /&(lt|#60|#x3C);/g, val : "<"},
       "quot" : { regex: /&(quot|#34|#x22);/g, val : "\""},
     };
+    this.ampEntity = { regex: /&(amp|#38|#x26);/g, val : "&"};
     this.htmlEntities = {
       "space": { regex: /&(nbsp|#160);/g, val: " " },
       // "lt" : { regex: /&(lt|#60);/g, val: "<" },
@@ -364,6 +364,7 @@ const parseXml = function(xmlData) {
 }
 
 const replaceEntitiesValue = function(val){
+
   if(this.options.processEntities){
     for(let entityName in this.docTypeEntities){
       const entity = this.docTypeEntities[entityName];
@@ -379,6 +380,7 @@ const replaceEntitiesValue = function(val){
         val = val.replace( entity.regex, entity.val);
       }
     }
+    val = val.replace( this.ampEntity.regex, this.ampEntity.val);
   }
   return val;
 }

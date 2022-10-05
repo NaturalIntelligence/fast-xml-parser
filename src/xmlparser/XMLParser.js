@@ -47,6 +47,8 @@ class XMLParser{
             throw new Error("Entity value can't have '&'")
         }else if(key.indexOf("&") !== -1 || key.indexOf(";") !== -1){
             throw new Error("An entity must be set without '&' and ';'. Eg. use '#xD' for '&#xD;'")
+        }else if(value === "&"){
+            throw new Error("An entity with value '&' is not permitted");
         }else{
             this.externalEntities[key] = value;
         }

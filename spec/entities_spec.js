@@ -501,4 +501,28 @@ describe("XMLParser External Entites", function() {
         // console.log(output);
         expect(output.replace(/\s+/g, "")).toEqual(expected.replace(/\s+/g, ""));
     });
+
+    it("should replace '&amp;lt;' with '&lt;'", function() {
+        const xmlData = `<SimpleScalarPropertiesInputOutput>
+        <stringValue>&amp;lt;</stringValue>
+      </SimpleScalarPropertiesInputOutput>`;
+
+        const expected = {
+            "SimpleScalarPropertiesInputOutput": {
+              "stringValue": "&lt;"
+            }
+          };
+
+        const options = {
+            attributeNamePrefix: "",
+            ignoreAttributes:    false,
+            processEntities: true,
+            // preserveOrder: true
+        };
+        const parser = new XMLParser(options);
+        let result = parser.parse(xmlData);
+        //console.log(JSON.stringify(result,null,4));
+
+        expect(result).toEqual(expected);
+    });
 });
