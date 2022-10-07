@@ -75,12 +75,14 @@ function addExternalEntities(externalEntities){
  * @param {boolean} escapeEntities
  */
 function parseTextData(val, tagName, jPath, dontTrim, hasAttributes, isLeafNode, escapeEntities) {
+  if(tagName === "!xml") return;
+  
   if (val !== undefined) {
     if (this.options.trimValues && !dontTrim) {
       val = val.trim();
     }
-    if(val.length > 0){
-      if(!escapeEntities) val = this.replaceEntitiesValue(val);
+    if(val.length > 0 && !escapeEntities) val = this.replaceEntitiesValue(val);
+    // if(val.length > 0 || isLeafNode){
       
       const newval = this.options.tagValueProcessor(tagName, val, jPath, hasAttributes, isLeafNode);
       if(newval === null || newval === undefined){
@@ -99,7 +101,7 @@ function parseTextData(val, tagName, jPath, dontTrim, hasAttributes, isLeafNode,
           return val;
         }
       }
-    }
+    // }
   }
 }
 
@@ -198,7 +200,7 @@ const parseXml = function(xmlData) {
         }
 
         if(currentNode){
-          textData = this.saveTextToParentTag(textData, currentNode, jPath);
+          textData = this.saveTextToParentTag(textData, currentNode, jPath,undefined,true);
         }
 
         jPath = jPath.substr(0, jPath.lastIndexOf("."));
@@ -211,7 +213,7 @@ const parseXml = function(xmlData) {
         let tagData = readTagExp(xmlData,i, false, "?>");
         if(!tagData) throw new Error("Pi Tag is not closed.");
 
-        textData = this.saveTextToParentTag(textData, currentNode, jPath);
+        textData = this.saveTextToParentTag(textData, currentNode, jPath,undefined,false);
         if( (this.options.ignoreDeclaration && tagData.tagName === "?xml") || this.options.ignorePiTags){
 
         }else{
@@ -233,7 +235,7 @@ const parseXml = function(xmlData) {
         if(this.options.commentPropName){
           const comment = xmlData.substring(i + 4, endIndex - 2);
 
-          textData = this.saveTextToParentTag(textData, currentNode, jPath);
+          textData = this.saveTextToParentTag(textData, currentNode, jPath,undefined,false);
 
           currentNode.add(this.options.commentPropName, [ { [this.options.textNodeName] : comment } ]);
         }
@@ -246,7 +248,7 @@ const parseXml = function(xmlData) {
         const closeIndex = findClosingIndex(xmlData, "]]>", i, "CDATA is not closed.") - 2;
         const tagExp = xmlData.substring(i + 9,closeIndex);
 
-        textData = this.saveTextToParentTag(textData, currentNode, jPath);
+        textData = this.saveTextToParentTag(textData, currentNode, jPath, '', false);
 
         //cdata should be set even if it is 0 length string
         if(this.options.cdataPropName){
@@ -275,7 +277,7 @@ const parseXml = function(xmlData) {
         if (currentNode && textData) {
           if(currentNode.tagname !== '!xml'){
             //when nested tag is found
-            textData = this.saveTextToParentTag(textData, currentNode, jPath, false);
+            textData = this.saveTextToParentTag(textData, currentNode, jPath, false, false);
           }
         }
 
@@ -384,24 +386,43 @@ const replaceEntitiesValue = function(val){
   }
   return val;
 }
-function saveTextToParentTag(textData, currentNode, jPath, isLeafNode) {
-  if (textData) { //store previously collected data as textNode
-    if(isLeafNode === undefined) isLeafNode = Object.keys(currentNode.child).length === 0
-    
+function saveTextToParentTag(textData, currentNode, jPath, isLeafNode, isClosing) {
+  if(isLeafNode === undefined) isLeafNode = Object.keys(currentNode.child).length === 0
+  if (textData || isLeafNode) { //store previously collected data as textNode
+    if(textData && this.options.trimValues){
+      textData = textData.trim();
+    }
+    // //leaf node
+    // //<a><![CDATA[text]]></a>
+    // isLeafNode && !textData
+    // isClosing && !textData
+    // //a is not leaf
+    // //<a><tag>text</tag></a>
+    // isLeafNode && !textData
+    // isClosing && !textData
+
+    if(textData || isClosing){
+      
     textData = this.parseTextData(textData,
       currentNode.tagname,
       jPath,
       false,
       currentNode[":@"] ? Object.keys(currentNode[":@"]).length !== 0 : false,
       isLeafNode);
-
+    }
     if (textData !== undefined && textData !== "")
       currentNode.add(this.options.textNodeName, textData);
     textData = "";
   }
   return textData;
 }
-
+// function getTagValues(node, textProperty){
+//   let nodeValue = "";
+//   for(const index in node.child){
+//    if(node.child[index][textProperty]) nodeValue+= node.child[index][textProperty];
+//   }
+//   return nodeValue;
+// }
 //TODO: use jPath to simplify the logic
 /**
  * 
