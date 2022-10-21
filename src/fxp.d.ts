@@ -20,7 +20,7 @@ Control how tag value should be parsed. Called only if tag value is not empty
 2. Same value to set parsed value if `parseTagValue: true`.
    */
   tagValueProcessor: (tagName: string, tagValue: string, jPath: string, hasAttributes: boolean, isLeafNode: boolean) => unknown;
-  attributeValueProcessor: (attrName: string, attrValue: string, jPath: string) => string;
+  attributeValueProcessor: (attrName: string, attrValue: string, jPath: string) => unknown;
   numberParseOptions: strnumOptions;
   stopNodes: string[];
   unpairedTags: string[];
@@ -60,8 +60,8 @@ type XmlBuilderOptions = {
   preserveOrder: boolean;
   unpairedTags: string[];
   stopNodes: string[];
-  tagValueProcessor: (name: string, value: string) => string;
-  attributeValueProcessor: (name: string, value: string) => string;
+  tagValueProcessor: (name: string, value: unknown) => string;
+  attributeValueProcessor: (name: string, value: unknown) => string;
   processEntities: boolean;
 };
 type XmlBuilderOptionsOptional = Partial<XmlBuilderOptions>;
