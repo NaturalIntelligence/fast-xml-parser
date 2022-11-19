@@ -1,5 +1,8 @@
 Note: If you find missing information about particular minor version, that version must have been changed without any functional change in this library.
 
+**4.0.12 / 2022-11-19**
+* fix typescript
+
 **4.0.11 / 2022-10-05**
 * fix #501: parse for entities only once
 
