@@ -128,13 +128,16 @@ Check lib folder for different browser bundles
 ### XML Parser
 
 ![](./docs/imgs/XMLParser_v4.png)
-
+* Y-axis: requests per second
+* X-axis: File size
 **Large files**
 ![](./docs/imgs/XMLParser_large_v4.png)
-
+* Y-axis: requests per second
+* X-axis: File size 
 ### XML Builder
 
 ![](./docs/imgs/XMLBuilder_v4.png)
+* Y-axis: requests per second
 
 <small>negative means error</small>
 
