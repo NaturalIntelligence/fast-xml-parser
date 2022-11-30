@@ -130,6 +130,7 @@ Check lib folder for different browser bundles
 ![](./docs/imgs/XMLParser_v4.png)
 * Y-axis: requests per second
 * X-axis: File size
+
 **Large files**
 ![](./docs/imgs/XMLParser_large_v4.png)
 * Y-axis: requests per second
