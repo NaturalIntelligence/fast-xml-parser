@@ -13,16 +13,32 @@ Validate XML, Parse XML to JS Object, or Build XML from JS Object without C/C++ 
 
 > Looking for maintainers
 
+Support this project by becoming a **Sponsor**. 
+
+Click on Sponsor button above or
 <a href="https://opencollective.com/fast-xml-parser/donate" target="_blank">
   <img src="https://opencollective.com/fast-xml-parser/donate/button@2x.png?color=blue" width=200 />
 </a>
 <a href="https://paypal.me/naturalintelligence"> <img src="static/img/support_paypal.svg" alt="Stubmatic donate button" width="200"/></a>
 
-Check [ThankYouBackers](https://github.com/NaturalIntelligence/ThankYouBackers) for our contributors
+
+### Sponsors
+
+<a href="https://github.com/getsentry" target="_blank"><img src="https://user-images.githubusercontent.com/7692328/204701653-ce369b29-6fdb-48f2-9848-593d04628a2b.png" width="60px"></a>
+<a href="https://opencollective.com/fast-xml-parser/sponsor/0/website" target="_blank"><img src="https://opencollective.com/fast-xml-parser/sponsor/0/avatar.svg"></a>
+<a href="https://opencollective.com/fast-xml-parser/sponsor/1/website" target="_blank"><img src="https://opencollective.com/fast-xml-parser/sponsor/1/avatar.svg"></a>
+<a href="https://opencollective.com/fast-xml-parser/sponsor/2/website" target="_blank"><img src="https://opencollective.com/fast-xml-parser/sponsor/2/avatar.svg"></a>
+<a href="https://opencollective.com/fast-xml-parser/sponsor/3/website" target="_blank"><img src="https://opencollective.com/fast-xml-parser/sponsor/3/avatar.svg"></a>
+<a href="https://opencollective.com/fast-xml-parser/sponsor/4/website" target="_blank"><img src="https://opencollective.com/fast-xml-parser/sponsor/4/avatar.svg"></a>
+<a href="https://opencollective.com/fast-xml-parser/sponsor/5/website" target="_blank"><img src="https://opencollective.com/fast-xml-parser/sponsor/5/avatar.svg"></a>
+<a href="https://opencollective.com/fast-xml-parser/sponsor/6/website" target="_blank"><img src="https://opencollective.com/fast-xml-parser/sponsor/6/avatar.svg"></a>
+<a href="https://opencollective.com/fast-xml-parser/sponsor/7/website" target="_blank"><img src="https://opencollective.com/fast-xml-parser/sponsor/7/avatar.svg"></a>
+<a href="https://opencollective.com/fast-xml-parser/sponsor/8/website" target="_blank"><img src="https://opencollective.com/fast-xml-parser/sponsor/8/avatar.svg"></a>
+<a href="https://opencollective.com/fast-xml-parser/sponsor/9/website" target="_blank"><img src="https://opencollective.com/fast-xml-parser/sponsor/9/avatar.svg"></a>
 
 
+Check [ThankYouBackers](https://github.com/NaturalIntelligence/ThankYouBackers) for our supporters
 
-[![](static/img/ni_ads_ads.gif)](https://github.com/NaturalIntelligence/ads/)
 ## Users
 
 <a href="https://github.com/renovatebot/renovate" title="renovate" ><img src="https://avatars1.githubusercontent.com/u/38656520" width="60px" ></a>
@@ -36,12 +52,14 @@ Check [ThankYouBackers](https://github.com/NaturalIntelligence/ThankYouBackers) 
 <a href="https://github.com/aws" title="AWS SDK" > <img src="https://avatars.githubusercontent.com/u/2232217" width="60px" ></a>
 <a href="http://www.fda.gov/" title="Food and Drug Administration " > <img src="https://avatars2.githubusercontent.com/u/6471964" width="60px" ></a>
 <a href="http://www.magento.com/" title="Magento" > <img src="https://avatars2.githubusercontent.com/u/168457" width="60px" ></a>
+<a href="https://github.com/SAP" title="SAP" > <img src="https://user-images.githubusercontent.com/7692328/204835214-d9d25b58-e3df-408d-87a3-c7d36b578ee4.png" width="60px" ></a>
+<a href="https://github.com/postmanlabs" title="postman" > <img src="https://user-images.githubusercontent.com/7692328/204835529-e9e290ad-696a-49ad-9d34-08e955704715.png" width="60px" ></a>
 
 Check the list of all known users [here](./USERs.md);
 
 <small>The list of users is collected either from the list published by Github, cummunicated directly through mails/chat , or from other resources. If you feel that your name in the above list is incorrectly published or you're not the user of this library anymore then you can inform us to remove it. We'll do the necessary changes ASAP.</small>
 
-### Main Features
+## Main Features
 
 <img align="right" src="static/img/fxp_logo.png" width="180px" alt="FXP logo"/>
 
@@ -142,6 +160,8 @@ Check lib folder for different browser bundles
 
 <small>negative means error</small>
 
+[![](static/img/ni_ads_ads.gif)](https://github.com/NaturalIntelligence/ads/)
+
 ## Our other projects and research you must try
 
 * **[BigBit standard](https://github.com/amitguptagwl/bigbit)** : 
@@ -176,20 +196,6 @@ Thank you to all our backers! 🙏 [[Become a backer](https://opencollective.com
 <a href="https://opencollective.com/fast-xml-parser#backers" target="_blank"><img src="https://opencollective.com/fast-xml-parser/backers.svg?width=890"></a>
 
 
-### Sponsors
-
-<small>[[Become a sponsor](https://opencollective.com/fast-xml-parser#sponsor)] Support this project by becoming a sponsor. Your logo will show up here with a link to your website. Please also share your detail so we can thankyou on SocialMedia.</small>
-
-<a href="https://opencollective.com/fast-xml-parser/sponsor/0/website" target="_blank"><img src="https://opencollective.com/fast-xml-parser/sponsor/0/avatar.svg"></a>
-<a href="https://opencollective.com/fast-xml-parser/sponsor/1/website" target="_blank"><img src="https://opencollective.com/fast-xml-parser/sponsor/1/avatar.svg"></a>
-<a href="https://opencollective.com/fast-xml-parser/sponsor/2/website" target="_blank"><img src="https://opencollective.com/fast-xml-parser/sponsor/2/avatar.svg"></a>
-<a href="https://opencollective.com/fast-xml-parser/sponsor/3/website" target="_blank"><img src="https://opencollective.com/fast-xml-parser/sponsor/3/avatar.svg"></a>
-<a href="https://opencollective.com/fast-xml-parser/sponsor/4/website" target="_blank"><img src="https://opencollective.com/fast-xml-parser/sponsor/4/avatar.svg"></a>
-<a href="https://opencollective.com/fast-xml-parser/sponsor/5/website" target="_blank"><img src="https://opencollective.com/fast-xml-parser/sponsor/5/avatar.svg"></a>
-<a href="https://opencollective.com/fast-xml-parser/sponsor/6/website" target="_blank"><img src="https://opencollective.com/fast-xml-parser/sponsor/6/avatar.svg"></a>
-<a href="https://opencollective.com/fast-xml-parser/sponsor/7/website" target="_blank"><img src="https://opencollective.com/fast-xml-parser/sponsor/7/avatar.svg"></a>
-<a href="https://opencollective.com/fast-xml-parser/sponsor/8/website" target="_blank"><img src="https://opencollective.com/fast-xml-parser/sponsor/8/avatar.svg"></a>
-<a href="https://opencollective.com/fast-xml-parser/sponsor/9/website" target="_blank"><img src="https://opencollective.com/fast-xml-parser/sponsor/9/avatar.svg"></a>
 
 # License
 * MIT License
