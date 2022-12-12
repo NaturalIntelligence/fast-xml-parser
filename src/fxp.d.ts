@@ -31,6 +31,7 @@ Control how tag value should be parsed. Called only if tag value is not empty
   ignoreDeclaration: boolean;
   ignorePiTags: boolean;
   transformTagName: ((tagName: string) => string) | false;
+  transformAttributeName: ((attributeName: string) => string) | false;
 };
 type strnumOptions = {
   hex: boolean;

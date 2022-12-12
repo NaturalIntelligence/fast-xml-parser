@@ -32,6 +32,7 @@ const defaultOptions = {
   processEntities: true,
   stopNodes: [],
   transformTagName: false,
+  transformAttributeName: false,
 };
 
 function Builder(options) {
