@@ -100,7 +100,7 @@ $ fxparser some.xml
 
 In a node js project
 ```js
-const { XMLParser, XMLBuilder, XMLValidator} = require("../src/fxp");
+const { XMLParser, XMLBuilder, XMLValidator} = require("fast-xml-parser");
 
 const parser = new XMLParser();
 let jObj = parser.parse(XMLdata);
