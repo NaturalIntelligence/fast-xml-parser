@@ -31,11 +31,11 @@ describe("XMLBuilder", function () {
         }
         const parser = new XMLParser(options);
         let result = parser.parse(XMLdata);
-        // console.log(JSON.stringify(result, null,4));
+    // console.log(JSON.stringify(result, null,4));
 
         const builder = new XMLBuilder(options);
         result = builder.build(result);
-        // console.log(result);
+    // console.log(result);
 
         expect(result).toEqual(expected);
     });
@@ -65,16 +65,16 @@ describe("XMLBuilder", function () {
             preserveOrder: true,
             cdataPropName: "#CDATA",
             allowBooleanAttributes: true,
-            //   format: true,
+    //   format: true,
 
         }
         const parser = new XMLParser(options);
         let result = parser.parse(XMLdata);
-        // console.log(JSON.stringify(result, null,4));
+    // console.log(JSON.stringify(result, null,4));
 
         const builder = new XMLBuilder(options);
         result = builder.build(result);
-        // console.log(result);
+    // console.log(result);
 
         expect(result).toEqual(expected);
     });
@@ -299,7 +299,7 @@ describe("XMLBuilder", function () {
 
         const options = {
             ignoreAttributes: false,
-            isArray: (tagName, jpath, isLeafNode, isAttribute) => {
+            isArray: (tagName, jpath, isLeafNode, isAttribute) => { 
                 if (isLeafNode === true) return true;
             },
             preserveOrder: true
