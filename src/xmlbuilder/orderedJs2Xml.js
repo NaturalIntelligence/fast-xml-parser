@@ -18,7 +18,8 @@ function arrToStr(arr, options, jPath, indentation) {
     let xmlStr = "";
     let isPreviousElementTag = false;
 
-    for (const tagObj of arr) {
+    for (let i = 0; i < arr.length; i++) {
+        const tagObj = arr[i];
         const tagName = propName(tagObj);
         let newJPath = "";
         if (jPath.length === 0) newJPath = tagName
