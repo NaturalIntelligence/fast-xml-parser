@@ -1,5 +1,0 @@
-{
-    "eslint.codeActionsOnSave.mode": "problems",
-    "editor.formatOnSaveMode": "modificationsIfAvailable",
-    "editor.formatOnPaste": false
-}
