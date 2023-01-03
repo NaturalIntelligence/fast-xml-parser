@@ -172,23 +172,14 @@ describe("XMLBuilder", function () {
 <store>
   <location>
     locates in
-    <region>
-      US
-    </region>
+    <region>US</region>
     and
-    <region>
-      JAPAN
-    </region>
+    <region>JAPAN</region>
     --finish--
   </location>
   <type>
-    <size>
-      Small
-      alpha
-    </size>
-    <function>
-      24x7
-    </function>
+    <size>Smallalpha</size>
+    <function>24x7</function>
   </type>
 </store>`;
 
@@ -228,23 +219,14 @@ describe("XMLBuilder", function () {
 <store>
   <location>
     <![CDATA[locates in]]>
-    <region>
-      US
-    </region>
+    <region>US</region>
     <![CDATA[and]]>
-    <region>
-      JAPAN
-    </region>
+    <region>JAPAN</region>
     --finish--
   </location>
   <type>
-    <size>
-      <![CDATA[Small]]>
-      alpha
-    </size>
-    <function>
-      24x7
-    </function>
+    <size><![CDATA[Small]]>alpha</size>
+    <function>24x7</function>
   </type>
 </store>`;
 
@@ -261,7 +243,7 @@ describe("XMLBuilder", function () {
         result = builder.build(result);
         // console.log(result);
 
-        expect(result).toEqual(XMLdata);
+        expect(result).toEqual(expected);
     });
 
     it("should build XML when leaf nodes or attributes are parsed to array", function () {
@@ -292,40 +274,24 @@ describe("XMLBuilder", function () {
         const expected = `
 <report>
   <store>
-    <region>
-      US
-    </region>
+    <region>US</region>
     <inventory>
       <item grade="A">
-        <name>
-          Banana
-        </name>
-        <count>
-          200
-        </count>
+        <name>Banana</name>
+        <count>200</count>
       </item>
       <item grade="B">
-        <name>
-          Apple
-        </name>
-        <count>
-          100
-        </count>
+        <name>Apple</name>
+        <count>100</count>
       </item>
     </inventory>
   </store>
   <store>
-    <region>
-      EU
-    </region>
+    <region>EU</region>
     <inventory>
       <item>
-        <name>
-          Banana
-        </name>
-        <count>
-          100
-        </count>
+        <name>Banana</name>
+        <count>100</count>
       </item>
     </inventory>
   </store>
