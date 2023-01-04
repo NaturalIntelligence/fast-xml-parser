@@ -32,10 +32,10 @@ suite
         console.log("Running Suite: " + this.name);
     })
     .on("error", function(e) {
-        console.log("Error in Suite: " + this.name);
+        console.log("Error in Suite: " + this.name, e);
     })
     .on("abort", function(e) {
-        console.log("Aborting Suite: " + this.name);
+        console.log("Aborting Suite: " + this.name, e);
     })
     /*.on('cycle',function(event){
         console.log("Suite ID:" + event.target.id);
