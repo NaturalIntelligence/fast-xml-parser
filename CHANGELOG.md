@@ -1,5 +1,9 @@
 Note: If you find missing information about particular minor version, that version must have been changed without any functional change in this library.
 
+**4.0.13 / 2023-01-07**
+* preserveorder formatting (By [mdeknowis](https://github.com/mdeknowis))
+* support `transformAttributeName` (By [Erik Rothoff Andersson](https://github.com/erkie))
+
 **4.0.12 / 2022-11-19**
 * fix typescript
 
