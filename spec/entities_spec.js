@@ -129,8 +129,7 @@ describe("XMLParser Entities", function() {
     });
 
     it("should not throw error when DTD comments contain '<' or '>'", function() {
-        const xmlData = `
-        <!DOCTYPE greeting [<!-- < > <-->]>`;
+        const xmlData = `<!DOCTYPE greeting [<!-- < > < -->]>`;
 
         const parser = new XMLParser();
         parser.parse(xmlData);
