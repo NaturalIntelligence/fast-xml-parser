@@ -78,14 +78,15 @@ function readDocType(xmlData, i){
                 if(comment){
                     if( xmlData[i - 1] === "-" && xmlData[i - 2] === "-"){
                         comment = false;
-                    }else{
-                        throw new Error(`Invalid XML comment in DOCTYPE`);
+                        angleBracketsCount--;
                     }
-                }else if(entity){
-                    parseEntityExp(exp, entities);
-                    entity = false;
+                }else{
+                    if(entity) {
+                        parseEntityExp(exp, entities);
+                        entity = false;
+                    }
+                    angleBracketsCount--;
                 }
-                angleBracketsCount--;
                 if (angleBracketsCount === 0) {
                   break;
                 }
