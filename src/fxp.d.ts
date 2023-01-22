@@ -36,7 +36,8 @@ Control how tag value should be parsed. Called only if tag value is not empty
 type strnumOptions = {
   hex: boolean;
   leadingZeros: boolean,
-  skipLike?: RegExp
+  skipLike?: RegExp,
+  eNotation: boolean
 }
 type X2jOptionsOptional = Partial<X2jOptions>;
 type validationOptions = {
