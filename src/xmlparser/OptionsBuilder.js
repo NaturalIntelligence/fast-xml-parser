@@ -14,7 +14,8 @@ const defaultOptions = {
     cdataPropName: false,
     numberParseOptions: {
       hex: true,
-      leadingZeros: true
+      leadingZeros: true,
+      eNotation: false
     },
     tagValueProcessor: function(tagName, val) {
       return val;

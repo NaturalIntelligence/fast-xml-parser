@@ -37,7 +37,7 @@ type strnumOptions = {
   hex: boolean;
   leadingZeros: boolean,
   skipLike?: RegExp,
-  eNotation: boolean
+  eNotation?: boolean
 }
 type X2jOptionsOptional = Partial<X2jOptions>;
 type validationOptions = {
