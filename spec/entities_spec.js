@@ -128,6 +128,13 @@ describe("XMLParser Entities", function() {
         expect(result).toEqual(expected);
     });
 
+    it("should not throw error when DTD comments contain '<' or '>'", function() {
+        const xmlData = `<!DOCTYPE greeting [<!-- < > < -->]>`;
+
+        const parser = new XMLParser();
+        parser.parse(xmlData);
+    });
+
     it("should parse attributes having '>' in value", function() {
         const xmlData = `
         <?xml version="1.0" encoding="UTF-8"?>
