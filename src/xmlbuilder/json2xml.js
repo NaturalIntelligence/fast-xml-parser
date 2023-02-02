@@ -59,20 +59,6 @@ function Builder(options) {
     this.tagEndChar = '>';
     this.newLine = '';
   }
-
-  if (this.options.suppressEmptyNode) {
-    this.buildTextNode = buildEmptyTextNode;
-    this.buildObjNode = buildEmptyObjNode;
-  } else {
-    this.buildTextNode = buildTextValNode;
-    this.buildObjNode = buildObjectNode;
-  }
-
-  this.buildTextValNode = buildTextValNode;
-  this.buildObjectNode = buildObjectNode;
-
-  this.replaceEntitiesValue = replaceEntitiesValue;
-  this.buildAttrPairStr = buildAttrPairStr;
 }
 
 Builder.prototype.build = function(jObj) {
@@ -99,7 +85,7 @@ Builder.prototype.j2x = function(jObj, level) {
       else val += this.indentate(level) + '<' + key + '/' + this.tagEndChar;
       // val += this.indentate(level) + '<' + key + '/' + this.tagEndChar;
     } else if (jObj[key] instanceof Date) {
-      val += this.buildTextNode(jObj[key], key, '', level);
+      val += this.buildTextValNode(jObj[key], key, '', level);
     } else if (typeof jObj[key] !== 'object') {
       //premitive type
       const attr = this.isAttribute(key);
@@ -111,7 +97,7 @@ Builder.prototype.j2x = function(jObj, level) {
           let newval = this.options.tagValueProcessor(key, '' + jObj[key]);
           val += this.replaceEntitiesValue(newval);
         } else {
-          val += this.buildTextNode(jObj[key], key, '', level);
+          val += this.buildTextValNode(jObj[key], key, '', level);
         }
       }
     } else if (Array.isArray(jObj[key])) {
@@ -128,7 +114,7 @@ Builder.prototype.j2x = function(jObj, level) {
         } else if (typeof item === 'object') {
           val += this.processTextOrObjNode(item, key, level)
         } else {
-          val += this.buildTextNode(item, key, '', level);
+          val += this.buildTextValNode(item, key, '', level);
         }
       }
     } else {
@@ -147,7 +133,7 @@ Builder.prototype.j2x = function(jObj, level) {
   return {attrStr: attrStr, val: val};
 };
 
-function buildAttrPairStr(attrName, val){
+Builder.prototype.buildAttrPairStr = function(attrName, val){
   val = this.options.attributeValueProcessor(attrName, '' + val);
   val = this.replaceEntitiesValue(val);
   if (this.options.suppressBooleanAttributes && val === "true") {
@@ -158,31 +144,51 @@ function buildAttrPairStr(attrName, val){
 function processTextOrObjNode (object, key, level) {
   const result = this.j2x(object, level + 1);
   if (object[this.options.textNodeName] !== undefined && Object.keys(object).length === 1) {
-    return this.buildTextNode(object[this.options.textNodeName], key, result.attrStr, level);
+    return this.buildTextValNode(object[this.options.textNodeName], key, result.attrStr, level);
   } else {
-    return this.buildObjNode(result.val, key, result.attrStr, level);
+    return this.buildObjectNode(result.val, key, result.attrStr, level);
   }
 }
 
-function buildObjectNode(val, key, attrStr, level) {
-  let tagEndExp = '</' + key + this.tagEndChar;
-  let piClosingChar = "";
-  
-  if(key[0] === "?") {
-    piClosingChar = "?";
-    tagEndExp = "";
-  }
+Builder.prototype.buildObjectNode = function(val, key, attrStr, level) {
+  if(val === ""){
+    if(key[0] === "?") return  this.indentate(level) + '<' + key + attrStr+ '?' + this.tagEndChar;
+    else {
+      return this.indentate(level) + '<' + key + attrStr + this.closeTag(key) + this.tagEndChar;
+    }
+  }else{
 
-  if (attrStr && val.indexOf('<') === -1) {
-    return ( this.indentate(level) + '<' +  key + attrStr + piClosingChar + '>' + val + tagEndExp );
-  } else if (this.options.commentPropName !== false && key === this.options.commentPropName && piClosingChar.length === 0) {
-    return this.indentate(level) + `<!--${val}-->` + this.newLine;
-  }else {
-    return (
-      this.indentate(level) + '<' + key + attrStr + piClosingChar + this.tagEndChar +
-      val +
-      this.indentate(level) + tagEndExp    );
+    let tagEndExp = '</' + key + this.tagEndChar;
+    let piClosingChar = "";
+    
+    if(key[0] === "?") {
+      piClosingChar = "?";
+      tagEndExp = "";
+    }
+  
+    if (attrStr && val.indexOf('<') === -1) {
+      return ( this.indentate(level) + '<' +  key + attrStr + piClosingChar + '>' + val + tagEndExp );
+    } else if (this.options.commentPropName !== false && key === this.options.commentPropName && piClosingChar.length === 0) {
+      return this.indentate(level) + `<!--${val}-->` + this.newLine;
+    }else {
+      return (
+        this.indentate(level) + '<' + key + attrStr + piClosingChar + this.tagEndChar +
+        val +
+        this.indentate(level) + tagEndExp    );
+    }
   }
+}
+
+Builder.prototype.closeTag = function(key){
+  let closeTag = "";
+  if(this.options.unpairedTags.indexOf(key) !== -1){ //unpaired
+    if(!this.options.suppressUnpairedNode) closeTag = "/"
+  }else if(this.options.suppressEmptyNode){ //empty
+    closeTag = "/";
+  }else{
+    closeTag = `></${key}`
+  }
+  return closeTag;
 }
 
 function buildEmptyObjNode(val, key, attrStr, level) {
@@ -190,36 +196,35 @@ function buildEmptyObjNode(val, key, attrStr, level) {
     return this.buildObjectNode(val, key, attrStr, level);
   } else {
     if(key[0] === "?") return  this.indentate(level) + '<' + key + attrStr+ '?' + this.tagEndChar;
-    else return  this.indentate(level) + '<' + key + attrStr + '/' + this.tagEndChar;
+    else {
+      return  this.indentate(level) + '<' + key + attrStr + '/' + this.tagEndChar;
+      // return this.buildTagStr(level,key, attrStr);
+    }
   }
 }
 
-function buildTextValNode(val, key, attrStr, level) {
+Builder.prototype.buildTextValNode = function(val, key, attrStr, level) {
   if (this.options.cdataPropName !== false && key === this.options.cdataPropName) {
     return this.indentate(level) + `<![CDATA[${val}]]>` +  this.newLine;
   }else if (this.options.commentPropName !== false && key === this.options.commentPropName) {
     return this.indentate(level) + `<!--${val}-->` +  this.newLine;
+  }else if(key[0] === "?") {//PI tag
+    return  this.indentate(level) + '<' + key + attrStr+ '?' + this.tagEndChar; 
   }else{
     let textValue = this.options.tagValueProcessor(key, val);
     textValue = this.replaceEntitiesValue(textValue);
   
-    if( textValue === '' && this.options.unpairedTags.indexOf(key) !== -1){ //unpaired
-      if(this.options.suppressUnpairedNode){
-        return this.indentate(level) + '<' + key + this.tagEndChar;
-      }else{
-        return this.indentate(level) + '<' + key + "/" + this.tagEndChar;
-      }
-    } else{
-      return (
-        this.indentate(level) + '<' + key + attrStr + '>' +
+    if( textValue === ''){
+      return this.indentate(level) + '<' + key + attrStr + this.closeTag(key) + this.tagEndChar;
+    }else{
+      return this.indentate(level) + '<' + key + attrStr + '>' +
          textValue +
-        '</' + key + this.tagEndChar  );
+        '</' + key + this.tagEndChar;
     }
-
   }
 }
 
-function replaceEntitiesValue(textValue){
+Builder.prototype.replaceEntitiesValue = function(textValue){
   if(textValue && textValue.length > 0 && this.options.processEntities){
     for (let i=0; i<this.options.entities.length; i++) {
       const entity = this.options.entities[i];
@@ -227,21 +232,6 @@ function replaceEntitiesValue(textValue){
     }
   }
   return textValue;
-}
-
-function buildEmptyTextNode(val, key, attrStr, level) {
-  if( val === '' && this.options.unpairedTags.indexOf(key) !== -1){ //unpaired
-    if(this.options.suppressUnpairedNode){
-      return this.indentate(level) + '<' + key + this.tagEndChar;
-    }else{
-      return this.indentate(level) + '<' + key + "/" + this.tagEndChar;
-    }
-  }else if (val !== '') { //empty
-    return this.buildTextValNode(val, key, attrStr, level);
-  } else {
-    if(key[0] === "?") return  this.indentate(level) + '<' + key + attrStr+ '?' + this.tagEndChar; //PI tag
-    else return  this.indentate(level) + '<' + key + attrStr + '/' + this.tagEndChar; //normal
-  }
 }
 
 function indentate(level) {
