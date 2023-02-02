@@ -15,7 +15,7 @@ const defaultOptions = {
     numberParseOptions: {
       hex: true,
       leadingZeros: true,
-      eNotation: false
+      eNotation: true
     },
     tagValueProcessor: function(tagName, val) {
       return val;

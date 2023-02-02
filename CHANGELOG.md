@@ -1,5 +1,12 @@
 Note: If you find missing information about particular minor version, that version must have been changed without any functional change in this library.
 
+**4.1.0 / 2023-02-02**
+* Fix '<' or '>' in DTD comment throwing an error. (#533) (By [Adam Baker](https://github.com/Cwazywierdo))
+* Set "eNotation" to 'true' as default
+
+**4.0.15 / 2023-01-25**
+* make "eNotation" optional
+
 **4.0.14 / 2023-01-22**
 * fixed: add missed typing "eNotation" to parse values
 
