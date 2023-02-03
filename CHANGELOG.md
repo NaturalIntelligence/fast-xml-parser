@@ -1,5 +1,9 @@
 Note: If you find missing information about particular minor version, that version must have been changed without any functional change in this library.
 
+**4.1.1 / 2023-02-03**
+* Fix #540: ignoreAttributes breaks unpairedTags
+* Refactor XML builder code
+
 **4.1.0 / 2023-02-02**
 * Fix '<' or '>' in DTD comment throwing an error. (#533) (By [Adam Baker](https://github.com/Cwazywierdo))
 * Set "eNotation" to 'true' as default
