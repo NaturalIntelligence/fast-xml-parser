@@ -8,18 +8,18 @@ describe("unpaired and empty tags", function() {
         const xmlData = `<rootNode>
             <tag>value</tag>
             <empty />
-            <unpaired>
+            <unpaired attr="1">
         </rootNode>`;
         const expectedXmlData = `<rootNode>
             <tag>value</tag>
             <empty></empty>
-            <unpaired>
+            <unpaired attr="1">
         </rootNode>`;
 
         const options = {
             // format: true,
             // preserveOrder: true,
-            // suppressEmptyNode: true,
+            ignoreAttributes: false,
             unpairedTags: ["unpaired"]
           };
           const parser = new XMLParser(options);
@@ -36,13 +36,14 @@ describe("unpaired and empty tags", function() {
         const xmlData = `<rootNode>
             <tag>value</tag>
             <empty />
-            <unpaired>
+            <unpaired attr="1">
         </rootNode>`;
 
         const options = {
             // format: true,
             // preserveOrder: true,
             suppressEmptyNode: true,
+            ignoreAttributes: false,
             unpairedTags: ["unpaired"]
           };
           const parser = new XMLParser(options);
@@ -59,13 +60,14 @@ describe("unpaired and empty tags", function() {
         const xmlData = `<rootNode>
             <tag>value</tag>
             <empty />
-            <unpaired>
+            <unpaired attr="1">
         </rootNode>`;
 
         const options = {
             // format: true,
             // preserveOrder: true,
             suppressEmptyNode: true,
+            ignoreAttributes: false,
             unpairedTags: ["unpaired"]
           };
           const parser = new XMLParser(options);
@@ -80,7 +82,7 @@ describe("unpaired and empty tags", function() {
     
     it("should be parsed when unpaired tag is self-closing or paired closing tag", function() {
         const xmlData = `<rootNode>
-            <unpaired>
+            <unpaired attr="1">
             <self />
             <unpaired>
             <unpaired />
@@ -90,7 +92,7 @@ describe("unpaired and empty tags", function() {
         </rootNode>`;
 
         const expectedXml = `<rootNode>
-        <unpaired>
+        <unpaired attr="1">
         <self/>
         <unpaired>
         <unpaired>
@@ -102,6 +104,7 @@ describe("unpaired and empty tags", function() {
             // format: true,
             preserveOrder: true,
             suppressEmptyNode: true,
+            ignoreAttributes: false,
             unpairedTags: ["unpaired"]
           };
           const parser = new XMLParser(options);
@@ -116,13 +119,13 @@ describe("unpaired and empty tags", function() {
 
     it("should parsed unpaired tag before stop nodes", function() {
         const xmlData = `<rootNode>
-            <unpaired>
+            <unpaired attr="1">
             <stop>here</stop>
             <unpaired>
         </rootNode>`;
 
         const expectedXml = `<rootNode>
-        <unpaired>
+        <unpaired attr="1">
         <stop>here</stop>
         <unpaired>
       </rootNode>`;
@@ -130,6 +133,7 @@ describe("unpaired and empty tags", function() {
             // format: true,
             preserveOrder: true,
             suppressEmptyNode: true,
+            ignoreAttributes: false,
             unpairedTags: ["unpaired"],
             stopNodes: ["*.stop"]
           };
@@ -147,11 +151,13 @@ describe("unpaired and empty tags", function() {
       const xmlData = `<rootNode>
           <tag>value</tag>
           <empty />
+          <unpaired attr="1">
           <unpaired>
       </rootNode>`;
       const expectedXmlData = `<rootNode>
           <tag>value</tag>
           <empty/>
+          <unpaired attr="1"/>
           <unpaired/>
       </rootNode>`;
 
@@ -160,6 +166,7 @@ describe("unpaired and empty tags", function() {
           // preserveOrder: true,
           suppressEmptyNode: true,
           suppressUnpairedNode: false,
+          ignoreAttributes: false,
           unpairedTags: ["unpaired"]
         };
         const parser = new XMLParser(options);
@@ -176,11 +183,13 @@ describe("unpaired and empty tags", function() {
       const xmlData = `<rootNode>
           <tag>value</tag>
           <empty />
+          <unpaired attr="1">
           <unpaired>
       </rootNode>`;
       const expectedXmlData = `<rootNode>
           <tag>value</tag>
           <empty></empty>
+          <unpaired attr="1">
           <unpaired>
       </rootNode>`;
 
@@ -189,6 +198,7 @@ describe("unpaired and empty tags", function() {
           // preserveOrder: true,
           // suppressEmptyNode: true,
           suppressUnpairedNode: true,
+          ignoreAttributes: false,
           unpairedTags: ["unpaired"]
         };
         const parser = new XMLParser(options);
@@ -205,11 +215,13 @@ describe("unpaired and empty tags", function() {
       const xmlData = `<rootNode>
           <tag>value</tag>
           <empty />
+          <unpaired attr="1">
           <unpaired>
       </rootNode>`;
       const expectedXmlData = `<rootNode>
           <tag>value</tag>
           <empty/>
+          <unpaired attr="1"/>
           <unpaired/>
       </rootNode>`;
 
@@ -218,6 +230,7 @@ describe("unpaired and empty tags", function() {
           preserveOrder: true,
           suppressEmptyNode: true,
           suppressUnpairedNode: false,
+          ignoreAttributes: false,
           unpairedTags: ["unpaired"]
         };
         const parser = new XMLParser(options);
@@ -234,11 +247,13 @@ describe("unpaired and empty tags", function() {
       const xmlData = `<rootNode>
           <tag>value</tag>
           <empty />
+          <unpaired attr="1">
           <unpaired>
       </rootNode>`;
       const expectedXmlData = `<rootNode>
           <tag>value</tag>
           <empty></empty>
+          <unpaired attr="1">
           <unpaired>
       </rootNode>`;
 
@@ -247,6 +262,7 @@ describe("unpaired and empty tags", function() {
           preserveOrder: true,
           // suppressEmptyNode: true,
           suppressUnpairedNode: true,
+          ignoreAttributes: false,
           unpairedTags: ["unpaired"]
         };
         const parser = new XMLParser(options);
