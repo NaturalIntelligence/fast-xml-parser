@@ -137,6 +137,7 @@ function buildAttributesMap(attrStr, jPath) {
         if (this.options.transformAttributeName) {
           aName = this.options.transformAttributeName(aName);
         }
+        if(aName === "__proto__") aName  = "#__proto__";
         if (oldVal !== undefined) {
           if (this.options.trimValues) {
             oldVal = oldVal.trim();
