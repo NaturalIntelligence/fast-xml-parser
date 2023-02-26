@@ -1,5 +1,11 @@
 Note: If you find missing information about particular minor version, that version must have been changed without any functional change in this library.
 
+**4.1.3 / 2023-02-26**
+* fix #546: Support complex entity value
+
+**4.1.2 / 2023-02-12**
+* Security Fix
+
 **4.1.1 / 2023-02-03**
 * Fix #540: ignoreAttributes breaks unpairedTags
 * Refactor XML builder code

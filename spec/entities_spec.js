@@ -533,7 +533,7 @@ describe("XMLParser External Entites", function() {
         expect(result).toEqual(expected);
     });
     
-    fit("should support entites with tags in content", function() {
+    it("should support entites with tags in content", function() {
         const xmlData = `
         <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" [ 
