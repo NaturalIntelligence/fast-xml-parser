@@ -94,8 +94,20 @@ function assignAttributes(obj, attrMap, jpath, options){
 }
 
 function isLeafTag(obj, options){
+  const { textNodeName } = options;
   const propCount = Object.keys(obj).length;
-  if( propCount === 0 || (propCount === 1 && obj[options.textNodeName]) ) return true;
+  
+  if (propCount === 0) {
+    return true;
+  }
+
+  if (
+    propCount === 1 &&
+    (obj[textNodeName] || typeof obj[textNodeName] === "boolean" || obj[textNodeName] === 0)
+  ) {
+    return true;
+  }
+
   return false;
 }
 exports.prettify = prettify;
