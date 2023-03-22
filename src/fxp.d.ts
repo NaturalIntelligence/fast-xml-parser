@@ -94,6 +94,6 @@ export class XMLValidator{
   static validate(  xmlData: string,  options?: validationOptionsOptional): true | ValidationError;
 }
 export class XMLBuilder {
-  constructor(options: XmlBuilderOptionsOptional);
+  constructor(options?: XmlBuilderOptionsOptional);
   build(jObj: any): any;
 }
