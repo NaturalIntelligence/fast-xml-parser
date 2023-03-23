@@ -10,6 +10,7 @@ const defaultOptions = {
     //ignoreRootElement : false,
     parseTagValue: true,
     parseAttributeValue: false,
+    attributeTargetTags: [], // Optional Array of Tag Names that will have attributes parsed
     trimValues: true, //Trim string values of tag and attributes
     cdataPropName: false,
     numberParseOptions: {

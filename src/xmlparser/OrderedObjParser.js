@@ -122,10 +122,10 @@ function resolveNameSpace(tagname) {
 const attrsRegx = new RegExp('([^\\s=]+)\\s*(=\\s*([\'"])([\\s\\S]*?)\\3)?', 'gm');
 
 function buildAttributesMap(attrStr, jPath) {
-  if (!this.options.ignoreAttributes && typeof attrStr === 'string') {
+  const tagName = jPath.split('.').pop();
+  if (!this.options.ignoreAttributes && typeof attrStr === 'string' && (!this.options.attributeTargetTags.length || this.options.attributeTargetTags.includes(tagName))) {
     // attrStr = attrStr.replace(/\r?\n/g, ' ');
     //attrStr = attrStr || attrStr.trim();
-
     const matches = util.getAllMatches(attrStr, attrsRegx);
     const len = matches.length; //don't make it inline
     const attrs = {};
