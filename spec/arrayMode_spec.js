@@ -175,6 +175,37 @@ describe("XMLParser with arrayMode enabled", function () {
         expect(result).toEqual(expected);
     });
 
+    it("should parse leaf tags with zero or false value correctly in arrayMode", function () {
+        const xmlDataExample = `
+            <report>
+                <value>0</value>
+                <isNew>false</isNew>
+                <isReport>true</isReport>
+            </report>`
+
+        const expected = {
+            "report": 
+                [
+                    {
+                        "value": 0,
+                        "isNew": false,
+                        "isReport": true
+                    }
+                ]
+        };
+
+        const options = {
+            ignoreAttributes: false,
+            isArray: (tagName, jpath, isLeafNode, isAttribute) => { 
+                if(!isLeafNode) return true;
+              }
+        }
+        const parser = new XMLParser(options);
+        const result = parser.parse(xmlDataExample);
+        // console.log(JSON.stringify(result,null,4));
+        expect(result).toEqual(expected);
+    });
+
     it("should parse only attributes as Array if set", function () {
 
         const expected = {
