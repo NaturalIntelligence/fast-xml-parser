@@ -33,6 +33,7 @@ const defaultOptions = {
   stopNodes: [],
   // transformTagName: false,
   // transformAttributeName: false,
+  oneListGroup: false
 };
 
 function Builder(options) {
@@ -103,6 +104,7 @@ Builder.prototype.j2x = function(jObj, level) {
     } else if (Array.isArray(jObj[key])) {
       //repeated nodes
       const arrLen = jObj[key].length;
+      let listTagVal = "";
       for (let j = 0; j < arrLen; j++) {
         const item = jObj[key][j];
         if (typeof item === 'undefined') {
@@ -112,11 +114,19 @@ Builder.prototype.j2x = function(jObj, level) {
           else val += this.indentate(level) + '<' + key + '/' + this.tagEndChar;
           // val += this.indentate(level) + '<' + key + '/' + this.tagEndChar;
         } else if (typeof item === 'object') {
-          val += this.processTextOrObjNode(item, key, level)
+          if(this.options.oneListGroup ){
+            listTagVal += this.j2x(item, level + 1).val;
+          }else{
+            listTagVal += this.processTextOrObjNode(item, key, level)
+          }
         } else {
-          val += this.buildTextValNode(item, key, '', level);
+          listTagVal += this.buildTextValNode(item, key, '', level);
         }
       }
+      if(this.options.oneListGroup){
+        listTagVal = this.buildObjectNode(listTagVal, key, '', level);
+      }
+      val += listTagVal;
     } else {
       //nested node
       if (this.options.attributesGroupName && key === this.options.attributesGroupName) {

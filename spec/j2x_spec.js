@@ -465,4 +465,22 @@ describe("XMLBuilder", function() {
         const result = xmlBuilder.build({ root: { test: 'hello' } });
         expect(result.replace(/\s+/g, "")).toEqual(expected.replace(/\s+/g, ""));
       });
+      it("should group list tags under single tag", function() {
+        const jObj = {
+            "a": [
+                {
+                    "b": "1"
+                },
+                {
+                    "b": "2"
+                }
+            ]
+        };
+        const builder = new XMLBuilder({oneListGroup:"true"});
+        const result = builder.build(jObj);
+        // console.log(result);
+        const expected = `<a><b>1</b><b>2</b></a>`;
+        expect(result).toEqual(expected);
+    });
+
 });

@@ -65,6 +65,7 @@ type XmlBuilderOptions = {
   tagValueProcessor: (name: string, value: unknown) => string;
   attributeValueProcessor: (name: string, value: unknown) => string;
   processEntities: boolean;
+  oneListGroup: boolean;
 };
 type XmlBuilderOptionsOptional = Partial<XmlBuilderOptions>;
 
