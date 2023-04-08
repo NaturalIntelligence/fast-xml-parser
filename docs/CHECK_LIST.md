@@ -6,8 +6,9 @@ Pre release
 * [ ] Browser bundle are generated `npm run bundle`
 * [ ] TS typings are updated
 * [ ] ReadMe file or docs are updated for any change, user list, performance report, links etc.
+* [ ] Single test is not running `fit`
 * [ ] `npm run checkReadiness` is used to check the files being published
-* [ ] tags are assigned to latest comit `git tag -a v3.20.0 -m "summary msg"`
+* [ ] tags are assigned to latest commit `git tag -a v3.20.0 -m "summary msg"`
 
 In general
 * [ ] tests are added/updated
@@ -17,4 +18,5 @@ Post release
 * [ ] Notified to the users
 * [ ] Sync master and dev branches
 
-
+To remove tag
+git tag -d <tag_name>
