@@ -1,5 +1,10 @@
 Note: If you find missing information about particular minor version, that version must have been changed without any functional change in this library.
 
+**4.1.4 / 2023-04-08**
+* update typings to let user create XMLBuilder instance without options (#556) (By [Patrick](https://github.com/omggga))
+* fix: IsArray option isn't parsing tags with 0 as value correctly #490 (#557) (By [Aleksandr Murashkin](https://github.com/p-kuen))
+* feature: support oneListGroup to group repeated children tags udder single group
+ 
 **4.1.3 / 2023-02-26**
 * fix #546: Support complex entity value
 
