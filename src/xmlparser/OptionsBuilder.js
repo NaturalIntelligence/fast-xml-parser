@@ -34,8 +34,8 @@ const defaultOptions = {
     ignorePiTags: false,
     transformTagName: false,
     transformAttributeName: false,
-    updateAttributes: function(tagName, attrs, jPath){
-      return attrs;
+    updateTag: function(tagName, jPath, attrs){
+      return tagName
     }
 };
    

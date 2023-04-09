@@ -50,6 +50,7 @@ class OrderedObjParser{
     this.replaceEntitiesValue = replaceEntitiesValue;
     this.readStopNodeData = readStopNodeData;
     this.saveTextToParentTag = saveTextToParentTag;
+    this.addChild = addChild;
   }
 
 }
@@ -171,7 +172,7 @@ function buildAttributesMap(attrStr, jPath, tagName) {
       attrCollection[this.options.attributesGroupName] = attrs;
       return attrCollection;
     }
-    return this.options.updateAttributes(tagName, attrs, jPath)
+    return attrs
   }
 }
 
@@ -226,7 +227,7 @@ const parseXml = function(xmlData) {
           if(tagData.tagName !== tagData.tagExp && tagData.attrExpPresent){
             childNode[":@"] = this.buildAttributesMap(tagData.tagExp, jPath, tagData.tagName);
           }
-          currentNode.addChild(childNode);
+          this.addChild(currentNode, childNode, jPath)
 
         }
 
@@ -323,7 +324,7 @@ const parseXml = function(xmlData) {
           jPath = jPath.substr(0, jPath.lastIndexOf("."));
           childNode.add(this.options.textNodeName, tagContent);
           
-          currentNode.addChild(childNode);
+          this.addChild(currentNode, childNode, jPath)
         }else{
   //selfClosing tag
           if(tagExp.length > 0 && tagExp.lastIndexOf("/") === tagExp.length - 1){
@@ -343,7 +344,7 @@ const parseXml = function(xmlData) {
               childNode[":@"] = this.buildAttributesMap(tagExp, jPath, tagName);
             }
             jPath = jPath.substr(0, jPath.lastIndexOf("."));
-            currentNode.addChild(childNode);
+            this.addChild(currentNode, childNode, jPath)
           }
     //opening tag
           else{
@@ -353,7 +354,7 @@ const parseXml = function(xmlData) {
             if(tagName !== tagExp && attrExpPresent){
               childNode[":@"] = this.buildAttributesMap(tagExp, jPath, tagName);
             }
-            currentNode.addChild(childNode);
+            this.addChild(currentNode, childNode, jPath)
             currentNode = childNode;
           }
           textData = "";
@@ -365,6 +366,17 @@ const parseXml = function(xmlData) {
     }
   }
   return xmlObj.child;
+}
+
+function addChild(currentNode, childNode, jPath){
+  const result = this.options.updateTag(childNode.tagname, jPath, childNode[":@"])
+  if(result === false){
+  }else if(typeof result === "string"){
+    childNode.tagname = result
+    currentNode.addChild(childNode);
+  }else{
+    currentNode.addChild(childNode);
+  }
 }
 
 const replaceEntitiesValue = function(val){
@@ -423,7 +435,7 @@ function isItStopNode(stopNodes, jPath, currentTagName){
 }
 
 /**
- * Returns the tag Expression and where it is ending handling single-dobule quotes situation
+ * Returns the tag Expression and where it is ending handling single-double quotes situation
  * @param {string} xmlData 
  * @param {number} i starting index
  * @returns 
