@@ -32,6 +32,7 @@ Control how tag value should be parsed. Called only if tag value is not empty
   ignorePiTags: boolean;
   transformTagName: ((tagName: string) => string) | false;
   transformAttributeName: ((attributeName: string) => string) | false;
+  updateAttributes(tagName: string, jPath: string, attrs: {[k: string]: string}): {[k: string]: string};
 };
 type strnumOptions = {
   hex: boolean;

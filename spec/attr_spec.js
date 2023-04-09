@@ -359,4 +359,104 @@ id="7" data="foo bar" bug="true"/>`;
         //   console.log(output);
           expect(output.replace(/\s+/g, "")).toEqual(XMLdata.replace(/\s+/g, ""));
     });
+    it("should parse attributes with valid names", function() {
+        const xmlData = `<root>
+            <a keep="me" skip="me"></a>
+            <a skip="me"></a>
+            <a need="friend"></a>
+            <a camel="case" MakeMe="lower"></a>
+            <b change="val"></b>
+        </root>`;
+        const expected = {
+            "root": {
+                "a": [
+                    {
+                        "keep": "me"
+                    },
+                    "",
+                    {
+                        "need": "friend",
+                        "friend": "me"
+                    },
+                    {
+                        "Camel": "case",
+                        "makeme": "lower"
+                    }
+                ],
+                "b": {
+                    "change": "VAL"
+                }
+            }
+        };
+        const options = {
+            attributeNamePrefix: "",
+            ignoreAttributes:    false,
+            parseAttributeValue: true,
+            updateAttributes(tagName, attrs, jPath){
+                if(attrs["skip"]) delete attrs["skip"]
+                if(attrs["camel"]) {
+                    attrs["Camel"] = attrs["camel"];
+                    delete attrs["camel"];
+                }
+                if(attrs["need"]) {
+                    attrs["friend"] = "me";
+                }
+                if(attrs["MakeMe"]) {
+                    attrs["makeme"] = attrs["MakeMe"];
+                    delete attrs["MakeMe"];
+                }
+                if(attrs["change"]) {
+                    attrs["change"] = attrs["change"].toUpperCase();
+                }
+                return attrs;
+            }
+        };
+
+        const parser = new XMLParser(options);
+        let result = parser.parse(xmlData);
+
+        // console.log(JSON.stringify(result,null,4));
+        expect(result).toEqual(expected);
+
+        result = XMLValidator.validate(xmlData);
+        expect(result).toBe(true);
+    });
+    it("should parse attributes with valid names", function() {
+        const xmlData = `<root>
+            <a keep="me" skip="me"></a>
+            <a skip="me"></a>
+            <a need="friend"></a>
+            <a camel="case" MakeMe="lower"></a>
+            <b change="val"></b>
+        </root>`;
+        const expected = {
+            "root": {
+                "a": [
+                    "",
+                    "",
+                    "",
+                    ""
+                ],
+                "b": ""
+            }
+        };
+        const options = {
+            attributeNamePrefix: "",
+            ignoreAttributes:    false,
+            parseAttributeValue: true,
+            updateAttributes(tagName, attrs,jPath){
+                // console.log("called")
+                return null;
+            }
+        };
+
+        const parser = new XMLParser(options);
+        let result = parser.parse(xmlData);
+
+        // console.log(JSON.stringify(result,null,4));
+        expect(result).toEqual(expected);
+
+        result = XMLValidator.validate(xmlData);
+        expect(result).toBe(true);
+    });
 });
