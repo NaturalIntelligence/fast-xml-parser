@@ -36,7 +36,8 @@ const defaultOptions = {
     transformAttributeName: false,
     updateTag: function(tagName, jPath, attrs){
       return tagName
-    }
+    },
+    // skipEmptyListItem: false
 };
    
 const buildOptions = function(options) {
