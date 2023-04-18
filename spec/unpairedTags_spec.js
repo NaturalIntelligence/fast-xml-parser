@@ -274,5 +274,46 @@ describe("unpaired and empty tags", function() {
       //   console.log(output);
         expect(output.replace(/\s+/g, "")).toEqual(expectedXmlData.replace(/\s+/g, ""));
   });
-  
+  it("should construct jpath correctly for tag after unpaired tag", function() {
+    const xmlData = `<rootNode>
+      <unpaired>
+      <nested>
+        <unpaired>
+        <empty />
+        <unpaired>
+      </nested>
+      <empty />
+      <stop />
+      <unpaired>
+    </rootNode>`;
+
+    const jpaths = [
+      "rootNode",
+      "rootNode.unpaired",
+      "rootNode.nested",
+      "rootNode.nested.unpaired",
+      "rootNode.nested.empty",
+      "rootNode.nested.unpaired",
+      "rootNode.empty",
+      "rootNode.stop",
+      "rootNode.unpaired",
+    ]
+    let jPathIndex=0;
+    const options = {
+        // format: true,
+        // preserveOrder: true,
+        ignoreAttributes: false,
+        stopNodes: ["stop"],
+        unpairedTags: ["unpaired", "unpaired2"],
+        updateTag: function(tagName,jpath){
+          // console.log(jpath);
+          expect(jpath).toEqual(jpaths[jPathIndex++]);
+          return tagName;
+        }
+      };
+      const parser = new XMLParser(options);
+      let result = parser.parse(xmlData);
+    //   console.log(JSON.stringify(result, null,4));
+
+  });
 });

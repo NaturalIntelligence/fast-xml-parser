@@ -206,8 +206,17 @@ const parseXml = function(xmlData) {
           textData = this.saveTextToParentTag(textData, currentNode, jPath);
         }
 
-        jPath = jPath.substr(0, jPath.lastIndexOf("."));
-        
+        //check if last tag of nested tag was unpaired tag
+        const lastTagName = jPath.substring(jPath.lastIndexOf(".")+1);
+        let propIndex = 0
+        if(lastTagName && this.options.unpairedTags.indexOf(lastTagName) !== -1 ){
+          propIndex = jPath.lastIndexOf('.', jPath.lastIndexOf('.')-1)
+          if(propIndex < 1) propIndex = jPath.lastIndexOf(".");
+        }else{
+          propIndex = jPath.lastIndexOf(".");
+        }
+        jPath = jPath.substring(0, propIndex);
+
         currentNode = this.tagsNodeStack.pop();//avoid recursion, set the parent tag scope
         textData = "";
         i = closeIndex;
@@ -284,23 +293,22 @@ const parseXml = function(xmlData) {
           }
         }
 
-        if(tagName !== xmlObj.tagname){
-          jPath += jPath ? "." + tagName : tagName;
-        }
-
         //check if last tag was unpaired tag
         const lastTag = currentNode;
         if(lastTag && this.options.unpairedTags.indexOf(lastTag.tagname) !== -1 ){
           currentNode = this.tagsNodeStack.pop();
+          jPath = jPath.substring(0, jPath.lastIndexOf("."));
         }
-
+        if(tagName !== xmlObj.tagname){
+          jPath += jPath ? "." + tagName : tagName;
+        }
         if (this.isItStopNode(this.options.stopNodes, jPath, tagName)) { //TODO: namespace
           let tagContent = "";
           //self-closing tag
           if(tagExp.length > 0 && tagExp.lastIndexOf("/") === tagExp.length - 1){
             i = result.closeIndex;
           }
-          //boolean tag
+          //unpaired tag
           else if(this.options.unpairedTags.indexOf(tagName) !== -1){
             i = result.closeIndex;
           }
@@ -343,8 +351,8 @@ const parseXml = function(xmlData) {
             if(tagName !== tagExp && attrExpPresent){
               childNode[":@"] = this.buildAttributesMap(tagExp, jPath, tagName);
             }
-            jPath = jPath.substr(0, jPath.lastIndexOf("."));
             this.addChild(currentNode, childNode, jPath)
+            jPath = jPath.substr(0, jPath.lastIndexOf("."));
           }
     //opening tag
           else{
