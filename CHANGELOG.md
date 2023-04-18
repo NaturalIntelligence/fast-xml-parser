@@ -1,5 +1,8 @@
 Note: If you find missing information about particular minor version, that version must have been changed without any functional change in this library.
 
+**4.2.1 / 2023-04-18**
+* fix: jpath after unpaired tags
+
 **4.2.0 / 2023-04-09**
 * support `updateTag` parser property
 
