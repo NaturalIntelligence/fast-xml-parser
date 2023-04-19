@@ -3,22 +3,23 @@
 const {XMLParser, XMLBuilder} = require("../src/fxp");
 
 describe("unpaired and empty tags", function() {
-    fit("bug test", function() {
+    it("bug test", function() {
         const xmlData = `<root>
-        <a>1</a>
-        <a></a>
-        <a>2</a>
-        <a></a>
-        <a>3</a>
-        <a></a>
+        <a>
+            <unpaired>
+        </a>
+        <b>whatever</b>
     </root>`;
         const expected = {
             "root": {
-                "a": [ 1,2,3]
+                "a": {
+                    "u": "",
+                },
+                "b":"w"
             }
         };
         const options = {
-            skipEmptyListItem: true
+            unpairedTags: ["unpaired"]
         };
         const parser = new XMLParser(options);
         // const parser = new XMLParser({ updateTag});
@@ -28,5 +29,6 @@ describe("unpaired and empty tags", function() {
         // expect(result).toEqual(expected);
 
     });
+ 
     
 });
