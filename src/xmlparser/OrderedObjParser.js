@@ -208,10 +208,13 @@ const parseXml = function(xmlData) {
 
         //check if last tag of nested tag was unpaired tag
         const lastTagName = jPath.substring(jPath.lastIndexOf(".")+1);
+        if(tagName && this.options.unpairedTags.indexOf(tagName) !== -1 ){
+          throw new Error(`Unpaired tag can not be used as closing tag: </${tagName}>`);
+        }
         let propIndex = 0
         if(lastTagName && this.options.unpairedTags.indexOf(lastTagName) !== -1 ){
           propIndex = jPath.lastIndexOf('.', jPath.lastIndexOf('.')-1)
-          if(propIndex < 1) propIndex = jPath.lastIndexOf(".");
+          this.tagsNodeStack.pop();
         }else{
           propIndex = jPath.lastIndexOf(".");
         }

@@ -87,7 +87,7 @@ describe("unpaired and empty tags", function() {
             <unpaired>
             <unpaired />
             <unpaired>
-            <unpaired></unpaired>
+            <unpaired />
             <unpaired>
         </rootNode>`;
 
@@ -316,4 +316,115 @@ describe("unpaired and empty tags", function() {
     //   console.log(JSON.stringify(result, null,4));
 
   });
+});
+
+describe("unpaired tas position", function() {
+  it(" when appears last in nested tag", function() {
+      const xmlData = `<root><a><u></a><b>w</b></root>`;
+      const expected = {
+          "root": {
+              "a": {
+                  "u": "",
+              },
+              "b":"w"
+          }
+      };
+      const options = {
+          unpairedTags: ["u"]
+      };
+      const parser = new XMLParser(options);
+      // const parser = new XMLParser({ updateTag});
+      let result = parser.parse(xmlData);
+
+      // console.log(JSON.stringify(result,null,4));
+      expect(result).toEqual(expected);
+
+  });
+  it(" when unpair then unpair self closed", function() {
+      const xmlData = `<root><v><v/><u></root>`;
+      const expected = {
+          "root": {
+              "v": ["",""],
+              "u": ""
+          }
+      }
+      const options = {
+          unpairedTags: ["u","v"]
+      };
+      const parser = new XMLParser(options);
+      // const parser = new XMLParser({ updateTag});
+      let result = parser.parse(xmlData);
+
+      // console.log(JSON.stringify(result,null,4));
+      expect(result).toEqual(expected);
+
+  });
+  it("when unpair then unpair", function() {
+      const xmlData = `<root><v><v></root>`;
+      const expected = {
+          "root": {
+              "v": ["",""]
+          }
+      }
+      const options = {
+          unpairedTags: ["u","v"]
+      };
+      const parser = new XMLParser(options);
+      // const parser = new XMLParser({ updateTag});
+      let result = parser.parse(xmlData);
+
+      // console.log(JSON.stringify(result,null,4));
+      expect(result).toEqual(expected);
+
+  });
+  it(" when 2 unpaired then unpaired self closed", function() {
+      const xmlData = `<root><v><v><v/></root>`;
+      const expected = {
+          "root": {
+              "v": ["","",""]
+          }
+      }
+      const options = {
+          unpairedTags: ["u","v"]
+      };
+      const parser = new XMLParser(options);
+      // const parser = new XMLParser({ updateTag});
+      let result = parser.parse(xmlData);
+
+      // console.log(JSON.stringify(result,null,4));
+      expect(result).toEqual(expected);
+
+  });
+  it(" when unpaired followed by normal self closed", function() {
+      const xmlData = `<root><v><a/></root>`;
+      const expected = {
+          "root": {
+              "v": "",
+              "a": ""
+          }
+      }
+      const options = {
+          unpairedTags: ["u","v"]
+      };
+      const parser = new XMLParser(options);
+      // const parser = new XMLParser({ updateTag});
+      let result = parser.parse(xmlData);
+
+      // console.log(JSON.stringify(result,null,4));
+      expect(result).toEqual(expected);
+
+  });
+  it(" when unpaired is used as closing tag then it's error", function() {
+      const xmlData = `<root><v><a/></v></root>`;
+      const options = {
+          unpairedTags: ["u","v"]
+      };
+      const parser = new XMLParser(options);
+
+      expect(() =>{
+          parser.parse(xmlData);
+      }).toThrowError("Unpaired tag can not be used as closing tag: </v>")
+
+  });
+  
 });
