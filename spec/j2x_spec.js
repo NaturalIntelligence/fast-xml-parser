@@ -483,4 +483,53 @@ describe("XMLBuilder", function() {
         expect(result).toEqual(expected);
     });
 
+    it('should start indentation from 0 level by default', function() {
+      const data = {
+        ['trans-unit']: {
+          source: 'source string',
+          target: 'target string',
+        },
+      };
+
+      const options = {
+        format: true,
+      };
+
+      const builder = new XMLBuilder(options);
+      const result = builder.build(data);
+
+      const expected =
+        '<trans-unit>\n' +
+        '  <source>source string</source>\n' +
+        '  <target>target string</target>\n' +
+        '</trans-unit>\n';
+
+      expect(result).toEqual(expected);
+    });
+
+    it('should start indentation from specified level', function() {
+      const data = {
+        ['trans-unit']: {
+          source: 'source string',
+          target: 'target string',
+        },
+      };
+
+      const options = {
+        format: true,
+        initialIndentationLevel: 1,
+      };
+
+      const builder = new XMLBuilder(options);
+      const result = builder.build(data);
+
+      const expected =
+        '  <trans-unit>\n' +
+        '    <source>source string</source>\n' +
+        '    <target>target string</target>\n' +
+        '  </trans-unit>\n';
+
+      expect(result).toEqual(expected);
+    });
+
 });
