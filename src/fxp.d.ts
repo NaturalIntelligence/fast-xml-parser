@@ -63,6 +63,7 @@ type XmlBuilderOptions = {
   commentPropName: false | string;
   format: boolean;
   indentBy: string;
+  initialIndentationLevel: number;
   arrayNodeName: string;
   suppressEmptyNode: boolean;
   suppressUnpairedNode: boolean;

@@ -10,6 +10,7 @@ const defaultOptions = {
   cdataPropName: false,
   format: false,
   indentBy: '  ',
+  initialIndentationLevel: 0,
   suppressEmptyNode: false,
   suppressUnpairedNode: true,
   suppressBooleanAttributes: true,
@@ -33,7 +34,7 @@ const defaultOptions = {
   stopNodes: [],
   // transformTagName: false,
   // transformAttributeName: false,
-  oneListGroup: false
+  oneListGroup: false,
 };
 
 function Builder(options) {
@@ -71,7 +72,7 @@ Builder.prototype.build = function(jObj) {
         [this.options.arrayNodeName] : jObj
       }
     }
-    return this.j2x(jObj, 0).val;
+    return this.j2x(jObj, this.options.initialIndentationLevel).val;
   }
 };
 
