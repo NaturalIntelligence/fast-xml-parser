@@ -46,6 +46,34 @@ describe("XMLParser Entities", function() {
         expect(result).toEqual(expected);
     });
 
+    it("should parse different entity character reference variants", function() {
+        const xmlData = `<?xml version="1.0"?>
+            <tests>
+              <test>&lt;</test>
+              <test>&#60;</test>
+              <test>&#060;</test>
+              <test>&#0060;</test>
+              <test>&#x3C;</test>
+              <test>&#x03C;</test>
+              <test>&#x003C;</test>
+              <test>&#x3c;</test>
+              <test>&#x03c;</test>
+              <test>&#x003c;</test>
+            </tests>`;
+
+        const expected = {
+            "?xml": "",
+            "tests": {
+                "test": ["<", "<", "<", "<", "<", "<", "<", "<", "<", "<"]
+            }
+        };
+
+        const parser = new XMLParser();
+        let result = parser.parse(xmlData, true);
+
+        expect(result).toEqual(expected);
+    });
+
     it("should parse XML with DOCTYPE without internal DTD", function() {
         const xmlData = "<?xml version='1.0' standalone='no'?><!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.1//EN\" \"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd\" ><svg><metadata>test</metadata></svg>";
         const expected = {
