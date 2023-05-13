@@ -1,16 +1,16 @@
 type X2jOptions = {
-  preserveOrder: boolean;
-  attributeNamePrefix: string;
-  attributesGroupName: false | string;
-  textNodeName: string;
-  ignoreAttributes: boolean;
-  removeNSPrefix: boolean;
-  allowBooleanAttributes: boolean;
-  parseTagValue: boolean;
-  parseAttributeValue: boolean;
-  trimValues: boolean;
-  cdataPropName: false | string;
-  commentPropName: false | string;
+  preserveOrder?: boolean;
+  attributeNamePrefix?: string;
+  attributesGroupName?: false | string;
+  textNodeName?: string;
+  ignoreAttributes?: boolean;
+  removeNSPrefix?: boolean;
+  allowBooleanAttributes?: boolean;
+  parseTagValue?: boolean;
+  parseAttributeValue?: boolean;
+  trimValues?: boolean;
+  cdataPropName?: false | string;
+  commentPropName?: false | string;
     /**
 Control how tag value should be parsed. Called only if tag value is not empty
 
@@ -19,19 +19,19 @@ Control how tag value should be parsed. Called only if tag value is not empty
 1. Different value or value with different data type to set new value. <br>
 2. Same value to set parsed value if `parseTagValue: true`.
    */
-  tagValueProcessor: (tagName: string, tagValue: string, jPath: string, hasAttributes: boolean, isLeafNode: boolean) => unknown;
-  attributeValueProcessor: (attrName: string, attrValue: string, jPath: string) => unknown;
-  numberParseOptions: strnumOptions;
-  stopNodes: string[];
-  unpairedTags: string[];
-  alwaysCreateTextNode: boolean;
-  isArray: (tagName: string, jPath: string, isLeafNode: boolean, isAttribute: boolean) => boolean;
-  processEntities: boolean;
-  htmlEntities: boolean;
-  ignoreDeclaration: boolean;
-  ignorePiTags: boolean;
-  transformTagName: ((tagName: string) => string) | false;
-  transformAttributeName: ((attributeName: string) => string) | false;
+  tagValueProcessor?: (tagName: string, tagValue: string, jPath: string, hasAttributes: boolean, isLeafNode: boolean) => unknown;
+  attributeValueProcessor?: (attrName: string, attrValue: string, jPath: string) => unknown;
+  numberParseOptions?: strnumOptions;
+  stopNodes?: string[];
+  unpairedTags?: string[];
+  alwaysCreateTextNode?: boolean;
+  isArray?: (tagName: string, jPath: string, isLeafNode: boolean, isAttribute: boolean) => boolean;
+  processEntities?: boolean;
+  htmlEntities?: boolean;
+  ignoreDeclaration?: boolean;
+  ignorePiTags?: boolean;
+  transformTagName?: ((tagName: string) => string) | false;
+  transformAttributeName?: ((attributeName: string) => string) | false;
     /**
 Change the tag name when a different name is returned. Skip the tag from parsed result when false is returned. 
 Modify `attrs` object to control attributes for the given tag.
@@ -55,25 +55,25 @@ type validationOptions = {
 type validationOptionsOptional = Partial<validationOptions>;
 
 type XmlBuilderOptions = {
-  attributeNamePrefix: string;
-  attributesGroupName: false | string;
-  textNodeName: string;
-  ignoreAttributes: boolean;
-  cdataPropName: false | string;
-  commentPropName: false | string;
-  format: boolean;
-  indentBy: string;
-  arrayNodeName: string;
-  suppressEmptyNode: boolean;
-  suppressUnpairedNode: boolean;
-  suppressBooleanAttributes: boolean;
-  preserveOrder: boolean;
-  unpairedTags: string[];
-  stopNodes: string[];
-  tagValueProcessor: (name: string, value: unknown) => string;
-  attributeValueProcessor: (name: string, value: unknown) => string;
-  processEntities: boolean;
-  oneListGroup: boolean;
+  attributeNamePrefix?: string;
+  attributesGroupName?: false | string;
+  textNodeName?: string;
+  ignoreAttributes?: boolean;
+  cdataPropName?: false | string;
+  commentPropName?: false | string;
+  format?: boolean;
+  indentBy?: string;
+  arrayNodeName?: string;
+  suppressEmptyNode?: boolean;
+  suppressUnpairedNode?: boolean;
+  suppressBooleanAttributes?: boolean;
+  preserveOrder?: boolean;
+  unpairedTags?: string[];
+  stopNodes?: string[];
+  tagValueProcessor?: (name: string, value: unknown) => string;
+  attributeValueProcessor?: (name: string, value: unknown) => string;
+  processEntities?: boolean;
+  oneListGroup?: boolean;
 };
 type XmlBuilderOptionsOptional = Partial<XmlBuilderOptions>;
 
