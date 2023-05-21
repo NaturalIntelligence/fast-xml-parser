@@ -220,7 +220,7 @@ const parseXml = function(xmlData) {
         }
         jPath = jPath.substring(0, propIndex);
 
-        currentNode = this.tagsNodeStack.pop();//avoid recursion, set the parent tag scope
+        currentNode = this.tagsNodeStack.length ? this.tagsNodeStack.pop() : currentNode;//avoid recursion, set the parent tag scope
         textData = "";
         i = closeIndex;
       } else if( xmlData[i+1] === '?') {

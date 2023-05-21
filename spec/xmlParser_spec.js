@@ -1066,4 +1066,36 @@ describe("XMLParser", function() {
   
       expect(result).toEqual(expected);
     });
+
+    it("should ignore closing tags without an opening tag", function() {
+        const xmlData = `<rootNode>
+                            <parentTag attr='my attr'>
+                                <childTag>Hello</childTag>
+                            </parentTag>
+                            <parentTag attr='my attr'>
+                                </childTag> <!-- This is a closing tag without an opening tag. Thus parsing should ignore such case and move forward -->
+                            </parentTag>
+                        </rootNode>`;    
+        const options = {            
+            ignoreAttributes: false,
+            preserveOrder: false,
+            alwaysCreateTextNode: false
+        };
+        const expected = {
+            "rootNode": {
+                "parentTag": [
+                    {
+                        "childTag": "Hello",
+                        "@_attr": "my attr"
+                    },
+                    {
+                        "@_attr": "my attr"
+                    }
+                ]
+            }
+        };
+        const parser = new XMLParser(options);
+        let result = parser.parse(xmlData);
+        expect(result).toEqual(expected);
+    });
 });
