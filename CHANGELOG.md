@@ -1,7 +1,7 @@
 Note: If you find missing information about particular minor version, that version must have been changed without any functional change in this library.
 
 **4.2.3 / 2023-05-23**
-* fix #573: unopened closing tags should be ignored instead of throwing "*Cannot read properties of undefined*" exception.
+* fix: Unopened closing tags should be ignored by XMLParser instead of throwing "*Cannot read properties of undefined*" exception.
 
 **4.2.2 / 2023-04-18**
 * fix #562: fix unpaired tag when it comes in last of a nested tag. Also throw error when unpaired tag is used as closing tag
