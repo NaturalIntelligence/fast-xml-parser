@@ -207,20 +207,23 @@ const parseXml = function(xmlData) {
         }
 
         //check if last tag of nested tag was unpaired tag
-        const lastTagName = jPath.substring(jPath.lastIndexOf(".")+1);
+        const lastTagName = jPath.substring(jPath.lastIndexOf("|")+1);
         if(tagName && this.options.unpairedTags.indexOf(tagName) !== -1 ){
           throw new Error(`Unpaired tag can not be used as closing tag: </${tagName}>`);
         }
         let propIndex = 0
         if(lastTagName && this.options.unpairedTags.indexOf(lastTagName) !== -1 ){
-          propIndex = jPath.lastIndexOf('.', jPath.lastIndexOf('.')-1)
+          propIndex = jPath.lastIndexOf('|', jPath.lastIndexOf('|')-1)
           this.tagsNodeStack.pop();
         }else{
-          propIndex = jPath.lastIndexOf(".");
-        }
-        jPath = jPath.substring(0, propIndex);
+          propIndex = jPath.lastIndexOf("|");
+        }        
+        if(lastTagName === tagName) {
+          //update path and pop out node only when the closing tag matches with opening tag. This condition will thus ignore unopened closing tags.
+          jPath = jPath.substring(0, propIndex);
 
-        currentNode = this.tagsNodeStack.pop();//avoid recursion, set the parent tag scope
+          currentNode = this.tagsNodeStack.pop();//avoid recursion, set the parent tag scope
+        }
         textData = "";
         i = closeIndex;
       } else if( xmlData[i+1] === '?') {
@@ -300,10 +303,10 @@ const parseXml = function(xmlData) {
         const lastTag = currentNode;
         if(lastTag && this.options.unpairedTags.indexOf(lastTag.tagname) !== -1 ){
           currentNode = this.tagsNodeStack.pop();
-          jPath = jPath.substring(0, jPath.lastIndexOf("."));
+          jPath = jPath.substring(0, jPath.lastIndexOf("|"));
         }
         if(tagName !== xmlObj.tagname){
-          jPath += jPath ? "." + tagName : tagName;
+          jPath += jPath ? "|" + tagName : tagName;
         }
         if (this.isItStopNode(this.options.stopNodes, jPath, tagName)) { //TODO: namespace
           let tagContent = "";
@@ -332,7 +335,7 @@ const parseXml = function(xmlData) {
             tagContent = this.parseTextData(tagContent, tagName, jPath, true, attrExpPresent, true, true);
           }
           
-          jPath = jPath.substr(0, jPath.lastIndexOf("."));
+          jPath = jPath.substr(0, jPath.lastIndexOf("|"));
           childNode.add(this.options.textNodeName, tagContent);
           
           this.addChild(currentNode, childNode, jPath)
@@ -355,7 +358,7 @@ const parseXml = function(xmlData) {
               childNode[":@"] = this.buildAttributesMap(tagExp, jPath, tagName);
             }
             this.addChild(currentNode, childNode, jPath)
-            jPath = jPath.substr(0, jPath.lastIndexOf("."));
+            jPath = jPath.substr(0, jPath.lastIndexOf("|"));
           }
     //opening tag
           else{
