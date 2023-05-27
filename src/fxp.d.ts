@@ -36,10 +36,12 @@ Control how tag value should be parsed. Called only if tag value is not empty
 Change the tag name when a different name is returned. Skip the tag from parsed result when false is returned. 
 Modify `attrs` object to control attributes for the given tag.
 
-@returns {string} new tag name.
-@returns false to skip the tag
+@returns {string} to change the tag name
+@returns {true} to not make any changes
+@returns {false} to skip the tag from the parsing result
+@returns {undefined} to skip the tag from the parsing result
    */
-  updateTag: (tagName: string, jPath: string, attrs: {[k: string]: string}) =>  string | boolean;
+  updateTag: (tagName: string, jPath: string, attrs: {[k: string]: string}) =>  string | boolean | undefined;
 };
 type strnumOptions = {
   hex: boolean;
