@@ -147,7 +147,7 @@ describe("unpaired and empty tags", function() {
         expect(output.replace(/\s+/g, "")).toEqual(expectedXml.replace(/\s+/g, ""));
     });
 
-    it("should supress paired tag but not unpaired tag when suppressUnpairedNode:false", function() {
+    it("should suppress paired tag but not unpaired tag when suppressUnpairedNode:false", function() {
       const xmlData = `<rootNode>
           <tag>value</tag>
           <empty />
@@ -211,7 +211,7 @@ describe("unpaired and empty tags", function() {
         expect(output.replace(/\s+/g, "")).toEqual(expectedXmlData.replace(/\s+/g, ""));
   });
 
-  it("should supress paired tag but not unpaired tag when suppressUnpairedNode:false (ordered)", function() {
+  it("should suppress paired tag but not unpaired tag when suppressUnpairedNode:false (ordered)", function() {
       const xmlData = `<rootNode>
           <tag>value</tag>
           <empty />
