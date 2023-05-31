@@ -70,8 +70,8 @@ type XmlBuilderOptions = {
   preserveOrder: boolean;
   unpairedTags: string[];
   stopNodes: string[];
-  tagValueProcessor: (name: string, value: unknown) => string;
-  attributeValueProcessor: (name: string, value: unknown) => string;
+  tagValueProcessor: (name: string, value: unknown) => unknown;
+  attributeValueProcessor: (name: string, value: unknown) => unknown;
   processEntities: boolean;
   oneListGroup: boolean;
 };
