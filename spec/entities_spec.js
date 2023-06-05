@@ -376,6 +376,24 @@ describe("XMLParser Entities", function() {
 
         expect(result).toEqual(expected);
     });
+    it("should throw error if an entity name contains special char", function() {
+        const xmlData = `
+        <?xml version="1.0" encoding="UTF-8"?>
+
+        <!DOCTYPE note [
+        <!ENTITY nj$ "writer;">
+        <!ENTITY wr?er "Writer: Donald Duck.">
+        ]>`;
+
+        const options = {
+            processEntities: true,
+        };
+
+        expect(() =>{
+            const parser = new XMLParser(options);
+            parser.parse(xmlData);
+        }).toThrowError("Invalid character $ in entity name")
+    });
 });
 
 describe("XMLParser External Entites", function() {

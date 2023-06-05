@@ -19,7 +19,7 @@ function readDocType(xmlData, i){
                     i += 7; 
                     [entityName, val,i] = readEntityExp(xmlData,i+1);
                     if(val.indexOf("&") === -1) //Parameter entities are not supported
-                        entities[ entityName ] = {
+                        entities[ validateEntityName(entityName) ] = {
                             regx : RegExp( `&${entityName};`,"g"),
                             val: val
                         };
@@ -138,6 +138,18 @@ function isNotation(xmlData, i){
     xmlData[i+8] === 'O' &&
     xmlData[i+9] === 'N') return true
     return false
+}
+
+//an entity name should not contains special characters that may be used in regex
+//Eg !?\\\/[]$%{}^&*()<>
+const specialChar = "!?\\\/[]$%{}^&*()<>";
+
+function validateEntityName(name){
+    for (let i = 0; i < specialChar.length; i++) {
+        const ch = specialChar[i];
+        if(name.indexOf(ch) !== -1) throw new Error(`Invalid character ${ch} in entity name`);
+    }
+    return name;
 }
 
 module.exports = readDocType;
