@@ -1,5 +1,8 @@
 Note: If you find missing information about particular minor version, that version must have been changed without any functional change in this library.
 
+**4.2.3 / 2023-06-05**
+* fix security bug
+
 **4.2.2 / 2023-04-18**
 * fix #562: fix unpaired tag when it comes in last of a nested tag. Also throw error when unpaired tag is used as closing tag
 
