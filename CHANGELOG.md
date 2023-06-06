@@ -1,5 +1,8 @@
 Note: If you find missing information about particular minor version, that version must have been changed without any functional change in this library.
 
+**4.2.4 / 2023-06-06**
+* fix security bug
+
 **4.2.3 / 2023-06-05**
 * fix security bug
 
