@@ -376,6 +376,7 @@ describe("XMLParser Entities", function() {
 
         expect(result).toEqual(expected);
     });
+
     it("should throw error if an entity name contains special char", function() {
         const xmlData = `
         <?xml version="1.0" encoding="UTF-8"?>
@@ -392,7 +393,48 @@ describe("XMLParser Entities", function() {
         expect(() =>{
             const parser = new XMLParser(options);
             parser.parse(xmlData);
-        }).toThrowError("Invalid character $ in entity name")
+        }).toThrowError("Invalid entity name nj$")
+    });
+
+    it("should allow localised entity names", function() {
+        const xmlData = `
+        <?xml version="1.0" encoding="UTF-8"?>
+
+        <!DOCTYPE note [
+        <!ENTITY ሀሎ "Amharic hello!">
+        <!ENTITY Здраво "Macedonian hello.">
+        ]>
+
+        <note>
+            <heading>Reminder</heading>
+            <body attr="&ሀሎ;">Don't forget me this weekend! &Здраво;</body>
+        </note> `;
+
+        const expected = {
+            "?xml": {
+                "version": "1.0",
+                "encoding": "UTF-8"
+            },
+            "note": {
+                "heading": "Reminder",
+                "body": {
+                    "#text": "Don't forget me this weekend! Macedonian hello.",
+                    "attr": "Amharic hello!"
+                }
+            }
+        };
+
+        const options = {
+            attributeNamePrefix: "",
+            ignoreAttributes:    false,
+            processEntities: true,
+            htmlEntities: true
+        };
+        const parser = new XMLParser(options);
+        let result = parser.parse(xmlData);
+        // console.log(JSON.stringify(result,null,4));
+
+        expect(result).toEqual(expected);
     });
 });
 
