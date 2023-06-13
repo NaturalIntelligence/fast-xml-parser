@@ -142,10 +142,6 @@ function isNotation(xmlData, i){
     return false
 }
 
-//an entity name should not contains special characters that may be used in regex
-//Eg !?\\\/[]$%{}^&*()<>
-const specialChar = "!?\\\/[]$%{}^&*()<>|+";
-
 function validateEntityName(name){
     if (util.isName(name))
 	return name;
