@@ -1,5 +1,8 @@
 Note: If you find missing information about particular minor version, that version must have been changed without any functional change in this library.
 
+**4.2.6 / 2023-07-17**
+* Remove trailing slash from jPath for self-closing tags (#595) (By [Maciej Radzikowski](https://github.com/m-radzikowski))
+
 **4.2.5 / 2023-06-22**
 * change code implementation
 
