@@ -249,7 +249,7 @@ function indentate(level) {
 }
 
 function isAttribute(name /*, options*/) {
-  if (name.startsWith(this.options.attributeNamePrefix)) {
+  if (name.startsWith(this.options.attributeNamePrefix) && name !== this.options.textNodeName) {
     return name.substr(this.attrPrefixLen);
   } else {
     return false;
