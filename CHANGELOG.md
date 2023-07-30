@@ -1,7 +1,8 @@
 Note: If you find missing information about particular minor version, that version must have been changed without any functional change in this library.
 
-**4.2.7 / 2023-07-22**
+**4.2.7 / 2023-07-30**
 * Fix: builder should set text node correctly when only textnode is present (#589) (By [qianqing](https://github.com/joneqian))
+* Fix: Fix for null and undefined attributes when building xml (#585) (#598). A null or undefined value should be ignored. (By [Eugenio Ceschia](https://github.com/cecia234))
 
 **4.2.6 / 2023-07-17**
 * Fix: Remove trailing slash from jPath for self-closing tags (#595) (By [Maciej Radzikowski](https://github.com/m-radzikowski))

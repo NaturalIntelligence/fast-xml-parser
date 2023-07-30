@@ -1,5 +1,5 @@
 # [fast-xml-parser](https://www.npmjs.com/package/fast-xml-parser)
-[![Backers on Open Collective](https://opencollective.com/fast-xml-parser/backers/badge.svg)](#backers) [![Sponsors on Open Collective](https://opencollective.com/fast-xml-parser/sponsors/badge.svg)](#sponsors) [![Known Vulnerabilities](https://snyk.io/test/github/naturalintelligence/fast-xml-parser/badge.svg)](https://snyk.io/test/github/naturalintelligence/fast-xml-parser)
+[![Known Vulnerabilities](https://snyk.io/test/github/naturalintelligence/fast-xml-parser/badge.svg)](https://snyk.io/test/github/naturalintelligence/fast-xml-parser)
 [![NPM quality][quality-image]][quality-url]
 [![Coverage Status](https://coveralls.io/repos/github/NaturalIntelligence/fast-xml-parser/badge.svg?branch=master)](https://coveralls.io/github/NaturalIntelligence/fast-xml-parser?branch=master)
 [<img src="https://img.shields.io/badge/Try-me-blue.svg?colorA=FFA500&colorB=0000FF" alt="Try me"/>](https://naturalintelligence.github.io/fast-xml-parser/)
@@ -11,20 +11,28 @@
 
 Validate XML, Parse XML to JS Object, or Build XML from JS Object without C/C++ based libraries and no callback.
 
-> Looking for maintainers
+<font size="6">I need a Career advice. I've posted the query on my <a href="github.com/amitguptagwl">profile</a>. Your support would be appreciable.</font>
 
-Support this project by becoming a **Sponsor**. 
-
-Click on Sponsor button above or
+Sponsor this project 👉 
+<a href="https://github.com/sponsors/NaturalIntelligence"> 
+  <img src="https://raw.githubusercontent.com/NaturalIntelligence/ThankYouBackers/main/github_sponsor.png" width="200" />
+</a>
 <a href="https://opencollective.com/fast-xml-parser/donate" target="_blank">
   <img src="https://opencollective.com/fast-xml-parser/donate/button@2x.png?color=blue" width=200 />
 </a>
 <a href="https://paypal.me/naturalintelligence"> <img src="static/img/support_paypal.svg" alt="Stubmatic donate button" width="200"/></a>
 
 
-### Sponsors
+### Current Sponsors
+
+Check the complete list at [ThankYouBackers](https://github.com/NaturalIntelligence/ThankYouBackers) for our sponsors and supporters.
+
+Through Github
 
 <a href="https://github.com/getsentry" target="_blank"><img src="https://user-images.githubusercontent.com/7692328/204701653-ce369b29-6fdb-48f2-9848-593d04628a2b.png" width="60px"></a>
+
+Through OpenCollective
+
 <a href="https://opencollective.com/fast-xml-parser/sponsor/0/website" target="_blank"><img src="https://opencollective.com/fast-xml-parser/sponsor/0/avatar.svg"></a>
 <a href="https://opencollective.com/fast-xml-parser/sponsor/1/website" target="_blank"><img src="https://opencollective.com/fast-xml-parser/sponsor/1/avatar.svg"></a>
 <a href="https://opencollective.com/fast-xml-parser/sponsor/2/website" target="_blank"><img src="https://opencollective.com/fast-xml-parser/sponsor/2/avatar.svg"></a>
@@ -36,8 +44,6 @@ Click on Sponsor button above or
 <a href="https://opencollective.com/fast-xml-parser/sponsor/8/website" target="_blank"><img src="https://opencollective.com/fast-xml-parser/sponsor/8/avatar.svg"></a>
 <a href="https://opencollective.com/fast-xml-parser/sponsor/9/website" target="_blank"><img src="https://opencollective.com/fast-xml-parser/sponsor/9/avatar.svg"></a>
 
-
-Check [ThankYouBackers](https://github.com/NaturalIntelligence/ThankYouBackers) for our supporters
 
 ## Users
 
@@ -56,9 +62,13 @@ Check [ThankYouBackers](https://github.com/NaturalIntelligence/ThankYouBackers) 
 <a href="https://github.com/postmanlabs" title="postman" > <img src="https://user-images.githubusercontent.com/7692328/204835529-e9e290ad-696a-49ad-9d34-08e955704715.png" width="60px" ></a>
 <a href="https://github.com/react-native-community" title="React Native Community" > <img src="https://avatars.githubusercontent.com/u/20269980?v=4" width="60px" ></a>
 
-Check the list of all known users [here](./USERs.md);
+Check the bigger [list](./USERs.md)
 
-<small>The list of users is collected either from the list published by Github, cummunicated directly through mails/chat , or from other resources. If you feel that your name in the above list is incorrectly published or you're not the user of this library anymore then you can inform us to remove it. We'll do the necessary changes ASAP.</small>
+<small>The list of users is collected either from the list published by Github, communicated directly through mails/chat , or from other resources. If you feel that your name in the above list is incorrectly published or you're not the user of this library anymore then you can inform us to remove it. We'll do the necessary changes ASAP.</small>
+
+If you want to be an anonymous user of this application and don't want to be highlighted anywhere then you can contact me at
+- githubissues@proton.me
+- https://linkedin.com/in/amitguptagwl/
 
 ## Main Features
 
