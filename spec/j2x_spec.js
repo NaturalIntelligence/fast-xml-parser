@@ -482,6 +482,34 @@ describe("XMLBuilder", function() {
         const expected = `<a><b>1</b><b>2</b></a>`;
         expect(result).toEqual(expected);
     });
+    
+    it('should build tag with only text node', async () => {
+        const schema_obj = {
+          field: {
+            values: {
+              value: {
+                '#text': 10061001,
+                size: '5',
+              },
+            },
+            id: 'skuCombineContent',
+            name: 'skuProduct',
+            type: 'multiInput',
+          },
+        };
+    
+        const parse_options = {
+          ignoreAttributes: false,
+          attributeNamePrefix: '',
+          textNodeName: '#text',
+        };
+        const expected = `<field id="skuCombineContent" name="skuProduct" type="multiInput"><values><value size="5">10061001</value></values></field>`;
+        
+        const builder = new XMLBuilder(parse_options);
+        const schema_xml = builder.build(schema_obj);
+        // console.log(schema_xml);
+        expect(schema_xml).toEqual(expected);
+      });
 
     it("should suppress null attributes in the xml when format is true and ignoreAttributes is false", function () {
         const jObj = {
@@ -596,4 +624,5 @@ describe("XMLBuilder", function() {
 
         expect(result).toEqual(expected);
     });
+
 });
