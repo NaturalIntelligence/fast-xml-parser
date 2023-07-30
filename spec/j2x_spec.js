@@ -483,4 +483,117 @@ describe("XMLBuilder", function() {
         expect(result).toEqual(expected);
     });
 
+    it("should suppress null attributes in the xml when format is true and ignoreAttributes is false", function () {
+        const jObj = {
+            "list": {
+                "item": [
+                    "one",
+                    { "#text": "two" },
+                    { "#text": "three", "@_attr": null }, // only one null attr
+                    { "#text": "four", "@_attr": "foo", "@_attr1": null }, // one defined attr and one null attr
+                    { "#text": "five", "@_attr": null, "@_attr1": "baz" }, // one null attr and one defined attr
+                    { "#text": "six", "@_attr": "foo", "@_attr1": "baz" }, // all defined attrs (more than one)
+                    { "#text": "seven", "@_attr": null, "@_attr1": null }, // all null attrs (more than one)
+                ]
+            }
+        };
+        const builder = new XMLBuilder({
+            ignoreAttributes: false,
+            format: true
+        });
+        const result = builder.build(jObj);
+        const expected = `
+        <list>
+            <item>one</item>
+            <item>two</item>
+            <item>three</item>
+            <item attr="foo">four</item>
+            <item attr1="baz">five</item>
+            <item attr="foo" attr1="baz">six</item>
+            <item>seven</item>
+        </list>`;
+
+        expect(result.replace(/\s+/g, "")).toEqual(expected.replace(/\s+/g, ""));
+    });
+
+    it("should suppress null attributes in the xml when format is false and ignoreAttributes is false", function () {
+        const jObj = {
+            "list": {
+                "item": [
+                    "one",
+                    { "#text": "two" },
+                    { "#text": "three", "@_attr": null }, // only one null attr
+                    { "#text": "four", "@_attr": "foo", "@_attr1": null }, // one defined attr and one null attr
+                    { "#text": "five", "@_attr": null, "@_attr1": "baz" }, // one null attr and one defined attr
+                    { "#text": "six", "@_attr": "foo", "@_attr1": "baz" }, // all defined attrs (more than one)
+                    { "#text": "seven", "@_attr": null, "@_attr1": null }, // all null attrs (more than one)
+                ]
+            }
+        };
+        const builder = new XMLBuilder({
+            ignoreAttributes: false,
+            format: false
+        });
+        const result = builder.build(jObj);
+        const expected = `<list><item>one</item><item>two</item><item>three</item><item attr="foo">four</item><item attr1="baz">five</item><item attr="foo" attr1="baz">six</item><item>seven</item></list>`;
+
+        expect(result).toEqual(expected);
+    });
+
+    it("should suppress undefined attributes in the xml when format is true and ignoreAttributes is false", function () {
+        const jObj = {
+            "list": {
+                "item": [
+                    "one",
+                    { "#text": "two" },
+                    { "#text": "three", "@_attr": undefined }, // only one undefined attr
+                    { "#text": "four", "@_attr": "foo", "@_attr1": undefined }, // one defined attr and one undefined attr
+                    { "#text": "five", "@_attr": undefined, "@_attr1": "baz" }, // one undefined attr and one defined attr
+                    { "#text": "six", "@_attr": "foo", "@_attr1": "baz" }, // all defined attrs (more than one)
+                    { "#text": "seven", "@_attr": undefined, "@_attr1": undefined }, // all undefined attrs (more than one)
+                ]
+            }
+        };
+        const builder = new XMLBuilder({
+            ignoreAttributes: false,
+            format: true
+        });
+        const result = builder.build(jObj);
+        const expected = `
+        <list>
+            <item>one</item>
+            <item>two</item>
+            <item>three</item>
+            <item attr="foo">four</item>
+            <item attr1="baz">five</item>
+            <item attr="foo" attr1="baz">six</item>
+            <item>seven</item>
+        </list>`;
+
+        expect(result.replace(/\s+/g, "")).toEqual(expected.replace(/\s+/g, ""));
+    });
+
+    it("should suppress undefined attributes in the xml when format is false and ignoreAttributes is false", function () {
+        const jObj = {
+            "list": {
+                "item": [
+                    "one",
+                    { "#text": "two" },
+                    { "#text": "three", "@_attr": undefined }, // only one undefined attr
+                    { "#text": "four", "@_attr": "foo", "@_attr1": undefined }, // one defined attr and one undefined attr
+                    { "#text": "five", "@_attr": undefined, "@_attr1": "baz" }, // one undefined attr and one defined attr
+                    { "#text": "six", "@_attr": "foo", "@_attr1": "baz" }, // all defined attrs (more than one)
+                    { "#text": "seven", "@_attr": undefined, "@_attr1": undefined }, // all undefined attrs (more than one)
+                ]
+            }
+        };
+        const builder = new XMLBuilder({
+            ignoreAttributes: false,
+            format: false
+        });
+        const result = builder.build(jObj);
+        const expected = `<list><item>one</item><item>two</item><item>three</item><item attr="foo">four</item><item attr1="baz">five</item><item attr="foo" attr1="baz">six</item><item>seven</item></list>`;
+
+        expect(result).toEqual(expected);
+    });
 });
