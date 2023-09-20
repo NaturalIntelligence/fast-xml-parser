@@ -88,9 +88,11 @@ type ValidationError = {
   };
 };
 
+type GenericObjectOrArray<TValue> = Record<string, unknown> | TValue[];
+
 export class XMLParser {
   constructor(options?: X2jOptionsOptional);
-  parse(xmlData: string | Buffer ,validationOptions?: validationOptionsOptional | boolean): any;
+  parse<TObject extends GenericObjectOrArray<unknown> = GenericObjectOrArray<unknown>>(xmlData: string | Buffer ,validationOptions?: validationOptionsOptional | boolean): TObject;
   /**
    * Add Entity which is not by default supported by this library
    * @param entityIndentifier {string} Eg: 'ent' for &ent;
@@ -104,5 +106,5 @@ export class XMLValidator{
 }
 export class XMLBuilder {
   constructor(options?: XmlBuilderOptionsOptional);
-  build(jObj: any): any;
+  build<TObject extends GenericObjectOrArray<unknown> = GenericObjectOrArray<unknown>>(jObj: TObject): string;
 }
