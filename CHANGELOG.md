@@ -1,8 +1,9 @@
 Note: If you find missing information about particular minor version, that version must have been changed without any functional change in this library.
 
-**4.2.8 / 2023-09-20**
+**4.3.0 / 2023-09-20**
 * Fix stopNodes to work with removeNSPrefix (#607) (#608) (By [Craig Andrews]https://github.com/candrews))
 * Fix #610 ignore properties set to Object.prototype
+* Fix typings for builder and parser to make return type generic (By [Sarah Dayan](https://github.com/sarahdayan))
 
 **4.2.7 / 2023-07-30**
 * Fix: builder should set text node correctly when only textnode is present (#589) (By [qianqing](https://github.com/joneqian))
