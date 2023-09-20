@@ -624,5 +624,14 @@ describe("XMLBuilder", function() {
 
         expect(result).toEqual(expected);
     });
+    it("should ignore Object level prototype properties or function", function () {
+        Object.prototype.something = 'strange';
+        const jObj = { a: 1 }
+        const builder = new XMLBuilder();
+        const result = builder.build(jObj);
+        const expected = `<a>1</a>`;
+
+        expect(result).toEqual(expected);
+    });
 
 });
