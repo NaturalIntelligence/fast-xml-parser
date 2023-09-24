@@ -1,5 +1,8 @@
 Note: If you find missing information about particular minor version, that version must have been changed without any functional change in this library.
 
+**4.3.1 / 2023-09-24**
+* revert back "Fix typings for builder and parser to make return type generic" to avoid failure of existing projects. Need to decide a common approach.
+
 **4.3.0 / 2023-09-20**
 * Fix stopNodes to work with removeNSPrefix (#607) (#608) (By [Craig Andrews]https://github.com/candrews))
 * Fix #610 ignore properties set to Object.prototype
