@@ -1,6 +1,6 @@
 {
   "name": "fast-xml-parser",
-  "version": "4.3.1",
+  "version": "4.3.2",
   "description": "Validate XML, Parse XML, Build XML without C/C++ based libraries",
   "main": "./src/fxp.js",
   "scripts": {
@@ -39,7 +39,7 @@
     "json2xml",
     "html"
   ],
-  "author": "Amit Gupta (https://amitguptagwl.github.io)",
+  "author": "Amit Gupta (https://solothought.com)",
   "license": "MIT",
   "devDependencies": {
     "@babel/core": "^7.13.10",
@@ -59,11 +59,11 @@
   },
   "typings": "src/fxp.d.ts",
   "funding": [{
-    "type": "paypal",
-    "url": "https://paypal.me/naturalintelligence"
-  },{
     "type": "github",
     "url": "https://github.com/sponsors/NaturalIntelligence"
+  },{
+    "type": "paypal",
+    "url": "https://paypal.me/naturalintelligence"
   }],
   "dependencies": {
     "strnum": "^1.0.5"
