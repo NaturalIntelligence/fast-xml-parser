@@ -29,7 +29,8 @@ Check the complete list at [ThankYouBackers](https://github.com/NaturalIntellige
 
 Through Github
 
-<a href="https://github.com/getsentry" target="_blank"><img src="https://user-images.githubusercontent.com/7692328/204701653-ce369b29-6fdb-48f2-9848-593d04628a2b.png" width="60px"></a>
+<a href="https://github.com/skunkteam" target="_blank"><img src="https://avatars.githubusercontent.com/u/46373671?s=60" width="60px"></a>
+<a href="https://github.com/getsentry" target="_blank"><img src="https://avatars.githubusercontent.com/u/1396951?s=60" width="60px"></a>
 
 Through OpenCollective
 
