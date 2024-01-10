@@ -1,5 +1,8 @@
 Note: If you find missing information about particular minor version, that version must have been changed without any functional change in this library.
 
+**4.3.3 / 2024-01-10**
+* Remove unnecessary regex
+
 **4.3.2 / 2023-10-02**
 * fix `jObj.hasOwnProperty` when give input is null (By [Arda TANRIKULU](https://github.com/ardatan)) 
 
