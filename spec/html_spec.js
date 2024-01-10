@@ -4,7 +4,8 @@ const {XMLParser, XMLBuilder} = require("../src/fxp");
 describe("XMLParser", function() {
 
     it("should parse HTML with basic entities, <pre>, <script>, <br>", function() {
-        const html = `
+      Object.prototype.something = 'strange';
+      const html = `
         <html lang="en">
             <head>
                 <script>

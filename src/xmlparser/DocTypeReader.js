@@ -1,3 +1,5 @@
+const util = require('../util');
+
 //TODO: handle comments
 function readDocType(xmlData, i){
     
@@ -19,7 +21,7 @@ function readDocType(xmlData, i){
                     i += 7; 
                     [entityName, val,i] = readEntityExp(xmlData,i+1);
                     if(val.indexOf("&") === -1) //Parameter entities are not supported
-                        entities[ entityName ] = {
+                        entities[ validateEntityName(entityName) ] = {
                             regx : RegExp( `&${entityName};`,"g"),
                             val: val
                         };
@@ -138,6 +140,13 @@ function isNotation(xmlData, i){
     xmlData[i+8] === 'O' &&
     xmlData[i+9] === 'N') return true
     return false
+}
+
+function validateEntityName(name){
+    if (util.isName(name))
+	return name;
+    else
+        throw new Error(`Invalid entity name ${name}`);
 }
 
 module.exports = readDocType;

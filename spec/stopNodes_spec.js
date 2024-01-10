@@ -4,6 +4,57 @@ const { XMLParser, XMLValidator } = require("../src/fxp");
 const he = require("he");
 
 describe("XMLParser StopNodes", function () {
+  it("should support single stopNode with namespace and removeNSPrefix set", function () {
+    const xmlData = `<issue><title>test 1</title><namespace:fix1><p>p 1</p><div class="show">div 1</div></namespace:fix1></issue>`;
+    const expected = {
+      "issue": {
+        "title": "test 1",
+        "fix1": "<p>p 1</p><div class=\"show\">div 1</div>"
+      }
+    };
+
+    const options = {
+      attributeNamePrefix: "",
+      ignoreAttributes: false,
+      parseAttributeValue: true,
+      removeNSPrefix: true,
+      stopNodes: ["issue.fix1"]
+    };
+    const parser = new XMLParser(options);
+    let result = parser.parse(xmlData);
+
+    // console.log(JSON.stringify(result,null,4));
+    expect(result).toEqual(expected);
+
+    result = XMLValidator.validate(xmlData);
+    expect(result).toBe(true);
+  });
+
+  it("should support single stopNode with namespace", function () {
+    const xmlData = `<issue><title>test 1</title><namespace:fix1><p>p 1</p><div class="show">div 1</div></namespace:fix1></issue>`;
+    const expected = {
+      "issue": {
+        "title": "test 1",
+        "namespace:fix1": "<p>p 1</p><div class=\"show\">div 1</div>"
+      }
+    };
+
+    const options = {
+      attributeNamePrefix: "",
+      ignoreAttributes: false,
+      parseAttributeValue: true,
+      stopNodes: ["issue.namespace:fix1"]
+    };
+    const parser = new XMLParser(options);
+    let result = parser.parse(xmlData);
+
+    // console.log(JSON.stringify(result,null,4));
+    expect(result).toEqual(expected);
+
+    result = XMLValidator.validate(xmlData);
+    expect(result).toBe(true);
+  });
+
   it("1a. should support single stopNode", function () {
     const xmlData = `<issue><title>test 1</title><fix1><p>p 1</p><div class="show">div 1</div></fix1></issue>`;
     const expected = {

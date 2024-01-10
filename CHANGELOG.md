@@ -1,5 +1,35 @@
 Note: If you find missing information about particular minor version, that version must have been changed without any functional change in this library.
 
+**4.3.3 / 2024-01-10**
+* Remove unnecessary regex
+
+**4.3.2 / 2023-10-02**
+* fix `jObj.hasOwnProperty` when give input is null (By [Arda TANRIKULU](https://github.com/ardatan)) 
+
+**4.3.1 / 2023-09-24**
+* revert back "Fix typings for builder and parser to make return type generic" to avoid failure of existing projects. Need to decide a common approach.
+
+**4.3.0 / 2023-09-20**
+* Fix stopNodes to work with removeNSPrefix (#607) (#608) (By [Craig Andrews]https://github.com/candrews))
+* Fix #610 ignore properties set to Object.prototype
+* Fix typings for builder and parser to make return type generic (By [Sarah Dayan](https://github.com/sarahdayan))
+
+**4.2.7 / 2023-07-30**
+* Fix: builder should set text node correctly when only textnode is present (#589) (By [qianqing](https://github.com/joneqian))
+* Fix: Fix for null and undefined attributes when building xml (#585) (#598). A null or undefined value should be ignored. (By [Eugenio Ceschia](https://github.com/cecia234))
+
+**4.2.6 / 2023-07-17**
+* Fix: Remove trailing slash from jPath for self-closing tags (#595) (By [Maciej Radzikowski](https://github.com/m-radzikowski))
+
+**4.2.5 / 2023-06-22**
+* change code implementation
+
+**4.2.4 / 2023-06-06**
+* fix security bug
+
+**4.2.3 / 2023-06-05**
+* fix security bug
+
 **4.2.2 / 2023-04-18**
 * fix #562: fix unpaired tag when it comes in last of a nested tag. Also throw error when unpaired tag is used as closing tag
 
