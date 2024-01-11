@@ -255,7 +255,7 @@ describe("XMLParser Entities", function() {
         expect(result).toEqual(expected);
     });
 
-    it("should build by decoding defaul entities", function() {
+    it("should build by decoding default entities", function() {
         const jsObj = {
             "note": {
                 "@heading": "Reminder > \"Alert",
@@ -283,7 +283,7 @@ describe("XMLParser Entities", function() {
         const result = builder.build(jsObj);
         expect(result.replace(/\s+/g, "")).toEqual(expected.replace(/\s+/g, ""));
     });
-    it("should build by decoding defaul entities in prserve mode", function() {
+    it("should build by decoding default entities in preserve mode", function() {
         const jsObj = [
             {
                 "note": [
@@ -438,7 +438,7 @@ describe("XMLParser Entities", function() {
     });
 });
 
-describe("XMLParser External Entites", function() {
+describe("XMLParser External Entities", function() {
     it("should throw error when an entity value has '&'", function() {
         const parser = new XMLParser();
         expect( () => {
@@ -471,7 +471,7 @@ describe("XMLParser External Entites", function() {
         expect(result.note).toEqual(`&unknown;\r\nlast`);
     });
     
-    it("External Entity can change the behaviour of default entites", function() {
+    it("External Entity can change the behavior of default entities", function() {
         const xmlData = `<note>&gt;last</note> `;
 
         const parser = new XMLParser();
@@ -493,7 +493,7 @@ describe("XMLParser External Entites", function() {
 
         expect(result.note).toEqual(`><last`);
     });
-    it("should build by decoding '&' prserve mode", function() {
+    it("should build by decoding '&' preserve mode", function() {
         const jsObj = [
             {
                 "note": [
@@ -593,7 +593,7 @@ describe("XMLParser External Entites", function() {
         expect(result).toEqual(expected);
     });
     
-    it("should support entites with tags in content", function() {
+    it("should support entities with tags in content", function() {
         const xmlData = `
         <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" [ 

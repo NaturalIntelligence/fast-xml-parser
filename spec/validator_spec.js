@@ -443,7 +443,7 @@ describe("XML Validator with options", function () {
         validate(`<parent><extra></parent>`,
         {InvalidTag: "Expected closing tag 'extra' (opened in line 1, col 9) instead of closing tag 'parent'."}, 1, 16));
     
-    it('- Maarked Unpaired tags', () =>{
+    it('- Marked Unpaired tags', () =>{
         const result = XMLValidator.validate(`<parent><extra></parent>`, {
             unpairedTags: ["extra"]
         });

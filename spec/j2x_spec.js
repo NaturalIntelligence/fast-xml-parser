@@ -52,7 +52,7 @@ describe("XMLBuilder", function() {
         expect(result).toEqual(expected);
     });
 
-    it("should supress undefined nodes", function() {
+    it("should suppress undefined nodes", function() {
         const jObj = {
             a: {
                 b: [

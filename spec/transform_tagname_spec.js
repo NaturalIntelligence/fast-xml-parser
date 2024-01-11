@@ -3,7 +3,7 @@
 const {XMLParser} = require("../src/fxp");
 
 describe("XMLParser", function() {
-    it("should parse lowercase tagnames", function() {
+    it("should parse lowercase tag names", function() {
         const xmlData = `<?xml version='1.0'?>
           <root>
             <person>Person 1</person>
