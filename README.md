@@ -11,7 +11,8 @@
 
 Validate XML, Parse XML to JS Object, or Build XML from JS Object without C/C++ based libraries and no callback.
 
-<font size="6">I need a Career advice. I've posted the query on my <a href="github.com/amitguptagwl">profile</a>. Your support would be appreciable.</font>
+> XML Parser v5 is added for experimental use
+> https://solothought.com
 
 Sponsor this project 👉 
 <a href="https://github.com/sponsors/NaturalIntelligence"> 
@@ -90,6 +91,11 @@ If you want to be an anonymous user of this application and don't want to be hig
 * You can control if a single tag should be parsed into array.
 * Supports parsing of PI (Processing Instruction) tags with XML declaration tags
 * And many more other features.
+
+## v5
+I developed v5 in Apr 2023. And I didn't get the chance to complete all the features. I've ensured that new features don't impact performance. With v5, you have more control on parsing output. Check [docs](./docs/v5) for syntax help and basic understanding.
+
+Please leave a comment in discussion forum for your suggestions and if you really need v5.
 
 ## How to use
 
@@ -173,19 +179,6 @@ Check lib folder for different browser bundles
 <small>negative means error</small>
 
 [![](static/img/ni_ads_ads.gif)](https://github.com/NaturalIntelligence/ads/)
-
-## Our other projects and research you must try
-
-* **[BigBit standard](https://github.com/amitguptagwl/bigbit)** : 
-  * Single text encoding to replace UTF-8, UTF-16, UTF-32 and more with less memory.
-  * Single Numeric datatype alternative of integer, float, double, long, decimal and more without precision loss.
-* **[Cytorus](https://github.com/NaturalIntelligence/cytorus)**:  Be specific and flexible while running E2E tests.
-  * Run tests only for a particular User Story
-  * Run tests for a route or from a route
-  * Customizable reporting
-  * Central dashboard for better monitoring
-  * Options to integrate E2E tests with Jira, Github etc using Central dashboard `Tian`.
-* **[Stubmatic](https://github.com/NaturalIntelligence/Stubmatic)** : Create fake webservices, DynamoDB or S3 servers, Manage fake/mock stub data, Or fake any HTTP(s) call.
 
 
 ## Supporters

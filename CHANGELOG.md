@@ -1,5 +1,8 @@
 Note: If you find missing information about particular minor version, that version must have been changed without any functional change in this library.
 
+**4.3.5 / 2024-02-24**
+* code for v5 is added for experimental use
+
 **4.3.4 / 2024-01-10**
 * fix: Don't escape entities in CDATA sections (#633) (By [wackbyte](https://github.com/wackbyte))
 
