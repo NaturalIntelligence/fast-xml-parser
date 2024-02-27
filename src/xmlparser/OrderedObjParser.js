@@ -20,26 +20,26 @@ class OrderedObjParser{
     this.tagsNodeStack = [];
     this.docTypeEntities = {};
     this.lastEntities = {
-      "apos" : { regex: /&(apos|#39|#x27);/g, val : "'"},
-      "gt" : { regex: /&(gt|#62|#x3E);/g, val : ">"},
-      "lt" : { regex: /&(lt|#60|#x3C);/g, val : "<"},
-      "quot" : { regex: /&(quot|#34|#x22);/g, val : "\""},
+      "apos" : { regex: /&(apos|#0*39|#x0*27);/gi, val : "'"},
+      "gt" : { regex: /&(gt|#0*62|#x0*3E);/gi, val : ">"},
+      "lt" : { regex: /&(lt|#0*60|#x0*3C);/gi, val : "<"},
+      "quot" : { regex: /&(quot|#0*34|#x0*22);/gi, val : "\""},
     };
-    this.ampEntity = { regex: /&(amp|#38|#x26);/g, val : "&"};
+    this.ampEntity = { regex: /&(amp|#0*38|#x0*26);/gi, val : "&"};
     this.htmlEntities = {
-      "space": { regex: /&(nbsp|#160);/g, val: " " },
-      // "lt" : { regex: /&(lt|#60);/g, val: "<" },
-      // "gt" : { regex: /&(gt|#62);/g, val: ">" },
-      // "amp" : { regex: /&(amp|#38);/g, val: "&" },
-      // "quot" : { regex: /&(quot|#34);/g, val: "\"" },
-      // "apos" : { regex: /&(apos|#39);/g, val: "'" },
-      "cent" : { regex: /&(cent|#162);/g, val: "¢" },
-      "pound" : { regex: /&(pound|#163);/g, val: "£" },
-      "yen" : { regex: /&(yen|#165);/g, val: "¥" },
-      "euro" : { regex: /&(euro|#8364);/g, val: "€" },
-      "copyright" : { regex: /&(copy|#169);/g, val: "©" },
-      "reg" : { regex: /&(reg|#174);/g, val: "®" },
-      "inr" : { regex: /&(inr|#8377);/g, val: "₹" },
+      "space": { regex: /&(nbsp|#0*160);/gi, val: " " },
+      // "lt" : { regex: /&(lt|#0*60);/gi, val: "<" },
+      // "gt" : { regex: /&(gt|#0*62);/gi, val: ">" },
+      // "amp" : { regex: /&(amp|#0*38);/gi, val: "&" },
+      // "quot" : { regex: /&(quot|#0*34);/gi, val: "\"" },
+      // "apos" : { regex: /&(apos|#0*39);/gi, val: "'" },
+      "cent" : { regex: /&(cent|#0*162);/gi, val: "¢" },
+      "pound" : { regex: /&(pound|#0*163);/gi, val: "£" },
+      "yen" : { regex: /&(yen|#0*165);/gi, val: "¥" },
+      "euro" : { regex: /&(euro|#0*8364);/gi, val: "€" },
+      "copyright" : { regex: /&(copy|#0*169);/gi, val: "©" },
+      "reg" : { regex: /&(reg|#0*174);/gi, val: "®" },
+      "inr" : { regex: /&(inr|#0*8377);/gi, val: "₹" },
     };
     this.addExternalEntities = addExternalEntities;
     this.parseXml = parseXml;
