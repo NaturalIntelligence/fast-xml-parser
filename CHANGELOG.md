@@ -1,5 +1,8 @@
 Note: If you find missing information about particular minor version, that version must have been changed without any functional change in this library.
 
+**4.3.6 / 2024-03-16**
+* Add support for parsing HTML numeric entities (#645) (By [Jonas Schade ](https://github.com/DerZade))
+
 **4.3.5 / 2024-02-24**
 * code for v5 is added for experimental use
 
