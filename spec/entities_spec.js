@@ -377,6 +377,41 @@ describe("XMLParser Entities", function() {
         expect(result).toEqual(expected);
     });
 
+    
+    it("should parse HTML numeric entities when htmlEntities:true", function() {
+        const xmlData = `
+        <?xml version="1.0" encoding="UTF-8"?>
+        <note>
+            <heading>Bear</heading>
+            <body face="&#x295;&#x2022;&#x1D25;&#x2022;&#x294;">Bears are called B&#228;ren in German!</body>
+        </note> `;
+
+        const expected = {
+            "?xml": {
+                "version": "1.0",
+                "encoding": "UTF-8"
+            },
+            "note": {
+                "heading": "Bear",
+                "body": {
+                    "#text": "Bears are called Bären in German!",
+                    "face": "ʕ•ᴥ•ʔ"
+                }
+            }
+        };
+
+        const options = {
+            attributeNamePrefix: "",
+            ignoreAttributes:    false,
+            processEntities: true,
+            htmlEntities: true,
+        };
+        const parser = new XMLParser(options);
+        let result = parser.parse(xmlData);
+
+        expect(result).toEqual(expected);
+    });
+
     it("should throw error if an entity name contains special char", function() {
         const xmlData = `
         <?xml version="1.0" encoding="UTF-8"?>
