@@ -10,8 +10,8 @@ class OutputBuilder{
       this.registeredParsers[name] = parserInstance;
     }
 
-  getInstance(){
-    return new JsMinArrBuilder(this.options, this.registeredParsers);
+  getInstance(parserOptions){
+    return new JsMinArrBuilder(parserOptions, this.options, this.registeredParsers);
   }
 }
 
@@ -20,9 +20,10 @@ const rootName = '^';
 
 class JsMinArrBuilder extends BaseOutputBuilder{
 
-  constructor(options,registeredParsers) {
+  constructor(parserOptions, options,registeredParsers) {
     super();
     this.tagsStack = [];
+    this.parserOptions = parserOptions;
     this.options = options;
     this.registeredParsers = registeredParsers;
 

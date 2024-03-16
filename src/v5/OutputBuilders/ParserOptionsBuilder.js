@@ -36,22 +36,24 @@ const defaultOptions={
     ]
   }
 }
+
+//TODO
+const withJoin = ["trim","join", /*"entities",*/"number","boolean","currency"/*, "date"*/]
+const withoutJoin = ["trim", /*"entities",*/"number","boolean","currency"/*, "date"*/]
+
 function buildOptions(options){
   //clone
   const finalOptions = { ... defaultOptions};
 
   //add config missed in cloning
-  finalOptions.tags.valueParsers.push("trim")
-  finalOptions.tags.valueParsers.push("boolean")
-  finalOptions.tags.valueParsers.push("number")
-  finalOptions.tags.valueParsers.push("currency")
+  finalOptions.tags.valueParsers.push(...withJoin)
+  if(!this.preserveOrder)
+    finalOptions.tags.valueParsers.push(...withoutJoin);
 
   //add config missed in cloning
-  finalOptions.attributes.valueParsers.push("trim")
-  finalOptions.attributes.valueParsers.push("boolean")
-  finalOptions.attributes.valueParsers.push("number")
-  finalOptions.attributes.valueParsers.push("currency")
+  finalOptions.attributes.valueParsers.push(...withJoin)
 
+  //override configuration
   copyProperties(finalOptions,options);
   return finalOptions;
 }

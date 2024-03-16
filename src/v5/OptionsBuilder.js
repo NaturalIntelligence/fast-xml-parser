@@ -1,5 +1,5 @@
 
-const JsArrBuilder = require("./OutputBuilders/JsArrBuilder");
+const JsObjOutputBuilder = require("./OutputBuilders/JsObjBuilder");
 
 const defaultOptions = {
   preserveOrder: false,
@@ -17,12 +17,11 @@ const defaultOptions = {
       text: '#text'
     },
     separateTextProperty: false,
-    valueParsers: []
   },
   attributes:{
     ignore: false,
     booleanType: true,
-    entities: true
+    entities: true,
   },
 
   // select: ["img[src]"],
@@ -33,21 +32,13 @@ const defaultOptions = {
 
   select: [], // on('select', tag => tag ) will be called if match
   stop: [], //given tagPath will not be parsed. innerXML will be set as string value
-  OutputBuilder: new JsArrBuilder(),
+  OutputBuilder: new JsObjOutputBuilder(),
 };
    
 const buildOptions = function(options) {
   const finalOptions = { ... defaultOptions};
-  finalOptions.tags.valueParsers.push("trim");
-  finalOptions.tags.valueParsers.push("entities");
-  if(!this.preserveOrder)
-    finalOptions.tags.valueParsers.push("join");
-  finalOptions.tags.valueParsers.push("boolean");
-  finalOptions.tags.valueParsers.push("number");
-  finalOptions.tags.valueParsers.push("currency");
-  finalOptions.tags.valueParsers.push("date");
   copyProperties(finalOptions,options)
-  return  finalOptions;
+  return finalOptions;
 };
 
 function copyProperties(target, source) {

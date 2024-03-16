@@ -7,7 +7,7 @@ class BaseOutputBuilder{
     if(this.options.onAttribute){
       //TODO: better to pass tag path
       const v = this.options.onAttribute(name, value, this.tagName);
-      if(!v) this.attributes[v.name] = v.value;
+      if(v) this.attributes[v.name] = v.value;
     }else{
       name = this.options.attributes.prefix + name + this.options.attributes.suffix;
       this.attributes[name] = this.parseValue(value, this.options.attributes.valueParsers);
@@ -21,10 +21,12 @@ class BaseOutputBuilder{
    */
     parseValue = function(val, valParsers){
       for (let i = 0; i < valParsers.length; i++) {
-        let valParser = this.registeredParsers[valParsers[i]];
+        let valParser = valParsers[i];
+        if(typeof valParser === "string"){
+          valParser = this.registeredParsers[valParser];
+        }
         if(valParser){
           val = valParser.parse(val);
-          // if(!valParser.chainable) break;
         }
       }
       return val;

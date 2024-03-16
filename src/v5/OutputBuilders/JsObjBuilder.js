@@ -3,8 +3,8 @@
 const {buildOptions,registerCommonValueParsers} = require("./ParserOptionsBuilder");
 
 class OutputBuilder{
-  constructor(options){
-      this.options = buildOptions(options);
+  constructor(builderOptions){
+      this.options = buildOptions(builderOptions);
       this.registeredParsers = registerCommonValueParsers();
   }
 
@@ -12,8 +12,8 @@ class OutputBuilder{
     this.registeredParsers[name] = parserInstance;
   }
 
-  getInstance(){
-    return new JsObjBuilder(this.options, this.registeredParsers);
+  getInstance(parserOptions){
+    return new JsObjBuilder(parserOptions, this.options, this.registeredParsers);
   }
 }
 
@@ -22,11 +22,12 @@ const rootName = '^';
 
 class JsObjBuilder extends BaseOutputBuilder{
 
-  constructor(options,registeredParsers) {
+  constructor(parserOptions, builderOptions,registeredParsers) {
     super();
     //hold the raw detail of a tag and sequence with reference to the output
     this.tagsStack = [];
-    this.options = options;
+    this.parserOptions = parserOptions;
+    this.options = builderOptions;
     this.registeredParsers = registeredParsers;
 
     this.root = {};
@@ -75,13 +76,13 @@ class JsObjBuilder extends BaseOutputBuilder{
 
     
     let resultTag= {
-      tagName: this.tagName,
+      tagName: tagName,
       value: value
     };
 
     if(this.options.onTagClose !== undefined){
       //TODO TagPathMatcher 
-      resultTag = this.options.onClose(this.tagName, value, this.textValue, new TagPathMatcher(this.tagsStack,node));
+      resultTag = this.options.onClose(tagName, value, this.textValue, new TagPathMatcher(this.tagsStack,node));
 
       if(!resultTag) return;
     }
