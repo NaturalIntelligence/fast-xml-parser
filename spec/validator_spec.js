@@ -129,6 +129,12 @@ describe("XML Validator", function () {
         });
     });
 
+    it("should not validate xml with unexpected closing tag", function () {
+        validate("</rootNode>", {
+            InvalidTag: "Closing tag 'rootNode' has not been opened."
+        });
+    });
+
     it("should validate xml with comment", function () {
         validate("<rootNode><!-- <tag> - - --><tag>1</tag><tag>val</tag></rootNode>");
     });
