@@ -121,6 +121,8 @@ describe("XMLParser updateTag ", function() {
                 <img width="500" height="500">
             </content>
             <script></script>
+            <lorem/>
+            <ipsum/>
         </body>
     </html>`;
         const expected = {
@@ -167,6 +169,10 @@ describe("XMLParser updateTag ", function() {
                     if(attrs.width > 200 || attrs.height > 200) return false;
                 }else if(tagname === "content"){
                     return "div"
+                }else if(tagname === "lorem") {
+                    return false;
+                }else if(jPath === "html.body.ipsum") {
+                    return false;
                 }
                 return tagname;
             },

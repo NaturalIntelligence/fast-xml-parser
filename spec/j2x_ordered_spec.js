@@ -247,6 +247,7 @@ describe("XMLBuilder", function () {
     });
 
     it("should build XML when leaf nodes or attributes are parsed to array", function () {
+        Object.prototype.something = 'strange';
         const XMLdata = `<report>
         <store>
             <region>US</region>

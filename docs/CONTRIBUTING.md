@@ -1,9 +1,9 @@
 # Thanks
-I would like to thank you for your valuable time and effort and applogies if this PR is rejected due to any reason.
+I would like to thank you for your valuable time and effort and apologies if this PR is rejected due to any reason.
 
-This repository is written with the aim of providing high performance not in terms of speed only but comfortability of the user as well.
+This repository is written with the aim of providing high performance, not in terms of speed only, but comfortably of the user as well.
 
-## No rights are resserved
+## No rights are reserved
 
 Your contribution is valuable. We try to mention your name on README with the avatar. We can't promise to pay you for your contribution.
 
@@ -11,7 +11,7 @@ Your contribution is valuable. We try to mention your name on README with the av
 Here is the check list to publish any change
 
 * Changes are not half implemented due to the library limitation or any other reason.
-* Changes are well discussed by raising github issue. So they are well known by other contributers and users
+* Changes are well discussed by raising github issue. So they are well known by other contributors and users
 * Echoing the above point. The purpose / goal for the PR should be mentioned in the description.
 * Multiple unrelated changes should not be clubbed in single PR.
 * Please run perf tests  `$ node benchmark\XmlParser.js` or `$ node benchmark\XmlBuilder.js` before and after the changes. And mention it in PR description.

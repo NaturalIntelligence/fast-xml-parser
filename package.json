@@ -1,10 +1,11 @@
 {
   "name": "fast-xml-parser",
-  "version": "4.2.2",
+  "version": "4.3.6",
   "description": "Validate XML, Parse XML, Build XML without C/C++ based libraries",
   "main": "./src/fxp.js",
   "scripts": {
     "test": "nyc --reporter=lcov --reporter=text jasmine spec/*spec.js",
+    "test-types": "tsc --noEmit spec/typings/typings-test.ts",
     "unit": "jasmine",
     "coverage": "nyc report --reporter html --reporter text -t .nyc_output --report-dir .nyc_output/summary",
     "perf": "node ./benchmark/perfTest3.js",
@@ -39,13 +40,14 @@
     "json2xml",
     "html"
   ],
-  "author": "Amit Gupta (https://amitkumargupta.work/)",
+  "author": "Amit Gupta (https://solothought.com)",
   "license": "MIT",
   "devDependencies": {
     "@babel/core": "^7.13.10",
     "@babel/plugin-transform-runtime": "^7.13.10",
     "@babel/preset-env": "^7.13.10",
     "@babel/register": "^7.13.8",
+    "@types/node": "20",
     "babel-loader": "^8.2.2",
     "cytorus": "^0.2.9",
     "eslint": "^8.3.0",
@@ -54,16 +56,17 @@
     "nyc": "^15.1.0",
     "prettier": "^1.19.1",
     "publish-please": "^5.5.2",
+    "typescript": "5",
     "webpack": "^5.64.4",
     "webpack-cli": "^4.9.1"
   },
   "typings": "src/fxp.d.ts",
   "funding": [{
-    "type": "paypal",
-    "url": "https://paypal.me/naturalintelligence"
-  },{
     "type": "github",
     "url": "https://github.com/sponsors/NaturalIntelligence"
+  },{
+    "type": "paypal",
+    "url": "https://paypal.me/naturalintelligence"
   }],
   "dependencies": {
     "strnum": "^1.0.5"

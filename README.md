@@ -1,5 +1,5 @@
 # [fast-xml-parser](https://www.npmjs.com/package/fast-xml-parser)
-[![Backers on Open Collective](https://opencollective.com/fast-xml-parser/backers/badge.svg)](#backers) [![Sponsors on Open Collective](https://opencollective.com/fast-xml-parser/sponsors/badge.svg)](#sponsors) [![Known Vulnerabilities](https://snyk.io/test/github/naturalintelligence/fast-xml-parser/badge.svg)](https://snyk.io/test/github/naturalintelligence/fast-xml-parser)
+[![Known Vulnerabilities](https://snyk.io/test/github/naturalintelligence/fast-xml-parser/badge.svg)](https://snyk.io/test/github/naturalintelligence/fast-xml-parser)
 [![NPM quality][quality-image]][quality-url]
 [![Coverage Status](https://coveralls.io/repos/github/NaturalIntelligence/fast-xml-parser/badge.svg?branch=master)](https://coveralls.io/github/NaturalIntelligence/fast-xml-parser?branch=master)
 [<img src="https://img.shields.io/badge/Try-me-blue.svg?colorA=FFA500&colorB=0000FF" alt="Try me"/>](https://naturalintelligence.github.io/fast-xml-parser/)
@@ -11,20 +11,30 @@
 
 Validate XML, Parse XML to JS Object, or Build XML from JS Object without C/C++ based libraries and no callback.
 
-> Looking for maintainers
+> XML Parser v5 is added for experimental use
+> https://solothought.com
 
-Support this project by becoming a **Sponsor**. 
-
-Click on Sponsor button above or
+Sponsor this project 👉 
+<a href="https://github.com/sponsors/NaturalIntelligence"> 
+  <img src="https://raw.githubusercontent.com/NaturalIntelligence/ThankYouBackers/main/github_sponsor.png" width="200" />
+</a>
 <a href="https://opencollective.com/fast-xml-parser/donate" target="_blank">
   <img src="https://opencollective.com/fast-xml-parser/donate/button@2x.png?color=blue" width=200 />
 </a>
 <a href="https://paypal.me/naturalintelligence"> <img src="static/img/support_paypal.svg" alt="Stubmatic donate button" width="200"/></a>
 
 
-### Sponsors
+### Current Sponsors
 
-<a href="https://github.com/getsentry" target="_blank"><img src="https://user-images.githubusercontent.com/7692328/204701653-ce369b29-6fdb-48f2-9848-593d04628a2b.png" width="60px"></a>
+Check the complete list at [ThankYouBackers](https://github.com/NaturalIntelligence/ThankYouBackers) for our sponsors and supporters.
+
+Through Github
+
+<a href="https://github.com/skunkteam" target="_blank"><img src="https://avatars.githubusercontent.com/u/46373671?s=60" width="60px"></a>
+<a href="https://github.com/getsentry" target="_blank"><img src="https://avatars.githubusercontent.com/u/1396951?s=60" width="60px"></a>
+
+Through OpenCollective
+
 <a href="https://opencollective.com/fast-xml-parser/sponsor/0/website" target="_blank"><img src="https://opencollective.com/fast-xml-parser/sponsor/0/avatar.svg"></a>
 <a href="https://opencollective.com/fast-xml-parser/sponsor/1/website" target="_blank"><img src="https://opencollective.com/fast-xml-parser/sponsor/1/avatar.svg"></a>
 <a href="https://opencollective.com/fast-xml-parser/sponsor/2/website" target="_blank"><img src="https://opencollective.com/fast-xml-parser/sponsor/2/avatar.svg"></a>
@@ -36,8 +46,6 @@ Click on Sponsor button above or
 <a href="https://opencollective.com/fast-xml-parser/sponsor/8/website" target="_blank"><img src="https://opencollective.com/fast-xml-parser/sponsor/8/avatar.svg"></a>
 <a href="https://opencollective.com/fast-xml-parser/sponsor/9/website" target="_blank"><img src="https://opencollective.com/fast-xml-parser/sponsor/9/avatar.svg"></a>
 
-
-Check [ThankYouBackers](https://github.com/NaturalIntelligence/ThankYouBackers) for our supporters
 
 ## Users
 
@@ -56,9 +64,13 @@ Check [ThankYouBackers](https://github.com/NaturalIntelligence/ThankYouBackers) 
 <a href="https://github.com/postmanlabs" title="postman" > <img src="https://user-images.githubusercontent.com/7692328/204835529-e9e290ad-696a-49ad-9d34-08e955704715.png" width="60px" ></a>
 <a href="https://github.com/react-native-community" title="React Native Community" > <img src="https://avatars.githubusercontent.com/u/20269980?v=4" width="60px" ></a>
 
-Check the list of all known users [here](./USERs.md);
+Check the bigger [list](./USERs.md)
 
-<small>The list of users is collected either from the list published by Github, cummunicated directly through mails/chat , or from other resources. If you feel that your name in the above list is incorrectly published or you're not the user of this library anymore then you can inform us to remove it. We'll do the necessary changes ASAP.</small>
+<small>The list of users is collected either from the list published by Github, communicated directly through mails/chat , or from other resources. If you feel that your name in the above list is incorrectly published or you're not the user of this library anymore then you can inform us to remove it. We'll do the necessary changes ASAP.</small>
+
+If you want to be an anonymous user of this application and don't want to be highlighted anywhere then you can contact me at
+- githubissues@proton.me
+- https://linkedin.com/in/amitguptagwl/
 
 ## Main Features
 
@@ -79,6 +91,11 @@ Check the list of all known users [here](./USERs.md);
 * You can control if a single tag should be parsed into array.
 * Supports parsing of PI (Processing Instruction) tags with XML declaration tags
 * And many more other features.
+
+## v5
+I developed v5 in Apr 2023. And I didn't get the chance to complete all the features. I've ensured that new features don't impact performance. With v5, you have more control on parsing output. Check [docs](./docs/v5) for syntax help and basic understanding.
+
+Please leave a comment in discussion forum for your suggestions and if you really need v5.
 
 ## How to use
 
@@ -162,19 +179,6 @@ Check lib folder for different browser bundles
 <small>negative means error</small>
 
 [![](static/img/ni_ads_ads.gif)](https://github.com/NaturalIntelligence/ads/)
-
-## Our other projects and research you must try
-
-* **[BigBit standard](https://github.com/amitguptagwl/bigbit)** : 
-  * Single text encoding to replace UTF-8, UTF-16, UTF-32 and more with less memory.
-  * Single Numeric datatype alternative of integer, float, double, long, decimal and more without precision loss.
-* **[Cytorus](https://github.com/NaturalIntelligence/cytorus)**:  Be specific and flexible while running E2E tests.
-  * Run tests only for a particular User Story
-  * Run tests for a route or from a route
-  * Customizable reporting
-  * Central dashboard for better monitoring
-  * Options to integrate E2E tests with Jira, Github etc using Central dashboard `Tian`.
-* **[Stubmatic](https://github.com/NaturalIntelligence/Stubmatic)** : Create fake webservices, DynamoDB or S3 servers, Manage fake/mock stub data, Or fake any HTTP(s) call.
 
 
 ## Supporters

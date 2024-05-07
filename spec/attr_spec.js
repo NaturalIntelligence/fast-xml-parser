@@ -214,7 +214,7 @@ id="7" data="foo bar" bug="true"/>`;
         expect(result).toEqual(expected);
     });
 
-    it("should err for invalid atributes", function() {
+    it("should err for invalid attributes", function() {
         const xmlData = `<rootNode =''></rootNode>`;
         const expected = {
             "err": {
@@ -228,21 +228,21 @@ id="7" data="foo bar" bug="true"/>`;
         expect(result).toEqual(expected);
     });
 
-    it("should validate xml with atributes", function() {
+    it("should validate xml with attributes", function() {
         const xmlData = `<rootNode attr="123"><tag></tag><tag>1</tag><tag>val</tag></rootNode>`;
 
         const result = XMLValidator.validate(xmlData);
         expect(result).toBe(true);
     });
 
-    it("should validate xml atribute has '>' in value", function() {
+    it("should validate xml attribute has '>' in value", function() {
         const xmlData = `<rootNode attr="123>234"><tag></tag><tag>1</tag><tag>val</tag></rootNode>`;
 
         const result = XMLValidator.validate(xmlData);
         expect(result).toBe(true);
     });
 
-    it("should not validate xml with invalid atributes", function() {
+    it("should not validate xml with invalid attributes", function() {
         const xmlData = `<rootNode attr="123><tag></tag><tag>1</tag><tag>val</tag></rootNode>`;
         const expected = {
             "err": {
@@ -315,7 +315,7 @@ id="7" data="foo bar" bug="true"/>`;
         expect(result).toEqual(expected);
     });
 
-    it("should validate xml with attributeshaving openquote in value", function () {
+    it("should validate xml with attributes having open quote in value", function () {
         const xmlData = "<rootNode  123 abc='1\"23' bc=\"56'7\" />";
         const expected = {
             "err": {

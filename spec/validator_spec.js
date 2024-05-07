@@ -129,6 +129,12 @@ describe("XML Validator", function () {
         });
     });
 
+    it("should not validate xml with unexpected closing tag", function () {
+        validate("</rootNode>", {
+            InvalidTag: "Closing tag 'rootNode' has not been opened."
+        });
+    });
+
     it("should validate xml with comment", function () {
         validate("<rootNode><!-- <tag> - - --><tag>1</tag><tag>val</tag></rootNode>");
     });
@@ -443,7 +449,7 @@ describe("XML Validator with options", function () {
         validate(`<parent><extra></parent>`,
         {InvalidTag: "Expected closing tag 'extra' (opened in line 1, col 9) instead of closing tag 'parent'."}, 1, 16));
     
-    it('- Maarked Unpaired tags', () =>{
+    it('- Marked Unpaired tags', () =>{
         const result = XMLValidator.validate(`<parent><extra></parent>`, {
             unpairedTags: ["extra"]
         });

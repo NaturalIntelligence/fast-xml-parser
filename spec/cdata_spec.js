@@ -446,4 +446,20 @@ patronymic</person></root>`;
         // console.log(JSON.stringify(result,null,4));
         expect(result).toEqual(expected);
     });
+
+    it("should not process entities in CDATA", function() {
+        const xmlData =`<xml><![CDATA[&lt;text&gt;]]></xml>`;
+
+        const expected = { xml: '&lt;text&gt;' };
+
+        const options = {
+            ignoreAttributes: false,
+        };
+
+        const parser = new XMLParser(options);
+        let result = parser.parse(xmlData);
+
+        // console.log(JSON.stringify(result,null,4));
+        expect(result).toEqual(expected);
+    });
 });

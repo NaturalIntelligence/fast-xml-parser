@@ -141,7 +141,7 @@ describe("XMLParser", function() {
           // console.log(output);
     });
 
-    it("should strip xml declarion tag", function(){
+    it("should strip xml declaration tag", function(){
       const xmlData = `<?xml version="1.0"?>
       <?elementnames <fred>, <bert>, <harry> ?>
       <h1></h1>
