@@ -414,4 +414,46 @@ describe("XMLParser StopNodes", function () {
     // console.log(JSON.stringify(jObj, null, 4));
     expect(jObj).toEqual(expected);
   });
+  it("should parse attributes correctly for self closing stop node", function() {
+        
+    const xmlData = `<script/>`;
+    const options = {
+        allowBooleanAttributes: true,
+        ignoreAttributes: false,
+        stopNodes: ["*.pre", "*.script"],
+    };
+    const expected = {
+      "script": ""
+    }
+    const parser = new XMLParser(options);
+    // console.log(JSON.stringify(parser.parse(xml)));
+    
+    let result = parser.parse(xmlData);
+
+    // console.log(JSON.stringify(result,null,4));
+    expect(result).toEqual(expected);
+
+  });
+  it("should parse attributes correctly for self closing stop node", function() {
+        
+    const xmlData = `<script src="some.js" />`;
+    const options = {
+        allowBooleanAttributes: true,
+        ignoreAttributes: false,
+        stopNodes: ["*.pre", "*.script"],
+    };
+    const expected = {
+      "script": {
+          "@_src": "some.js"
+      }
+    }
+    const parser = new XMLParser(options);
+    // console.log(JSON.stringify(parser.parse(xml)));
+    
+    let result = parser.parse(xmlData);
+
+    // console.log(JSON.stringify(result,null,4));
+    expect(result).toEqual(expected);
+
+  });
 });
