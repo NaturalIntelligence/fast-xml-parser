@@ -1,5 +1,10 @@
 Note: If you find missing information about particular minor version, that version must have been changed without any functional change in this library.
 
+**4.4.0 / 2024-05-18**
+* fix #654: parse attribute list correctly for self closing stop node.
+* fix: validator bug when closing tag is not opened. (#647) (By [Ryosuke Fukatani](https://github.com/RyosukeFukatani))
+* fix #581: typings; return type of `tagValueProcessor` & `attributeValueProcessor` (#582) (By [monholm]())
+
 **4.3.6 / 2024-03-16**
 * Add support for parsing HTML numeric entities (#645) (By [Jonas Schade ](https://github.com/DerZade))
 
