@@ -200,8 +200,6 @@ Bundle size
 
 <!-- [![](static/img/ni_ads_ads.gif)](https://github.com/NaturalIntelligence/ads/) -->
 
-<!-- [![](static/img/ni_ads_ads.gif)](https://github.com/NaturalIntelligence/ads/) -->
-
 
 ## Usage Trend
 
