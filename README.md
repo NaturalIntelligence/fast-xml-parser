@@ -159,26 +159,27 @@ Check lib folder for different browser bundles
 5.  [Entities](./docs/v4/5.Entities.md)
 6.  [HTML Document Parsing](./docs/v4/6.HTMLParsing.md)
 7. [PI Tag processing](./docs/v4/7.PITags.md)
+
 ## Performance
+<small>negative means error</small>
 
 ### XML Parser
 
-![](./docs/imgs/XMLParser_v4.png)
+<img align="left" src="./docs/imgs/XMLParser_v4.png" width="45%" />
+<img src="./docs/imgs/XMLParser_large_v4.png" width="47%" />
+
 * Y-axis: requests per second
 * X-axis: File size
 
-**Large files**
-![](./docs/imgs/XMLParser_large_v4.png)
-* Y-axis: requests per second
-* X-axis: File size 
 ### XML Builder
 
-![](./docs/imgs/XMLBuilder_v4.png)
+<img src="./docs/imgs/XMLBuilder_v4.png" width="50%" />
 * Y-axis: requests per second
 
-<small>negative means error</small>
 
-[![](static/img/ni_ads_ads.gif)](https://github.com/NaturalIntelligence/ads/)
+
+<!-- [![](static/img/ni_ads_ads.gif)](https://github.com/NaturalIntelligence/ads/) -->
+
 
 ## Usage Trend
 
