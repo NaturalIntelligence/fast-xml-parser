@@ -186,7 +186,7 @@ Check lib folder for different browser bundles
 [Usage Trend of fast-xml-parser](https://npm-compare.com/fast-xml-parser#timeRange=THREE_YEARS)
   
 <a href="https://npm-compare.com/fast-xml-parser#timeRange=THREE_YEARS" target="_blank">
-  <img src="https://npm-compare.com/img/npm-trend/THREE_YEARS/fast-xml-parser.png" width="800px" alt="NPM Usage Trend of fast-xml-parser" />
+  <img src="https://npm-compare.com/img/npm-trend/THREE_YEARS/fast-xml-parser.png" width="50%" alt="NPM Usage Trend of fast-xml-parser" />
 </a>
 
 ## Supporters
