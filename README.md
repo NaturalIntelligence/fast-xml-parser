@@ -72,14 +72,6 @@ If you want to be an anonymous user of this application and don't want to be hig
 - githubissues@proton.me
 - https://linkedin.com/in/amitguptagwl/
 
-## Usage Trend
-
-[Usage Trend of fast-xml-parser](https://npm-compare.com/fast-xml-parser#timeRange=THREE_YEARS)
-  
-<a href="https://npm-compare.com/fast-xml-parser#timeRange=THREE_YEARS" target="_blank">
-  <img src="https://npm-compare.com/img/npm-trend/THREE_YEARS/fast-xml-parser.png" width="800px" alt="NPM Usage Trend of fast-xml-parser" />
-</a>
-
 ## Main Features
 
 <img align="right" src="static/img/fxp_logo.png" width="180px" alt="FXP logo"/>
@@ -188,6 +180,13 @@ Check lib folder for different browser bundles
 
 [![](static/img/ni_ads_ads.gif)](https://github.com/NaturalIntelligence/ads/)
 
+## Usage Trend
+
+[Usage Trend of fast-xml-parser](https://npm-compare.com/fast-xml-parser#timeRange=THREE_YEARS)
+  
+<a href="https://npm-compare.com/fast-xml-parser#timeRange=THREE_YEARS" target="_blank">
+  <img src="https://npm-compare.com/img/npm-trend/THREE_YEARS/fast-xml-parser.png" width="800px" alt="NPM Usage Trend of fast-xml-parser" />
+</a>
 
 ## Supporters
 ### Contributors
