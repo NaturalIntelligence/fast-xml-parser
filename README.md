@@ -201,6 +201,14 @@ Bundle size
 <!-- [![](static/img/ni_ads_ads.gif)](https://github.com/NaturalIntelligence/ads/) -->
 
 
+## Usage Trend
+
+[Usage Trend of fast-xml-parser](https://npm-compare.com/fast-xml-parser#timeRange=THREE_YEARS)
+  
+<a href="https://npm-compare.com/fast-xml-parser#timeRange=THREE_YEARS" target="_blank">
+  <img src="https://npm-compare.com/img/npm-trend/THREE_YEARS/fast-xml-parser.png" width="50%" alt="NPM Usage Trend of fast-xml-parser" />
+</a>
+
 ## Supporters
 ### Contributors
 
