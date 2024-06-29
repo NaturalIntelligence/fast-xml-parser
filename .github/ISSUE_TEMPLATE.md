@@ -9,11 +9,11 @@
 <!-- If you are raising a **bug** please ensure to fill below checklist; -->
 ### Checklist
 <!-- choose one by changing [ ] to [x] -->
-* [ ] Have you asked your question on Stackoverflow or similar forum?
-* [ ] Are you running the latest version?
+* [ ] Have you asked your question on Stackoverflow or similar forum? You may get better support and opinion.
+* [ ] What version of the library you're using?
 * [ ] Have you included sample input, output, error, and expected output? 
-* [ ] Have you checked if you are using correct configuration?
-* [ ] Did you try online [tool](https://naturalintelligence.github.io/fast-xml-parser/)?
+* [ ] Have you checked if you are using correct configuration? Please check README to find documentation.
+* [ ] Did you try online [tool](https://naturalintelligence.github.io/fast-xml-parser/)? It has limited features still helpful.
 
 <!-- Please provide following data to avoid long communication and fast resolution. --> 
 ### Input

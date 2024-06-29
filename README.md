@@ -1,29 +1,32 @@
 # [fast-xml-parser](https://www.npmjs.com/package/fast-xml-parser)
-[![Known Vulnerabilities](https://snyk.io/test/github/naturalintelligence/fast-xml-parser/badge.svg)](https://snyk.io/test/github/naturalintelligence/fast-xml-parser)
 [![NPM quality][quality-image]][quality-url]
 [![Coverage Status](https://coveralls.io/repos/github/NaturalIntelligence/fast-xml-parser/badge.svg?branch=master)](https://coveralls.io/github/NaturalIntelligence/fast-xml-parser?branch=master)
 [<img src="https://img.shields.io/badge/Try-me-blue.svg?colorA=FFA500&colorB=0000FF" alt="Try me"/>](https://naturalintelligence.github.io/fast-xml-parser/)
 [![NPM total downloads](https://img.shields.io/npm/dt/fast-xml-parser.svg)](https://npm.im/fast-xml-parser)
 
-[quality-image]: http://npm.packagequality.com/shield/fast-xml-parser.svg?style=flat-square
-[quality-url]: http://packagequality.com/#?package=fast-xml-parser
-
 
 Validate XML, Parse XML to JS Object, or Build XML from JS Object without C/C++ based libraries and no callback.
 
-> XML Parser v5 is added for experimental use
-> https://solothought.com
+---
 
-Sponsor this project 👉 
+<a href="https://www.amazon.in/Power-Glasses-world-imagination-Perspective-ebook/dp/B0CW1CJGNK/"><img align="left" src="https://github.com/NaturalIntelligence/fast-xml-parser/assets/7692328/e7a42bcc-5186-45e3-bfee-de8d8b9a69d4" alt="ads-thePowerGlassesBook"/></a>
+I had recently published a book, The Power Glasses. Please have a look. Your feedback would be helpful. You can [mail](githubissues@proton.me) me for a free copy.
+<br>
+
+Sponsor this project
+
 <a href="https://github.com/sponsors/NaturalIntelligence"> 
-  <img src="https://raw.githubusercontent.com/NaturalIntelligence/ThankYouBackers/main/github_sponsor.png" width="200" />
+  <img src="https://raw.githubusercontent.com/NaturalIntelligence/ThankYouBackers/main/github_sponsor.png" width="180" />
 </a>
 <a href="https://opencollective.com/fast-xml-parser/donate" target="_blank">
-  <img src="https://opencollective.com/fast-xml-parser/donate/button@2x.png?color=blue" width=200 />
+  <img src="https://opencollective.com/fast-xml-parser/donate/button@2x.png?color=blue" width=180 />
 </a>
-<a href="https://paypal.me/naturalintelligence"> <img src="static/img/support_paypal.svg" alt="Stubmatic donate button" width="200"/></a>
+<a href="https://paypal.me/naturalintelligence"> <img src="static/img/support_paypal.svg" alt="Stubmatic donate button" width="180"/></a>
+<br>
+<br>
+<br>
 
-
+<!--
 ### Current Sponsors
 
 Check the complete list at [ThankYouBackers](https://github.com/NaturalIntelligence/ThankYouBackers) for our sponsors and supporters.
@@ -45,7 +48,9 @@ Through OpenCollective
 <a href="https://opencollective.com/fast-xml-parser/sponsor/7/website" target="_blank"><img src="https://opencollective.com/fast-xml-parser/sponsor/7/avatar.svg"></a>
 <a href="https://opencollective.com/fast-xml-parser/sponsor/8/website" target="_blank"><img src="https://opencollective.com/fast-xml-parser/sponsor/8/avatar.svg"></a>
 <a href="https://opencollective.com/fast-xml-parser/sponsor/9/website" target="_blank"><img src="https://opencollective.com/fast-xml-parser/sponsor/9/avatar.svg"></a>
+-->
 
+![fxp_sponsors](https://github.com/NaturalIntelligence/fast-xml-parser/assets/7692328/c9367497-d67e-410a-90a6-66e3808be929)
 
 ## Users
 
@@ -63,14 +68,15 @@ Through OpenCollective
 <a href="https://github.com/SAP" title="SAP" > <img src="https://user-images.githubusercontent.com/7692328/204835214-d9d25b58-e3df-408d-87a3-c7d36b578ee4.png" width="60px" ></a>
 <a href="https://github.com/postmanlabs" title="postman" > <img src="https://user-images.githubusercontent.com/7692328/204835529-e9e290ad-696a-49ad-9d34-08e955704715.png" width="60px" ></a>
 <a href="https://github.com/react-native-community" title="React Native Community" > <img src="https://avatars.githubusercontent.com/u/20269980?v=4" width="60px" ></a>
+<a href="https://github.com/googleapis" title="Google APIs" > <img src="https://avatars.githubusercontent.com/u/16785467?v=4" width="60px" ></a>
+<a href="https://github.com/langchain-ai" title="Langchain AI" > <img src="https://avatars.githubusercontent.com/u/126733545?v=4" width="60px" ></a>
+<a href="https://github.com/withastro" title="Astro websie builder" > <img src="https://avatars.githubusercontent.com/u/44914786?v=4" width="60px" ></a>
+<a href="https://github.com/baidu" title="Baidu" > <img src="https://avatars.githubusercontent.com/u/13245940?v=4" width="60px" ></a>
+[more](./USERs.md)
 
-Check the bigger [list](./USERs.md)
+<small>The list of users are mostly published by Github or communicated directly. Feel free to contact if you find any information wrong.</small>
 
-<small>The list of users is collected either from the list published by Github, communicated directly through mails/chat , or from other resources. If you feel that your name in the above list is incorrectly published or you're not the user of this library anymore then you can inform us to remove it. We'll do the necessary changes ASAP.</small>
-
-If you want to be an anonymous user of this application and don't want to be highlighted anywhere then you can contact me at
-- githubissues@proton.me
-- https://linkedin.com/in/amitguptagwl/
+---
 
 ## Main Features
 
@@ -79,7 +85,7 @@ If you want to be an anonymous user of this application and don't want to be hig
 * Validate XML data syntactically
 * Parse XML to JS Object
 * Build XML from JS Object
-* Works with node packages, in browser, and in CLI (press try me button above for demo)
+* Compatible to node js packages, in browser, and in CLI (click try me button above for demo)
 * Faster than any other pure JS implementation.
 * It can handle big files (tested up to 100mb).
 * Controlled parsing using various options
@@ -137,49 +143,71 @@ In a HTML page
 </script>
 ```
 
-Check lib folder for different browser bundles
+Bundle size
 
 | Bundle Name        | Size |
 | ------------------ | ---- |
-| fxbuilder.min.js   | 5.2K |
-| fxparser.js        | 50K  |
-| fxparser.min.js    | 17K  |
-| fxp.min.js         | 22K  |
+| fxbuilder.min.js   | 6.5K |
+| fxparser.min.js    | 20K  |
+| fxp.min.js         | 26K  |
 | fxvalidator.min.js | 5.7K |
 
 ### Documents
-**v3**
-* [documents](./docs/v3/docs.md)
+<table>
+  <tr><td>v3</td><td>v4</td><td>v5</td></tr>
+  <tr>
+    <td>
+      <a href="./docs/v3/docs.md">documents</a>
+    </td>
+    <td><ol>
+      <li><a href="./docs/v4/1.GettingStarted.md">Getting Started</a></li>
+      <li><a href="./docs/v4/2.XMLparseOptions.md">XML Parser</a></li>
+      <li><a href="./docs/v4/3.XMLBuilder.md">XML Builder</a></li>
+      <li><a href="./docs/v4/4.XMLValidator.md">XML Validator</a></li>
+      <li><a href="./docs/v4/5.Entities.md">Entities</a></li>
+      <li><a href="./docs/v4/6.HTMLParsing.md">HTML Document Parsing</a></li>
+      <li><a href="./docs/v4/7.PITags.md">PI Tag processing</a></li>
+    </ol></td>
+    <td><ol>
+      <li></li><a href="./docs/v5/1.GettingStarted.md">Getting Started</a></li>
+      <li><a href="./docs/v5/2.Features.md">Features</a></li>
+      <li><a href="./docs/v5/3.Options.md">Options</a></li>
+      <li><a href="./docs/v5/4.OutputBuilders.md">Output Builders</a></li>
+      <li><a href="./docs/v5/5.ValueParsers.md">Value Parsers</a></li>
+    </ol></td>
+  </tr>
+</table>
 
-**v4**
-1. [GettingStarted.md](./docs/v4/1.GettingStarted.md)
-2.  [XML Parser](./docs/v4/2.XMLparseOptions.md)
-3.  [XML Builder](./docs/v4/3.XMLBuilder.md)
-4.  [XML Validator](./docs/v4/4.XMLValidator.md)
-5.  [Entities](./docs/v4/5.Entities.md)
-6.  [HTML Document Parsing](./docs/v4/6.HTMLParsing.md)
-7. [PI Tag processing](./docs/v4/7.PITags.md)
+**note**: version 5 is released with version 4 tfor experimental use. Based on it's demand, it'll be developed and the features can be different in final release.
+
 ## Performance
+<small>negative means error</small>
 
 ### XML Parser
 
-![](./docs/imgs/XMLParser_v4.png)
+<img align="left" src="./docs/imgs/XMLParser_v4.png" width="45%" />
+<img src="./docs/imgs/XMLParser_large_v4.png" width="47%" />
+
 * Y-axis: requests per second
 * X-axis: File size
 
-**Large files**
-![](./docs/imgs/XMLParser_large_v4.png)
-* Y-axis: requests per second
-* X-axis: File size 
 ### XML Builder
 
-![](./docs/imgs/XMLBuilder_v4.png)
+<img src="./docs/imgs/XMLBuilder_v4.png" width="50%" />
 * Y-axis: requests per second
 
-<small>negative means error</small>
 
-[![](static/img/ni_ads_ads.gif)](https://github.com/NaturalIntelligence/ads/)
 
+<!-- [![](static/img/ni_ads_ads.gif)](https://github.com/NaturalIntelligence/ads/) -->
+
+
+## Usage Trend
+
+[Usage Trend of fast-xml-parser](https://npm-compare.com/fast-xml-parser#timeRange=THREE_YEARS)
+  
+<a href="https://npm-compare.com/fast-xml-parser#timeRange=THREE_YEARS" target="_blank">
+  <img src="https://npm-compare.com/img/npm-trend/THREE_YEARS/fast-xml-parser.png" width="50%" alt="NPM Usage Trend of fast-xml-parser" />
+</a>
 
 ## Supporters
 ### Contributors

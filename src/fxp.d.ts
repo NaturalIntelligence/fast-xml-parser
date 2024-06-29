@@ -345,7 +345,7 @@ type XmlBuilderOptions = {
    * 
    * Defaults to `(tagName, val, jPath, hasAttributes, isLeafNode) => val`
    */
-  tagValueProcessor?: (name: string, value: unknown) => string;
+  tagValueProcessor?: (name: string, value: unknown) => unknown;
 
   /**
    * Control how attribute value should be parsed
@@ -358,7 +358,7 @@ type XmlBuilderOptions = {
    * 
    * Defaults to `(attrName, val, jPath) => val`
    */
-  attributeValueProcessor?: (name: string, value: unknown) => string;
+  attributeValueProcessor?: (name: string, value: unknown) => unknown;
 
   /**
    * Whether to process default and DOCTYPE entities
