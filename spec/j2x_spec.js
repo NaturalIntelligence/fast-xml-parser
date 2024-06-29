@@ -482,6 +482,30 @@ describe("XMLBuilder", function() {
         const expected = `<a><b>1</b><b>2</b></a>`;
         expect(result).toEqual(expected);
     });
+
+    it("should handle attributes with oneListGroup", function() {
+        const jObj = {
+            "a": [
+                {
+                    "b": "1"
+                },
+                {
+                    "b": "2"
+                },
+                {
+                    "@": {
+                        "foo": "bar",
+                        "baz": "foo",
+                        "bar": "baz"
+                    }
+                }
+            ],
+        };
+        const builder = new XMLBuilder({oneListGroup:"true", attributesGroupName: "@"});
+        const result = builder.build(jObj);
+        const expected = `<a foo="bar" baz="foo" bar="baz"><b>1</b><b>2</b></a>`;
+        expect(result).toEqual(expected);
+    });
     
     it('should build tag with only text node', async () => {
         const schema_obj = {
