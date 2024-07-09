@@ -483,6 +483,19 @@ describe("XMLBuilder", function() {
         expect(result).toEqual(expected);
     });
 
+    it("should correctly handle values with oneListGroup", function() {
+        const jObj = {
+            "a": [
+                "(first)",
+                "(second)"
+            ],
+        };
+        const builder = new XMLBuilder({oneListGroup:"true", attributesGroupName: "@"});
+        const result = builder.build(jObj);
+        const expected = `<a>(first)(second)</a>`;
+        expect(result).toEqual(expected);
+    });
+
     it("should handle attributes with oneListGroup", function() {
         const jObj = {
             "a": [
@@ -506,7 +519,7 @@ describe("XMLBuilder", function() {
         const expected = `<a foo="bar" baz="foo" bar="baz"><b>1</b><b>2</b></a>`;
         expect(result).toEqual(expected);
     });
-    
+
     it('should build tag with only text node', async () => {
         const schema_obj = {
           field: {
