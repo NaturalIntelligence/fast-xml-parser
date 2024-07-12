@@ -11,6 +11,7 @@ assignees: ''
 * [ ] Have you included sample input, output, error, and expected output? 
 * [ ] Have you checked if you are using correct configuration?
 * [ ] Did you try online [tool](https://naturalintelligence.github.io/fast-xml-parser/)?
+* [ ] Have you checked the [docs](https://github.com/NaturalIntelligence/fast-xml-parser/tree/master/docs) for helpful APIs and examples?
 
 ### Description
 <!-- Please provide following data to avoid long communication and fast resolution. --> 
