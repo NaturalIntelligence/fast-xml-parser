@@ -5,7 +5,7 @@ const {buildOptions,registerCommonValueParsers} = require("./ParserOptionsBuilde
 class OutputBuilder{
   constructor(builderOptions){
       this.options = buildOptions(builderOptions);
-      this.registeredParsers = registerCommonValueParsers();
+      this.registeredParsers = registerCommonValueParsers(this.options);
   }
 
   registerValueParser(name,parserInstance){//existing name will override the parser without warning

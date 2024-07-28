@@ -1,4 +1,7 @@
-
+const defaultOptions = {
+    maxLength: 200,
+    // locale: "en-IN"
+}
 const localeMap = {
     "$":"en-US",
     "€":"de-DE",
@@ -6,15 +9,19 @@ const localeMap = {
     "¥":"ja-JP",
     "₹":"en-IN",
 }
+const sign = "(?:-|\+)?";
+const digitsAndSeparator = "(?:\d+|\d{1,3}(?:,\d{3})+)";
+const decimalPart = "(?:\.\d{1,2})?";
+const symbol = "(?:\$|€|¥|₹)?";
 
 const currencyCheckRegex = /^\s*(?:-|\+)?(?:\d+|\d{1,3}(?:,\d{3})+)?(?:\.\d{1,2})?\s*(?:\$|€|¥|₹)?\s*$/u;
 
 class CurrencyParser{
     constructor(options){
-        this.options = options;
+        this.options = options || defaultOptions;
     }
     parse(val){
-        if (typeof val === 'string') {
+        if (typeof val === 'string' && val.length <= this.options.maxLength) {
             if(val.indexOf(",,") !== -1 && val.indexOf(".." !== -1)){
                 const match = val.match(currencyCheckRegex);
                 if(match){
@@ -28,4 +35,6 @@ class CurrencyParser{
         return val;
     }
 }
+CurrencyParser.defaultOptions = defaultOptions;
+
 module.exports = CurrencyParser;

@@ -34,6 +34,9 @@ const defaultOptions={
       // "currency",
       // "date",
     ]
+  },
+  dataType:{
+
   }
 }
 
@@ -75,7 +78,7 @@ function copyProperties(target, source) {
   }
 }
 
-function registerCommonValueParsers(){
+function registerCommonValueParsers(options){
   return {
     "trim": new trimParser(),
     // "join": this.entityParser.parse,
