@@ -30,9 +30,17 @@ type X2jOptions = {
   /**
    * Whether to ignore attributes when parsing
    * 
+   * When `true` - ignores all the attributes
+   * 
+   * When `false` - parses all the attributes
+   * 
+   * When `Array<string | RegExp>` - filters out attributes that match provided patterns
+   * 
+   * When `Function` - calls the function for each attribute and filters out those for which the function returned `true`
+   * 
    * Defaults to `true`
    */
-  ignoreAttributes?: boolean;
+  ignoreAttributes?: boolean | (string | RegExp)[] | ((attrName: string, jPath: string) => boolean);
 
   /**
    * Whether to remove namespace string from tag and attribute names
@@ -250,11 +258,19 @@ type XmlBuilderOptions = {
   textNodeName?: string;
 
   /**
-   * Whether to ignore attributes when parsing
+   * Whether to ignore attributes when building
+   * 
+   * When `true` - ignores all the attributes
+   * 
+   * When `false` - builds all the attributes
+   * 
+   * When `Array<string | RegExp>` - filters out attributes that match provided patterns
+   * 
+   * When `Function` - calls the function for each attribute and filters out those for which the function returned `true`
    * 
    * Defaults to `true`
    */
-  ignoreAttributes?: boolean;
+  ignoreAttributes?: boolean | (string | RegExp)[] | ((attrName: string, jPath: string) => boolean);
 
   /**
    * Give a property name to set CDATA values to instead of merging to tag's text value
