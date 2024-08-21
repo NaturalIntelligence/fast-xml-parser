@@ -1,4 +1,4 @@
-module.exports = function (ignoreAttributes) {
+function getIgnoreAttributesFn(ignoreAttributes) {
     if (typeof ignoreAttributes === 'function') {
         return ignoreAttributes
     }
@@ -16,3 +16,5 @@ module.exports = function (ignoreAttributes) {
     }
     return () => false
 }
+
+module.exports = getIgnoreAttributesFn

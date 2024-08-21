@@ -103,11 +103,9 @@ Builder.prototype.j2x = function(jObj, level, ajPath) {
     } else if (typeof jObj[key] !== 'object') {
       //premitive type
       const attr = this.isAttribute(key);
-      if (attr) {
-        if (!this.ignoreAttributesFn(attr, jPath)) {
-          attrStr += this.buildAttrPairStr(attr, '' + jObj[key]);
-        }
-      }else {
+      if (attr && !this.ignoreAttributesFn(attr, jPath)) {
+        attrStr += this.buildAttrPairStr(attr, '' + jObj[key]);
+      } else if (!attr) {
         //tag value
         if (key === this.options.textNodeName) {
           let newval = this.options.tagValueProcessor(key, '' + jObj[key]);
