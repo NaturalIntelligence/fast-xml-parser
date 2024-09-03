@@ -50,7 +50,7 @@ Through OpenCollective
 <a href="https://opencollective.com/fast-xml-parser/sponsor/9/website" target="_blank"><img src="https://opencollective.com/fast-xml-parser/sponsor/9/avatar.svg"></a>
 -->
 
-![fxp_sponsors](https://github.com/NaturalIntelligence/fast-xml-parser/assets/7692328/c9367497-d67e-410a-90a6-66e3808be929)
+![fxp_sponsors](https://raw.githubusercontent.com/NaturalIntelligence/ThankYouBackers/main/assets/NI_sponsors.jpg)
 
 ## Users
 
