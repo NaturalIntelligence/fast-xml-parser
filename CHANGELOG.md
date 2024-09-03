@@ -1,5 +1,8 @@
 <small>Note: If you find missing information about particular minor version, that version must have been changed without any functional change in this library.</small>
 
+**4.5.0 / 2024-09-03**
+- feat #666: ignoreAttributes support function, and array of string or regex (By [ArtemM](https://github.com/mav-rik))
+
 **4.4.1 / 2024-07-28**
 - v5 fix: maximum length limit to currency value
 - fix #634: build attributes with oneListGroup and attributesGroupName (#653)(By [Andreas Naziris](https://github.com/a-rasin))

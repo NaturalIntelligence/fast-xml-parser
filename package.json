@@ -1,6 +1,6 @@
 {
   "name": "fast-xml-parser",
-  "version": "4.4.1",
+  "version": "4.5.0",
   "description": "Validate XML, Parse XML, Build XML without C/C++ based libraries",
   "main": "./src/fxp.js",
   "scripts": {
@@ -49,7 +49,6 @@
     "@babel/register": "^7.13.8",
     "@types/node": "20",
     "babel-loader": "^8.2.2",
-    "cytorus": "^0.2.9",
     "eslint": "^8.3.0",
     "he": "^1.2.0",
     "jasmine": "^3.6.4",
