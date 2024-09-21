@@ -1,0 +1,15 @@
+{
+  "name": "importtests",
+  "version": "1.0.0",
+  "description": "",
+  "main": "v5_spec.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "fast-xml-parser": "^4.5.0"
+  }
+}
