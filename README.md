@@ -21,7 +21,7 @@ Sponsor this project
 <a href="https://opencollective.com/fast-xml-parser/donate" target="_blank">
   <img src="https://opencollective.com/fast-xml-parser/donate/button@2x.png?color=blue" width=180 />
 </a>
-<a href="https://paypal.me/naturalintelligence"> <img src="static/img/support_paypal.svg" alt="Stubmatic donate button" width="180"/></a>
+<a href="https://paypal.me/naturalintelligence"> <img src="static/img/support_paypal.svg" alt="donate button" width="180"/></a>
 <br>
 <br>
 <br>
@@ -51,6 +51,7 @@ Through OpenCollective
 -->
 
 ![fxp_sponsors](https://raw.githubusercontent.com/NaturalIntelligence/ThankYouBackers/main/assets/NI_sponsors.jpg)
+<a href="https://github.com/cocopon" target="_blank">Hiroki Kokubun</a>
 
 ## Users
 
