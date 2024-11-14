@@ -16,7 +16,7 @@ describe("XMLParser", function() {
                     gtag('config', 'UA-80202630-2');
                 </script>
         
-                <title>Fast XMl Parser</title>
+                <title>Fast XML Parser</title>
                 <meta charset="UTF-8">
                 <meta name="viewport" content="width=device-width, initial-scale=1">
                 <link rel="stylesheet" href="static/css/bootstrap.min.css">
