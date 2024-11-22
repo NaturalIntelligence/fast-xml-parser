@@ -2,17 +2,17 @@
 
 /**
  * find paired tag for a stop node
- * @param {string} xmlDoc 
- * @param {string} tagName 
+ * @param {string} xmlDoc
+ * @param {string} tagName
  * @param {number} i : start index
  */
 function readStopNode(xmlDoc, tagName, i){
     const startIndex = i;
     // Starting at 1 since we already have an open tag
     let openTagCount = 1;
-  
+
     for (; i < xmlDoc.length; i++) {
-      if( xmlDoc[i] === "<"){ 
+      if( xmlDoc[i] === "<"){
         if (xmlDoc[i+1] === "/") {//close tag
             const closeIndex = findSubStrIndex(xmlDoc, ">", i, `${tagName} is not closed`);
             let closeTagName = xmlDoc.substring(i+2,closeIndex).trim();
@@ -26,18 +26,18 @@ function readStopNode(xmlDoc, tagName, i){
               }
             }
             i=closeIndex;
-          } else if(xmlDoc[i+1] === '?') { 
+          } else if(xmlDoc[i+1] === '?') {
             const closeIndex = findSubStrIndex(xmlDoc, "?>", i+1, "StopNode is not closed.")
             i=closeIndex;
-          } else if(xmlDoc.substr(i + 1, 3) === '!--') { 
+          } else if(xmlDoc.substr(i + 1, 3) === '!--') {
             const closeIndex = findSubStrIndex(xmlDoc, "-->", i+3, "StopNode is not closed.")
             i=closeIndex;
-          } else if(xmlDoc.substr(i + 1, 2) === '![') { 
+          } else if(xmlDoc.substr(i + 1, 2) === '![') {
             const closeIndex = findSubStrIndex(xmlDoc, "]]>", i, "StopNode is not closed.") - 2;
             i=closeIndex;
           } else {
             const tagData = readTagExp(xmlDoc, i, '>')
-  
+
             if (tagData) {
               const openTagName = tagData && tagData.tagName;
               if (openTagName === tagName && tagData.tagExp[tagData.tagExp.length-1] !== "/") {
@@ -52,7 +52,7 @@ function readStopNode(xmlDoc, tagName, i){
 
 /**
  * Read closing tag name
- * @param {Source} source 
+ * @param {Source} source
  * @returns tag name
  */
 function readClosingTagName(source){
@@ -73,9 +73,9 @@ function readClosingTagName(source){
  * This function can be used to read normal tag, pi tag.
  * This function can't be used to read comment, CDATA, DOCTYPE.
  * Eg <tag attr = ' some"' attr= ">" bool>
- * @param {string} xmlDoc 
+ * @param {string} xmlDoc
  * @param {number} startIndex starting index
- * @returns tag expression includes tag name & attribute string 
+ * @returns tag expression includes tag name & attribute string
  */
 function readTagExp(parser) {
   let inSingleQuotes = false;
@@ -100,8 +100,8 @@ function readTagExp(parser) {
   if(inSingleQuotes || inDoubleQuotes){
     throw new Error("Invalid attribute expression. Quote is not properly closed");
   }else if(!EOE) throw new Error("Unexpected closing of source. Waiting for '>'");
-  
-  
+
+
   const exp = parser.source.readStr(i);
   parser.source.updateBufferBoundary(i + 1);
   return buildTagExpObj(exp, parser)
@@ -133,7 +133,7 @@ function readPiExp(parser) {
   if(inSingleQuotes || inDoubleQuotes){
     throw new Error("Invalid attribute expression. Quote is not properly closed in PI tag expression");
   }else if(!EOE) throw new Error("Unexpected closing of source. Waiting for '?>'");
-  
+
   if(!parser.options.attributes.ignore){
     //TODO: use regex to verify attributes if not set to ignore
   }
@@ -150,7 +150,11 @@ function buildTagExpObj(exp, parser){
   };
   let attrsExp = "";
 
-  if(exp[exp.length -1] === "/") tagExp.selfClosing = true;
+  // Check for self-closing tag before setting the name
+  if(exp[exp.length -1] === "/") {
+    tagExp.selfClosing = true;
+    exp = exp.slice(0, -1); // Remove the trailing slash
+  }
 
   //separate tag name
   let i = 0;
@@ -182,7 +186,7 @@ function parseAttributesExp(attrStr, parser) {
   for (let i = 0; i < len; i++) {
     let attrName = parser.processAttrName(matches[i][1]);
     let attrVal = parser.replaceEntities(matches[i][4] || true);
-    
+
     parser.outputBuilder.addAttribute(attrName, attrVal);
   }
 }
