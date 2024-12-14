@@ -19,6 +19,7 @@ function readDocType(xmlData, i){
             if (xmlData[i] === '<' && !comment) { //Determine the tag type
                 if( hasBody && isEntity(xmlData, i)){
                     i += 7; 
+                    let entityName, val;
                     [entityName, val,i] = readEntityExp(xmlData,i+1);
                     if(val.indexOf("&") === -1) //Parameter entities are not supported
                         entities[ validateEntityName(entityName) ] = {
