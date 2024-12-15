@@ -1,5 +1,9 @@
 <small>Note: If you find missing information about particular minor version, that version must have been changed without any functional change in this library.</small>
 
+**4.5.1 / 2024-12-15**
+- Fix empty tag key name for v5 (#697).  no impact on v4
+- Fixes entity parsing when used in strict mode (#699)
+
 **4.5.0 / 2024-09-03**
 - feat #666: ignoreAttributes support function, and array of string or regex (By [ArtemM](https://github.com/mav-rik))
 
