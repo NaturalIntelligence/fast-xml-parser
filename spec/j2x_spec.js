@@ -108,6 +108,22 @@ describe("XMLBuilder", function() {
         expect(result).toEqual(expected);
     });
 
+    it('should parse to XML with empty CDATA', function() {
+        const jObj = {
+            a: {
+                $cdata: null,
+            },
+            b: {
+                $cdata: undefined,
+            },
+        };
+        const builder = new XMLBuilder({ cdataPropName: '$cdata' });
+        const result = builder.build(jObj);
+        //console.log(result);
+        const expected = `<a></a><b></b>`;
+        expect(result).toEqual(expected);
+    });
+
     it("should parse to XML with attributes as separate node", function() {
         const jObj = {
             a: {

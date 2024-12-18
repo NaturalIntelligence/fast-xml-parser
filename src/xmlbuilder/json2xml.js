@@ -92,6 +92,8 @@ Builder.prototype.j2x = function(jObj, level, ajPath) {
       // null attribute should be ignored by the attribute list, but should not cause the tag closing
       if (this.isAttribute(key)) {
         val += '';
+      } else if (key === this.options.cdataPropName) {
+        val += '';
       } else if (key[0] === '?') {
         val += this.indentate(level) + '<' + key + '?' + this.tagEndChar;
       } else {
