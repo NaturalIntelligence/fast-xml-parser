@@ -51,8 +51,9 @@ Through OpenCollective
 -->
 
 ![fxp_sponsors](https://raw.githubusercontent.com/NaturalIntelligence/ThankYouBackers/main/assets/NI_sponsors.jpg)
-<a href="https://github.com/cocopon" target="_blank">Hiroki Kokubun</a>
+- <a href="https://github.com/cocopon" target="_blank">Hiroki Kokubun</a>
 
+> This is a donation. No goods or services are expected in return. Any requests for refunds for those purposes will be rejected.
 ## Users
 
 <a href="https://github.com/renovatebot/renovate" title="renovate" ><img src="https://avatars1.githubusercontent.com/u/38656520" width="60px" ></a>
