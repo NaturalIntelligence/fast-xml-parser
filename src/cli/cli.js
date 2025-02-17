@@ -57,7 +57,7 @@ if (process.argv[2] === '--help' || process.argv[2] === '-h') {
     if (outputFileName) {
       writeToFile(outputFileName, output);
     } else {
-      console.log(output);
+      console.log(JSON.stringify(output, null, 2));
     }
   };
 
