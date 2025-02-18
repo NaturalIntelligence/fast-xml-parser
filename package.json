@@ -1,6 +1,6 @@
 {
   "name": "fast-xml-parser",
-  "version": "4.5.1",
+  "version": "4.5.2",
   "description": "Validate XML, Parse XML, Build XML without C/C++ based libraries",
   "main": "./src/fxp.js",
   "scripts": {
@@ -63,9 +63,6 @@
   "funding": [{
     "type": "github",
     "url": "https://github.com/sponsors/NaturalIntelligence"
-  },{
-    "type": "paypal",
-    "url": "https://paypal.me/naturalintelligence"
   }],
   "dependencies": {
     "strnum": "^1.0.5"
