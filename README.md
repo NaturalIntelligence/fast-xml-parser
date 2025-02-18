@@ -9,8 +9,7 @@ Validate XML, Parse XML to JS Object, or Build XML from JS Object without C/C++ 
 
 ---
 
-<a href="https://www.amazon.in/Power-Glasses-world-imagination-Perspective-ebook/dp/B0CW1CJGNK/"><img align="left" src="https://github.com/NaturalIntelligence/fast-xml-parser/assets/7692328/e7a42bcc-5186-45e3-bfee-de8d8b9a69d4" alt="ads-thePowerGlassesBook"/></a>
-I had recently published a book, The Power Glasses. Please have a look. Your feedback would be helpful. You can [mail](githubissues@proton.me) me for a free copy.
+<small>Checkout our new library [Text2Chart](https://solothought.com/text2chart/flow) that constructs flow chart out of simple text. Very helpful in creating or alayzing an algorithm, and documentation purpose</small>
 <br>
 
 Sponsor this project
