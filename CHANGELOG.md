@@ -1,5 +1,8 @@
 <small>Note: If you find missing information about particular minor version, that version must have been changed without any functional change in this library.</small>
 
+**5.0.1 / 2025-02-19**
+- fix syntax error for CLI command
+
 **5.0.0 / 2025-02-19**
 - ESM support
   - no change in the functionality, syntax, APIs, options, or documentation.
