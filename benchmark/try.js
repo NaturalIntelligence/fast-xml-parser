@@ -1,5 +1,5 @@
-const fs = require("fs");
-const path = require("path");
+import fs from "fs";
+import path from "path";
 // const fileNamePath = path.join(__dirname, "../spec/assets/test.json");//1.5k
 // const jsonData = JSON.parse(fs.readFileSync(fileNamePath).toString());
 
@@ -9,7 +9,7 @@ const path = require("path");
 // const xml2jsBuilder = new xml2js.Builder();
 // xml2jsBuilder.buildObject(jsonData);
 
-const {XMLParser} = require("../src/fxp");
+import {XMLParser} from "../src/fxp.js";
 const fileNamePath = path.join(__dirname, "../spec/assets/sample.xml");//1.5k
 const xmlData = fs.readFileSync(fileNamePath).toString();
 

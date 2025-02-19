@@ -1,7 +1,6 @@
 "use strict";
 
-const { XMLParser, XMLValidator } = require("../src/fxp");
-const he = require("he");
+import { XMLParser, XMLValidator } from "../src/fxp.js";
 
 describe("XMLParser StopNodes", function () {
   it("should support single stopNode with namespace and removeNSPrefix set", function () {

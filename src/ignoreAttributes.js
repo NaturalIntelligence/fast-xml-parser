@@ -1,4 +1,4 @@
-function getIgnoreAttributesFn(ignoreAttributes) {
+export default function getIgnoreAttributesFn(ignoreAttributes) {
     if (typeof ignoreAttributes === 'function') {
         return ignoreAttributes
     }
@@ -16,5 +16,3 @@ function getIgnoreAttributesFn(ignoreAttributes) {
     }
     return () => false
 }
-
-module.exports = getIgnoreAttributesFn

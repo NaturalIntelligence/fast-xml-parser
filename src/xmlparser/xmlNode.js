@@ -1,6 +1,6 @@
 'use strict';
 
-class XmlNode{
+export default class XmlNode{
   constructor(tagname) {
     this.tagname = tagname;
     this.child = []; //nested tags, text, cdata, comments in order
@@ -18,8 +18,5 @@ class XmlNode{
     }else{
       this.child.push( { [node.tagname]: node.child });
     }
-  };
-};
-
-
-module.exports = XmlNode;
+  }
+}

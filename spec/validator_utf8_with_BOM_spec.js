@@ -1,5 +1,5 @@
 "use strict";
-const {XMLParser, XMLValidator} = require("../src/fxp");
+import {XMLParser, XMLValidator} from "../src/fxp.js";
 
 describe("XMLParser", function() {
     it("should validate xml string with cyrillic characters", function() {

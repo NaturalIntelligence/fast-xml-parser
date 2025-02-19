@@ -1,4 +1,7 @@
-module.exports = `Fast XML Parser 4.0.0
+import pkg from '../../package.json';
+const version = pkg.version;
+
+export default `Fast XML Parser ${version}
 ----------------
 $ fxparser [-ns|-a|-c|-v|-V] <filename> [-o outputfile.json]
 $ cat xmlfile.xml | fxparser [-ns|-a|-c|-v|-V] [-o outputfile.json]

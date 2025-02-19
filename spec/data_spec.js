@@ -1,7 +1,7 @@
 "use strict";
 
-const {XMLParser, XMLValidator} = require("../src/fxp");
-const he = require("he");
+import {XMLParser, XMLValidator} from "../src/fxp.js";
+// import he from "he";
 
 describe("XMLParser", function() {
     

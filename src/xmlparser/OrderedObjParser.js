@@ -1,11 +1,11 @@
 'use strict';
 ///@ts-check
 
-const util = require('../util');
-const xmlNode = require('./xmlNode');
-const readDocType = require("./DocTypeReader");
-const toNumber = require("strnum");
-const getIgnoreAttributesFn = require('../ignoreAttributes')
+import {getAllMatches, isExist} from '../util.js';
+import xmlNode from './xmlNode.js';
+import readDocType from './DocTypeReader.js';
+import toNumber from "strnum";
+import getIgnoreAttributesFn from "../ignoreAttributes.js";
 
 // const regx =
 //   '<((!\\[CDATA\\[([\\s\\S]*?)(]]>))|((NAME:)?(NAME))([^>]*)>|((\\/)(NAME)\\s*>))([^<]*)'
@@ -14,7 +14,7 @@ const getIgnoreAttributesFn = require('../ignoreAttributes')
 //const tagsRegx = new RegExp("<(\\/?[\\w:\\-\._]+)([^>]*)>(\\s*"+cdataRegx+")*([^<]+)?","g");
 //const tagsRegx = new RegExp("<(\\/?)((\\w*:)?([\\w:\\-\._]+))([^>]*)>([^<]*)("+cdataRegx+"([^<]*))*([^<]+)?","g");
 
-class OrderedObjParser{
+export default class OrderedObjParser{
   constructor(options){
     this.options = options;
     this.currentNode = null;
@@ -131,7 +131,7 @@ function buildAttributesMap(attrStr, jPath, tagName) {
     // attrStr = attrStr.replace(/\r?\n/g, ' ');
     //attrStr = attrStr || attrStr.trim();
 
-    const matches = util.getAllMatches(attrStr, attrsRegx);
+    const matches = getAllMatches(attrStr, attrsRegx);
     const len = matches.length; //don't make it inline
     const attrs = {};
     for (let i = 0; i < len; i++) {
@@ -594,13 +594,10 @@ function parseValue(val, shouldParse, options) {
     else if(newval === 'false' ) return false;
     else return toNumber(val, options);
   } else {
-    if (util.isExist(val)) {
+    if (isExist(val)) {
       return val;
     } else {
       return '';
     }
   }
 }
-
-
-module.exports = OrderedObjParser;

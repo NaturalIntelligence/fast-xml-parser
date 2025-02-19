@@ -6,7 +6,7 @@ const EOL = "\n";
  * @param {any} options 
  * @returns 
  */
-function toXml(jArray, options) {
+export default function toXml(jArray, options) {
     let indentation = "";
     if (options.format && options.indentBy.length > 0) {
         indentation = EOL;
@@ -132,4 +132,3 @@ function replaceEntitiesValue(textValue, options) {
     }
     return textValue;
 }
-module.exports = toXml;

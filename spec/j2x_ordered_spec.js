@@ -1,4 +1,4 @@
-const { XMLParser, XMLBuilder } = require("../src/fxp");
+import {XMLParser, XMLBuilder} from "../src/fxp.js";
 
 describe("XMLBuilder", function () {
 

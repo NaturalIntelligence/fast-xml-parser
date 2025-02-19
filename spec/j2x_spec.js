@@ -1,7 +1,7 @@
 "use strict";
 
-const {XMLBuilder} = require("../src/fxp");
-const he = require("he");
+import {XMLBuilder} from "../src/fxp.js";
+import he from "he";
 
 describe("XMLBuilder", function() {
 

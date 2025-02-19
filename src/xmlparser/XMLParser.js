@@ -1,9 +1,9 @@
-const { buildOptions} = require("./OptionsBuilder");
-const OrderedObjParser = require("./OrderedObjParser");
-const { prettify} = require("./node2json");
-const validator = require('../validator');
+import { buildOptions} from './OptionsBuilder.js';
+import OrderedObjParser from './OrderedObjParser.js';
+import prettify from './node2json.js';
+import {validate} from "../validator.js";
 
-class XMLParser{
+export default class XMLParser{
     
     constructor(options){
         this.externalEntities = {};
@@ -25,7 +25,7 @@ class XMLParser{
         if( validationOption){
             if(validationOption === true) validationOption = {}; //validate with default options
             
-            const result = validator.validate(xmlData, validationOption);
+            const result = validate(xmlData, validationOption);
             if (result !== true) {
               throw Error( `${result.err.msg}:${result.err.line}:${result.err.col}` )
             }
@@ -54,5 +54,3 @@ class XMLParser{
         }
     }
 }
-
-module.exports = XMLParser;

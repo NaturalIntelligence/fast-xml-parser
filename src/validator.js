@@ -1,6 +1,6 @@
 'use strict';
 
-const util = require('./util');
+import {getAllMatches, isName} from './util.js';
 
 const defaultOptions = {
   allowBooleanAttributes: false, //A tag can have attributes without any value
@@ -8,7 +8,7 @@ const defaultOptions = {
 };
 
 //const tagsPattern = new RegExp("<\\/?([\\w:\\-_\.]+)\\s*\/?>","g");
-exports.validate = function (xmlData, options) {
+export function validate(xmlData, options) {
   options = Object.assign({}, defaultOptions, options);
 
   //xmlData = xmlData.replace(/(\r\n|\n|\r)/gm,"");//make it single line
@@ -321,7 +321,7 @@ function validateAttributeString(attrStr, options) {
 
   //if(attrStr.trim().length === 0) return true; //empty string
 
-  const matches = util.getAllMatches(attrStr, validAttrStrRegxp);
+  const matches = getAllMatches(attrStr, validAttrStrRegxp);
   const attrNames = {};
 
   for (let i = 0; i < matches.length; i++) {
@@ -399,13 +399,13 @@ function getErrorObject(code, message, lineNumber) {
 }
 
 function validateAttrName(attrName) {
-  return util.isName(attrName);
+  return isName(attrName);
 }
 
 // const startsWithXML = /^xml/i;
 
 function validateTagName(tagname) {
-  return util.isName(tagname) /* && !tagname.match(startsWithXML) */;
+  return isName(tagname) /* && !tagname.match(startsWithXML) */;
 }
 
 //this function returns the line number for the character at the given index

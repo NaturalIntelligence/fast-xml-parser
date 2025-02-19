@@ -1,9 +1,17 @@
 "use strict";
 
-const fs = require("fs");
-const path = require("path");
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
 
-const {XMLParser, XMLValidator} = require("../src/fxp");
+// Get the file URL of the current module
+const __filename = fileURLToPath(import.meta.url);
+
+// Derive the directory name
+const __dirname = dirname(__filename);
+
+import {XMLParser, XMLValidator} from "../src/fxp.js";
 
 describe("XMLParser", function() {
 

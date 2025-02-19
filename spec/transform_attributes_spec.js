@@ -1,6 +1,6 @@
 "use strict";
 
-const {XMLParser} = require("../src/fxp");
+import {XMLParser} from "../src/fxp.js";
 
 describe("XMLParsers", function() {
     it("should transform attribute names", function() {

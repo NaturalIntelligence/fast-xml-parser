@@ -1,7 +1,7 @@
 "use strict";
 
-const {XMLParser, XMLBuilder, XMLValidator} = require("../src/fxp");
-const he = require("he");
+import {XMLParser, XMLBuilder, XMLValidator} from "../src/fxp.js";
+// import he from "he";
 
 describe("XMLParser", function() {
     it("should parse attributes with valid names", function() {

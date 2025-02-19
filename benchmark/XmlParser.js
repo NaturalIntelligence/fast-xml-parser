@@ -1,15 +1,15 @@
 "use strict";
 
-const Benchmark = require("benchmark");
+import Benchmark from "benchmark";
+import {XMLParser} from "../src/fxp.js";
+import xml2js from "xml2js";
+import fxpv3 from "fast-xml-parser";
+import { convert } from 'xmlbuilder2';
+
 const suite = new Benchmark.Suite("XML Parser benchmark");
 
-const {XMLParser} = require("../src/fxp");
-const xml2js = require("xml2js");
-const fxpv3 = require("fast-xml-parser");
-const { convert } = require('xmlbuilder2');
-
-const fs = require("fs");
-const path = require("path");
+import fs from "fs";
+import path from "path";
 const fileNamePath = path.join(__dirname, "../spec/assets/ptest.xml");//with CDATA
 // const fileNamePath = path.join(__dirname, "../spec/assets/ptest_with_prolog.xml");//with CDATA
 // const fileNamePath = path.join(__dirname, "../spec/assets/sample.xml");//1.5k

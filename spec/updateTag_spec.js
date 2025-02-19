@@ -1,7 +1,6 @@
 "use strict";
 
-const {XMLParser, XMLBuilder, XMLValidator} = require("../src/fxp");
-const he = require("he");
+import {XMLParser, XMLBuilder, XMLValidator} from "../src/fxp.js";
 
 describe("XMLParser updateTag ", function() {
     it("should delete, join, update attribute name and value", function() {

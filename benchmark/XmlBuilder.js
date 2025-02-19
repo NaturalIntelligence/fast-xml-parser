@@ -1,14 +1,14 @@
 "use strict";
 
-const Benchmark = require("benchmark");
+import Benchmark from "benchmark";
 const suite = new Benchmark.Suite("XML Builder benchmark");
 
-const {XMLBuilder} = require("../src/fxp");
-const xml2js = require("xml2js");
+import {XMLBuilder} from "../src/fxp.js";
+import xml2js from "xml2js";
 const xml2jsBuilder = new xml2js.Builder();
 
-const fs = require("fs");
-const path = require("path");
+import fs from "fs";
+import path from "path";
 const fileNamePath = path.join(__dirname, "../spec/assets/test.json");//1.5k
 const fileNamePath2 = path.join(__dirname, "../spec/assets/test_ordered.json");//1.5k
 const jsonData = JSON.parse(fs.readFileSync(fileNamePath).toString());

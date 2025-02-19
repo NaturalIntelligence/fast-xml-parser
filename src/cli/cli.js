@@ -1,14 +1,15 @@
 #!/usr/bin/env node
 'use strict';
 /*eslint-disable no-console*/
-const fs = require('fs');
-const path = require('path');
-const {XMLParser, XMLValidator} = require("../fxp");
-const readToEnd = require('./read').readToEnd;
+import fs from 'fs';
+import {XMLParser, XMLValidator} from "../fxp.js";
+import {readToEnd} from './read.js';
+import cmdDetail from "./man.js"
+import pkg from '../../package.json';
+const version = pkg.version;
 
-const version = require('./../../package.json').version;
 if (process.argv[2] === '--help' || process.argv[2] === '-h') {
-  console.log(require("./man"));
+  console.log(cmdDetail);
 } else if (process.argv[2] === '--version') {
   console.log(version);
 } else {

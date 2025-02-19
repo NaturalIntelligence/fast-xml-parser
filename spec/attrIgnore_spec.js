@@ -1,6 +1,6 @@
 "use strict";
 
-const { XMLParser, XMLBuilder, XMLValidator } = require("../src/fxp");
+import {XMLParser, XMLBuilder, XMLValidator} from "../src/fxp.js";
 
 const xmlData = `
 <tag

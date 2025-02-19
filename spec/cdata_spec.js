@@ -1,6 +1,16 @@
 "use strict";
 
-const {XMLParser, XMLBuilder, XMLValidator} = require("../src/fxp");
+import {XMLParser, XMLBuilder, XMLValidator} from "../src/fxp.js";
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+
+// Get the file URL of the current module
+const __filename = fileURLToPath(import.meta.url);
+
+// Derive the directory name
+const __dirname = dirname(__filename);
 
 describe("XMLParser", function() {
     it("should parse multiline tag value when tags without spaces", function() {
@@ -395,8 +405,7 @@ patronymic</person></root>`;
     });
 
     it("should validate XML with repeated multiline CDATA and comments", function() {
-        const fs = require("fs");
-        const path = require("path");
+        
         const fileNamePath = path.join(__dirname, "assets/mixed.xml");
         const xmlData = fs.readFileSync(fileNamePath).toString();
 

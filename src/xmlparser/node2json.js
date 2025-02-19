@@ -6,7 +6,7 @@
  * @param {any} options 
  * @returns 
  */
-function prettify(node, options){
+export default function prettify(node, options){
   return compress( node, options);
 }
 
@@ -110,4 +110,3 @@ function isLeafTag(obj, options){
 
   return false;
 }
-exports.prettify = prettify;

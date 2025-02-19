@@ -99,10 +99,10 @@ Through OpenCollective
 * Supports parsing of PI (Processing Instruction) tags with XML declaration tags
 * And many more other features.
 
-## v5
-I developed v5 in Apr 2023. And I didn't get the chance to complete all the features. I've ensured that new features don't impact performance. With v5, you have more control on parsing output. Check [docs](./docs/v5) for syntax help and basic understanding.
+## v6
+I developed v6 in Apr 2023. And I didn't get the chance to complete all the features. I've ensured that new features don't impact performance. With v6, you have more control on parsing output. Check [docs](./docs/v6) for syntax help and basic understanding.
 
-Please leave a comment in discussion forum for your suggestions and if you really need v5.
+Please leave a comment in discussion forum for your suggestions and if you really need v6.
 
 ## How to use
 
@@ -155,7 +155,7 @@ Bundle size
 
 ### Documents
 <table>
-  <tr><td>v3</td><td>v4</td><td>v5</td></tr>
+  <tr><td>v3</td><td>v4</td><td>v6</td></tr>
   <tr>
     <td>
       <a href="./docs/v3/docs.md">documents</a>
@@ -170,11 +170,11 @@ Bundle size
       <li><a href="./docs/v4/7.PITags.md">PI Tag processing</a></li>
     </ol></td>
     <td><ol>
-      <li></li><a href="./docs/v5/1.GettingStarted.md">Getting Started</a></li>
-      <li><a href="./docs/v5/2.Features.md">Features</a></li>
-      <li><a href="./docs/v5/3.Options.md">Options</a></li>
-      <li><a href="./docs/v5/4.OutputBuilders.md">Output Builders</a></li>
-      <li><a href="./docs/v5/5.ValueParsers.md">Value Parsers</a></li>
+      <li></li><a href="./docs/v6/1.GettingStarted.md">Getting Started</a></li>
+      <li><a href="./docs/v6/2.Features.md">Features</a></li>
+      <li><a href="./docs/v6/3.Options.md">Options</a></li>
+      <li><a href="./docs/v6/4.OutputBuilders.md">Output Builders</a></li>
+      <li><a href="./docs/v6/5.ValueParsers.md">Value Parsers</a></li>
     </ol></td>
   </tr>
 </table>

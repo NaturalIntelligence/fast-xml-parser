@@ -1,7 +1,7 @@
 'use strict';
 //parse Empty Node as self closing node
-const buildFromOrderedJs = require('./orderedJs2Xml');
-const getIgnoreAttributesFn = require('../ignoreAttributes')
+import buildFromOrderedJs from './orderedJs2Xml.js';
+import getIgnoreAttributesFn from "../ignoreAttributes.js";
 
 const defaultOptions = {
   attributeNamePrefix: '@_',
@@ -37,7 +37,7 @@ const defaultOptions = {
   oneListGroup: false
 };
 
-function Builder(options) {
+export default function Builder(options) {
   this.options = Object.assign({}, defaultOptions, options);
   if (this.options.ignoreAttributes === true || this.options.attributesGroupName) {
     this.isAttribute = function(/*a*/) {
@@ -283,4 +283,3 @@ function isAttribute(name /*, options*/) {
   }
 }
 
-module.exports = Builder;

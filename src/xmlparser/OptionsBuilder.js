@@ -1,5 +1,5 @@
 
-const defaultOptions = {
+export const defaultOptions = {
     preserveOrder: false,
     attributeNamePrefix: '@_',
     attributesGroupName: false,
@@ -40,9 +40,6 @@ const defaultOptions = {
     // skipEmptyListItem: false
 };
    
-const buildOptions = function(options) {
+export const buildOptions = function(options) {
     return Object.assign({}, defaultOptions, options);
 };
-
-exports.buildOptions = buildOptions;
-exports.defaultOptions = defaultOptions;

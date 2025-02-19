@@ -5,7 +5,7 @@ import {
     type X2jOptions,
     type XmlBuilderOptions,
     type validationOptions,
-} from '../../src/fxp';
+} from '../../src/fxp.js';
 
 const parseOpts: X2jOptions = {};
 

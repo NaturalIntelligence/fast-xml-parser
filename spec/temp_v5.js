@@ -1,6 +1,6 @@
 "use strict";
 
-const XMLParser = require("../src/v5/XMLParser");
+import XMLParser from "../src/v6/XMLParser";
 
 describe("unpaired and empty tags", function() {
     it("bug test", function() {

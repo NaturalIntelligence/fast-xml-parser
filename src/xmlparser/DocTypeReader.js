@@ -1,7 +1,7 @@
-const util = require('../util');
+import {isName} from '../util.js';
 
 //TODO: handle comments
-function readDocType(xmlData, i){
+export default function readDocType(xmlData, i){
     
     const entities = {};
     if( xmlData[i + 3] === 'O' &&
@@ -144,10 +144,8 @@ function isNotation(xmlData, i){
 }
 
 function validateEntityName(name){
-    if (util.isName(name))
+    if (isName(name))
 	return name;
     else
         throw new Error(`Invalid entity name ${name}`);
 }
-
-module.exports = readDocType;

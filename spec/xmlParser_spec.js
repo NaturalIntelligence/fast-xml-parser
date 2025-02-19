@@ -1,6 +1,16 @@
 "use strict";
 
-const {XMLParser, XMLValidator} = require("../src/fxp");
+import {XMLParser, XMLValidator} from "../src/fxp.js";
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+
+// Get the file URL of the current module
+const __filename = fileURLToPath(import.meta.url);
+
+// Derive the directory name
+const __dirname = dirname(__filename);
 
 describe("XMLParser", function() {
 
@@ -554,8 +564,6 @@ describe("XMLParser", function() {
     });
 
     it("should parse all type of nodes", function() {
-        const fs = require("fs");
-        const path = require("path");
         const fileNamePath = path.join(__dirname, "assets/sample.xml");
         const xmlData = fs.readFileSync(fileNamePath).toString();
 
@@ -638,8 +646,8 @@ describe("XMLParser", function() {
     });
 
     /* it("should parse nodes as arrays", function () {
-      const fs = require("fs");
-      const path = require("path");
+      import fs from "fs";
+      import path from "path";
       const fileNamePath = path.join(__dirname, "assets/sample.xml");
       const xmlData = fs.readFileSync(fileNamePath).toString();
 

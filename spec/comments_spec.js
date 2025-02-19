@@ -1,5 +1,5 @@
 
-const { XMLParser, XMLBuilder, XMLValidator} = require("../src/fxp");
+import {XMLParser, XMLBuilder, XMLValidator} from "../src/fxp.js";
 
 describe("Comments", function() {
 
