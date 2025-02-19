@@ -3,10 +3,11 @@
 /*eslint-disable no-console*/
 import fs from 'fs';
 import {XMLParser, XMLValidator} from "../fxp.js";
-import {readToEnd} from './read.js';
+import ReadToEnd from './read.js';
 import cmdDetail from "./man.js"
-import pkg from '../../package.json';
+import pkg from '../../package.json' assert { type: 'json' };
 const version = pkg.version;
+
 
 if (process.argv[2] === '--help' || process.argv[2] === '-h') {
   console.log(cmdDetail);
@@ -65,7 +66,7 @@ if (process.argv[2] === '--help' || process.argv[2] === '-h') {
   try {
     
     if (!fileName) {
-      readToEnd(process.stdin, function(err, data) {
+      ReadToEnd.readToEnd(process.stdin, function(err, data) {
         if (err) {
           throw err;
         }
