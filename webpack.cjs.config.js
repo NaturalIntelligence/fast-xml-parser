@@ -15,9 +15,10 @@ export default [
         output: {
             path: __dirname,
             filename: "./lib/fxp.cjs",
-            library: "fxp",
+            // library: "fxp",
             libraryTarget: "commonjs2"
-        }
+        },
+        target: "node"
     },{
         context: __dirname,
         entry: "./src/fxp.js",
@@ -27,7 +28,8 @@ export default [
             path: __dirname,
             filename: "./lib/fxp.min.js",
             library: "fxp",
-            libraryTarget: "var"
+            libraryTarget: "umd",
+            globalObject: "this"
         },
         module: {
             rules: [
@@ -47,7 +49,8 @@ export default [
             path: __dirname,
             filename: "./lib/fxbuilder.min.js",
             library: "XMLBuilder",
-            libraryTarget: "var"
+            libraryTarget: "umd",
+            globalObject: "this"
         },
         module: {
             rules: [
@@ -67,7 +70,9 @@ export default [
             path: __dirname,
             filename: "./lib/fxparser.min.js",
             library: "XMLParser",
-            libraryTarget: "var"
+            libraryTarget: "umd",
+            globalObject: "this"    
+
         },
         module: {
             rules: [
@@ -87,7 +92,8 @@ export default [
             path: __dirname,
             filename: "./lib/fxvalidator.min.js",
             library: "XMLValidator",
-            libraryTarget: "var"
+            libraryTarget: "umd",
+            globalObject: "this"
         },
         module: {
             rules: [
