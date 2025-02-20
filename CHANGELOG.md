@@ -1,5 +1,8 @@
 <small>Note: If you find missing information about particular minor version, that version must have been changed without any functional change in this library.</small>
 
+**5.0.5 / 2025-02-20**
+- fix parsing of string starting with 'e' or 'E' by updating strnum
+
 **5.0.4 / 2025-02-20**
 - fix CLI to support all the versions of node js when displaying library version.
 - fix CJS import in v5
