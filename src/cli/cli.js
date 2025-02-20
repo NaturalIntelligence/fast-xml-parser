@@ -46,22 +46,20 @@ if (process.argv[2] === '--help' || process.argv[2] === '-h') {
   
   const callback = function(xmlData) {
     let output = '';
-    if (validate) {
-      const parser = new XMLParser(options);
-      output = parser.parse(xmlData,validate);
-    } else if (validateOnly) {
+    if (validateOnly) {
       output = XMLValidator.validate(xmlData);
       process.exitCode = output === true ? 0 : 1;
-    } else {
+    }  else {
       const parser = new XMLParser(options);
       output = JSON.stringify(parser.parse(xmlData,validate), null, 4);
     }
     if (outputFileName) {
       writeToFile(outputFileName, output);
     } else {
-      console.log(JSON.stringify(output, null, 2));
+      console.log(output);
     }
   };
+
 
   try {
     
