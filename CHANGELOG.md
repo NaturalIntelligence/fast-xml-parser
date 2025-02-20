@@ -1,5 +1,10 @@
 <small>Note: If you find missing information about particular minor version, that version must have been changed without any functional change in this library.</small>
 
+**5.0.4 / 2025-02-20**
+- fix CLI to support all the versions of node js when displaying library version.
+- fix CJS import in v5
+  - by fixing webpack config
+
 **5.0.3 / 2025-02-20**
 - Using strnum ESM module
   - new fixes in strum may break your experience
