@@ -155,7 +155,7 @@ Bundle size
 
 ### Documents
 <table>
-  <tr><td>v3</td><td>v4</td><td>v6</td></tr>
+  <tr><td>v3</td><td>v4 and v5</td><td>v6</td></tr>
   <tr>
     <td>
       <a href="./docs/v3/docs.md">documents</a>
@@ -179,7 +179,8 @@ Bundle size
   </tr>
 </table>
 
-**note**: version 5 is released with version 4 tfor experimental use. Based on it's demand, it'll be developed and the features can be different in final release.
+**note**: version 6 is released with version 4 for experimental use. Based on it's demand, it'll be developed and the features can be different in final release.
+Version 5 has the same functionalities as version 4.
 
 ## Performance
 <small>negative means error</small>
