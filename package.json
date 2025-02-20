@@ -28,6 +28,11 @@
   "bin": {
     "fxparser": "./src/cli/cli.js"
   },
+  "files": [
+    "lib",
+    "src",
+    "CHANGELOG.md"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/NaturalIntelligence/fast-xml-parser"
