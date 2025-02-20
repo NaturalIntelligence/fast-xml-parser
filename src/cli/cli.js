@@ -2,16 +2,16 @@
 'use strict';
 /*eslint-disable no-console*/
 import fs from 'fs';
+import { resolve } from 'path';
 import {XMLParser, XMLValidator} from "../fxp.js";
 import ReadToEnd from './read.js';
 import cmdDetail from "./man.js"
-import pkg from '../../package.json' assert { type: 'json' };
-const version = pkg.version;
-
 
 if (process.argv[2] === '--help' || process.argv[2] === '-h') {
   console.log(cmdDetail);
 } else if (process.argv[2] === '--version') {
+  const packageJsonPath = resolve(process.cwd(), 'package.json');
+  const version = JSON.parse(fs.readFileSync(packageJsonPath).toString()).version;
   console.log(version);
 } else {
   const options = {

@@ -1,6 +1,7 @@
-import pkg from '../../package.json' assert { type: 'json' };
-const version = pkg.version;
-
+import fs from 'fs';
+import { resolve } from 'path';
+const packageJsonPath = resolve(process.cwd(), 'package.json');
+const version = JSON.parse(fs.readFileSync(packageJsonPath).toString()).version;
 
 export default `Fast XML Parser ${version}
 ----------------
