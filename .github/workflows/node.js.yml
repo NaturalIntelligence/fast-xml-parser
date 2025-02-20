@@ -23,7 +23,7 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-    - run: npm install
+    - run: npm install && npm remove publish-please
     - run: npm run test
     - uses: coverallsapp/github-action@v1.1.1
       with:
