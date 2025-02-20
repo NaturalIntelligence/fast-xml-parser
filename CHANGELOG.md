@@ -1,5 +1,9 @@
 <small>Note: If you find missing information about particular minor version, that version must have been changed without any functional change in this library.</small>
 
+**5.0.3 / 2025-02-20**
+- Using strnum ESM module
+  - new fixes in strum may break your experience
+
 **5.0.2 / 2025-02-20**
 - fix: include CommonJS resources in the npm package #714 (By [Thomas Bouffard](https://github.com/tbouffard))
 - fix: move babel deps to dev deps

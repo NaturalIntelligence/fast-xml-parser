@@ -3644,10 +3644,10 @@ strip-json-comments@^3.1.1:
   resolved "https://registry.npmjs.org/strip-json-comments/-/strip-json-comments-3.1.1.tgz"
   integrity sha512-6fPc+R4ihwqP6N/aIv2f1gMH8lOVtWQHoqC4yK6oSDVVocumAsfCqjkXnqiYMhmMwS/mEHLp7Vehlt3ql6lEig==
 
-strnum@^1.0.5:
-  version "1.0.5"
-  resolved "https://registry.npmjs.org/strnum/-/strnum-1.0.5.tgz"
-  integrity sha512-J8bbNyKKXl5qYcR36TIO8W3mVGVHrmmxsd5PAItGkmyzwJvybiw2IVq5nqd0i4LSNSkB/sx9VHllbfFdr9k1JA==
+strnum@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.npmjs.org/strnum/-/strnum-2.0.1.tgz"
+  integrity sha512-JtrFERBg81Re6FNa4OyaMxwAdw7dEQemvbHH4dFb2K+C6dZ28+PE9uYJ4K0GvQAbQikrqexEEyOj3oradFxDzg==
 
 supports-color@^2.0.0:
   version "2.0.0"
