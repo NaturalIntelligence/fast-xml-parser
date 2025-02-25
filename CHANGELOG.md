@@ -1,5 +1,8 @@
 <small>Note: If you find missing information about particular minor version, that version must have been changed without any functional change in this library.</small>
 
+**5.0.7 / 2025-02-25**
+- fix (#724) typings for cjs.
+
 **5.0.6 / 2025-02-20**
 - fix cli output (By [Angel Delgado](https://github.com/angeld7))
   - remove multiple JSON parsing

@@ -1,6 +1,6 @@
 {
   "name": "fast-xml-parser",
-  "version": "5.0.6",
+  "version": "5.0.7",
   "description": "Validate XML, Parse XML, Build XML without C/C++ based libraries",
   "main": "./lib/fxp.cjs",
   "type": "module",
@@ -8,10 +8,14 @@
   "types": "./src/fxp.d.ts",
   "exports": {
     ".": {
-      "import": "./src/fxp.js",
-      "require": "./lib/fxp.cjs",
-      "types": "./src/fxp.d.ts",
-      "default": "./src/fxp.js"
+      "import": {
+        "types": "./src/fxp.d.ts",
+        "default": "./src/fxp.js"
+      },
+      "require": {
+        "types": "./lib/fxp.d.cts",
+        "default": "./lib/fxp.cjs"
+      }
     }
   },
   "scripts": {
