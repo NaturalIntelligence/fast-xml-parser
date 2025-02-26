@@ -1,5 +1,9 @@
 <small>Note: If you find missing information about particular minor version, that version must have been changed without any functional change in this library.</small>
 
+**5.0.8 / 2025-02-27**
+- fix parsing 0 if skiplike option is used.
+  - updating strnum dependency
+
 **5.0.7 / 2025-02-25**
 - fix (#724) typings for cjs.
 
