@@ -13,8 +13,8 @@ const htmlEntities = {
     "copyright" : { regex: /&(copy|#169);/g, val: "©" },
     "reg" : { regex: /&(reg|#174);/g, val: "®" },
     "inr" : { regex: /&(inr|#8377);/g, val: "₹" },
-    "num_dec": { regex: /&#([0-9]{1,7});/g, val : (_, str) => String.fromCharCode(Number.parseInt(str, 10)) },
-    "num_hex": { regex: /&#x([0-9a-fA-F]{1,6});/g, val : (_, str) => String.fromCharCode(Number.parseInt(str, 16)) },
+    "num_dec": { regex: /&#([0-9]{1,7});/g, val : (_, str) => String.fromCodePoint(Number.parseInt(str, 10)) },
+    "num_hex": { regex: /&#x([0-9a-fA-F]{1,6});/g, val : (_, str) => String.fromCodePoint(Number.parseInt(str, 16)) },
 };
 
 export default class EntitiesParser{
