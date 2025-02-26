@@ -383,7 +383,7 @@ describe("XMLParser Entities", function() {
         <?xml version="1.0" encoding="UTF-8"?>
         <note>
             <heading>Bear</heading>
-            <body face="&#x295;&#x2022;&#x1D25;&#x2022;&#x294;">Bears are called B&#228;ren in German!</body>
+            <body face="&#x295;&#x2022;&#x1D25;&#x2022;&#x294;" smile="&#x1F60A;&#128523;">Bears are called B&#228;ren in German!</body>
         </note> `;
 
         const expected = {
@@ -395,7 +395,8 @@ describe("XMLParser Entities", function() {
                 "heading": "Bear",
                 "body": {
                     "#text": "Bears are called Bären in German!",
-                    "face": "ʕ•ᴥ•ʔ"
+                    "face": "ʕ•ᴥ•ʔ",
+                    "smile": "\u{1F60A}\u{1F60B}"
                 }
             }
         };
