@@ -1,5 +1,11 @@
 <small>Note: If you find missing information about particular minor version, that version must have been changed without any functional change in this library.</small>
 
+**4.5.4 / 2025-02-27**
+- update strnum to fix parsing issues
+
+**4.5.3 / 2025-02-21**
+- update strnum to fix parsing issues
+
 **4.5.2 / 2025-02-18**
 - Fix null CDATA to comply with undefined behavior (#701) (By [Matthieu BOHEAS](https://github.com/Kelgors))
 - Fix(performance): Update check for leaf node in saveTextToParentTag function in OrderedObjParser.js (#707) (By [...](https://github.com/tomingtoming))
