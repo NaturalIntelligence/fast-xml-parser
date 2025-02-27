@@ -14,6 +14,7 @@ const regx =
 //const tagsRegx = new RegExp("<(\\/?)((\\w*:)?([\\w:\\-\._]+))([^>]*)>([^<]*)("+cdataRegx+"([^<]*))*([^<]+)?","g");
 
 class OrderedObjParser{
+  static START_INDEX = Symbol("Start Index of XML Node");
   constructor(options){
     this.options = options;
     this.currentNode = null;
@@ -226,7 +227,7 @@ const parseXml = function(xmlData) {
           if(tagData.tagName !== tagData.tagExp && tagData.attrExpPresent){
             childNode[":@"] = this.buildAttributesMap(tagData.tagExp, jPath);
           }
-          currentNode.addChild(childNode);
+          currentNode.addChild(childNode, OrderedObjParser.START_INDEX, i);
 
         }
 
@@ -293,6 +294,8 @@ const parseXml = function(xmlData) {
           currentNode = this.tagsNodeStack.pop();
         }
 
+        const startIndex = i;
+
         if (this.isItStopNode(this.options.stopNodes, jPath, tagName)) { //TODO: namespace
           let tagContent = "";
           //self-closing tag
@@ -313,6 +316,7 @@ const parseXml = function(xmlData) {
           }
 
           const childNode = new xmlNode(tagName);
+
           if(tagName !== tagExp && attrExpPresent){
             childNode[":@"] = this.buildAttributesMap(tagExp, jPath);
           }
@@ -323,7 +327,7 @@ const parseXml = function(xmlData) {
           jPath = jPath.substr(0, jPath.lastIndexOf("."));
           childNode.add(this.options.textNodeName, tagContent);
           
-          currentNode.addChild(childNode);
+          currentNode.addChild(childNode, OrderedObjParser.START_INDEX, startIndex);
         }else{
   //selfClosing tag
           if(tagExp.length > 0 && tagExp.lastIndexOf("/") === tagExp.length - 1){
@@ -343,7 +347,7 @@ const parseXml = function(xmlData) {
               childNode[":@"] = this.buildAttributesMap(tagExp, jPath);
             }
             jPath = jPath.substr(0, jPath.lastIndexOf("."));
-            currentNode.addChild(childNode);
+            currentNode.addChild(childNode, OrderedObjParser.START_INDEX, startIndex);
           }
     //opening tag
           else{
@@ -353,7 +357,7 @@ const parseXml = function(xmlData) {
             if(tagName !== tagExp && attrExpPresent){
               childNode[":@"] = this.buildAttributesMap(tagExp, jPath);
             }
-            currentNode.addChild(childNode);
+            currentNode.addChild(childNode, OrderedObjParser.START_INDEX, startIndex);
             currentNode = childNode;
           }
           textData = "";

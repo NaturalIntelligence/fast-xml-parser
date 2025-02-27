@@ -1,5 +1,7 @@
 'use strict';
 
+const { START_INDEX } = require('./OrderedObjParser');
+
 /**
  * 
  * @param {array} node 
@@ -36,6 +38,7 @@ function compress(arr, options, jPath){
       
       let val = compress(tagObj[property], options, newJpath);
       const isLeaf = isLeafTag(val, options);
+      val[START_INDEX] = tagObj[START_INDEX]; // copy over start index
 
       if(tagObj[":@"]){
         assignAttributes( val, tagObj[":@"], newJpath, options);

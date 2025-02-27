@@ -53,6 +53,11 @@ class XMLParser{
             this.externalEntities[key] = value;
         }
     }
+
+    /** get the symbol used for the start index on nodes */
+    getStartIndexSymbol() {
+        return OrderedObjParser.START_INDEX;
+    }
 }
 
 module.exports = XMLParser;
