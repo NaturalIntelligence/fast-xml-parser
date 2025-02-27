@@ -11,12 +11,12 @@ class XmlNode{
     if(key === "__proto__") key = "#__proto__";
     this.child.push( {[key]: val });
   }
-  addChild(node) {
+  addChild(node, START_INDEX, startIndex) {
     if(node.tagname === "__proto__") node.tagname = "#__proto__";
     if(node[":@"] && Object.keys(node[":@"]).length > 0){
-      this.child.push( { [node.tagname]: node.child, [":@"]: node[":@"] });
+      this.child.push( { [node.tagname]: node.child, [":@"]: node[":@"], [START_INDEX]: startIndex });
     }else{
-      this.child.push( { [node.tagname]: node.child });
+      this.child.push( { [node.tagname]: node.child, [START_INDEX]: startIndex });
     }
   };
 };
