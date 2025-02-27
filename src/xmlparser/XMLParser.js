@@ -2,6 +2,7 @@ import { buildOptions} from './OptionsBuilder.js';
 import OrderedObjParser from './OrderedObjParser.js';
 import prettify from './node2json.js';
 import {validate} from "../validator.js";
+import XmlNode from './xmlNode.js';
 
 export default class XMLParser{
     
@@ -52,5 +53,9 @@ export default class XMLParser{
         }else{
             this.externalEntities[key] = value;
         }
+    }
+    /** get the symbol used for the start index on nodes */
+    static getStartIndexSymbol() {
+        return XmlNode.getStartIndexSymbol();
     }
 }
