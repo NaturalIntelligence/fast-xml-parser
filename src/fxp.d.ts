@@ -408,7 +408,7 @@ export class XMLParser {
    */
   addEntity(entityIdentifier: string, entityValue: string): void;
   /** Returns a Symbol that can be used to extract the node start index. */
-  getStartIndexSymbol() : Symbol;
+  static getStartIndexSymbol() : Symbol;
 }
 
 export class XMLValidator{
