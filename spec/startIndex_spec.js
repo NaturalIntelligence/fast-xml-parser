@@ -5,18 +5,27 @@ describe("XMLParser", function() {
 
     it("should support the START_INDEX symbol ", function(){
         const xmlData = `<root><foo/><bar type="quux"/><bar type="bat"/></root>`;
+        const START_INDEX = XMLParser.getStartIndexSymbol();
         const expected = { 
             root: {
-                foo: '',
+                [START_INDEX]: 0,
+                foo: {
+                    [START_INDEX]: 6,
+                },
                 bar: [
-                    { "@_type": 'quux'},
-                    { "@_type": 'bat'},
+                    { 
+                        [START_INDEX]: 12,
+                        "@_type": 'quux'
+                    },
+                    { 
+                        [START_INDEX]: 30,
+                        "@_type": 'bat'
+                    },
                 ],
             }
          };
         
-        const parser = new XMLParser({preserveOrder:false, ignoreAttributes: false});
-        const START_INDEX = XMLParser.getStartIndexSymbol();
+        const parser = new XMLParser({preserveOrder:false, ignoreAttributes: false, preserveStartIndex: true});
         const result = parser.parse(xmlData);
         // console.dir(result, {depth:Infinity});
         expect(result).toEqual(expected);

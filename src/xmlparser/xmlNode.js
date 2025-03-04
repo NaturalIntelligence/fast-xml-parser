@@ -1,6 +1,12 @@
 'use strict';
 
-const START_INDEX = Symbol("Start Index of XML Node");
+let START_INDEX;
+
+if (typeof Symbol !== "function") {
+  START_INDEX = "@@startIndex";
+} else {
+  START_INDEX = Symbol("Start Index of XML Node");
+}
 
 export default class XmlNode{
   constructor(tagname) {
@@ -16,11 +22,16 @@ export default class XmlNode{
   addChild(node, startIndex) {
     if(node.tagname === "__proto__") node.tagname = "#__proto__";
     if(node[":@"] && Object.keys(node[":@"]).length > 0){
-      this.child.push( { [node.tagname]: node.child, [":@"]: node[":@"], [START_INDEX]: startIndex });
+      this.child.push( { [node.tagname]: node.child, [":@"]: node[":@"] });
     }else{
-      this.child.push( { [node.tagname]: node.child, [START_INDEX]: startIndex });
+      this.child.push( { [node.tagname]: node.child });
+    }
+    // if requested, add the startIndex
+    if (startIndex !== undefined) {
+      this.child[this.child.length - 1][START_INDEX] = startIndex;
     }
   }
+  /** symbol used for startIndex */
   static getStartIndexSymbol() {
     return START_INDEX;
   }

@@ -40,7 +40,9 @@ function compress(arr, options, jPath){
       
       let val = compress(tagObj[property], options, newJpath);
       const isLeaf = isLeafTag(val, options);
-      val[START_INDEX] = tagObj[START_INDEX]; // copy over start index
+      if (tagObj[START_INDEX] !== undefined) {
+        val[START_INDEX] = tagObj[START_INDEX]; // copy over start index
+      }
 
       if(tagObj[":@"]){
         assignAttributes( val, tagObj[":@"], newJpath, options);
