@@ -14,7 +14,8 @@ Here is the check list to publish any change
 * Changes are well discussed by raising github issue. So they are well known by other contributors and users
 * Echoing the above point. The purpose / goal for the PR should be mentioned in the description.
 * Multiple unrelated changes should not be clubbed in single PR.
-* Please run perf tests  `$ node benchmark\XmlParser.js` or `$ node benchmark\XmlBuilder.js` before and after the changes. And mention it in PR description.
+* Please run perf tests  `$ node benchmark/XmlParser.mjs` or `$ node benchmark/XmlBuilder.mjs` before and after the changes. And mention it in PR description.
+  * See [benchmark/README.md](../benchmark/README.md) for details
 * If you are adding any dependency (specially if it is not the dev dependency) please check that 
   * it is not dependent on other language packages like c/c++
   * the package is not very old, very new, discontinued, or has any vulnerability etc.

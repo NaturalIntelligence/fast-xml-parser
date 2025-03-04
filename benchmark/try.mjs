@@ -2,6 +2,11 @@ import fs from "fs";
 import path from "path";
 // const fileNamePath = path.join(__dirname, "../spec/assets/test.json");//1.5k
 // const jsonData = JSON.parse(fs.readFileSync(fileNamePath).toString());
+import { dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
+    
+// compatibility
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 
 // const xml2js = require("xml2js");
