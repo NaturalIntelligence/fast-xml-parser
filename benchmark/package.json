@@ -4,7 +4,9 @@
   "private": true,
   "description": "Performance test",
   "scripts": {
-    "perf": "node perfTest3.js"
+    "parser": "node XmlParser.mjs",
+    "builder": "node XmlBuilder.mjs",
+    "test": "npm run parser && npm run builder && node try.mjs"
   },
   "devDependencies": {
     "benchmark": "^2.1.4",

@@ -5,6 +5,11 @@ import {XMLParser} from "../src/fxp.js";
 import xml2js from "xml2js";
 import fxpv3 from "fast-xml-parser";
 import { convert } from 'xmlbuilder2';
+import { dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
+    
+// compatibility
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const suite = new Benchmark.Suite("XML Parser benchmark");
 

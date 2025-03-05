@@ -6,6 +6,11 @@ const suite = new Benchmark.Suite("XML Builder benchmark");
 import {XMLBuilder} from "../src/fxp.js";
 import xml2js from "xml2js";
 const xml2jsBuilder = new xml2js.Builder();
+import { dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
+    
+// compatibility
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 import fs from "fs";
 import path from "path";
