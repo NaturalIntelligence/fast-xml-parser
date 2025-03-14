@@ -1,5 +1,9 @@
 <small>Note: If you find missing information about particular minor version, that version must have been changed without any functional change in this library.</small>
 
+**5.0.9 / 2025-03-14**
+- fix: support numeric entities with values over 0xFFFF (#726) (By (Marc Durdin)[https://github.com/mcdurdin])
+- fix: update strnum to fix parsing 0 if skiplike option is used
+
 **5.0.8 / 2025-02-27**
 - fix parsing 0 if skiplike option is used.
   - updating strnum dependency
