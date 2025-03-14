@@ -1,16 +1,29 @@
 # [fast-xml-parser](https://www.npmjs.com/package/fast-xml-parser)
-[![NPM quality][quality-image]][quality-url]
-[![Coverage Status](https://coveralls.io/repos/github/NaturalIntelligence/fast-xml-parser/badge.svg?branch=master)](https://coveralls.io/github/NaturalIntelligence/fast-xml-parser?branch=master)
-[<img src="https://img.shields.io/badge/Try-me-blue.svg?colorA=FFA500&colorB=0000FF" alt="Try me"/>](https://naturalintelligence.github.io/fast-xml-parser/)
-[![NPM total downloads](https://img.shields.io/npm/dt/fast-xml-parser.svg)](https://npm.im/fast-xml-parser)
 
+[![NPM total downloads](https://img.shields.io/npm/dt/fast-xml-parser.svg)](https://npm.im/fast-xml-parser)
 
 Validate XML, Parse XML to JS Object, or Build XML from JS Object without C/C++ based libraries and no callback.
 
----
+<img align="right" src="static/img/fxp_logo.png" width="180px" alt="FXP logo"/>
 
-<small>Checkout our new library [Text2Chart](https://solothought.com/text2chart/flow) that constructs flow chart out of simple text. Very helpful in creating or alayzing an algorithm, and documentation purpose</small>
-<br>
+* Validate XML data syntactically. Use [detailed-xml-validator](https://github.com/NaturalIntelligence/detailed-xml-validator/) to verify business rules.
+* Parse XML to JS Objectand vice versa
+* Common JS, ESM, and browser compatible
+* Faster than any other pure JS implementation.
+
+It can handle big files (tested up to 100mb). XML Entities, HTML entities, and DOCTYPE entites are supported. Unpaired tags (Eg `<br>` in HTML), stop nodes (Eg `<script>` in HTML) are supported. It can also preserve Order of tags in JS object
+
+---
+# Your Support, Our Motivation
+
+## Try out our New Thoughts
+
+We've recently launched **Flowgger**
+<a href="https://github.com/solothought/flowgger"> <img src="static/img/flowgger_h.webp" alt="Flowgger Logging Framework" /></a>
+
+Don't forget to check our new library [Text2Chart](https://solothought.com/text2chart/flow) that constructs flow chart out of simple text. Very helpful in creating or alayzing an algorithm, and documentation purpose.
+
+## Financial Support
 
 Sponsor this project
 
@@ -50,9 +63,9 @@ Through OpenCollective
 -->
 
 ![fxp_sponsors](https://raw.githubusercontent.com/NaturalIntelligence/ThankYouBackers/main/assets/NI_sponsors.jpg)
-- <a href="https://github.com/cocopon" target="_blank">Hiroki Kokubun</a>
 
 > This is a donation. No goods or services are expected in return. Any requests for refunds for those purposes will be rejected.
+
 ## Users
 
 <a href="https://github.com/renovatebot/renovate" title="renovate" ><img src="https://avatars1.githubusercontent.com/u/38656520" width="60px" ></a>
@@ -79,30 +92,7 @@ Through OpenCollective
 
 ---
 
-## Main Features
-
-<img align="right" src="static/img/fxp_logo.png" width="180px" alt="FXP logo"/>
-
-* Validate XML data syntactically
-* Parse XML to JS Object
-* Build XML from JS Object
-* Compatible to node js packages, in browser, and in CLI (click try me button above for demo)
-* Faster than any other pure JS implementation.
-* It can handle big files (tested up to 100mb).
-* Controlled parsing using various options
-* XML Entities, HTML entities, and DOCTYPE entites are supported.
-* unpaired tags (Eg `<br>` in HTML), stop nodes (Eg `<script>` in HTML) are supported.
-* You can restore almost same XML from JSON
-* Supports comments
-* It can preserve Order of tags in JS object
-* You can control if a single tag should be parsed into array.
-* Supports parsing of PI (Processing Instruction) tags with XML declaration tags
-* And many more other features.
-
-## v6
-I developed v6 in Apr 2023. And I didn't get the chance to complete all the features. I've ensured that new features don't impact performance. With v6, you have more control on parsing output. Check [docs](./docs/v6) for syntax help and basic understanding.
-
-Please leave a comment in discussion forum for your suggestions and if you really need v6.
+# More about this library
 
 ## How to use
 
@@ -153,7 +143,7 @@ Bundle size
 | fxp.min.js         | 26K  |
 | fxvalidator.min.js | 5.7K |
 
-### Documents
+## Documents
 <table>
   <tr><td>v3</td><td>v4 and v5</td><td>v6</td></tr>
   <tr>
@@ -179,8 +169,9 @@ Bundle size
   </tr>
 </table>
 
-**note**: version 6 is released with version 4 for experimental use. Based on it's demand, it'll be developed and the features can be different in final release.
-Version 5 has the same functionalities as version 4.
+**note**: 
+- Version 6 is released with version 4 for experimental use. Based on it's demand, it'll be developed and the features can be different in final release.
+- Version 5 has the same functionalities as version 4.
 
 ## Performance
 <small>negative means error</small>
@@ -198,10 +189,9 @@ Version 5 has the same functionalities as version 4.
 <img src="./docs/imgs/XMLBuilder_v4.png" width="50%" />
 * Y-axis: requests per second
 
-
-
 <!-- [![](static/img/ni_ads_ads.gif)](https://github.com/NaturalIntelligence/ads/) -->
 
+---
 
 ## Usage Trend
 
@@ -211,20 +201,15 @@ Version 5 has the same functionalities as version 4.
   <img src="https://npm-compare.com/img/npm-trend/THREE_YEARS/fast-xml-parser.png" width="50%" alt="NPM Usage Trend of fast-xml-parser" />
 </a>
 
-## Supporters
-### Contributors
+# Supporters
+#### Contributors
 
 This project exists thanks to [all](graphs/contributors) the people who contribute. [[Contribute](docs/CONTRIBUTING.md)].
-<!-- <a href="graphs/contributors"><img src="https://opencollective.com/fast-xml-parser/contributors.svg?width=890&button=false" /></a> -->
-<!--
-### Lead Maintainers
-![Amit Gupta](https://avatars1.githubusercontent.com/u/7692328?s=100&v=4)
-[![Vohmyanin Sergey Vasilevich](https://avatars3.githubusercontent.com/u/783335?s=100&v=4)](https://github.com/Delagen)
 
-### All Contributors -->
 <a href="graphs/contributors"><img src="https://opencollective.com/fast-xml-parser/contributors.svg?width=890&button=false" /></a>
 
-### Backers
+
+#### Backers from Open collective
 
 Thank you to all our backers! 🙏 [[Become a backer](https://opencollective.com/fast-xml-parser#backer)]
 
