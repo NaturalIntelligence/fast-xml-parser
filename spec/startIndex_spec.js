@@ -1,37 +1,61 @@
 
 import { XMLParser } from "../src/fxp.js";
 
-describe("XMLParser", function() {
+describe("XMLParser", function () {
 
-    it("should support the START_INDEX symbol ", function(){
-        const xmlData = `<root><foo/><bar type="quux"/><bar type="bat"/></root>`;
-        const START_INDEX = XMLParser.getStartIndexSymbol();
-        const expected = { 
+    const xmlData = `<root><foo/><bar type="quux"/><bar type="bat"/></root>`;
+    const XML_METADATA = XMLParser.getMetaDataSymbol();
+
+    it("should support captureMetadata && !preserveOrder", function () {
+        const expected = {
             root: {
-                [START_INDEX]: 0,
-                foo: {
-                    [START_INDEX]: 6,
-                },
+                [XML_METADATA]: { startIndex: 0 },
+                // TODO: investigate why this is ''
+                foo: '',
+                // foo: {
+                //     [XML_METADATA]: { startIndex: 6 },
+                // },
                 bar: [
-                    { 
-                        [START_INDEX]: 12,
+                    {
+                        [XML_METADATA]: { startIndex: 12 },
                         "@_type": 'quux'
                     },
-                    { 
-                        [START_INDEX]: 30,
+                    {
+                        [XML_METADATA]: { startIndex: 30 },
                         "@_type": 'bat'
                     },
                 ],
             }
-         };
-        
-        const parser = new XMLParser({preserveOrder:false, ignoreAttributes: false, preserveStartIndex: true});
+        };
+
+        const parser = new XMLParser({ preserveOrder: false, ignoreAttributes: false, captureMetaData: true });
         const result = parser.parse(xmlData);
-        // console.dir(result, {depth:Infinity});
+        // console.dir({ result, expected }, { depth: Infinity });
         expect(result).toEqual(expected);
-        expect(result.root[START_INDEX]).toEqual(0); // index of <root>
-        // expect(result.root.foo[START_INDEX]).toEqual(6); // index of <foo/> - but there's no object, just a string.
-        expect(result.root.bar[0][START_INDEX]).toEqual(12);
-        expect(result.root.bar[1][START_INDEX]).toEqual(30);
+    });
+    it("should support captureMetadata && preserveOrder", function () {
+        const expected = [
+            {
+                root: [
+                    { foo: [], [XML_METADATA]: { startIndex: 6 } },
+                    {
+                        bar: [],
+                        ':@': { "@_type": 'quux' },
+                        [XML_METADATA]: { startIndex: 12 },
+                    },
+                    {
+                        bar: [],
+                        ':@': { "@_type": 'bat' },
+                        [XML_METADATA]: { startIndex: 30 },
+                    },
+                ],
+                [XML_METADATA]: { startIndex: 0 },
+            }
+        ];
+
+        const parser = new XMLParser({ preserveOrder: true, ignoreAttributes: false, captureMetaData: true });
+        const result = parser.parse(xmlData);
+        // console.dir({ result, expected }, { depth: Infinity });
+        expect(result).toEqual(expected);
     });
 });

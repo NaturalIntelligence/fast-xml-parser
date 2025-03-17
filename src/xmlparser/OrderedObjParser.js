@@ -398,7 +398,7 @@ const parseXml = function(xmlData) {
 
 function addChild(currentNode, childNode, jPath, startIndex){
   // unset startIndex if not requested
-  if (!this.options.preserveStartIndex) startIndex = undefined;
+  if (!this.options.captureMetaData) startIndex = undefined;
   const result = this.options.updateTag(childNode.tagname, jPath, childNode[":@"])
   if(result === false){
   } else if(typeof result === "string"){

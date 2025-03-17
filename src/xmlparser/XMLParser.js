@@ -55,7 +55,7 @@ export default class XMLParser{
         }
     }
     /** get the symbol used for the start index on nodes */
-    static getStartIndexSymbol() {
-        return XmlNode.getStartIndexSymbol();
+    static getMetaDataSymbol() {
+        return XmlNode.getMetaDataSymbol();
     }
 }

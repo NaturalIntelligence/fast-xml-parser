@@ -2,7 +2,7 @@
 
 import XmlNode from './xmlNode.js';
 
-const START_INDEX = XmlNode.getStartIndexSymbol();
+const METADATA_SYMBOL = XmlNode.getMetaDataSymbol();
 
 /**
  * 
@@ -40,8 +40,8 @@ function compress(arr, options, jPath){
       
       let val = compress(tagObj[property], options, newJpath);
       const isLeaf = isLeafTag(val, options);
-      if (tagObj[START_INDEX] !== undefined) {
-        val[START_INDEX] = tagObj[START_INDEX]; // copy over start index
+      if (tagObj[METADATA_SYMBOL] !== undefined) {
+        val[METADATA_SYMBOL] = tagObj[METADATA_SYMBOL]; // copy over metadata
       }
 
       if(tagObj[":@"]){

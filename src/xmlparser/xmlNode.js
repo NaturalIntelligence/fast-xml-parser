@@ -1,11 +1,11 @@
 'use strict';
 
-let START_INDEX;
+let METADATA_SYMBOL;
 
 if (typeof Symbol !== "function") {
-  START_INDEX = "@@startIndex";
+  METADATA_SYMBOL = "@@xmlMetadata";
 } else {
-  START_INDEX = Symbol("Start Index of XML Node");
+  METADATA_SYMBOL = Symbol("XML Node Metadata");
 }
 
 export default class XmlNode{
@@ -28,11 +28,13 @@ export default class XmlNode{
     }
     // if requested, add the startIndex
     if (startIndex !== undefined) {
-      this.child[this.child.length - 1][START_INDEX] = startIndex;
+      // Note: for now we just overwrite the metadata. If we had more complex metadata,
+      // we might need to do an object append here:  metadata = { ...metadata, startIndex }
+      this.child[this.child.length - 1][METADATA_SYMBOL] = { startIndex };
     }
   }
   /** symbol used for startIndex */
-  static getStartIndexSymbol() {
-    return START_INDEX;
+  static getMetaDataSymbol() {
+    return METADATA_SYMBOL;
   }
 }
