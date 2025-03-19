@@ -210,6 +210,19 @@ type X2jOptions = {
    * Defaults to `(tagName, jPath, attrs) => tagName`
    */
   updateTag?: (tagName: string, jPath: string, attrs: {[k: string]: string}) =>  string | boolean;
+
+  /**
+   * If true, adds a Symbol to non-string nodes (accessible by XMLParser.getMetaDataSymbol()) which returns
+   * metadata about each the node in the XML file.
+   * (If Symbol is not available, an ordinary property is used.)
+   */
+  captureMetaData?: boolean;
+};
+
+/** type of the metadata symbol accessible by XMLParser.getMetaDataSymbol() */
+type X2jMetaData = {
+  /** contains the character index of the beginning of the XML node */
+  startIndex?: number;
 };
 
 type strnumOptions = {
@@ -407,6 +420,11 @@ export class XMLParser {
    * @param entityValue {string} Eg: '\r'
    */
   addEntity(entityIdentifier: string, entityValue: string): void;
+  /**
+   * Returns a Symbol that can be used to extract the node start index.
+   * (If Symbol is not available, an ordinary property is used.)
+   */
+  static getMetaDataSymbol() : Symbol;
 }
 
 export class XMLValidator{

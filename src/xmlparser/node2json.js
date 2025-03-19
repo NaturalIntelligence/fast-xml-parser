@@ -1,5 +1,9 @@
 'use strict';
 
+import XmlNode from './xmlNode.js';
+
+const METADATA_SYMBOL = XmlNode.getMetaDataSymbol();
+
 /**
  * 
  * @param {array} node 
@@ -36,6 +40,9 @@ function compress(arr, options, jPath){
       
       let val = compress(tagObj[property], options, newJpath);
       const isLeaf = isLeafTag(val, options);
+      if (tagObj[METADATA_SYMBOL] !== undefined) {
+        val[METADATA_SYMBOL] = tagObj[METADATA_SYMBOL]; // copy over metadata
+      }
 
       if(tagObj[":@"]){
         assignAttributes( val, tagObj[":@"], newJpath, options);
