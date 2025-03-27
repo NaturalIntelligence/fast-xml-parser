@@ -54,7 +54,17 @@ export default class XMLParser{
             this.externalEntities[key] = value;
         }
     }
-    /** get the symbol used for the start index on nodes */
+
+    /**
+     * Returns a Symbol that can be used to access the metadata
+     * property on a node.
+     * 
+     * If Symbol is not available in the environment, an ordinary property is used
+     * and the name of the property is here returned.
+     * 
+     * The XMLMetaData property is only present when `captureMetaData`
+     * is true in the options.
+     */
     static getMetaDataSymbol() {
         return XmlNode.getMetaDataSymbol();
     }

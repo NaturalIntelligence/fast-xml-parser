@@ -212,9 +212,8 @@ type X2jOptions = {
   updateTag?: (tagName: string, jPath: string, attrs: {[k: string]: string}) =>  string | boolean;
 
   /**
-   * If true, adds a Symbol to non-string nodes (accessible by XMLParser.getMetaDataSymbol()) which returns
+   * If true, adds a Symbol to all object nodes, accessible by {@link XMLParser.getMetaDataSymbol} with
    * metadata about each the node in the XML file.
-   * (If Symbol is not available, an ordinary property is used.)
    */
   captureMetaData?: boolean;
 };
@@ -420,9 +419,16 @@ export class XMLParser {
    * @param entityValue {string} Eg: '\r'
    */
   addEntity(entityIdentifier: string, entityValue: string): void;
+
   /**
-   * Returns a Symbol that can be used to extract the node start index.
-   * (If Symbol is not available, an ordinary property is used.)
+   * Returns a Symbol that can be used to access the {@link XMLMetaData}
+   * property on a node.
+   * 
+   * If Symbol is not available in the environment, an ordinary property is used
+   * and the name of the property is here returned.
+   * 
+   * The XMLMetaData property is only present when {@link X2jOptions.captureMetaData}
+   * is true in the options.
    */
   static getMetaDataSymbol() : Symbol;
 }
@@ -433,4 +439,13 @@ export class XMLValidator{
 export class XMLBuilder {
   constructor(options?: XmlBuilderOptions);
   build(jObj: any): any;
+}
+
+/**
+ * This object is available on nodes via the symbol {@link XMLParser.getMetaDataSymbol} 
+ * when {@link X2jOptions.captureMetaData} is true.
+ */
+export interface XMLMetaData {
+  /** The index, if available, of the character where the XML node began in the input stream. */
+  startIndex?: number;
 }

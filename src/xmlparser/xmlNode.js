@@ -33,7 +33,7 @@ export default class XmlNode{
       this.child[this.child.length - 1][METADATA_SYMBOL] = { startIndex };
     }
   }
-  /** symbol used for startIndex */
+  /** symbol used for metadata */
   static getMetaDataSymbol() {
     return METADATA_SYMBOL;
   }
