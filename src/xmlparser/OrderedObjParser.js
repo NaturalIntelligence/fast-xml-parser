@@ -592,7 +592,10 @@ function parseValue(val, shouldParse, options) {
     const newval = val.trim();
     if(newval === 'true' ) return true;
     else if(newval === 'false' ) return false;
-    else return toNumber(val, options);
+    else {
+       const result = toNumber(val, options)
+       return Number.isNaN(result) ? val: result 
+    }
   } else {
     if (isExist(val)) {
       return val;
