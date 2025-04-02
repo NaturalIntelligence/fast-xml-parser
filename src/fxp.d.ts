@@ -218,12 +218,6 @@ type X2jOptions = {
   captureMetaData?: boolean;
 };
 
-/** type of the metadata symbol accessible by XMLParser.getMetaDataSymbol() */
-type X2jMetaData = {
-  /** contains the character index of the beginning of the XML node */
-  startIndex?: number;
-};
-
 type strnumOptions = {
   hex: boolean;
   leadingZeros: boolean,
