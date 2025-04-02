@@ -11,7 +11,7 @@ const __dirname = dirname(__filename);
 export default [
     {
         entry: "./src/fxp.js",
-        mode: "development",
+        mode: "production",
         output: {
             path: __dirname,
             filename: "./lib/fxp.cjs",

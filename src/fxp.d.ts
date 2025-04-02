@@ -432,7 +432,7 @@ export class XMLValidator{
 }
 export class XMLBuilder {
   constructor(options?: XmlBuilderOptions);
-  build(jObj: any): any;
+  build(jObj: any): string;
 }
 
 /**
