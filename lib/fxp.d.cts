@@ -415,7 +415,7 @@ declare class XMLValidator{
 
 declare class XMLBuilder {
   constructor(options?: XmlBuilderOptions);
-  build(jObj: any): any;
+  build(jObj: any): string;
 }
 
 declare namespace fxp {
