@@ -4,6 +4,7 @@
   "description": "Validate XML, Parse XML, Build XML without C/C++ based libraries",
   "main": "./lib/fxp.cjs",
   "type": "module",
+  "sideEffects": false,
   "module": "./src/fxp.js",
   "types": "./src/fxp.d.ts",
   "exports": {
