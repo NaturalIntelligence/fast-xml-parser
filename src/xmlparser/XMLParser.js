@@ -2,6 +2,7 @@ import { buildOptions} from './OptionsBuilder.js';
 import OrderedObjParser from './OrderedObjParser.js';
 import prettify from './node2json.js';
 import {validate} from "../validator.js";
+import XmlNode from './xmlNode.js';
 
 export default class XMLParser{
     
@@ -52,5 +53,19 @@ export default class XMLParser{
         }else{
             this.externalEntities[key] = value;
         }
+    }
+
+    /**
+     * Returns a Symbol that can be used to access the metadata
+     * property on a node.
+     * 
+     * If Symbol is not available in the environment, an ordinary property is used
+     * and the name of the property is here returned.
+     * 
+     * The XMLMetaData property is only present when `captureMetaData`
+     * is true in the options.
+     */
+    static getMetaDataSymbol() {
+        return XmlNode.getMetaDataSymbol();
     }
 }

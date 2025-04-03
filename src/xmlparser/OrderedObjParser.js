@@ -246,8 +246,7 @@ const parseXml = function(xmlData) {
           if(tagData.tagName !== tagData.tagExp && tagData.attrExpPresent){
             childNode[":@"] = this.buildAttributesMap(tagData.tagExp, jPath, tagData.tagName);
           }
-          this.addChild(currentNode, childNode, jPath)
-
+          this.addChild(currentNode, childNode, jPath, i);
         }
 
 
@@ -312,6 +311,7 @@ const parseXml = function(xmlData) {
         if(tagName !== xmlObj.tagname){
           jPath += jPath ? "." + tagName : tagName;
         }
+        const startIndex = i;
         if (this.isItStopNode(this.options.stopNodes, jPath, tagName)) {
           let tagContent = "";
           //self-closing tag
@@ -340,6 +340,7 @@ const parseXml = function(xmlData) {
           }
 
           const childNode = new xmlNode(tagName);
+
           if(tagName !== tagExp && attrExpPresent){
             childNode[":@"] = this.buildAttributesMap(tagExp, jPath, tagName);
           }
@@ -350,7 +351,7 @@ const parseXml = function(xmlData) {
           jPath = jPath.substr(0, jPath.lastIndexOf("."));
           childNode.add(this.options.textNodeName, tagContent);
           
-          this.addChild(currentNode, childNode, jPath)
+          this.addChild(currentNode, childNode, jPath, startIndex);
         }else{
   //selfClosing tag
           if(tagExp.length > 0 && tagExp.lastIndexOf("/") === tagExp.length - 1){
@@ -370,7 +371,7 @@ const parseXml = function(xmlData) {
             if(tagName !== tagExp && attrExpPresent){
               childNode[":@"] = this.buildAttributesMap(tagExp, jPath, tagName);
             }
-            this.addChild(currentNode, childNode, jPath)
+            this.addChild(currentNode, childNode, jPath, startIndex);
             jPath = jPath.substr(0, jPath.lastIndexOf("."));
           }
     //opening tag
@@ -381,7 +382,7 @@ const parseXml = function(xmlData) {
             if(tagName !== tagExp && attrExpPresent){
               childNode[":@"] = this.buildAttributesMap(tagExp, jPath, tagName);
             }
-            this.addChild(currentNode, childNode, jPath)
+            this.addChild(currentNode, childNode, jPath, startIndex);
             currentNode = childNode;
           }
           textData = "";
@@ -395,14 +396,16 @@ const parseXml = function(xmlData) {
   return xmlObj.child;
 }
 
-function addChild(currentNode, childNode, jPath){
+function addChild(currentNode, childNode, jPath, startIndex){
+  // unset startIndex if not requested
+  if (!this.options.captureMetaData) startIndex = undefined;
   const result = this.options.updateTag(childNode.tagname, jPath, childNode[":@"])
   if(result === false){
-  }else if(typeof result === "string"){
+  } else if(typeof result === "string"){
     childNode.tagname = result
-    currentNode.addChild(childNode);
+    currentNode.addChild(childNode, startIndex);
   }else{
-    currentNode.addChild(childNode);
+    currentNode.addChild(childNode, startIndex);
   }
 }
 

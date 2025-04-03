@@ -38,6 +38,7 @@ export const defaultOptions = {
       return tagName
     },
     // skipEmptyListItem: false
+    captureMetaData: false,
 };
    
 export const buildOptions = function(options) {

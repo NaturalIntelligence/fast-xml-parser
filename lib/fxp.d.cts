@@ -210,6 +210,12 @@ type X2jOptions = {
    * Defaults to `(tagName, jPath, attrs) => tagName`
    */
   updateTag?: (tagName: string, jPath: string, attrs: {[k: string]: string}) =>  string | boolean;
+
+  /**
+   * If true, adds a Symbol to all object nodes, accessible by {@link XMLParser.getMetaDataSymbol} with
+   * metadata about each the node in the XML file.
+   */
+  captureMetaData?: boolean;
 };
 
 type strnumOptions = {
@@ -407,6 +413,18 @@ declare class XMLParser {
    * @param entityValue {string} Eg: '\r'
    */
   addEntity(entityIdentifier: string, entityValue: string): void;
+
+  /**
+   * Returns a Symbol that can be used to access the {@link XMLMetaData}
+   * property on a node.
+   * 
+   * If Symbol is not available in the environment, an ordinary property is used
+   * and the name of the property is here returned.
+   * 
+   * The XMLMetaData property is only present when {@link X2jOptions.captureMetaData}
+   * is true in the options.
+   */
+  static getMetaDataSymbol() : Symbol;
 }
 
 declare class XMLValidator{
@@ -418,11 +436,22 @@ declare class XMLBuilder {
   build(jObj: any): string;
 }
 
+
+/**
+ * This object is available on nodes via the symbol {@link XMLParser.getMetaDataSymbol} 
+ * when {@link X2jOptions.captureMetaData} is true.
+ */
+declare interface XMLMetaData {
+  /** The index, if available, of the character where the XML node began in the input stream. */
+  startIndex?: number;
+}
+
 declare namespace fxp {
   export {
     XMLParser,
     XMLValidator,
-    XMLBuilder
+    XMLBuilder,
+    XMLMetaData
   }
 }
 
