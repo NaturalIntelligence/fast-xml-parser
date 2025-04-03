@@ -17,7 +17,7 @@ In general
 
 Post release
 * [ ] Tagged and Released on github `git push origin --tags`
-* [ ] `git push origin master`
+* [ ] `git push origin master --tags`
 * [ ] Notified to the users
 * [ ] Sync master and dev branches
 

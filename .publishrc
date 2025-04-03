@@ -14,6 +14,5 @@
   "confirm": true,
   "publishCommand": "npm publish",
   "publishTag": "latest",
-  "prePublishScript": "npm test && npm test-types",
-  "postPublishScript": "git push origin master --tags && echo 'Published and Pushed to Github successfully!'"
+  "prePublishScript": "npm test && npm test-types"
 }

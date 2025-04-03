@@ -1,5 +1,8 @@
 <small>Note: If you find missing information about particular minor version, that version must have been changed without any functional change in this library.</small>
 
+**5.2.0 / 2025-04-03**
+- feat: support metadata on nodes (#593) (By [Steven R. Loomis](https://github.com/srl295))
+
 **5.1.0 / 2025-04-02**
 - feat: declare package as side-effect free (#738) (By [Thomas Bouffard](https://github.com/tbouffard))
 - fix cjs build mode
