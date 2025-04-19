@@ -1,4 +1,4 @@
-type X2jOptions = {
+export type X2jOptions = {
   /**
    * Preserve the order of tags in resulting JS object
    * 
@@ -218,14 +218,14 @@ type X2jOptions = {
   captureMetaData?: boolean;
 };
 
-type strnumOptions = {
+export type strnumOptions = {
   hex: boolean;
   leadingZeros: boolean,
   skipLike?: RegExp,
   eNotation?: boolean
 }
 
-type validationOptions = {
+export type validationOptions = {
   /**
    * Whether to allow attributes without value
    * 
@@ -241,7 +241,7 @@ type validationOptions = {
   unpairedTags?: string[];
 };
 
-type XmlBuilderOptions = {
+export type XmlBuilderOptions = {
   /**
    * Give a prefix to the attribute name in the resulting JS object
    * 
@@ -395,7 +395,7 @@ type XmlBuilderOptions = {
 
 type ESchema = string | object | Array<string|object>;
 
-type ValidationError = {
+export type ValidationError = {
   err: { 
     code: string;
     msg: string,
