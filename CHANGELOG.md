@@ -1,5 +1,10 @@
 <small>Note: If you find missing information about particular minor version, that version must have been changed without any functional change in this library.</small>
 
+**5.2.1 / 2025-04-22**
+- fix: read DOCTYPE entity value correctly
+- read DOCTYPE NOTATION, ELEMENT exp but not using read values
+
+
 **5.2.0 / 2025-04-03**
 - feat: support metadata on nodes (#593) (By [Steven R. Loomis](https://github.com/srl295))
 
