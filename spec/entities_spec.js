@@ -247,6 +247,7 @@ describe("XMLParser Entities", function() {
         <!DOCTYPE code [
           <!ELEMENT code (#PCDATA)>
           <!NOTATION vrml PUBLIC "VRML 1.0">
+          <!NOTATION vrml2 PUBLIC "VRML 1.0"   "system">
           <!ATTLIST code lang NOTATION (vrml) #REQUIRED>
         ]>
         <code lang="vrml">Some VRML instructions</code>`;

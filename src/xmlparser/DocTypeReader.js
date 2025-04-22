@@ -29,8 +29,11 @@ export default function readDocType(xmlData, i){
                 }
                 else if( hasBody && isElement(xmlData, i))  i += 8;//Not supported
                 else if( hasBody && isAttlist(xmlData, i))  i += 8;//Not supported
-                else if( hasBody && isNotation(xmlData, i)) i += 9;//Not supported
-                else if( isComment)                         comment = true;
+                else if( hasBody && isNotation(xmlData, i)) {
+                    i += 9;//Not supported
+                    const {name, publicIdentifier, systemIdentifier,index} = readNotationExp(xmlData,i+1);
+                    i = index;
+                }else if( isComment)                         comment = true;
                 else                                        throw new Error("Invalid DOCTYPE");
 
                 angleBracketsCount++;
@@ -124,6 +127,80 @@ function readEntityExp(xmlData, i) {
     return [entityName, entityValue, i ];
 }
 
+function readNotationExp(xmlData, i) {
+    // Skip leading whitespace after <!NOTATION
+    i = skipWhitespace(xmlData, i);
+
+    // Read notation name
+    let notationName = "";
+    while (i < xmlData.length && !/\s/.test(xmlData[i])) {
+        notationName += xmlData[i];
+        i++;
+    }
+
+    // Validate notation name
+    if (!validateEntityName(notationName)) {
+        throw new Error(`Invalid notation name: "${notationName}"`);
+    }
+
+    // Skip whitespace after notation name
+    i = skipWhitespace(xmlData, i);
+
+    // Check identifier type (SYSTEM or PUBLIC)
+    const identifierType = xmlData.substring(i, i + 6).toUpperCase();
+    if (identifierType !== "SYSTEM" && identifierType !== "PUBLIC") {
+        throw new Error(`Expected SYSTEM or PUBLIC, found "${identifierType}"`);
+    }
+    i += identifierType.length;
+
+    // Skip whitespace after identifier type
+    i = skipWhitespace(xmlData, i);
+
+    // Read public identifier (if PUBLIC)
+    let publicIdentifier = null;
+    let systemIdentifier = null;
+
+    if (identifierType === "PUBLIC") {
+        [i, publicIdentifier ] = readIdentifierVal(xmlData, i);
+
+        // Skip whitespace after public identifier
+        i = skipWhitespace(xmlData, i);
+
+        // Optionally read system identifier
+        if (xmlData[i] === '"' || xmlData[i] === "'") {
+            [i, systemIdentifier ] = readIdentifierVal(xmlData, i);
+        }
+    } else if (identifierType === "SYSTEM") {
+        // Read system identifier (mandatory for SYSTEM)
+        [i, systemIdentifier ] = readIdentifierVal(xmlData, i);
+
+        if (!systemIdentifier) {
+            throw new Error("Missing mandatory system identifier for SYSTEM notation");
+        }
+    }
+    
+    return {notationName, publicIdentifier, systemIdentifier, index: --i};
+}
+
+function readIdentifierVal(xmlData, i) {
+    let identifierVal = "";
+    const startChar = xmlData[i];
+    if (startChar !== '"' && startChar !== "'") {
+        throw new Error(`Expected quoted string, found "${startChar}"`);
+    }
+    i++;
+
+    while (i < xmlData.length && xmlData[i] !== startChar) {
+        identifierVal += xmlData[i];
+        i++;
+    }
+
+    if (xmlData[i] !== startChar) {
+        throw new Error("Unterminated identifier");
+    }
+    i++;
+    return [i, identifierVal];
+}
 
 function isComment(xmlData, i){
     if(xmlData[i+1] === '!' &&
