@@ -27,14 +27,20 @@ export default function readDocType(xmlData, i){
                             val: val
                         };
                 }
-                else if( hasBody && isElement(xmlData, i))  i += 8;//Not supported
-                else if( hasBody && isAttlist(xmlData, i))  i += 8;//Not supported
-                else if( hasBody && isNotation(xmlData, i)) {
-                    i += 9;//Not supported
-                    const {name, publicIdentifier, systemIdentifier,index} = readNotationExp(xmlData,i+1);
+                else if( hasBody && isElement(xmlData, i))  {
+                    i += 8;//Not supported
+                    const {index} = readElementExp(xmlData,i+1);
                     i = index;
-                }else if( isComment)                         comment = true;
-                else                                        throw new Error("Invalid DOCTYPE");
+                }else if( hasBody && isAttlist(xmlData, i)){
+                    i += 8;//Not supported
+                    // const {index} = readAttlistExp(xmlData,i+1);
+                    // i = index;
+                }else if( hasBody && isNotation(xmlData, i)) {
+                    i += 9;//Not supported
+                    const {index} = readNotationExp(xmlData,i+1);
+                    i = index;
+                }else if( isComment) comment = true;
+                else throw new Error("Invalid DOCTYPE");
 
                 angleBracketsCount++;
                 exp = "";
@@ -179,6 +185,167 @@ function readIdentifierVal(xmlData, i, type) {
     }
     i++;
     return [i, identifierVal];
+}
+
+function readElementExp(xmlData, i) {
+    // <!ELEMENT name (content-model)>
+
+    // Skip leading whitespace after <!ELEMENT
+    i = skipWhitespace(xmlData, i);
+
+    // Read element name
+    let elementName = "";
+    while (i < xmlData.length && !/\s/.test(xmlData[i])) {
+        elementName += xmlData[i];
+        i++;
+    }
+
+    // Validate element name
+    if (!validateEntityName(elementName)) {
+        throw new Error(`Invalid element name: "${elementName}"`);
+    }
+
+    // Skip whitespace after element name
+    i = skipWhitespace(xmlData, i);
+
+    // Expect '(' to start content model
+    if (xmlData[i] !== "(") {
+        throw new Error(`Expected '(', found "${xmlData[i]}"`);
+    }
+    i++; // Move past '('
+
+    // Read content model
+    let contentModel = "";
+    while (i < xmlData.length && xmlData[i] !== ")") {
+        contentModel += xmlData[i];
+        i++;
+    }
+
+    if (xmlData[i] !== ")") {
+        throw new Error("Unterminated content model");
+    }
+
+    return {
+        elementName,
+        contentModel: contentModel.trim(),
+        index: i
+    };
+}
+
+function readAttlistExp(xmlData, i) {
+    // Skip leading whitespace after <!ATTLIST
+    i = skipWhitespace(xmlData, i);
+
+    // Read element name
+    let elementName = "";
+    while (i < xmlData.length && !/\s/.test(xmlData[i])) {
+        elementName += xmlData[i];
+        i++;
+    }
+
+    // Validate element name
+    validateEntityName(elementName)
+
+    // Skip whitespace after element name
+    i = skipWhitespace(xmlData, i);
+
+    // Read attribute name
+    let attributeName = "";
+    while (i < xmlData.length && !/\s/.test(xmlData[i])) {
+        attributeName += xmlData[i];
+        i++;
+    }
+
+    // Validate attribute name
+    if (!validateEntityName(attributeName)) {
+        throw new Error(`Invalid attribute name: "${attributeName}"`);
+    }
+
+    // Skip whitespace after attribute name
+    i = skipWhitespace(xmlData, i);
+
+    // Read attribute type
+    let attributeType = "";
+    if (xmlData.substring(i, i + 8).toUpperCase() === "NOTATION") {
+        attributeType = "NOTATION";
+        i += 8; // Move past "NOTATION"
+
+        // Skip whitespace after "NOTATION"
+        i = skipWhitespace(xmlData, i);
+
+        // Expect '(' to start the list of notations
+        if (xmlData[i] !== "(") {
+            throw new Error(`Expected '(', found "${xmlData[i]}"`);
+        }
+        i++; // Move past '('
+
+        // Read the list of allowed notations
+        let allowedNotations = [];
+        while (i < xmlData.length && xmlData[i] !== ")") {
+            let notation = "";
+            while (i < xmlData.length && xmlData[i] !== "|" && xmlData[i] !== ")") {
+                notation += xmlData[i];
+                i++;
+            }
+
+            // Validate notation name
+            notation = notation.trim();
+            if (!validateEntityName(notation)) {
+                throw new Error(`Invalid notation name: "${notation}"`);
+            }
+
+            allowedNotations.push(notation);
+
+            // Skip '|' separator or exit loop
+            if (xmlData[i] === "|") {
+                i++; // Move past '|'
+                i = skipWhitespace(xmlData, i); // Skip optional whitespace after '|'
+            }
+        }
+
+        if (xmlData[i] !== ")") {
+            throw new Error("Unterminated list of notations");
+        }
+        i++; // Move past ')'
+
+        // Store the allowed notations as part of the attribute type
+        attributeType += " (" + allowedNotations.join("|") + ")";
+    } else {
+        // Handle simple types (e.g., CDATA, ID, IDREF, etc.)
+        while (i < xmlData.length && !/\s/.test(xmlData[i])) {
+            attributeType += xmlData[i];
+            i++;
+        }
+
+        // Validate simple attribute type
+        const validTypes = ["CDATA", "ID", "IDREF", "IDREFS", "ENTITY", "ENTITIES", "NMTOKEN", "NMTOKENS"];
+        if (!validTypes.includes(attributeType.toUpperCase())) {
+            throw new Error(`Invalid attribute type: "${attributeType}"`);
+        }
+    }
+
+    // Skip whitespace after attribute type
+    i = skipWhitespace(xmlData, i);
+
+    // Read default value
+    let defaultValue = "";
+    if (xmlData.substring(i, i + 8).toUpperCase() === "#REQUIRED") {
+        defaultValue = "#REQUIRED";
+        i += 8;
+    } else if (xmlData.substring(i, i + 7).toUpperCase() === "#IMPLIED") {
+        defaultValue = "#IMPLIED";
+        i += 7;
+    } else {
+        [i, defaultValue] = readIdentifierVal(xmlData, i, "ATTLIST");
+    }
+
+    return {
+        elementName,
+        attributeName,
+        attributeType,
+        defaultValue,
+        index: i
+    }
 }
 
 function isComment(xmlData, i){
