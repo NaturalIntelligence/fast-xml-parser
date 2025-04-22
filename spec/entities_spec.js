@@ -47,7 +47,9 @@ describe("XMLParser Entities", function() {
     });
 
     it("should parse XML with DOCTYPE without internal DTD", function() {
-        const xmlData = "<?xml version='1.0' standalone='no'?><!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.1//EN\" \"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd\" ><svg><metadata>test</metadata></svg>";
+        const xmlData = `<?xml version='1.0' standalone='no'?>
+            <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" >
+            <svg><metadata>test</metadata></svg>`;
         const expected = {
             "?xml": {
                 "@_version": "1.0",
@@ -103,7 +105,7 @@ describe("XMLParser Entities", function() {
         }).toThrowError("Unclosed DOCTYPE")
     })
 
-    it("should parse XML with DOCTYPE", function() {
+    it("should parse XML with DOCTYPE with valid comment expressions    ", function() {
         const xmlData = "<?xml version=\"1.0\" standalone=\"yes\" ?>" +
             "<!--open the DOCTYPE declaration -" +
             "  the open square bracket indicates an internal DTD-->" +
@@ -133,6 +135,22 @@ describe("XMLParser Entities", function() {
 
         const parser = new XMLParser();
         parser.parse(xmlData);
+    });
+
+    it("should read entity value between correct matching quote char", function() {
+        const xmlData = `<!DOCTYPE x [ <!ENTITY x 'x">]><!--'> ]>
+                <X>
+                    <Y/><![CDATA[--><X><Z/><!--]]>-->
+                </X>`;
+        const expected = { 
+            X: { 
+                Y: '', 
+                '#text': '--><X><Z/><!---->' 
+            } };
+        const parser = new XMLParser();
+        let result = parser.parse(xmlData);
+        // console.log(result);
+        expect(result).toEqual(expected);
     });
 
     it("should parse attributes having '>' in value", function() {
@@ -475,6 +493,7 @@ describe("XMLParser Entities", function() {
 });
 
 describe("XMLParser External Entities", function() {
+    
     it("should throw error when an entity value has '&'", function() {
         const parser = new XMLParser();
         expect( () => {

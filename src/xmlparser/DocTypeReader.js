@@ -22,7 +22,7 @@ export default function readDocType(xmlData, i){
                     let entityName, val;
                     [entityName, val,i] = readEntityExp(xmlData,i+1);
                     if(val.indexOf("&") === -1) //Parameter entities are not supported
-                        entities[ validateEntityName(entityName) ] = {
+                        entities[ entityName ] = {
                             regx : RegExp( `&${entityName};`,"g"),
                             val: val
                         };
@@ -62,7 +62,14 @@ export default function readDocType(xmlData, i){
     return {entities, i};
 }
 
-function readEntityExp(xmlData,i){
+const skipWhitespace = (data, index) => {
+    while (index < data.length && /\s/.test(data[index])) {
+        index++;
+    }
+    return index;
+};
+
+function readEntityExp(xmlData, i) {    
     //External entities are not supported
     //    <!ENTITY ext SYSTEM "http://normal-website.com" >
 
@@ -71,25 +78,52 @@ function readEntityExp(xmlData,i){
 
     //Internal entities are supported
     //    <!ENTITY entityname "replacement text">
-    
-    //read EntityName
-    let entityName = "";
-    for (; i < xmlData.length && (xmlData[i] !== "'" && xmlData[i] !== '"' ); i++) {
-        // if(xmlData[i] === " ") continue;
-        // else 
-        entityName += xmlData[i];
-    }
-    entityName = entityName.trim();
-    if(entityName.indexOf(" ") !== -1) throw new Error("External entites are not supported");
 
-    //read Entity Value
-    const startChar = xmlData[i++];
-    let val = ""
-    for (; i < xmlData.length && xmlData[i] !== startChar ; i++) {
-        val += xmlData[i];
+    // Skip leading whitespace after <!ENTITY
+    i = skipWhitespace(xmlData, i);
+
+    // Read entity name
+    let entityName = "";
+    while (i < xmlData.length && !/\s/.test(xmlData[i]) && xmlData[i] !== '"' && xmlData[i] !== "'") {
+        entityName += xmlData[i];
+        i++;
     }
-    return [entityName, val, i];
+
+    // Validate entity name
+    if (!validateEntityName(entityName)) {
+        throw new Error(`Invalid entity name: "${entityName}"`);
+    }
+
+    // Skip whitespace after entity name
+    i = skipWhitespace(xmlData, i);
+
+    // Check for unsupported constructs (external entities or parameter entities)
+    if (xmlData.substring(i, i + 6).toUpperCase() === "SYSTEM") {
+        throw new Error("External entities are not supported");
+    }else if (xmlData[i] === "%") {
+        throw new Error("Parameter entities are not supported");
+    }
+
+    // Read entity value (internal entity)
+    const quoteChar = xmlData[i];
+    if (quoteChar !== '"' && quoteChar !== "'") {
+        throw new Error(`Expected quoted string, found "${quoteChar}"`);
+    }
+    i++;
+
+    let entityValue = "";
+    while (i < xmlData.length && xmlData[i] !== quoteChar) {
+        entityValue += xmlData[i];
+        i++;
+    }
+
+    if (xmlData[i] !== quoteChar) {
+        throw new Error("Unterminated entity value");
+    }
+
+    return [entityName, entityValue, i ];
 }
+
 
 function isComment(xmlData, i){
     if(xmlData[i+1] === '!' &&
