@@ -91,11 +91,7 @@ function readEntityExp(xmlData, i) {
         entityName += xmlData[i];
         i++;
     }
-
-    // Validate entity name
-    if (!validateEntityName(entityName)) {
-        throw new Error(`Invalid entity name: "${entityName}"`);
-    }
+    validateEntityName(entityName);
 
     // Skip whitespace after entity name
     i = skipWhitespace(xmlData, i);
@@ -108,22 +104,9 @@ function readEntityExp(xmlData, i) {
     }
 
     // Read entity value (internal entity)
-    const quoteChar = xmlData[i];
-    if (quoteChar !== '"' && quoteChar !== "'") {
-        throw new Error(`Expected quoted string, found "${quoteChar}"`);
-    }
-    i++;
-
     let entityValue = "";
-    while (i < xmlData.length && xmlData[i] !== quoteChar) {
-        entityValue += xmlData[i];
-        i++;
-    }
-
-    if (xmlData[i] !== quoteChar) {
-        throw new Error("Unterminated entity value");
-    }
-
+    [i, entityValue] = readIdentifierVal(xmlData, i, "entity");
+    i--;
     return [entityName, entityValue, i ];
 }
 
@@ -137,11 +120,7 @@ function readNotationExp(xmlData, i) {
         notationName += xmlData[i];
         i++;
     }
-
-    // Validate notation name
-    if (!validateEntityName(notationName)) {
-        throw new Error(`Invalid notation name: "${notationName}"`);
-    }
+    validateEntityName(notationName);
 
     // Skip whitespace after notation name
     i = skipWhitespace(xmlData, i);
@@ -161,18 +140,18 @@ function readNotationExp(xmlData, i) {
     let systemIdentifier = null;
 
     if (identifierType === "PUBLIC") {
-        [i, publicIdentifier ] = readIdentifierVal(xmlData, i);
+        [i, publicIdentifier ] = readIdentifierVal(xmlData, i, "publicIdentifier");
 
         // Skip whitespace after public identifier
         i = skipWhitespace(xmlData, i);
 
         // Optionally read system identifier
         if (xmlData[i] === '"' || xmlData[i] === "'") {
-            [i, systemIdentifier ] = readIdentifierVal(xmlData, i);
+            [i, systemIdentifier ] = readIdentifierVal(xmlData, i,"systemIdentifier");
         }
     } else if (identifierType === "SYSTEM") {
         // Read system identifier (mandatory for SYSTEM)
-        [i, systemIdentifier ] = readIdentifierVal(xmlData, i);
+        [i, systemIdentifier ] = readIdentifierVal(xmlData, i, "systemIdentifier");
 
         if (!systemIdentifier) {
             throw new Error("Missing mandatory system identifier for SYSTEM notation");
@@ -182,7 +161,7 @@ function readNotationExp(xmlData, i) {
     return {notationName, publicIdentifier, systemIdentifier, index: --i};
 }
 
-function readIdentifierVal(xmlData, i) {
+function readIdentifierVal(xmlData, i, type) {
     let identifierVal = "";
     const startChar = xmlData[i];
     if (startChar !== '"' && startChar !== "'") {
@@ -196,7 +175,7 @@ function readIdentifierVal(xmlData, i) {
     }
 
     if (xmlData[i] !== startChar) {
-        throw new Error("Unterminated identifier");
+        throw new Error(`Unterminated ${type} value`);
     }
     i++;
     return [i, identifierVal];
