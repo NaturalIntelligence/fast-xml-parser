@@ -1,5 +1,8 @@
 <small>Note: If you find missing information about particular minor version, that version must have been changed without any functional change in this library.</small>
 
+**5.2.2 / 2025-05-05**
+- fix (#746): update strnum to fix parsing issues related to enotations
+
 **5.2.1 / 2025-04-22**
 - fix: read DOCTYPE entity value correctly
 - read DOCTYPE NOTATION, ELEMENT exp but not using read values
