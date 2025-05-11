@@ -111,7 +111,8 @@ describe("XMLParser Entities", function() {
             "  the open square bracket indicates an internal DTD-->" +
             "<!DOCTYPE foo [" +
             "<!--define the internal DTD-->" +
-            "<!ELEMENT foo (#PCDATA)>" +
+            "<!ELEMENT foo EMPTY>" +
+            "<!ELEMENT foo ANY>" +
             "<!--close the DOCTYPE declaration-->" +
             "]>" +
             "<foo>Hello World.</foo>";

@@ -17,7 +17,7 @@ export default function readDocType(xmlData, i){
         let exp = "";
         for(;i<xmlData.length;i++){
             if (xmlData[i] === '<' && !comment) { //Determine the tag type
-                if( hasBody && isEntity(xmlData, i)){
+                if( hasBody && hasSeq(xmlData, "!ENTITY",i)){
                     i += 7; 
                     let entityName, val;
                     [entityName, val,i] = readEntityExp(xmlData,i+1);
@@ -27,19 +27,19 @@ export default function readDocType(xmlData, i){
                             val: val
                         };
                 }
-                else if( hasBody && isElement(xmlData, i))  {
+                else if( hasBody && hasSeq(xmlData, "!ELEMENT",i))  {
                     i += 8;//Not supported
                     const {index} = readElementExp(xmlData,i+1);
                     i = index;
-                }else if( hasBody && isAttlist(xmlData, i)){
+                }else if( hasBody && hasSeq(xmlData, "!ATTLIST",i)){
                     i += 8;//Not supported
                     // const {index} = readAttlistExp(xmlData,i+1);
                     // i = index;
-                }else if( hasBody && isNotation(xmlData, i)) {
+                }else if( hasBody && hasSeq(xmlData, "!NOTATION",i)) {
                     i += 9;//Not supported
                     const {index} = readNotationExp(xmlData,i+1);
                     i = index;
-                }else if( isComment) comment = true;
+                }else if( hasSeq(xmlData, "!--",i) ) comment = true;
                 else throw new Error("Invalid DOCTYPE");
 
                 angleBracketsCount++;
@@ -188,8 +188,12 @@ function readIdentifierVal(xmlData, i, type) {
 }
 
 function readElementExp(xmlData, i) {
+    // <!ELEMENT br EMPTY>
+    // <!ELEMENT div ANY>
+    // <!ELEMENT title (#PCDATA)>
+    // <!ELEMENT book (title, author+)>
     // <!ELEMENT name (content-model)>
-
+    
     // Skip leading whitespace after <!ELEMENT
     i = skipWhitespace(xmlData, i);
 
@@ -207,24 +211,26 @@ function readElementExp(xmlData, i) {
 
     // Skip whitespace after element name
     i = skipWhitespace(xmlData, i);
-
-    // Expect '(' to start content model
-    if (xmlData[i] !== "(") {
-        throw new Error(`Expected '(', found "${xmlData[i]}"`);
-    }
-    i++; // Move past '('
-
-    // Read content model
     let contentModel = "";
-    while (i < xmlData.length && xmlData[i] !== ")") {
-        contentModel += xmlData[i];
-        i++;
-    }
+    // Expect '(' to start content model
+    if(xmlData[i] === "E" && hasSeq(xmlData, "MPTY",i)) i+=6;
+    else if(xmlData[i] === "A" && hasSeq(xmlData, "NY",i)) i+=4;
+    else if (xmlData[i] === "(") {
+        i++; // Move past '('
 
-    if (xmlData[i] !== ")") {
-        throw new Error("Unterminated content model");
-    }
+        // Read content model
+        while (i < xmlData.length && xmlData[i] !== ")") {
+            contentModel += xmlData[i];
+            i++;
+        }
+        if (xmlData[i] !== ")") {
+            throw new Error("Unterminated content model");
+        }
 
+    }else{
+        throw new Error(`Invalid Element Expression, found "${xmlData[i]}"`);
+    }
+    
     return {
         elementName,
         contentModel: contentModel.trim(),
@@ -348,56 +354,11 @@ function readAttlistExp(xmlData, i) {
     }
 }
 
-function isComment(xmlData, i){
-    if(xmlData[i+1] === '!' &&
-    xmlData[i+2] === '-' &&
-    xmlData[i+3] === '-') return true
-    return false
-}
-function isEntity(xmlData, i){
-    if(xmlData[i+1] === '!' &&
-    xmlData[i+2] === 'E' &&
-    xmlData[i+3] === 'N' &&
-    xmlData[i+4] === 'T' &&
-    xmlData[i+5] === 'I' &&
-    xmlData[i+6] === 'T' &&
-    xmlData[i+7] === 'Y') return true
-    return false
-}
-function isElement(xmlData, i){
-    if(xmlData[i+1] === '!' &&
-    xmlData[i+2] === 'E' &&
-    xmlData[i+3] === 'L' &&
-    xmlData[i+4] === 'E' &&
-    xmlData[i+5] === 'M' &&
-    xmlData[i+6] === 'E' &&
-    xmlData[i+7] === 'N' &&
-    xmlData[i+8] === 'T') return true
-    return false
-}
-
-function isAttlist(xmlData, i){
-    if(xmlData[i+1] === '!' &&
-    xmlData[i+2] === 'A' &&
-    xmlData[i+3] === 'T' &&
-    xmlData[i+4] === 'T' &&
-    xmlData[i+5] === 'L' &&
-    xmlData[i+6] === 'I' &&
-    xmlData[i+7] === 'S' &&
-    xmlData[i+8] === 'T') return true
-    return false
-}
-function isNotation(xmlData, i){
-    if(xmlData[i+1] === '!' &&
-    xmlData[i+2] === 'N' &&
-    xmlData[i+3] === 'O' &&
-    xmlData[i+4] === 'T' &&
-    xmlData[i+5] === 'A' &&
-    xmlData[i+6] === 'T' &&
-    xmlData[i+7] === 'I' &&
-    xmlData[i+8] === 'O' &&
-    xmlData[i+9] === 'N') return true
-    return false
+function hasSeq(data, seq,i){
+    for(let j=0;j<seq.length;j++){
+        if(seq[j]!==data[i+j+1]) return false;
+    }
+    return true;
 }
 
 function validateEntityName(name){
