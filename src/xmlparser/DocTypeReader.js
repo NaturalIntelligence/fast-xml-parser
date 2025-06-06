@@ -40,7 +40,7 @@ export default function readDocType(xmlData, i){
                     const {index} = readNotationExp(xmlData,i+1);
                     i = index;
                 }else if( hasSeq(xmlData, "!--",i) ) comment = true;
-                else throw new Error("Invalid DOCTYPE");
+                else throw new Error(`Invalid DOCTYPE`);
 
                 angleBracketsCount++;
                 exp = "";
@@ -213,8 +213,8 @@ function readElementExp(xmlData, i) {
     i = skipWhitespace(xmlData, i);
     let contentModel = "";
     // Expect '(' to start content model
-    if(xmlData[i] === "E" && hasSeq(xmlData, "MPTY",i)) i+=6;
-    else if(xmlData[i] === "A" && hasSeq(xmlData, "NY",i)) i+=4;
+    if(xmlData[i] === "E" && hasSeq(xmlData, "MPTY",i)) i+=4;
+    else if(xmlData[i] === "A" && hasSeq(xmlData, "NY",i)) i+=2;
     else if (xmlData[i] === "(") {
         i++; // Move past '('
 

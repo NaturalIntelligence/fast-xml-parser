@@ -1,5 +1,8 @@
 <small>Note: If you find missing information about particular minor version, that version must have been changed without any functional change in this library.</small>
 
+**5.2.4 / 2025-06-06**
+- fix (#747): fix EMPTY and ANY with ELEMENT in DOCTYPE
+
 **5.2.3 / 2025-05-11**
 - fix (#747): support EMPTY and ANY with ELEMENT in DOCTYPE
 
