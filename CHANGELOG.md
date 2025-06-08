@@ -1,5 +1,9 @@
 <small>Note: If you find missing information about particular minor version, that version must have been changed without any functional change in this library.</small>
 
+**5.2.5 / 2025-06-08**
+- Inform user to use [fxp-cli](https://github.com/NaturalIntelligence/fxp-cli) instead of in-built CLI feature
+- Export typings  for direct use
+
 **5.2.4 / 2025-06-06**
 - fix (#747): fix EMPTY and ANY with ELEMENT in DOCTYPE
 

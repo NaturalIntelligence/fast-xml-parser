@@ -7,6 +7,10 @@ import {XMLParser, XMLValidator} from "../fxp.js";
 import ReadToEnd from './read.js';
 import cmdDetail from "./man.js"
 
+console.warn("\x1b[33m%s\x1b[0m", "⚠️  Warning: The built-in CLI interface is now deprecated.");
+console.warn("Please install the dedicated CLI package instead:");
+console.warn("  npm install -g fxp-cli");
+
 if (process.argv[2] === '--help' || process.argv[2] === '-h') {
   console.log(cmdDetail);
 } else if (process.argv[2] === '--version') {
