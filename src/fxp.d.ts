@@ -64,7 +64,7 @@ export type X2jOptions = {
   parseTagValue?: boolean;
 
   /**
-   * Whether to parse tag value with `strnum` package
+   * Whether to parse attribute value with `strnum` package
    * 
    * Defaults to `false`
    */
