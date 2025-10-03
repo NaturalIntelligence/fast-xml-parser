@@ -3,7 +3,7 @@
 
 import {getAllMatches, isExist} from '../util.js';
 import xmlNode from './xmlNode.js';
-import readDocType from './DocTypeReader.js';
+import DocTypeReader from './DocTypeReader.js';
 import toNumber from "strnum";
 import getIgnoreAttributesFn from "../ignoreAttributes.js";
 
@@ -189,6 +189,7 @@ const parseXml = function(xmlData) {
   let currentNode = xmlObj;
   let textData = "";
   let jPath = "";
+  const docTypeReader = new DocTypeReader(this.options.processEntities);
   for(let i=0; i< xmlData.length; i++){//for each char in XML data
     const ch = xmlData[i];
     if(ch === '<'){
@@ -262,7 +263,7 @@ const parseXml = function(xmlData) {
         }
         i = endIndex;
       } else if( xmlData.substr(i + 1, 2) === '!D') {
-        const result = readDocType(xmlData, i);
+        const result = docTypeReader.readDocType(xmlData, i);
         this.docTypeEntities = result.entities;
         i = result.i;
       }else if(xmlData.substr(i + 1, 2) === '![') {

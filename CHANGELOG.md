@@ -1,5 +1,8 @@
 <small>Note: If you find missing information about particular minor version, that version must have been changed without any functional change in this library.</small>
 
+**5.3.0 / 2025-10-03**
+- Use `Uint8Array` in place of `Buffer` in Parser
+
 **5.2.5 / 2025-06-08**
 - Inform user to use [fxp-cli](https://github.com/NaturalIntelligence/fxp-cli) instead of in-built CLI feature
 - Export typings  for direct use

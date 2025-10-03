@@ -406,7 +406,7 @@ type ValidationError = {
 
 declare class XMLParser {
   constructor(options?: X2jOptions);
-  parse(xmlData: string | Buffer ,validationOptions?: validationOptions | boolean): any;
+  parse(xmlData: string | Uint8Array ,validationOptions?: validationOptions | boolean): any;
   /**
    * Add Entity which is not by default supported by this library
    * @param entityIdentifier {string} Eg: 'ent' for &ent;

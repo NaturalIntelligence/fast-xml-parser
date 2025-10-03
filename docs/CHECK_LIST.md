@@ -5,7 +5,7 @@ Pre release
 * [ ] `package-lock.json` reflects the right version : `npm install`
 * [ ] Browser bundle are generated `npm run bundle`
 * [ ] TS and CJS typings are updated
-  - fxp.d.cjs
+  - fxp.d.cts
   - fxp.d.ts
 * [ ] ReadMe file or docs are updated for any change, user list, performance report, links etc.
 * [ ] Single test is not running `fit`

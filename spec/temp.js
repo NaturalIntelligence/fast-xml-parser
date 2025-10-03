@@ -4,7 +4,7 @@ import { format } from "path";
 import {XMLParser, XMLValidator, XMLBuilder} from "../src/fxp.js";
 
 describe("unpaired and empty tags", function() {
-    fit("bug test", function() {
+    xit("bug test", function() {
         
         const xmlData = `<?xml version="1.0"?>
 <!DOCTYPE softwarelists [
@@ -112,39 +112,31 @@ describe("unpaired and empty tags", function() {
         // expect(result).toEqual(expected);
 
     });
-    it("bug test", function() {
+    fit("bug test", function() {
         
-        const xmlData = `<script/>`;
+        const xmlData = `<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE dmodule [
+   <!ENTITY EXTERNAL-IMAGE SYSTEM "EXTERNAL-IMAGE.cgm" NDATA cgm>
+   <!NOTATION cgm SYSTEM "cgm">
+   <!NOTATION tif SYSTEM "tif">
+]>
+<element xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+Hello!
+</element>`;
         const options = {
-            allowBooleanAttributes: true,
             ignoreAttributes: false,
-            stopNodes: ["*.pre", "*.script"],
-            format: true,
+						attributeNamePrefix: "@",
+						processEntities: false,
+						stopNodes: ["dmCode"],
         };
-        const input = {
-            "ExternalId": "123456-01",
-            "Name": "Product name",
-            "Attributes": [
-                {
-                    "Attribute": {
-                        "@_id": "FAMILY",
-                        "Value": "family "
-                    }
-                },
-                {
-                    "Attribute": {
-                        "@_id": "EXPAND",
-                        "Value": "expanded-family"
-                    }
-                }
-            ]
-        }
-        const builder = new XMLBuilder(options);
-        // console.log(JSON.stringify(parser.parse(xml)));
         
-        let result = builder.build(input);
-        console.log(result);
-        // console.log(JSON.stringify(result,null,4));
+        // const result = XMLValidator.validate(xmlData)
+				const parser = new XMLParser(options);
+        const result = parser.parse(xmlData);
+        
+        // console.log(result);
+        console.log(JSON.stringify(result,null,4));
         // expect(result).toEqual(expected);
 
     });

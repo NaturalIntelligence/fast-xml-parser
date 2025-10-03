@@ -13,16 +13,16 @@ export default class XMLParser{
     }
     /**
      * Parse XML dats to JS object 
-     * @param {string|Buffer} xmlData 
+     * @param {string|Uint8Array} xmlData 
      * @param {boolean|Object} validationOption 
      */
     parse(xmlData,validationOption){
-        if(typeof xmlData === "string"){
-        }else if( xmlData.toString){
+        if(typeof xmlData !== "string" && xmlData.toString){
             xmlData = xmlData.toString();
-        }else{
+        }else if(typeof xmlData !== "string"){
             throw new Error("XML data is accepted in String or Bytes[] form.")
         }
+        
         if( validationOption){
             if(validationOption === true) validationOption = {}; //validate with default options
             
