@@ -1,4 +1,6 @@
-import {buildOptions,registerCommonValueParsers} from './ParserOptionsBuilder.js';
+import TagPathMatcher from '../TagPathMatcher.js';
+import BaseOutputBuilder from './BaseOutputBuilder.js';
+import { buildOptions, registerCommonValueParsers } from './ParserOptionsBuilder.js';
 
 export default class OutputBuilder{
   constructor(options){
@@ -16,7 +18,6 @@ export default class OutputBuilder{
 }
 
 const rootName = '!js_arr';
-import BaseOutputBuilder from './BaseOutputBuilder.js';
 
 class JsArrBuilder extends BaseOutputBuilder{
 
@@ -99,5 +100,3 @@ class Node{
       this[":@"] = attributes;
   }
 }
-
-module.exports = OutputBuilder;

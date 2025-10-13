@@ -17,6 +17,12 @@
         "types": "./lib/fxp.d.cts",
         "default": "./lib/fxp.cjs"
       }
+    },
+    "./v6": {
+      "import": "./src/v6/index.js"
+    },
+    "./v6/*": {
+      "import": "./src/v6/*"
     }
   },
   "scripts": {
@@ -28,7 +34,9 @@
     "lint": "eslint src/**/*.js spec/**/*.js benchmark/**/*.js",
     "bundle": "webpack --config webpack.cjs.config.js",
     "prettier": "prettier --write src/**/*.js",
-    "checkReadiness": "publish-please --dry-run"
+    "checkReadiness": "publish-please --dry-run",
+    "publish-please": "publish-please",
+    "prepublishOnly": "publish-please guard"
   },
   "bin": {
     "fxparser": "./src/cli/cli.js"
@@ -85,6 +93,6 @@
     }
   ],
   "dependencies": {
-    "strnum": "^2.1.0"
+    "strnum": "^2.1.1"
   }
 }

@@ -1,8 +1,6 @@
-import XMLParser from "../../src/v6/XMLParser";
-import JsObjOutputBuilder from "../../src/v6/OutputBuilders/JsObjBuilder";
-import JsArrBuilder from "../../src/v6/OutputBuilders/JsArrBuilder";
-import JsMinArrBuilder from "../../src/v6/OutputBuilders/JsMinArrBuilder";
-import numberParser from "../../src/v6/valueParsers/number";
+import JsObjOutputBuilder from "../../src/v6/OutputBuilders/JsObjBuilder.js";
+import numberParser from "../../src/v6/valueParsers/number.js";
+import XMLParser from "../../src/v6/XMLParser.js";
 
 import fs from "fs";
 import path from "path";

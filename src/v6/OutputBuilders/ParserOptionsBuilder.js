@@ -1,7 +1,7 @@
-import trimParser from "../valueParsers/trim";
-import booleanParser from "../valueParsers/booleanParser";
-import currencyParser from "../valueParsers/currency";
-import numberParser from "../valueParsers/number";
+import booleanParser from "../valueParsers/booleanParser.js";
+import currencyParser from "../valueParsers/currency.js";
+import numberParser from "../valueParsers/number.js";
+import trimParser from "../valueParsers/trim.js";
 
 const defaultOptions={
   nameFor:{
@@ -44,24 +44,22 @@ const defaultOptions={
 const withJoin = ["trim","join", /*"entities",*/"number","boolean","currency"/*, "date"*/]
 const withoutJoin = ["trim", /*"entities",*/"number","boolean","currency"/*, "date"*/]
 
-export function buildOptions(options){
-  //clone
-  const finalOptions = { ... defaultOptions};
+export function buildOptions(options = {}){
+  // clone defaults
+  const finalOptions = { ...defaultOptions };
 
-  //add config missed in cloning
-  finalOptions.tags.valueParsers.push(...withJoin)
-  if(!this.preserveOrder)
-    finalOptions.tags.valueParsers.push(...withoutJoin);
+  // add defaults for value parsers
+  finalOptions.tags.valueParsers.push(...withJoin);
+  if (!options.preserveOrder) finalOptions.tags.valueParsers.push(...withoutJoin);
+  finalOptions.attributes.valueParsers.push(...withJoin);
 
-  //add config missed in cloning
-  finalOptions.attributes.valueParsers.push(...withJoin)
-
-  //override configuration
-  copyProperties(finalOptions,options);
+  // merge user options
+  copyProperties(finalOptions, options);
   return finalOptions;
 }
 
 function copyProperties(target, source) {
+  if (!source) return;
   for (let key in source) {
     if (source.hasOwnProperty(key)) {
       if (typeof source[key] === 'object' && !Array.isArray(source[key])) {
