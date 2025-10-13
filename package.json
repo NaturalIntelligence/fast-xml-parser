@@ -19,7 +19,8 @@
       }
     },
     "./v6": {
-      "import": "./src/v6/index.js"
+      "import": "./src/v6/index.js",
+      "types": "./src/v6/index.d.ts"
     },
     "./v6/*": {
       "import": "./src/v6/*"
