@@ -1,10 +1,9 @@
-import StringSource from './inputSource/StringSource.js';
-import BufferSource from './inputSource/BufferSource.js';
-import {readTagExp,readClosingTagName} from './XmlPartReader.js';
-import {readComment, readCdata,readDocType,readPiTag} from './XmlSpecialTagsReader.js';
-import TagPath from './TagPath.js';
-import TagPathMatcher from './TagPathMatcher.js';
 import EntitiesParser from './EntitiesParser.js';
+import BufferSource from './inputSource/BufferSource.js';
+import StringSource from './inputSource/StringSource.js';
+import TagPath from './TagPath.js';
+import { readClosingTagName, readTagExp } from './XmlPartReader.js';
+import { readCdata, readComment, readDocType, readPiTag } from './XmlSpecialTagsReader.js';
 
 //To hold the data of current tag
 //This is usually used to compare jpath expression against current tag
@@ -76,7 +75,7 @@ export default class Xml2JsParser {
           this.tagTextData += ch;
         }
       }//End While loop
-      if(this.tagsStack.length > 0 || ( this.tagTextData !== "undefined" && this.tagTextData.trimEnd().length > 0) ) throw new Error("Unexpected data in the end of document");
+      if(this.tagsStack.length > 0 || ( this.tagTextData.trim() !== "undefined" && this.tagTextData.trim().length > 0) ) throw new Error("Unexpected data in the end of document");
     }
   
     /**
