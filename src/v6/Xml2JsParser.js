@@ -112,6 +112,24 @@ export default class Xml2JsParser {
 
       //create new tag
       let tagExp = readTagExp(this, ">" );
+
+      // if the tag is to be skipped, then continue to read until closing tag and return
+      if (this.options.skip.includes(tagExp.tagName)){
+        console.log(`Skipping tag ${tagExp.tagName}`);
+        while (this.source.canRead()){
+          let ch = this.source.readCh();
+          if (ch === "") break;
+          if(ch === "<"){//tagStart
+            let nextChar = this.source.readChAt(0);
+            if (nextChar === "" ) throw new Error("Unexpected end of source");
+            if(nextChar === "/"){
+              this.source.updateBufferReadIndex();
+              let closeTagName = this.processTagName(readClosingTagName(this.source));
+              if (closeTagName === tagExp.tagName) return;
+            }
+          }
+        }
+      }
       
       // process and skip from tagsStack For unpaired tag, self closing tag, and stop node
       const tagDetail = new TagDetail(tagExp.tagName);
