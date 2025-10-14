@@ -58,13 +58,13 @@ export default class Xml2JsParser {
           
         
           if(nextChar === "!" || nextChar === "?"){
-            this.source.updateBufferBoundary();
+            this.source.updateBufferReadIndex();
             //previously collected text should be added to current node
             this.addTextNode(); 
             
             this.readSpecialTag(nextChar);// Read DOCTYPE, comment, CDATA, PI tag
           }else if(nextChar === "/"){
-            this.source.updateBufferBoundary();
+            this.source.updateBufferReadIndex();
             this.readClosingTag();
             // console.log(this.source.buffer.length, this.source.readable);
             // console.log(this.tagsStack.length);

@@ -103,13 +103,11 @@ export default class StringSource{
 
       // }
     }
-    if(updateIndex) this.updateBufferBoundary(n);
+    if(updateIndex) this.updateBufferReadIndex(n);
     return ch;
   }
 
-  //TODO: rename to updateBufferReadIndex
-  
-  updateBufferBoundary(n = 1) { //n: number of characters read
+  updateBufferReadIndex(n = 1) { //n: number of characters read
     this.startIndex += n;
   }
 
