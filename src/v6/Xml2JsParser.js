@@ -115,7 +115,7 @@ export default class Xml2JsParser {
 
       // if the tag is to be skipped, then continue to read until closing tag and return
       if (this.options.skip.includes(tagExp.tagName)){
-        console.log(`Skipping tag ${tagExp.tagName}`);
+        // console.log(`Skipping tag ${tagExp.tagName}`);
         while (this.source.canRead()){
           let ch = this.source.readCh();
           if (ch === "") break;
