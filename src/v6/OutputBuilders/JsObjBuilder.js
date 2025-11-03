@@ -1,6 +1,6 @@
 
 
-import {buildOptions,registerCommonValueParsers} from './ParserOptionsBuilder.js';
+import { buildOptions, registerCommonValueParsers } from './ParserOptionsBuilder.js';
 
 export default class OutputBuilder{
   constructor(builderOptions){
@@ -17,6 +17,7 @@ export default class OutputBuilder{
   }
 }
 
+import TagPathMatcher from '../TagPathMatcher.js';
 import BaseOutputBuilder from './BaseOutputBuilder.js';
 const rootName = '^';
 

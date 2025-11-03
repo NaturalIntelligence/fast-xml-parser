@@ -103,7 +103,7 @@ export function readTagExp(parser) {
 
 
   const exp = parser.source.readStr(i);
-  parser.source.updateBufferBoundary(i + 1);
+  parser.source.updateBufferReadIndex(i + 1);
   return buildTagExpObj(exp, parser)
 }
 
@@ -139,7 +139,7 @@ export function readPiExp(parser) {
   }
 
   const exp = parser.source.readStr(i);
-  parser.source.updateBufferBoundary(i + 1);
+  parser.source.updateBufferReadIndex(i + 1);
   return buildTagExpObj(exp, parser)
 }
 

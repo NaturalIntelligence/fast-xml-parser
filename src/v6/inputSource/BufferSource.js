@@ -104,7 +104,7 @@ readUptoCloseTag(stopStr) { //stopStr: "</tagname"
     return ch;
   }
 
-  updateBufferBoundary(n = 1) { //n: number of characters read
+  updateBufferReadIndex(n = 1) { //n: number of characters read
     this.startIndex += n;
   }
 

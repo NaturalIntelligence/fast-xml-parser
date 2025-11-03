@@ -1,4 +1,4 @@
-import {TagPath} from './TagPath.js';
+import TagPath from './TagPath.js';
 
 export default class TagPathMatcher{
   constructor(stack,node){

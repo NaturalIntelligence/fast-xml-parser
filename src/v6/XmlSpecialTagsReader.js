@@ -1,9 +1,9 @@
-import {readPiExp} from './XmlPartReader.js';
+import { readPiExp } from './XmlPartReader.js';
 
 export function readCdata(parser){
   //<![ are already read till this point
   let str = parser.source.readStr(6); //CDATA[
-  parser.source.updateBufferBoundary(6);
+  parser.source.updateBufferReadIndex(6);
 
   if(str !== "CDATA[") throw new Error(`Invalid CDATA expression at ${parser.source.line}:${parser.source.cols}`);
 
@@ -39,7 +39,7 @@ const DOCTYPE_tags = {
 export function readDocType(parser){
   //<!D are already read till this point
   let str = parser.source.readStr(6); //OCTYPE
-  parser.source.updateBufferBoundary(6);
+  parser.source.updateBufferReadIndex(6);
 
   if(str !== "OCTYPE") throw new Error(`Invalid DOCTYPE expression at ${parser.source.line}:${parser.source.cols}`);
 
@@ -51,10 +51,10 @@ export function readDocType(parser){
     if(hasBody){
       if (ch === '<') { //Determine the tag type
         let str = parser.source.readStr(2);
-        parser.source.updateBufferBoundary(2);
+        parser.source.updateBufferReadIndex(2);
         if(str === "EN"){ //ENTITY
           let str = parser.source.readStr(4);
-          parser.source.updateBufferBoundary(4);
+          parser.source.updateBufferReadIndex(4);
           if(str !== "TITY") throw new Error("Invalid DOCTYPE ENTITY expression");
 
           registerEntity(parser);

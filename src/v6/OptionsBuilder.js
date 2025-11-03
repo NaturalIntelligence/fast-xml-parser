@@ -1,5 +1,5 @@
 
-import {JsObjOutputBuilder} from './OutputBuilders/JsObjBuilder.js';
+import JsObjOutputBuilder from './OutputBuilders/JsObjBuilder.js';
 
 export const defaultOptions = {
   preserveOrder: false,
