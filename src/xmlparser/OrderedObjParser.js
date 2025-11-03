@@ -55,6 +55,20 @@ export default class OrderedObjParser{
     this.saveTextToParentTag = saveTextToParentTag;
     this.addChild = addChild;
     this.ignoreAttributesFn = getIgnoreAttributesFn(this.options.ignoreAttributes)
+
+    if(this.options.stopNodes && this.options.stopNodes.length > 0){
+      this.stopNodesExact = new Set();
+      this.stopNodesWildcard = new Set();
+      for(let i = 0; i < this.options.stopNodes.length; i++){
+        const stopNodeExp = this.options.stopNodes[i];
+        if(typeof stopNodeExp !== 'string') continue;
+        if(stopNodeExp.startsWith("*.")){
+          this.stopNodesWildcard.add(stopNodeExp.substring(2));
+        }else{
+          this.stopNodesExact.add(stopNodeExp);
+        }
+      }
+    }
   }
 
 }
@@ -313,7 +327,7 @@ const parseXml = function(xmlData) {
           jPath += jPath ? "." + tagName : tagName;
         }
         const startIndex = i;
-        if (this.isItStopNode(this.options.stopNodes, jPath, tagName)) {
+        if (this.isItStopNode(this.stopNodesExact, this.stopNodesWildcard, jPath, tagName)) {
           let tagContent = "";
           //self-closing tag
           if(tagExp.length > 0 && tagExp.lastIndexOf("/") === tagExp.length - 1){
@@ -451,17 +465,14 @@ function saveTextToParentTag(textData, currentNode, jPath, isLeafNode) {
 
 //TODO: use jPath to simplify the logic
 /**
- * 
- * @param {string[]} stopNodes 
+ * @param {Set} stopNodesExact
+ * @param {Set} stopNodesWildcard
  * @param {string} jPath
- * @param {string} currentTagName 
+ * @param {string} currentTagName
  */
-function isItStopNode(stopNodes, jPath, currentTagName){
-  const allNodesExp = "*." + currentTagName;
-  for (const stopNodePath in stopNodes) {
-    const stopNodeExp = stopNodes[stopNodePath];
-    if( allNodesExp === stopNodeExp || jPath === stopNodeExp  ) return true;
-  }
+function isItStopNode(stopNodesExact, stopNodesWildcard, jPath, currentTagName){
+  if(stopNodesWildcard && stopNodesWildcard.has(currentTagName)) return true;
+  if(stopNodesExact && stopNodesExact.has(jPath)) return true;
   return false;
 }
 
