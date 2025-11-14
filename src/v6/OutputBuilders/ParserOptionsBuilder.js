@@ -1,7 +1,7 @@
-import trimParser from "../valueParsers/trim";
-import booleanParser from "../valueParsers/booleanParser";
-import currencyParser from "../valueParsers/currency";
-import numberParser from "../valueParsers/number";
+import trimParser from "../valueParsers/trim.js";
+import booleanParser from "../valueParsers/booleanParser.js";
+import currencyParser from "../valueParsers/currency.js";
+import numberParser from "../valueParsers/number.js";
 
 const defaultOptions={
   nameFor:{

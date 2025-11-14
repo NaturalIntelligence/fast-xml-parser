@@ -1,4 +1,4 @@
-import {buildOptions,registerCommonValueParsers} from"./ParserOptionsBuilder";
+import {buildOptions,registerCommonValueParsers} from"./ParserOptionsBuilder.js";
 
 export default class OutputBuilder{
   constructor(options){
