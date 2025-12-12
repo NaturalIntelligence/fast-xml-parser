@@ -33,4 +33,52 @@ describe("XMLParser", function() {
 
         expect(result).toEqual(expected);
     });
+    it("should parse tag name with attributes", function() {
+        const tagMap = { 'list-item': 'li' };
+        const xmlData = `<?xml version="1.0"?>
+            <root>
+                <ul>
+                    <list-item/>
+                    <list-item>foo</list-item>
+                    <list-item checked>bar</list-item>
+                    <list-item attr="value">bar</list-item>
+                </ul>
+            </root>`
+        const expected = {
+    "?xml": {
+        "@_version": "1.0"
+    },
+    "root": {
+        "ul": {
+            "li": [
+                "",
+                "foo",
+                {
+                    "#text": "bar",
+                    "@_checked": true
+                },
+                {
+                    "#text": "bar",
+                    "@_attr": "value"
+                }
+            ]
+        }
+    }
+}
+        const options = {
+                //preserveOrder: true,
+                allowBooleanAttributes: true,
+                ignoreAttributes: false,
+                transformTagName: (tagName) => tagMap[tagName] ?? tagName,
+        };
+        const parser = new XMLParser(options);
+        // console.log(JSON.stringify(parser.parse(xml)));
+        
+        let result = parser.parse(xmlData);
+
+        // console.log(JSON.stringify(result,null,4));
+        expect(result).toEqual(expected);
+
+    });
+        
 });
