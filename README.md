@@ -18,10 +18,11 @@ It can handle big files (tested up to 100mb). XML Entities, HTML entities, and D
 
 ## Try out our New Thoughts
 
-We've recently launched **Flowgger**
-<a href="https://github.com/solothought/flowgger"> <img src="static/img/flowgger_h.webp" alt="Flowgger Logging Framework" /></a>
-
-Don't forget to check our new library [Text2Chart](https://solothought.com/text2chart/flow) that constructs flow chart out of simple text. Very helpful in creating or alayzing an algorithm, and documentation purpose.
+- WishIn - You need it if negative thoughts take over all the time <br>
+<a href="https://play.google.com/store/apps/details?id=com.solothought.wishin"> <img src="https://solothought.com/products/assets/images/wishin/YouTubeThumbnail.png" width="500px"/> </a>
+- **Flowgger**: 90% less logs size and 90% less debugging time<br>
+<a href="https://github.com/solothought/flowgger"> <img src="static/img/flowgger_h.webp" alt="Flowgger Logging Framework" width="300px"/></a>
+- [Text2Chart](https://solothought.com/text2chart/flow): interactive flow chart out of simple text.
 
 ## Financial Support
 

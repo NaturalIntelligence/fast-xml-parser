@@ -1,5 +1,8 @@
 <small>Note: If you find missing information about particular minor version, that version must have been changed without any functional change in this library.</small>
 
+**5.3.3 / 2025-12-12**
+- fix #775: transformTagName with allowBooleanAttributes adds an unnecessary attribute
+
 **5.3.2 / 2025-11-14**
 - fix for import statement for v6
 
