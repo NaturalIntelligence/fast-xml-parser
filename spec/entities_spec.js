@@ -433,6 +433,28 @@ describe("XMLParser Entities", function() {
         expect(result).toEqual(expected);
     });
 
+    it("should skip HTML numeric or hex entities when htmlEntities:true but entity is out of range", function() {
+        const xmlData = `<root attr="&#9999999;">&#xFFFFFF;</root>`;
+
+        const expected = {
+            "root": {
+                "#text": "&#xFFFFFF;",
+                "attr": "&#9999999;"
+            }
+        };
+
+        const options = {
+            attributeNamePrefix: "",
+            ignoreAttributes:    false,
+            processEntities: true,
+            htmlEntities: true,
+        };
+        const parser = new XMLParser(options);
+        let result = parser.parse(xmlData);
+
+        expect(result).toEqual(expected);
+    });
+
     it("should throw error if an entity name contains special char", function() {
         const xmlData = `
         <?xml version="1.0" encoding="UTF-8"?>
