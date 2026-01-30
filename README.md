@@ -171,7 +171,7 @@ Bundle size
 </table>
 
 **note**: 
-- Version 6 is released with version 4 for experimental use. Based on it's demand, it'll be developed and the features can be different in final release.
+- Version 6 is released with version 4 for experimental use. Based on its demand, it'll be developed and the features can be different in final release.
 - Version 5 has the same functionalities as version 4.
 
 ## Performance
