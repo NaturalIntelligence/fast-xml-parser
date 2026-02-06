@@ -451,7 +451,13 @@ declare namespace fxp {
     XMLParser,
     XMLValidator,
     XMLBuilder,
-    XMLMetaData
+    XMLMetaData,
+    XmlBuilderOptions,
+    X2jOptions,
+    ESchema,
+    ValidationError,
+    strnumOptions,
+    validationOptions,
   }
 }
 
