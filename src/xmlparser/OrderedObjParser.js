@@ -77,8 +77,9 @@ function addExternalEntities(externalEntities){
   const entKeys = Object.keys(externalEntities);
   for (let i = 0; i < entKeys.length; i++) {
     const ent = entKeys[i];
+    const escaped = ent.replace(/[.\-+*:]/g, '\\.');
     this.lastEntities[ent] = {
-       regex: new RegExp("&"+ent+";","g"),
+       regex: new RegExp("&"+escaped+";","g"),
        val : externalEntities[ent]
     }
   }
