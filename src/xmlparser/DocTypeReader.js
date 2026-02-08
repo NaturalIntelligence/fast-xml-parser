@@ -25,11 +25,13 @@ export default class DocTypeReader{
                         i += 7; 
                         let entityName, val;
                         [entityName, val,i] = this.readEntityExp(xmlData,i+1,this.suppressValidationErr);
-                        if(val.indexOf("&") === -1) //Parameter entities are not supported
+                        if(val.indexOf("&") === -1){ //Parameter entities are not supported
+                            const escaped = entityName.replace(/[.\-+*:]/g, '\\.');
                             entities[ entityName ] = {
-                                regx : RegExp( `&${entityName};`,"g"),
+                                regx : RegExp( `&${escaped};`,"g"),
                                 val: val
                             };
+                        }
                     }
                     else if( hasBody && hasSeq(xmlData, "!ELEMENT",i))  {
                         i += 8;//Not supported

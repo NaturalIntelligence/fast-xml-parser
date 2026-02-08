@@ -37,12 +37,13 @@ export default class EntitiesParser{
     }
     addExternalEntity(key,val){
       validateEntityName(key);
+      const escaped = key.replace(/[.\-+*:]/g, '\\.');
       if(val.indexOf("&") !== -1) {
         reportWarning(`Entity ${key} is not added as '&' is found in value;`)
         return;
       }else{
-        this.lastEntities[ent] = {
-          regex: new RegExp("&"+key+";","g"),
+        this.lastEntities[key] = {
+          regex: new RegExp("&"+escaped+";","g"),
           val : val
         }
       }
@@ -52,8 +53,9 @@ export default class EntitiesParser{
         const entKeys = Object.keys(entities);
         for (let i = 0; i < entKeys.length; i++) {
           const ent = entKeys[i];
+          const escaped = ent.replace(/[.\-+*:]/g, '\\.');
           this.docTypeEntities[ent] = {
-             regex: new RegExp("&"+ent+";","g"),
+             regex: new RegExp("&"+escaped+";","g"),
              val : entities[ent]
           }
         }
@@ -89,11 +91,11 @@ export default class EntitiesParser{
         }
         return val;
     }
-};
+}
 
 //an entity name should not contains special characters that may be used in regex
 //Eg !?\\\/[]$%{}^&*()<>
-const specialChar = "!?\\\/[]$%{}^&*()<>|+";
+const specialChar = "!?\\/[]$%{}^&*()<>|+";
 
 function validateEntityName(name){
     for (let i = 0; i < specialChar.length; i++) {
