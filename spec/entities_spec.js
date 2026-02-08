@@ -154,6 +154,31 @@ describe("XMLParser Entities", function() {
         expect(result).toEqual(expected);
     });
 
+    it("should escape regex char from entity name", function() {
+        const xmlData = `<?xml version="1.0"?>
+<!DOCTYPE foo [
+  <!ENTITY l. "<img src=x onerror=alert(1)>">
+]>
+<root>
+  <text>Hello &lt;b&gt;World&lt;/b&gt;</text>
+</root>`;
+
+        const expected = {
+            "?xml": "",
+            "root": {
+                "text": "Hello <b>World</b>"
+            }
+        };
+        
+        const options = {
+
+        };
+        const parser = new XMLParser(options);
+        let result = parser.parse(xmlData);
+        //console.log(JSON.stringify(result,null,4));
+        expect(result).toEqual(expected);
+    });
+
     it("should parse attributes having '>' in value", function() {
         const xmlData = `
         <?xml version="1.0" encoding="UTF-8"?>

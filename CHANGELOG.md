@@ -1,5 +1,12 @@
 <small>Note: If you find missing information about particular minor version, that version must have been changed without any functional change in this library.</small>
 
+
+**5.3.5 / 2026-02-08**
+- fix: Escape regex char in entity name
+- update strnum to 2.1.2
+- add missing exports in CJS typings
+
+
 **5.3.4 / 2026-01-30**
 - fix: handle HTML numeric and hex entities when out of range
 

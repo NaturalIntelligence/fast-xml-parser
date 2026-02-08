@@ -1,6 +1,6 @@
 {
   "name": "fast-xml-parser",
-  "version": "5.3.4",
+  "version": "5.3.5",
   "description": "Validate XML, Parse XML, Build XML without C/C++ based libraries",
   "main": "./lib/fxp.cjs",
   "type": "module",
@@ -87,6 +87,6 @@
     }
   ],
   "dependencies": {
-    "strnum": "^2.1.0"
+    "strnum": "^2.1.2"
   }
 }
