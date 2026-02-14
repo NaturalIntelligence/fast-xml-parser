@@ -1,5 +1,11 @@
 <small>Note: If you find missing information about particular minor version, that version must have been changed without any functional change in this library.</small>
 
+**5.3.6 / 2026-02-14**
+- Improve security and performance of entity processing
+  - new options `maxEntitySize`, `maxExpansionDepth`, `maxTotalExpansions`, `maxExpandedLength`, `allowedTags`,`tagFilter`
+  - fast return when no edtity is present
+  - improvement replacement logic to reduce number of calls
+
 
 **5.3.5 / 2026-02-08**
 - fix: Escape regex char in entity name
