@@ -21,7 +21,7 @@ export function getAllMatches(string, regex) {
   return matches;
 }
 
-export const isName = function(string) {
+export const isName = function (string) {
   const match = regexName.exec(string);
   return !(match === null || typeof match === 'undefined');
 }
@@ -34,28 +34,6 @@ export function isEmptyObject(obj) {
   return Object.keys(obj).length === 0;
 }
 
-/**
- * Copy all the properties of a into b.
- * @param {*} target
- * @param {*} a
- */
-export function merge(target, a, arrayMode) {
-  if (a) {
-    const keys = Object.keys(a); // will return an array of own properties
-    const len = keys.length; //don't make it inline
-    for (let i = 0; i < len; i++) {
-      if (arrayMode === 'strict') {
-        target[keys[i]] = [ a[keys[i]] ];
-      } else {
-        target[keys[i]] = a[keys[i]];
-      }
-    }
-  }
-}
-/* exports.merge =function (b,a){
-  return Object.assign(b,a);
-} */
-
 export function getValue(v) {
   if (exports.isExist(v)) {
     return v;
@@ -63,6 +41,3 @@ export function getValue(v) {
     return '';
   }
 }
-
-// const fakeCall = function(a) {return a;};
-// const fakeCallNoReturn = function() {};
