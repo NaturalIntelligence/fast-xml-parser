@@ -1,4 +1,60 @@
-type X2jOptions = {
+type ProcessEntitiesOptions = {
+  /**
+   * Whether to enable entity processing
+   * 
+   * Defaults to `true`
+   */
+  enabled?: boolean;
+
+  /**
+   * Maximum size in characters for a single entity definition
+   * 
+   * Defaults to `10000`
+   */
+  maxEntitySize?: number;
+
+  /**
+   * Maximum depth for nested entity references (reserved for future use)
+   * 
+   * Defaults to `10`
+   */
+  maxExpansionDepth?: number;
+
+  /**
+   * Maximum total number of entity expansions allowed
+   * 
+   * Defaults to `1000`
+   */
+  maxTotalExpansions?: number;
+
+  /**
+   * Maximum total expanded content length in characters
+   * 
+   * Defaults to `100000`
+   */
+  maxExpandedLength?: number;
+
+  /**
+   * Array of tag names where entity replacement is allowed.
+   * If null, entities are replaced in all tags.
+   * 
+   * Defaults to `null`
+   */
+  allowedTags?: string[] | null;
+
+  /**
+   * Custom filter function to determine if entities should be replaced in a tag
+   * 
+   * @param tagName - The name of the current tag
+   * @param jPath - The jPath of the current tag
+   * @returns `true` to allow entity replacement, `false` to skip
+   * 
+   * Defaults to `null`
+   */
+  tagFilter?: ((tagName: string, jPath: string) => boolean) | null;
+};
+
+export type X2jOptions = {
   /**
    * Preserve the order of tags in resulting JS object
    * 
@@ -10,7 +66,7 @@ type X2jOptions = {
    * Give a prefix to the attribute name in the resulting JS object
    * 
    * Defaults to '@_'
-   */  
+   */
   attributeNamePrefix?: string;
 
   /**
@@ -64,7 +120,7 @@ type X2jOptions = {
   parseTagValue?: boolean;
 
   /**
-   * Whether to parse tag value with `strnum` package
+   * Whether to parse attribute value with `strnum` package
    * 
    * Defaults to `false`
    */
@@ -161,9 +217,15 @@ type X2jOptions = {
   /**
    * Whether to process default and DOCTYPE entities
    * 
+   * When `true` - enables entity processing with default limits
+   * 
+   * When `false` - disables all entity processing
+   * 
+   * When `ProcessEntitiesOptions` - enables entity processing with custom configuration
+   * 
    * Defaults to `true`
    */
-  processEntities?: boolean;
+  processEntities?: boolean | ProcessEntitiesOptions;
 
   /**
    * Whether to process HTML entities
@@ -209,7 +271,7 @@ type X2jOptions = {
    * 
    * Defaults to `(tagName, jPath, attrs) => tagName`
    */
-  updateTag?: (tagName: string, jPath: string, attrs: {[k: string]: string}) =>  string | boolean;
+  updateTag?: (tagName: string, jPath: string, attrs: { [k: string]: string }) => string | boolean;
 
   /**
    * If true, adds a Symbol to all object nodes, accessible by {@link XMLParser.getMetaDataSymbol} with
@@ -232,7 +294,7 @@ type validationOptions = {
    * Defaults to `false`
    */
   allowBooleanAttributes?: boolean;
-  
+
   /**
    * List of tags without closing tags
    * 
@@ -246,7 +308,7 @@ type XmlBuilderOptions = {
    * Give a prefix to the attribute name in the resulting JS object
    * 
    * Defaults to '@_'
-   */  
+   */
   attributeNamePrefix?: string;
 
   /**
@@ -393,20 +455,20 @@ type XmlBuilderOptions = {
   oneListGroup?: boolean;
 };
 
-type ESchema = string | object | Array<string|object>;
+type ESchema = string | object | Array<string | object>;
 
 type ValidationError = {
-  err: { 
+  err: {
     code: string;
     msg: string,
     line: number,
-    col: number 
+    col: number
   };
 };
 
 declare class XMLParser {
   constructor(options?: X2jOptions);
-  parse(xmlData: string | Uint8Array ,validationOptions?: validationOptions | boolean): any;
+  parse(xmlData: string | Uint8Array, validationOptions?: validationOptions | boolean): any;
   /**
    * Add Entity which is not by default supported by this library
    * @param entityIdentifier {string} Eg: 'ent' for &ent;
@@ -424,10 +486,10 @@ declare class XMLParser {
    * The XMLMetaData property is only present when {@link X2jOptions.captureMetaData}
    * is true in the options.
    */
-  static getMetaDataSymbol() : Symbol;
+  static getMetaDataSymbol(): Symbol;
 }
 
-declare class XMLValidator{
+declare class XMLValidator {
   static validate(xmlData: string, options?: validationOptions): true | ValidationError;
 }
 
@@ -458,6 +520,7 @@ declare namespace fxp {
     ValidationError,
     strnumOptions,
     validationOptions,
+    ProcessEntitiesOptions,
   }
 }
 
