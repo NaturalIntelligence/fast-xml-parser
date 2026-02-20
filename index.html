@@ -170,7 +170,7 @@
                     editor.setValue('');
                     const builder = new fxp.XMLBuilder(xmlBuilderOptions());
                     const result = builder.build(JSON.parse( $('#result').val() ));
-                    editor.setValue('<?xml version="1.0"?>\n'+result);
+                    editor.setValue(result);
                 }else{
                     console.error("Empty input");
                 }
@@ -255,8 +255,7 @@
                 $("#lengthoutput")[0].innerText = data.length;
             }
 
-            editor.setValue(`<?xml version="1.0"?>
-<any_name>
+            editor.setValue(`<any_name>
     <person>
         <phone>+122233344550</phone>
         <name>Jack</name>
