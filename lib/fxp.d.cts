@@ -54,7 +54,7 @@ type ProcessEntitiesOptions = {
   tagFilter?: ((tagName: string, jPath: string) => boolean) | null;
 };
 
-export type X2jOptions = {
+type X2jOptions = {
   /**
    * Preserve the order of tags in resulting JS object
    * 
