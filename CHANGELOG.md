@@ -1,5 +1,11 @@
 <small>Note: If you find missing information about particular minor version, that version must have been changed without any functional change in this library.</small>
 
+5.3.7
+**5.3.7 / 2026-02-20**
+- fix typings for CJS (By [Corentin Girard](https://github.com/Drarig29))
+
+
+
 **5.3.6 / 2026-02-14**
 - Improve security and performance of entity processing
   - new options `maxEntitySize`, `maxExpansionDepth`, `maxTotalExpansions`, `maxExpandedLength`, `allowedTags`,`tagFilter`
