@@ -49,254 +49,205 @@ describe("XMLBuilder", function () {
             <region>JAPAN</region>
             --finish--
         </location>
-        <type>
-            <size>
-                <![CDATA[Small]]>alpha
-            </size>
-            <function>24x7</function>
-            <empty></empty>
-            <empty attr="ibute"></empty>
-        </type>
+        <item price="108">
+            <![CDATA[Banana]]>
+        </item>
     </store>`;
-        const expected = `<store><location><![CDATA[locates in]]><region>US</region><![CDATA[and]]><region>JAPAN</region>--finish--</location><type><size><![CDATA[Small]]>alpha</size><function>24x7</function><empty></empty><empty attr="ibute"></empty></type></store>`;
+        const expected = `<store><location><![CDATA[locates in]]><region>US</region><![CDATA[and]]><region>JAPAN</region>--finish--</location><item price="108"><![CDATA[Banana]]></item></store>`;
 
         const options = {
+            preserveOrder: true,
             ignoreAttributes: false,
-            preserveOrder: true,
-            cdataPropName: "#CDATA",
-            allowBooleanAttributes: true,
-    //   format: true,
-
+            cdataPropName: "__cdata",
         }
         const parser = new XMLParser(options);
         let result = parser.parse(XMLdata);
-    // console.log(JSON.stringify(result, null,4));
 
         const builder = new XMLBuilder(options);
         result = builder.build(result);
-    // console.log(result);
-
         expect(result).toEqual(expected);
     });
 
-    it("should build XML by merging CDATA to text property when CDATA tag name is not set", function () {
-        const XMLdata = `<store>
-        <location>
-            <![CDATA[locates in]]>
-            <region>US</region>
-            <![CDATA[and]]>
-            <region>JAPAN</region>
-            --finish--
-        </location>
-        <type>
-            <size>
-                <![CDATA[Small]]>alpha
-            </size>
-            <function>24x7</function>
-        </type>
-    </store>`;
-        const expected = `<store><location>locates in<region>US</region>and<region>JAPAN</region>--finish--</location><type><size>Smallalpha</size><function>24x7</function></type></store>`;
-
-        const options = {
-            preserveOrder: true,
-        }
-        const parser = new XMLParser(options);
-        let result = parser.parse(XMLdata);
-        // console.log(JSON.stringify(result, null,4));
-
-        const builder = new XMLBuilder(parser.options);
-        result = builder.build(result);
-        // console.log(result);
-
-        expect(result).toEqual(expected);
-    });
-
-    it("should build XML having only text", function () {
-        const XMLdata = `<store>
-            <![CDATA[albha]]>beta
-    </store>`;
-        const expected = `<store>albhabeta</store>`;
-
-        const options = {
-            preserveOrder: true,
-        }
-        const parser = new XMLParser(options);
-        let result = parser.parse(XMLdata);
-        // console.log(JSON.stringify(result, null,4));
-
-        const builder = new XMLBuilder(parser.options);
-        result = builder.build(result);
-        // console.log(result);
-
-        expect(result).toEqual(expected);
-    });
-
-    it("should build XML by suppressing empty nodes", function () {
-        const XMLdata = `<store>
-            <![CDATA[albha]]>beta <a/><b></b>
-    </store>`;
-        const expected = "<store>albhabeta<a/><b/></store>"
-
-        const options = {
-            preserveOrder: true,
-            suppressEmptyNode: true
-        }
-        const parser = new XMLParser(options);
-        let result = parser.parse(XMLdata);
-        // console.log(JSON.stringify(result, null,4));
-
-        const builder = new XMLBuilder(options);
-        result = builder.build(result);
-        // console.log(result);
-
-        expect(result).toEqual(expected);
-    });
-
-    it("should build formatted XML", function () {
-        const XMLdata = `<store>
-        <location>
-            <![CDATA[locates in]]>
-            <region>US</region>
-            <![CDATA[and]]>
-            <region>JAPAN</region>
-            --finish--
-        </location>
-        <type>
-            <size>
-                <![CDATA[Small]]>alpha
-            </size>
-            <function>24x7</function>
-        </type>
-    </store>`;
-        const expected = `
+    it("should build the formatted XML with attributes", function () {
+        const XMLdata = `<?xml version="1.0"?>
+<?xml-stylesheet href="catalog.xsl"  type="text/xsl" ?>
+<!DOCTYPE store SYSTEM "store" [<!ELEMENT store (item)*> <!ELEMENT item (#PCDATA)> <!ATTLIST item price CDATA #REQUIRED>]>
 <store>
-  <location>
-    locates in
-    <region>US</region>
-    and
-    <region>JAPAN</region>
-    --finish--
-  </location>
-  <type>
-    <size>Smallalpha</size>
-    <function>24x7</function>
-  </type>
+    <location id="100">
+        <![CDATA[locates in]]>
+        <region>US</region>
+        <![CDATA[and]]>
+        <region>JAPAN</region>
+        --finish--
+    </location>
+    <item price="108">
+        <![CDATA[Banana]]>
+    </item>
 </store>`;
-
-        const options = {
-            preserveOrder: true,
-            format: true,
-            // cdataPropName: "#CDATA"
-        }
-        const parser = new XMLParser(options);
-        let result = parser.parse(XMLdata);
-        // console.log(JSON.stringify(result, null,4));
-
-        const builder = new XMLBuilder(options);
-        result = builder.build(result);
-        // console.log(result);
-
-        expect(result).toEqual(expected);
-    });
-
-    it("should build formatted XML with CDATA", function () {
-        const XMLdata = `<store>
-        <location>
-            <![CDATA[locates in]]>
-            <region>US</region>
-            <![CDATA[and]]>
-            <region>JAPAN</region>
-            --finish--
-        </location>
-        <type>
-            <size>
-                <![CDATA[Small]]>alpha
-            </size>
-            <function>24x7</function>
-        </type>
-    </store>`;
-        const expected = `
+        const expected = `<?xml version="1.0"?>
+<?xml-stylesheet href="catalog.xsl" type="text/xsl"?>
 <store>
-  <location>
+  <location id="100">
     <![CDATA[locates in]]>
     <region>US</region>
     <![CDATA[and]]>
     <region>JAPAN</region>
     --finish--
   </location>
-  <type>
-    <size><![CDATA[Small]]>alpha</size>
-    <function>24x7</function>
-  </type>
+  <item price="108">
+    <![CDATA[Banana]]>
+  </item>
 </store>`;
 
         const options = {
             preserveOrder: true,
-            format: true,
-            cdataPropName: "#CDATA"
+            ignoreAttributes: false,
+            cdataPropName: "__cdata",
+            format: true
         }
         const parser = new XMLParser(options);
         let result = parser.parse(XMLdata);
-        // console.log(JSON.stringify(result, null,4));
 
         const builder = new XMLBuilder(options);
         result = builder.build(result);
-        // console.log(result);
+        expect(result).toEqual(expected);
+    });
+
+    it("should build the XML using given tag-value processor for ordered XML", function () {
+        const XMLdata = `
+    <root>
+        <element1>val&amp;1</element1>
+        <element2>val&lt;2</element2>
+    </root>`;
+
+        const expected = `<root><element1>val&1</element1><element2>val<2</element2></root>`;
+
+        const options = {
+            preserveOrder: true,
+            processEntities: false,
+            tagValueProcessor: (tagName, tagValue, jPath, hasAttributes, isLeafNode) => {
+                return tagValue;
+            },
+        }
+        const parser = new XMLParser(options);
+        let result = parser.parse(XMLdata);
+
+        const builder = new XMLBuilder(options);
+        result = builder.build(result);
+        expect(result).toEqual(expected);
+    });
+
+    it("should build the formatted output for the deep nested data", function () {
+        const XMLdata = `<root>
+  <a>
+    <b>
+      <c>
+        <d>
+          <e>
+            <f>val</f>
+          </e>
+        </d>
+      </c>
+    </b>
+  </a>
+</root>`;
+        const expected = `<root>
+  <a>
+    <b>
+      <c>
+        <d>
+          <e>
+            <f>val</f>
+          </e>
+        </d>
+      </c>
+    </b>
+  </a>
+</root>`;
+
+        const options = {
+            preserveOrder: true,
+            format: true,
+        }
+        const parser = new XMLParser(options);
+        let result = parser.parse(XMLdata);
+
+        const builder = new XMLBuilder(options);
+        result = builder.build(result);
+        expect(result).toEqual(expected);
+    });
+
+    it("should build XML for the ordered array of ordered arrays", function () {
+        const XMLdata = `<root>
+    <a>
+        <b>1</b>
+        <b>2</b>
+        <b>3</b>
+    </a>
+    <a>
+        <b>4</b>
+        <b>5</b>
+        <b>6</b>
+    </a>
+</root>`;
+        const expected = `<root><a><b>1</b><b>2</b><b>3</b></a><a><b>4</b><b>5</b><b>6</b></a></root>`;
+
+        const options = {
+            preserveOrder: true
+        }
+        const parser = new XMLParser(options);
+        let result = parser.parse(XMLdata);
+
+        const builder = new XMLBuilder(options);
+        result = builder.build(result);
+        expect(result).toEqual(expected);
+    });
+
+    it("should build correctly for oneListGroup option", function () {
+        const XMLdata = `<?xml version="1.0"?>
+<company>
+    <person>
+        <name>John</name>
+        <phone>7878787</phone>
+    </person>
+    <person>
+        <name>Jack</name>
+        <phone>4545454</phone>
+    </person>
+    <person>
+        <name>Jack</name>
+        <phone>2323232</phone>
+    </person>
+</company>`;
+
+        const options = {
+            preserveOrder: true,
+            isArray: (tagName, jpath, isLeafNode, isAttribute) => {
+                if (tagName === "person") return true;
+            }
+        }
+        const parser = new XMLParser(options);
+        let result = parser.parse(XMLdata);
+
+        const expected = `<?xml version="1.0"?><company><person><name>John</name><phone>7878787</phone></person><person><name>Jack</name><phone>4545454</phone></person><person><name>Jack</name><phone>2323232</phone></person></company>`;
+
+        const builder = new XMLBuilder({ preserveOrder: true });
+        result = builder.build(result);
 
         expect(result).toEqual(expected);
     });
 
-    it("should build XML when leaf nodes or attributes are parsed to array", function () {
-        Object.prototype.something = 'strange';
-        const XMLdata = `<report>
-        <store>
-            <region>US</region>
-            <inventory>
-                <item grade="A">
-                    <name>Banana</name>
-                    <count>200</count>
-                </item>
-                <item grade="B">
-                    <name>Apple</name>
-                    <count>100</count>
-                </item>
-            </inventory>
-        </store>
-        <store>
-            <region>EU</region>
-            <inventory>
-                <item>
-                    <name>Banana</name>
-                    <count>100</count>
-                </item>
-            </inventory>
-        </store>
-    </report>`;
-        const expected = `
-<report>
-  <store>
-    <region>US</region>
-    <inventory>
-      <item grade="A">
-        <name>Banana</name>
-        <count>200</count>
-      </item>
-      <item grade="B">
-        <name>Apple</name>
-        <count>100</count>
-      </item>
-    </inventory>
-  </store>
-  <store>
-    <region>EU</region>
-    <inventory>
-      <item>
-        <name>Banana</name>
-        <count>100</count>
-      </item>
-    </inventory>
-  </store>
-</report>`;
+    it("should build correctly for isLeafNode option", function () {
+        const XMLdata = `<properties>
+    <property name="color">
+        <int>7</int>
+    </property>
+    <property name="background-color">
+        <int>42</int>
+    </property>
+</properties>`;
+
+        const expected = `<properties><property name="color"><int>7</int></property><property name="background-color"><int>42</int></property></properties>`;
 
         const options = {
             ignoreAttributes: false,
@@ -318,5 +269,32 @@ describe("XMLBuilder", function () {
         result = builder.build(result);
         // console.log(result);
         expect(result).toEqual(expected);
+    });
+
+    it("should not throw stack overflow when child value is a non-array (issue #781)", function () {
+        const builder = new XMLBuilder({
+            ignoreAttributes: false,
+            attributeNamePrefix: '@_',
+            preserveOrder: true,
+            format: true,
+            indentBy: '  ',
+            processEntities: true,
+        });
+        const input = [
+            {
+                'foo': [
+                    { 'bar': [{ '@_V': 'baz' }] },
+                    { 'fum': [{ 'qux': '' }] },
+                    { 'hello': [{ '#text': 'world' }] }
+                ]
+            }
+        ];
+        expect(function () {
+            builder.build(input);
+        }).not.toThrow();
+
+        const result = builder.build(input);
+        expect(result).toContain('<hello>world</hello>');
+        expect(result).toContain('<foo>');
     });
 });

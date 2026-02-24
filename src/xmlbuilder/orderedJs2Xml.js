@@ -15,6 +15,16 @@ export default function toXml(jArray, options) {
 }
 
 function arrToStr(arr, options, jPath, indentation) {
+    if (!Array.isArray(arr)) {
+        // Non-array values (e.g. string tag values) should be treated as text content
+        if (arr !== undefined && arr !== null) {
+            let text = arr.toString();
+            text = replaceEntitiesValue(text, options);
+            return text;
+        }
+        return "";
+    }
+
     let xmlStr = "";
     let isPreviousElementTag = false;
 
