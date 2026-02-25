@@ -531,4 +531,27 @@ describe("unpaired tas position", function () {
 
   });
 
+  it("XMLParser should not move tag data into the unpairedTag node #785", function () {
+
+    const xmlData = `<p>hello<br>world</p>`;
+    const options = {
+      ignoreAttributes: false,
+      unpairedTags: ["hr", "br", "link", "meta"],
+    };
+    const expected = {
+      "p": {
+          "br": "",
+          "#text": "helloworld"
+      }
+  }
+    const parser = new XMLParser(options);
+    // console.log(JSON.stringify(parser.parse(xml)));
+
+    let result = parser.parse(xmlData);
+
+    // console.log(JSON.stringify(result, null, 4));
+    expect(result).toEqual(expected);
+
+  });
+
 });
