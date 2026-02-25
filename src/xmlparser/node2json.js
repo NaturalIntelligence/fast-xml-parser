@@ -23,7 +23,7 @@ export default function prettify(node, options) {
  */
 function compress(arr, options, jPath) {
   let text;
-  const compressedObj = {};
+  const compressedObj = {}; //This is intended to be a plain object
   for (let i = 0; i < arr.length; i++) {
     const tagObj = arr[i];
     const property = propName(tagObj);
@@ -40,9 +40,6 @@ function compress(arr, options, jPath) {
 
       let val = compress(tagObj[property], options, newJpath);
       const isLeaf = isLeafTag(val, options);
-      if (tagObj[METADATA_SYMBOL] !== undefined) {
-        val[METADATA_SYMBOL] = tagObj[METADATA_SYMBOL]; // copy over metadata
-      }
 
       if (tagObj[":@"]) {
         assignAttributes(val, tagObj[":@"], newJpath, options);
@@ -52,6 +49,11 @@ function compress(arr, options, jPath) {
         if (options.alwaysCreateTextNode) val[options.textNodeName] = "";
         else val = "";
       }
+
+      if (tagObj[METADATA_SYMBOL] !== undefined && typeof val === "object" && val !== null) {
+        val[METADATA_SYMBOL] = tagObj[METADATA_SYMBOL]; // copy over metadata
+      }
+
 
       if (compressedObj[property] !== undefined && Object.prototype.hasOwnProperty.call(compressedObj, property)) {
         if (!Array.isArray(compressedObj[property])) {
@@ -74,6 +76,8 @@ function compress(arr, options, jPath) {
   if (typeof text === "string") {
     if (text.length > 0) compressedObj[options.textNodeName] = text;
   } else if (text !== undefined) compressedObj[options.textNodeName] = text;
+
+
   return compressedObj;
 }
 

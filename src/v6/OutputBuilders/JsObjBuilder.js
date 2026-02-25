@@ -1,18 +1,18 @@
 
 
-import {buildOptions,registerCommonValueParsers} from './ParserOptionsBuilder.js';
+import { buildOptions, registerCommonValueParsers } from './ParserOptionsBuilder.js';
 
-export default class OutputBuilder{
-  constructor(builderOptions){
-      this.options = buildOptions(builderOptions);
-      this.registeredParsers = registerCommonValueParsers(this.options);
+export default class OutputBuilder {
+  constructor(builderOptions) {
+    this.options = buildOptions(builderOptions);
+    this.registeredParsers = registerCommonValueParsers(this.options);
   }
 
-  registerValueParser(name,parserInstance){//existing name will override the parser without warning
+  registerValueParser(name, parserInstance) {//existing name will override the parser without warning
     this.registeredParsers[name] = parserInstance;
   }
 
-  getInstance(parserOptions){
+  getInstance(parserOptions) {
     return new JsObjBuilder(parserOptions, this.options, this.registeredParsers);
   }
 }
@@ -20,9 +20,9 @@ export default class OutputBuilder{
 import BaseOutputBuilder from './BaseOutputBuilder.js';
 const rootName = '^';
 
-class JsObjBuilder extends BaseOutputBuilder{
+class JsObjBuilder extends BaseOutputBuilder {
 
-  constructor(parserOptions, builderOptions,registeredParsers) {
+  constructor(parserOptions, builderOptions, registeredParsers) {
     super();
     //hold the raw detail of a tag and sequence with reference to the output
     this.tagsStack = [];
@@ -38,14 +38,14 @@ class JsObjBuilder extends BaseOutputBuilder{
     this.attributes = {};
   }
 
-  addTag(tag){
+  addTag(tag) {
 
     let value = "";
-    if( !isEmpty(this.attributes)){
+    if (!isEmpty(this.attributes)) {
       value = {};
-      if(this.options.attributes.groupBy){
+      if (this.options.attributes.groupBy) {
         value[this.options.attributes.groupBy] = this.attributes;
-      }else{
+      } else {
         value = this.attributes;
       }
     }
@@ -62,44 +62,44 @@ class JsObjBuilder extends BaseOutputBuilder{
    * @param {Node} node 
    * @returns boolean: true if the node should not be added
    */
-  closeTag(){
+  closeTag() {
     const tagName = this.tagName;
     let value = this.value;
     let textValue = this.textValue;
 
     //update tag text value
-    if(typeof value !== "object" && !Array.isArray(value)){
+    if (typeof value !== "object" && !Array.isArray(value)) {
       value = this.parseValue(textValue.trim(), this.options.tags.valueParsers);
-    }else if(textValue.length > 0){
+    } else if (textValue.length > 0) {
       value[this.options.nameFor.text] = this.parseValue(textValue.trim(), this.options.tags.valueParsers);
     }
 
-    
-    let resultTag= {
+
+    let resultTag = {
       tagName: tagName,
       value: value
     };
 
-    if(this.options.onTagClose !== undefined){
+    if (this.options.onTagClose !== undefined) {
       //TODO TagPathMatcher 
-      resultTag = this.options.onClose(tagName, value, this.textValue, new TagPathMatcher(this.tagsStack,node));
+      resultTag = this.options.onClose(tagName, value, this.textValue, new TagPathMatcher(this.tagsStack, node));
 
-      if(!resultTag) return;
+      if (!resultTag) return;
     }
 
     //set parent node in scope
-    let arr = this.tagsStack.pop(); 
+    let arr = this.tagsStack.pop();
     let parentTag = arr[2];
-    parentTag=this._addChildTo(resultTag.tagName, resultTag.value, parentTag);
+    parentTag = this._addChildTo(resultTag.tagName, resultTag.value, parentTag);
 
     this.tagName = arr[0];
     this.textValue = arr[1];
     this.value = parentTag;
   }
 
-  _addChild(key, val){
-    if(typeof this.value === "string"){
-      this.value = { [this.options.nameFor.text] : this.value };
+  _addChild(key, val) {
+    if (typeof this.value === "string") {
+      this.value = { [this.options.nameFor.text]: this.value };
     }
 
     this._addChildTo(key, val, this.value);
@@ -107,12 +107,12 @@ class JsObjBuilder extends BaseOutputBuilder{
     this.attributes = {};
   }
 
-  _addChildTo(key, val, node){
-    if(typeof node === 'string') node = {};
-    if(!node[key]){
+  _addChildTo(key, val, node) {
+    if (typeof node === 'string') node = {};
+    if (!node[key]) {
       node[key] = val;
-    }else{ //Repeated
-      if(!Array.isArray(node[key])){ //but not stored as array
+    } else { //Repeated
+      if (!Array.isArray(node[key])) { //but not stored as array
         node[key] = [node[key]];
       }
       node[key].push(val);
@@ -125,26 +125,26 @@ class JsObjBuilder extends BaseOutputBuilder{
    * Add text value child node 
    * @param {string} text 
    */
-  addValue(text){
+  addValue(text) {
     //TODO: use bytes join
-    if(this.textValue.length > 0) this.textValue += " " + text;
+    if (this.textValue.length > 0) this.textValue += " " + text;
     else this.textValue = text;
   }
 
-  addPi(name){
+  addPi(name) {
     let value = "";
-    if( !isEmpty(this.attributes)){
+    if (!isEmpty(this.attributes)) {
       value = {};
-      if(this.options.attributes.groupBy){
+      if (this.options.attributes.groupBy) {
         value[this.options.attributes.groupBy] = this.attributes;
-      }else{
+      } else {
         value = this.attributes;
       }
     }
     this._addChild(name, value);
-    
+
   }
-  getOutput(){
+  getOutput() {
     return this.value;
   }
 }

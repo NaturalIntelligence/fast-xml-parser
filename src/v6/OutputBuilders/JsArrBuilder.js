@@ -1,16 +1,16 @@
-import {buildOptions,registerCommonValueParsers} from './ParserOptionsBuilder.js';
+import { buildOptions, registerCommonValueParsers } from './ParserOptionsBuilder.js';
 
-export default class OutputBuilder{
-  constructor(options){
+export default class OutputBuilder {
+  constructor(options) {
     this.options = buildOptions(options);
-      this.registeredParsers = registerCommonValueParsers(this.options);
-    }
-    
-    registerValueParser(name,parserInstance){//existing name will override the parser without warning
-      this.registeredParsers[name] = parserInstance;
-    }
+    this.registeredParsers = registerCommonValueParsers(this.options);
+  }
 
-  getInstance(parserOptions){
+  registerValueParser(name, parserInstance) {//existing name will override the parser without warning
+    this.registeredParsers[name] = parserInstance;
+  }
+
+  getInstance(parserOptions) {
     return new JsArrBuilder(parserOptions, this.options, this.registeredParsers);
   }
 }
@@ -18,9 +18,9 @@ export default class OutputBuilder{
 const rootName = '!js_arr';
 import BaseOutputBuilder from './BaseOutputBuilder.js';
 
-class JsArrBuilder extends BaseOutputBuilder{
+class JsArrBuilder extends BaseOutputBuilder {
 
-  constructor(parserOptions, options,registeredParsers) {
+  constructor(parserOptions, options, registeredParsers) {
     super();
     this.tagsStack = [];
     this.parserOptions = parserOptions;
@@ -32,10 +32,10 @@ class JsArrBuilder extends BaseOutputBuilder{
     this.attributes = {};
   }
 
-  addTag(tag){
+  addTag(tag) {
     //when a new tag is added, it should be added as child of current node
     //TODO: shift this check to the parser
-    if(tag.name === "__proto__") tag.name = "#__proto__";
+    if (tag.name === "__proto__") tag.name = "#__proto__";
 
     this.tagsStack.push(this.currentNode);
     this.currentNode = new Node(tag.name, this.attributes);
@@ -47,23 +47,23 @@ class JsArrBuilder extends BaseOutputBuilder{
    * @param {Node} node 
    * @returns boolean: true if the node should not be added
    */
-  closeTag(){
+  closeTag() {
     const node = this.currentNode;
     this.currentNode = this.tagsStack.pop(); //set parent node in scope
-    if(this.options.onClose !== undefined){
+    if (this.options.onClose !== undefined) {
       //TODO TagPathMatcher 
-      const resultTag = this.options.onClose(node, 
-        new TagPathMatcher(this.tagsStack,node));
+      const resultTag = this.options.onClose(node,
+        new TagPathMatcher(this.tagsStack, node));
 
-      if(resultTag) return;
+      if (resultTag) return;
     }
     this.currentNode.child.push(node);  //to parent node
   }
 
   //Called by parent class methods
-  _addChild(key, val){
+  _addChild(key, val) {
     // if(key === "__proto__") tagName = "#__proto__";
-    this.currentNode.child.push( {[key]: val });
+    this.currentNode.child.push({ [key]: val });
     // this.currentNode.leafType = false;
   }
 
@@ -71,31 +71,31 @@ class JsArrBuilder extends BaseOutputBuilder{
    * Add text value child node 
    * @param {string} text 
    */
-  addValue(text){
-    this.currentNode.child.push( {[this.options.nameFor.text]: this.parseValue(text, this.options.tags.valueParsers) });
+  addValue(text) {
+    this.currentNode.child.push({ [this.options.nameFor.text]: this.parseValue(text, this.options.tags.valueParsers) });
   }
 
-  addPi(name){
+  addPi(name) {
     //TODO: set pi flag
-    if(!this.options.ignorePiTags){
+    if (!this.options.ignorePiTags) {
       const node = new Node(name, this.attributes);
       this.currentNode[":@"] = this.attributes;
       this.currentNode.child.push(node);
     }
     this.attributes = {};
   }
-  getOutput(){
+  getOutput() {
     return this.root.child[0];
   }
 }
 
 
 
-class Node{
-  constructor(tagname, attributes){
+class Node {
+  constructor(tagname, attributes) {
     this.tagname = tagname;
     this.child = []; //nested tags, text, cdata, comments
-    if(attributes && Object.keys(attributes).length > 0)
+    if (attributes && Object.keys(attributes).length > 0)
       this[":@"] = attributes;
   }
 }

@@ -8,7 +8,7 @@ export default class DocTypeReader {
 
     readDocType(xmlData, i) {
 
-        const entities = {};
+        const entities = Object.create(null);
         if (xmlData[i + 3] === 'O' &&
             xmlData[i + 4] === 'C' &&
             xmlData[i + 5] === 'T' &&

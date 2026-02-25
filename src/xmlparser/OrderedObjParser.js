@@ -19,7 +19,7 @@ export default class OrderedObjParser {
     this.options = options;
     this.currentNode = null;
     this.tagsNodeStack = [];
-    this.docTypeEntities = Object.create(null);
+    this.docTypeEntities = {};
     this.lastEntities = {
       "apos": { regex: /&(apos|#39|#x27);/g, val: "'" },
       "gt": { regex: /&(gt|#62|#x3E);/g, val: ">" },
@@ -150,7 +150,7 @@ function buildAttributesMap(attrStr, jPath, tagName) {
 
     const matches = getAllMatches(attrStr, attrsRegx);
     const len = matches.length; //don't make it inline
-    const attrs = Object.create(null);
+    const attrs = {};
     for (let i = 0; i < len; i++) {
       const attrName = this.resolveNameSpace(matches[i][1]);
       if (this.ignoreAttributesFn(attrName, jPath)) {
@@ -192,7 +192,7 @@ function buildAttributesMap(attrStr, jPath, tagName) {
       return;
     }
     if (this.options.attributesGroupName) {
-      const attrCollection = Object.create(null);
+      const attrCollection = {};
       attrCollection[this.options.attributesGroupName] = attrs;
       return attrCollection;
     }
