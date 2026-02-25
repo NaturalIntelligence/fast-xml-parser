@@ -19,7 +19,7 @@ export default class OrderedObjParser {
     this.options = options;
     this.currentNode = null;
     this.tagsNodeStack = [];
-    this.docTypeEntities = {};
+    this.docTypeEntities = Object.create(null);
     this.lastEntities = {
       "apos": { regex: /&(apos|#39|#x27);/g, val: "'" },
       "gt": { regex: /&(gt|#62|#x3E);/g, val: ">" },
@@ -150,7 +150,7 @@ function buildAttributesMap(attrStr, jPath, tagName) {
 
     const matches = getAllMatches(attrStr, attrsRegx);
     const len = matches.length; //don't make it inline
-    const attrs = {};
+    const attrs = Object.create(null);
     for (let i = 0; i < len; i++) {
       const attrName = this.resolveNameSpace(matches[i][1]);
       if (this.ignoreAttributesFn(attrName, jPath)) {
@@ -192,7 +192,7 @@ function buildAttributesMap(attrStr, jPath, tagName) {
       return;
     }
     if (this.options.attributesGroupName) {
-      const attrCollection = {};
+      const attrCollection = Object.create(null);
       attrCollection[this.options.attributesGroupName] = attrs;
       return attrCollection;
     }
@@ -409,6 +409,9 @@ const parseXml = function (xmlData) {
           //opening tag
           else {
             const childNode = new xmlNode(tagName);
+            if (this.tagsNodeStack.length > this.options.maxNestedTags) {
+              throw new Error("Maximum nested tags exceeded");
+            }
             this.tagsNodeStack.push(currentNode);
 
             if (tagName !== tagExp && attrExpPresent) {

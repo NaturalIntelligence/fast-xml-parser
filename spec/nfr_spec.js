@@ -23,4 +23,21 @@ describe("XMLParser", function () {
     //   console.log(JSON.stringify(result, null,4));
     expect(result).toEqual(expected);
   });
+
+  it("should throw error for deeply nested XML", function () {
+
+    const depth = 102;
+    const xmlData = '<a>'.repeat(depth) + 'x' + '</a>'.repeat(depth);
+
+    const parser = new XMLParser();
+    expect(() => parser.parse(xmlData)).toThrowError("Maximum nested tags exceeded");
+  });
+  it("should not throw error when max depth is not reached", function () {
+
+    const depth = 100;
+    const xmlData = '<a>'.repeat(depth) + 'x' + '</a>'.repeat(depth);
+
+    const parser = new XMLParser({ maxNestedTags: 101 });
+    parser.parse(xmlData);
+  });
 });

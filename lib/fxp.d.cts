@@ -278,6 +278,13 @@ type X2jOptions = {
    * metadata about each the node in the XML file.
    */
   captureMetaData?: boolean;
+
+  /**
+   * Maximum number of nested tags
+   * 
+   * Defaults to `100`
+   */
+  maxNestedTags?: number;
 };
 
 type strnumOptions = {
