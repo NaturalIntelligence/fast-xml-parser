@@ -1,9 +1,9 @@
 "use strict";
 
-import {XMLParser, XMLBuilder, XMLValidator} from "../src/fxp.js";
+import { XMLParser, XMLValidator } from "../src/fxp.js";
 
-describe("XMLParser updateTag ", function() {
-    it("should delete, join, update attribute name and value", function() {
+describe("XMLParser updateTag ", function () {
+    it("should delete, join, update attribute name and value", function () {
         const xmlData = `<root>
             <a keep="me" skip="me"></a>
             <a skip="me"></a>
@@ -34,22 +34,22 @@ describe("XMLParser updateTag ", function() {
         };
         const options = {
             attributeNamePrefix: "",
-            ignoreAttributes:    false,
+            ignoreAttributes: false,
             parseAttributeValue: true,
-            updateTag(tagName, jPath, attrs){
-                if(attrs["skip"]) delete attrs["skip"]
-                if(attrs["camel"]) {
+            updateTag(tagName, jPath, attrs) {
+                if (attrs["skip"]) delete attrs["skip"]
+                if (attrs["camel"]) {
                     attrs["Camel"] = attrs["camel"];
                     delete attrs["camel"];
                 }
-                if(attrs["need"]) {
+                if (attrs["need"]) {
                     attrs["friend"] = "me";
                 }
-                if(attrs["MakeMe"]) {
+                if (attrs["MakeMe"]) {
                     attrs["makeme"] = attrs["MakeMe"];
                     delete attrs["MakeMe"];
                 }
-                if(attrs["change"]) {
+                if (attrs["change"]) {
                     attrs["change"] = attrs["change"].toUpperCase();
                 }
                 return tagName;
@@ -65,7 +65,7 @@ describe("XMLParser updateTag ", function() {
         result = XMLValidator.validate(xmlData);
         expect(result).toBe(true);
     });
-    it("should delete all the attributes", function() {
+    it("should delete all the attributes", function () {
         const xmlData = `<root>
             <a keep="me" skip="me"></a>
             <a skip="me"></a>
@@ -86,11 +86,11 @@ describe("XMLParser updateTag ", function() {
         };
         const options = {
             attributeNamePrefix: "",
-            ignoreAttributes:    false,
+            ignoreAttributes: false,
             parseAttributeValue: true,
-            updateTag(tagName, jPath, attrs){
-                for (var k in attrs){
-                    if (attrs.hasOwnProperty(k)){
+            updateTag(tagName, jPath, attrs) {
+                for (var k in attrs) {
+                    if (attrs.hasOwnProperty(k)) {
                         delete attrs[k];
                     }
                 }
@@ -107,7 +107,7 @@ describe("XMLParser updateTag ", function() {
         result = XMLValidator.validate(xmlData);
         expect(result).toBe(true);
     });
-    it("should skip a tag or modify tag name", function() {
+    it("should skip a tag or modify tag name", function () {
         const xmlData = `<html>
         <header></header>
         <body>
@@ -151,26 +151,26 @@ describe("XMLParser updateTag ", function() {
         const options = {
             ignoreAttributes: false,
             attributeNamePrefix: "",
-            updateTag: function(tagname, jPath, attrs){
-                
-                if(tagname ==="h1" && attrs["class"] && attrs["class"].indexOf("highlight") > -1){
+            updateTag: function (tagname, jPath, attrs) {
+
+                if (tagname === "h1" && attrs["class"] && attrs["class"].indexOf("highlight") > -1) {
                     attrs["class"] += " underline"
-                }else if(attrs["join"]){
+                } else if (attrs["join"]) {
                     let val = "";
-                    Object.keys(attrs).forEach( a => {
-                        val+= attrs[a]
+                    Object.keys(attrs).forEach(a => {
+                        val += attrs[a]
                         delete attrs[a];
                     });
                     attrs["joint"] = val;
                 }
-                if(tagname === "script") return false;
-                else if(tagname === "img"){
-                    if(attrs.width > 200 || attrs.height > 200) return false;
-                }else if(tagname === "content"){
+                if (tagname === "script") return false;
+                else if (tagname === "img") {
+                    if (attrs.width > 200 || attrs.height > 200) return false;
+                } else if (tagname === "content") {
                     return "div"
-                }else if(tagname === "lorem") {
+                } else if (tagname === "lorem") {
                     return false;
-                }else if(jPath === "html.body.ipsum") {
+                } else if (jPath === "html.body.ipsum") {
                     return false;
                 }
                 return tagname;

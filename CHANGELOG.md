@@ -1,5 +1,8 @@
 <small>Note: If you find missing information about particular minor version, that version must have been changed without any functional change in this library.</small>
 
+5.4.0
+- migrate to fast-xml-builder
+
 5.3.9
 **5.3.9 / 2026-02-25**
 - support strictReservedNames 

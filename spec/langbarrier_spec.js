@@ -1,13 +1,13 @@
 
-import {XMLParser, XMLBuilder, XMLValidator} from "../src/fxp.js";
+import { XMLParser } from "../src/fxp.js";
 
-describe("XMLParser", function() {
+describe("XMLParser", function () {
 
-    it("should parse <constructor> ", function(){
+    it("should parse <constructor> ", function () {
         const xmlData = `<root><other /><constructor /></root>`;
         const expected = { root: { other: '', constructor: '' } };
-        
-        const parser = new XMLParser({preserveOrder:false});
+
+        const parser = new XMLParser({ preserveOrder: false });
         const result = parser.parse(xmlData);
         // console.log(result);
         expect(result).toEqual(expected);

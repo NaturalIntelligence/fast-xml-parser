@@ -11,12 +11,12 @@ const __filename = fileURLToPath(import.meta.url);
 // Derive the directory name
 const __dirname = dirname(__filename);
 
-import {XMLParser, XMLValidator} from "../src/fxp.js";
+import { XMLParser } from "../src/fxp.js";
 
-describe("XMLParser", function() {
+describe("XMLParser", function () {
 
-    it("should parse when Buffer is given as input", function() {
-        
+    it("should parse when Buffer is given as input", function () {
+
         const fileNamePath = path.join(__dirname, "assets/mini-sample.xml");
         const xmlData = fs.readFileSync(fileNamePath);
 
@@ -90,6 +90,6 @@ describe("XMLParser", function() {
     //         // console.log(result);
     //     }).toThrowError("Cannot read properties of undefined (reading 'toString')");
     // });
-    
-    
+
+
 });
