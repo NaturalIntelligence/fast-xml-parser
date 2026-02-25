@@ -1,5 +1,12 @@
 <small>Note: If you find missing information about particular minor version, that version must have been changed without any functional change in this library.</small>
 
+
+5.3.8
+**5.3.8 / 2026-02-25**
+- support maxNestedTags 
+- handle non-array input for XML builder when preserveOrder is true (By [Angelo Coetzee](https://github.com/Angelopvtac))
+- save use of js properies
+
 5.3.7
 **5.3.7 / 2026-02-20**
 - fix typings for CJS (By [Corentin Girard](https://github.com/Drarig29))
