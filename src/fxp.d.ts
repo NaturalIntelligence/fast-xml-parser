@@ -285,6 +285,13 @@ export type X2jOptions = {
    * Defaults to `100`
    */
   maxNestedTags?: number;
+
+  /**
+   * Whether to strictly validate tag names
+   * 
+   * Defaults to `true`
+   */
+  strictReservedNames?: boolean;
 };
 
 

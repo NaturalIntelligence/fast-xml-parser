@@ -163,6 +163,7 @@ function buildAttributesMap(attrStr, jPath, tagName) {
           aName = this.options.transformAttributeName(aName);
         }
         if (aName === "__proto__") aName = "#__proto__";
+
         if (oldVal !== undefined) {
           if (this.options.trimValues) {
             oldVal = oldVal.trim();
@@ -320,6 +321,13 @@ const parseXml = function (xmlData) {
             tagExp = newTagName
           }
           tagName = newTagName;
+        }
+
+        if (this.options.strictReservedNames &&
+          (tagName === this.options.commentPropName
+            || tagName === this.options.cdataPropName
+          )) {
+          throw new Error(`Invalid tag name: ${tagName}`);
         }
 
         //save text as child node

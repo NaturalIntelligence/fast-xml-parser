@@ -39,6 +39,7 @@ export const defaultOptions = {
   // skipEmptyListItem: false
   captureMetaData: false,
   maxNestedTags: 100,
+  strictReservedNames: true,
 };
 
 /**
