@@ -1,5 +1,5 @@
 
-import {JsObjOutputBuilder} from './OutputBuilders/JsObjBuilder.js';
+import { JsObjOutputBuilder } from './OutputBuilders/JsObjBuilder.js';
 
 export const defaultOptions = {
   preserveOrder: false,
@@ -9,16 +9,16 @@ export const defaultOptions = {
   // isArray: () => false, //User will set it
   htmlEntities: false,
   // skipEmptyListItem: false
-  tags:{
+  tags: {
     unpaired: [],
-    nameFor:{
+    nameFor: {
       cdata: false,
       comment: false,
       text: '#text'
     },
     separateTextProperty: false,
   },
-  attributes:{
+  attributes: {
     ignore: false,
     booleanType: true,
     entities: true,
@@ -34,19 +34,19 @@ export const defaultOptions = {
   stop: [], //given tagPath will not be parsed. innerXML will be set as string value
   OutputBuilder: new JsObjOutputBuilder(),
 };
-   
-export const buildOptions = function(options) {
-  const finalOptions = { ... defaultOptions};
-  copyProperties(finalOptions,options)
+
+export const buildOptions = function (options) {
+  const finalOptions = { ...defaultOptions };
+  copyProperties(finalOptions, options)
   return finalOptions;
 };
 
 function copyProperties(target, source) {
   for (let key in source) {
-    if (source.hasOwnProperty(key)) {
+    if (Object.prototype.hasOwnProperty.call(source, key)) {
       if (key === 'OutputBuilder') {
         target[key] = source[key];
-      }else if (typeof source[key] === 'object' && !Array.isArray(source[key])) {
+      } else if (typeof source[key] === 'object' && !Array.isArray(source[key])) {
         // Recursively copy nested properties
         if (typeof target[key] === 'undefined') {
           target[key] = {};
