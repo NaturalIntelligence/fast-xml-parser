@@ -1,4 +1,5 @@
-import {XMLParser, XMLBuilder} from "../src/fxp.js";
+import { format } from "path";
+import { XMLParser, XMLBuilder } from "../src/fxp.js";
 
 describe("XMLBuilder", function () {
 
@@ -31,11 +32,11 @@ describe("XMLBuilder", function () {
         }
         const parser = new XMLParser(options);
         let result = parser.parse(XMLdata);
-    // console.log(JSON.stringify(result, null,4));
+        // console.log(JSON.stringify(result, null,4));
 
         const builder = new XMLBuilder(options);
         result = builder.build(result);
-    // console.log(result);
+        // console.log(result);
 
         expect(result).toEqual(expected);
     });
@@ -65,16 +66,16 @@ describe("XMLBuilder", function () {
             preserveOrder: true,
             cdataPropName: "#CDATA",
             allowBooleanAttributes: true,
-    //   format: true,
+            //   format: true,
 
         }
         const parser = new XMLParser(options);
         let result = parser.parse(XMLdata);
-    // console.log(JSON.stringify(result, null,4));
+        // console.log(JSON.stringify(result, null,4));
 
         const builder = new XMLBuilder(options);
         result = builder.build(result);
-    // console.log(result);
+        // console.log(result);
 
         expect(result).toEqual(expected);
     });
@@ -300,7 +301,7 @@ describe("XMLBuilder", function () {
 
         const options = {
             ignoreAttributes: false,
-            isArray: (tagName, jpath, isLeafNode, isAttribute) => { 
+            isArray: (tagName, jpath, isLeafNode, isAttribute) => {
                 if (isLeafNode === true) return true;
             },
             preserveOrder: true
@@ -319,4 +320,33 @@ describe("XMLBuilder", function () {
         // console.log(result);
         expect(result).toEqual(expected);
     });
+
+
+});
+
+describe("XMLBuilder- array processing issue", function () {
+    it("should not throw stack overflow when child value is a non-array (issue #781)", function () {
+        const builder = new XMLBuilder({
+            ignoreAttributes: false,
+            attributeNamePrefix: '@_',
+            preserveOrder: true,
+        });
+        const input = [
+            {
+                'foo': [
+                    { 'bar': [{ '@_V': 'baz' }] },
+                    //{ 'fum': [{ 'qux': '' }] },
+                    { 'hello': [{ '#text': 'world' }] }
+                ]
+            }
+        ];
+        expect(function () {
+            builder.build(input);
+        }).not.toThrow();
+
+        const result = builder.build(input);
+        expect(result).toContain('<hello>world</hello>');
+        expect(result).toContain('<foo>');
+    });
+
 });
