@@ -1,23 +1,21 @@
 <small>Note: If you find missing information about particular minor version, that version must have been changed without any functional change in this library.</small>
 
+Note: Due to some last quick changes on v4, detail of v4.5.3 & v4.5.4 are not updated here. v4.5.4x is the last tag of v4 in github repository. I'm extremely sorry for the confusion
+
 **5.4.1  / 2026-02-25**
 - fix (#785) unpairedTag node should not have tag content
-
 
 **5.4.0  / 2026-02-25**
 - migrate to fast-xml-builder
 
-5.3.9
 **5.3.9 / 2026-02-25**
 - support strictReservedNames 
 
-5.3.8
 **5.3.8 / 2026-02-25**
 - support maxNestedTags 
 - handle non-array input for XML builder when preserveOrder is true (By [Angelo Coetzee](https://github.com/Angelopvtac))
 - save use of js properies
 
-5.3.7
 **5.3.7 / 2026-02-20**
 - fix typings for CJS (By [Corentin Girard](https://github.com/Drarig29))
 
