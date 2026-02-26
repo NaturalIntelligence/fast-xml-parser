@@ -1,5 +1,22 @@
 <small>Note: If you find missing information about particular minor version, that version must have been changed without any functional change in this library.</small>
 
+**4.5.3 / 2026-02-26**
+- support strictReservedNames
+- support captureMetaData
+- support maxNestedTags
+- handle non-array input for XML builder when preserveOrder is true (By Angelo Coetzee)
+- Improve security and performance of entity processing
+  - new options maxEntitySize, maxExpansionDepth, maxTotalExpansions, maxExpandedLength, allowedTags,tagFilter
+  - fast return when no edtity is present
+  - improvement replacement logic to reduce number of calls
+- fix: Escape regex char in entity name
+- fix: handle HTML numeric and hex entities when out of range
+- fix #775: transformTagName with allowBooleanAttributes adds an unnecessary attribute
+- Use Uint8Array in place of Buffer in Parser
+- Support EMPTY and ANY with ELEMENT in DOCTYPE
+- fix: support numeric entities with values over 0xFFFF (#726) (By Marc Durdin)
+
+
 **4.5.2 / 2025-02-18**
 - Fix null CDATA to comply with undefined behavior (#701) (By [Matthieu BOHEAS](https://github.com/Kelgors))
 - Fix(performance): Update check for leaf node in saveTextToParentTag function in OrderedObjParser.js (#707) (By [...](https://github.com/tomingtoming))
