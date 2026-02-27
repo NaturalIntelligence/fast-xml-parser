@@ -7,7 +7,7 @@ Validate XML, Parse XML to JS Object, or Build XML from JS Object without C/C++ 
 <img align="right" src="static/img/fxp_logo.png" width="180px" alt="FXP logo"/>
 
 * Validate XML data syntactically. Use [detailed-xml-validator](https://github.com/NaturalIntelligence/detailed-xml-validator/) to verify business rules.
-* Parse XML to JS Objectand vice versa
+* Parse XML to JS Objects and vice versa
 * Common JS, ESM, and browser compatible
 * Faster than any other pure JS implementation.
 

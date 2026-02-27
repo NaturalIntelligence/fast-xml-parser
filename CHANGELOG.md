@@ -1,5 +1,8 @@
 <small>Note: If you find missing information about particular minor version, that version must have been changed without any functional change in this library.</small>
 
+**5.3.1 / 2025-11-03**
+- Performance improvement for stopNodes (By [Maciek Lamberski](https://github.com/macieklamberski))
+
 **5.3.0 / 2025-10-03**
 - Use `Uint8Array` in place of `Buffer` in Parser
 
