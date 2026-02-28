@@ -1,10 +1,9 @@
-import StringSource from './inputSource/StringSource.js';
-import BufferSource from './inputSource/BufferSource.js';
-import {readTagExp,readClosingTagName} from './XmlPartReader.js';
-import {readComment, readCdata,readDocType,readPiTag} from './XmlSpecialTagsReader.js';
-import TagPath from './TagPath.js';
-import TagPathMatcher from './TagPathMatcher.js';
 import EntitiesParser from './EntitiesParser.js';
+import BufferSource from './inputSource/BufferSource.js';
+import StringSource from './inputSource/StringSource.js';
+import TagPath from './TagPath.js';
+import { readClosingTagName, readTagExp } from './XmlPartReader.js';
+import { readCdata, readComment, readDocType, readPiTag } from './XmlSpecialTagsReader.js';
 
 //To hold the data of current tag
 //This is usually used to compare jpath expression against current tag
@@ -59,13 +58,13 @@ export default class Xml2JsParser {
           
         
           if(nextChar === "!" || nextChar === "?"){
-            this.source.updateBufferBoundary();
+            this.source.updateBufferReadIndex();
             //previously collected text should be added to current node
             this.addTextNode(); 
             
             this.readSpecialTag(nextChar);// Read DOCTYPE, comment, CDATA, PI tag
           }else if(nextChar === "/"){
-            this.source.updateBufferBoundary();
+            this.source.updateBufferReadIndex();
             this.readClosingTag();
             // console.log(this.source.buffer.length, this.source.readable);
             // console.log(this.tagsStack.length);
@@ -76,7 +75,7 @@ export default class Xml2JsParser {
           this.tagTextData += ch;
         }
       }//End While loop
-      if(this.tagsStack.length > 0 || ( this.tagTextData !== "undefined" && this.tagTextData.trimEnd().length > 0) ) throw new Error("Unexpected data in the end of document");
+      if(this.tagsStack.length > 0 || ( this.tagTextData.trim() !== "undefined" && this.tagTextData.trim().length > 0) ) throw new Error("Unexpected data in the end of document");
     }
   
     /**
@@ -113,6 +112,24 @@ export default class Xml2JsParser {
 
       //create new tag
       let tagExp = readTagExp(this, ">" );
+
+      // if the tag is to be skipped, then continue to read until closing tag and return
+      if (this.options.skip.includes(tagExp.tagName)){
+        // console.log(`Skipping tag ${tagExp.tagName}`);
+        while (this.source.canRead()){
+          let ch = this.source.readCh();
+          if (ch === "") break;
+          if(ch === "<"){//tagStart
+            let nextChar = this.source.readChAt(0);
+            if (nextChar === "" ) throw new Error("Unexpected end of source");
+            if(nextChar === "/"){
+              this.source.updateBufferReadIndex();
+              let closeTagName = this.processTagName(readClosingTagName(this.source));
+              if (closeTagName === tagExp.tagName) return;
+            }
+          }
+        }
+      }
       
       // process and skip from tagsStack For unpaired tag, self closing tag, and stop node
       const tagDetail = new TagDetail(tagExp.tagName);

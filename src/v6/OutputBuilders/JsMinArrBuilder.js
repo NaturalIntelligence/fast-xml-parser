@@ -1,4 +1,4 @@
-import {buildOptions,registerCommonValueParsers} from"./ParserOptionsBuilder";
+import { buildOptions, registerCommonValueParsers } from "./ParserOptionsBuilder.js";
 
 export default class OutputBuilder{
   constructor(options){
@@ -15,7 +15,8 @@ export default class OutputBuilder{
   }
 }
 
-import BaseOutputBuilder  from "./BaseOutputBuilder.js";
+import TagPathMatcher from "../TagPathMatcher.js";
+import BaseOutputBuilder from "./BaseOutputBuilder.js";
 const rootName = '^';
 
 class JsMinArrBuilder extends BaseOutputBuilder{
