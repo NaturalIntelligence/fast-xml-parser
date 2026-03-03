@@ -447,7 +447,6 @@ const parseXml = function (xmlData) {
       textData += xmlData[i];
     }
   }
-  // console.log(xmlObj)
   if (xmlObj.child) {
     // count only actual element roots, ignoring processing instructions, comments, doctype, CDATA, etc.
     const rootItems = xmlObj.child.filter(item => {
