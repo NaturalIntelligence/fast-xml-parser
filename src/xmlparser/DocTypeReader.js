@@ -7,8 +7,9 @@ export default class DocTypeReader {
     }
 
     readDocType(xmlData, i) {
-
         const entities = Object.create(null);
+        let entityCount = 0;
+
         if (xmlData[i + 3] === 'O' &&
             xmlData[i + 4] === 'C' &&
             xmlData[i + 5] === 'T' &&
@@ -26,11 +27,19 @@ export default class DocTypeReader {
                         let entityName, val;
                         [entityName, val, i] = this.readEntityExp(xmlData, i + 1, this.suppressValidationErr);
                         if (val.indexOf("&") === -1) { //Parameter entities are not supported
+                            if (this.options.enabled !== false &&
+                                this.options.maxEntityCount &&
+                                entityCount >= this.options.maxEntityCount) {
+                                throw new Error(
+                                    `Entity count (${entityCount + 1}) exceeds maximum allowed (${this.options.maxEntityCount})`
+                                );
+                            }
                             const escaped = entityName.replace(/[.\-+*:]/g, '\\.');
                             entities[entityName] = {
                                 regx: RegExp(`&${escaped};`, "g"),
                                 val: val
                             };
+                            entityCount++;
                         }
                     }
                     else if (hasBody && hasSeq(xmlData, "!ELEMENT", i)) {

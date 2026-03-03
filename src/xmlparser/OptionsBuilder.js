@@ -56,6 +56,7 @@ function normalizeProcessEntities(value) {
       maxExpansionDepth: 10,
       maxTotalExpansions: 1000,
       maxExpandedLength: 100000,
+      maxEntityCount: 100,
       allowedTags: null,
       tagFilter: null
     };
@@ -69,6 +70,7 @@ function normalizeProcessEntities(value) {
       maxExpansionDepth: value.maxExpansionDepth ?? 10,
       maxTotalExpansions: value.maxTotalExpansions ?? 1000,
       maxExpandedLength: value.maxExpandedLength ?? 100000,
+      maxEntityCount: value.maxEntityCount ?? 100,
       allowedTags: value.allowedTags ?? null,
       tagFilter: value.tagFilter ?? null
     };

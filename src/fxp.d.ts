@@ -35,6 +35,13 @@ export type ProcessEntitiesOptions = {
   maxExpandedLength?: number;
 
   /**
+   * Maximum number of entities allowed in the XML
+   * 
+   * Defaults to `100`
+   */
+  maxEntityCount?: number;
+
+  /**
    * Array of tag names where entity replacement is allowed.
    * If null, entities are replaced in all tags.
    * 
