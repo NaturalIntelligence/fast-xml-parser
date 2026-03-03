@@ -40,6 +40,7 @@ export const defaultOptions = {
   captureMetaData: false,
   maxNestedTags: 100,
   strictReservedNames: true,
+  multipleRoots: false, //if true, it will parse multiple root level tags and return an array of objects. If false, it will throw error if there are multiple root level tags
 };
 
 /**
