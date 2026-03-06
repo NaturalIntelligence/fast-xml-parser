@@ -451,7 +451,7 @@ describe("XMLParser", function() {
         };
 
         const options = {
-
+            multipleRoots: true
         };
         const parser = new XMLParser(options);
         let result = parser.parse(xmlData);

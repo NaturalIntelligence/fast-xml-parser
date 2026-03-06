@@ -447,6 +447,25 @@ const parseXml = function (xmlData) {
       textData += xmlData[i];
     }
   }
+  if (xmlObj.child) {
+    // count only actual element roots, ignoring processing instructions, comments, doctype, CDATA, etc.
+    const rootItems = xmlObj.child.filter(item => {
+      const tag = Object.keys(item)[0];
+      // ignore declarations and PIs that start with '?', comments, doctype and cdata
+      if (tag.startsWith('?') || tag.startsWith('!--') || tag.startsWith('!D') || tag.startsWith('![') || tag.startsWith(this.options.commentPropName) || tag.startsWith(this.options.cdataPropName)) {
+        return false;
+      }
+
+      return true;
+    });
+    
+    if (rootItems.length > 1 && !this.options.multipleRoots) {
+      throw new Error(
+        "Multiple root tags found. Root tags: " +
+          rootItems.map(t => Object.keys(t)[0]).join(", ")
+      );
+    }
+  }
   return xmlObj.child;
 }
 
