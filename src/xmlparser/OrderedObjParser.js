@@ -238,18 +238,15 @@ const parseXml = function (xmlData) {
         }
 
         //check if last tag of nested tag was unpaired tag
-        const lastTagName = jPath.substring(jPath.lastIndexOf(".") + 1);
+        const lastTagName = currentNode ? currentNode.tagname : "";
         if (tagName && this.options.unpairedTags.indexOf(tagName) !== -1) {
           throw new Error(`Unpaired tag can not be used as closing tag: </${tagName}>`);
         }
-        let propIndex = 0
         if (lastTagName && this.options.unpairedTags.indexOf(lastTagName) !== -1) {
-          propIndex = jPath.lastIndexOf('.', jPath.lastIndexOf('.') - 1)
+          jPath = popTagFromJPath(jPath, lastTagName);
           this.tagsNodeStack.pop();
-        } else {
-          propIndex = jPath.lastIndexOf(".");
         }
-        jPath = jPath.substring(0, propIndex);
+        jPath = popTagFromJPath(jPath, tagName);
 
         currentNode = this.tagsNodeStack.pop();//avoid recursion, set the parent tag scope
         textData = "";
@@ -342,7 +339,7 @@ const parseXml = function (xmlData) {
         const lastTag = currentNode;
         if (lastTag && this.options.unpairedTags.indexOf(lastTag.tagname) !== -1) {
           currentNode = this.tagsNodeStack.pop();
-          jPath = jPath.substring(0, jPath.lastIndexOf("."));
+          jPath = popTagFromJPath(jPath, lastTag.tagname);
         }
         if (tagName !== xmlObj.tagname) {
           jPath += jPath ? "." + tagName : tagName;
@@ -384,7 +381,7 @@ const parseXml = function (xmlData) {
             tagContent = this.parseTextData(tagContent, tagName, jPath, true, attrExpPresent, true, true);
           }
 
-          jPath = jPath.substr(0, jPath.lastIndexOf("."));
+          jPath = popTagFromJPath(jPath, tagName);
           childNode.add(this.options.textNodeName, tagContent);
 
           this.addChild(currentNode, childNode, jPath, startIndex);
@@ -412,7 +409,7 @@ const parseXml = function (xmlData) {
               childNode[":@"] = this.buildAttributesMap(tagExp, jPath, tagName);
             }
             this.addChild(currentNode, childNode, jPath, startIndex);
-            jPath = jPath.substr(0, jPath.lastIndexOf("."));
+            jPath = popTagFromJPath(jPath, tagName);
           }
           else if(this.options.unpairedTags.indexOf(tagName) !== -1){//unpaired tag
             const childNode = new xmlNode(tagName);
@@ -420,7 +417,7 @@ const parseXml = function (xmlData) {
               childNode[":@"] = this.buildAttributesMap(tagExp, jPath);
             }
             this.addChild(currentNode, childNode, jPath, startIndex);
-            jPath = jPath.substr(0, jPath.lastIndexOf("."));
+            jPath = popTagFromJPath(jPath, tagName);
             i = result.closeIndex;
             // Continue to next iteration without changing currentNode
             continue;
@@ -716,6 +713,16 @@ function parseValue(val, shouldParse, options) {
       return '';
     }
   }
+}
+
+/**
+ * Remove the last tag name from jPath.
+ * Since jPath is built by appending "." + tagName, we reverse it
+ * using the known tag name length rather than searching for "."
+ * which would break when tag names themselves contain dots.
+ */
+function popTagFromJPath(jPath, tagName) {
+  return jPath.substring(0, jPath.length - tagName.length - 1);
 }
 
 function fromCodePoint(str, base, prefix) {
