@@ -448,11 +448,38 @@ describe("XMLParser StopNodes", function () {
     }
     const parser = new XMLParser(options);
     // console.log(JSON.stringify(parser.parse(xml)));
-    
+
     let result = parser.parse(xmlData);
 
     // console.log(JSON.stringify(result,null,4));
     expect(result).toEqual(expected);
 
+  });
+  it("should preserve text content as string, not parse as number/boolean (#795)", function() {
+    const parser = new XMLParser({ stopNodes: ["*.a"] });
+
+    // Numeric string should remain string
+    let result = parser.parse("<a>6</a>");
+    expect(result).toEqual({ "a": "6" });
+    expect(typeof result.a).toBe("string");
+
+    // Boolean string should remain string
+    result = parser.parse("<a>true</a>");
+    expect(result).toEqual({ "a": "true" });
+    expect(typeof result.a).toBe("string");
+
+    result = parser.parse("<a>false</a>");
+    expect(result).toEqual({ "a": "false" });
+    expect(typeof result.a).toBe("string");
+
+    // Negative/decimal numbers should remain string
+    result = parser.parse("<a>-123.45</a>");
+    expect(result).toEqual({ "a": "-123.45" });
+    expect(typeof result.a).toBe("string");
+
+    // Scientific notation should remain string
+    result = parser.parse("<a>1e10</a>");
+    expect(result).toEqual({ "a": "1e10" });
+    expect(typeof result.a).toBe("string");
   });
 });
