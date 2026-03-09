@@ -26,3 +26,6 @@ try {
 - Don't let user to inject any malicious code or information
 - Don't leak any sensitive information like server detail, user data, app data etc.
 
+---
+
+v6 is an experimental release and has no impact on main app. This might be separated soon. Vulenrability on this might not be accepted.
