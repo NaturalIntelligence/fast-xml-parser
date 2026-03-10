@@ -35,7 +35,7 @@ export default class XMLParser {
         orderedObjParser.addExternalEntities(this.externalEntities);
         const orderedResult = orderedObjParser.parseXml(xmlData);
         if (this.options.preserveOrder || orderedResult === undefined) return orderedResult;
-        else return prettify(orderedResult, this.options);
+        else return prettify(orderedResult, this.options, orderedObjParser.matcher);
     }
 
     /**

@@ -152,13 +152,14 @@ Bundle size
       <a href="./docs/v3/docs.md">documents</a>
     </td>
     <td><ol>
-      <li><a href="./docs/v4/1.GettingStarted.md">Getting Started</a></li>
-      <li><a href="./docs/v4/2.XMLparseOptions.md">XML Parser</a></li>
-      <li><a href="./docs/v4/3.XMLBuilder.md">XML Builder</a></li>
-      <li><a href="./docs/v4/4.XMLValidator.md">XML Validator</a></li>
-      <li><a href="./docs/v4/5.Entities.md">Entities</a></li>
-      <li><a href="./docs/v4/6.HTMLParsing.md">HTML Document Parsing</a></li>
-      <li><a href="./docs/v4/7.PITags.md">PI Tag processing</a></li>
+      <li><a href="./docs/v4,v5/1.GettingStarted.md">Getting Started</a></li>
+      <li><a href="./docs/v4,v5/2.XMLparseOptions.md">XML Parser</a></li>
+      <li><a href="./docs/v4,v5/3.XMLBuilder.md">XML Builder</a></li>
+      <li><a href="./docs/v4,v5/4.XMLValidator.md">XML Validator</a></li>
+      <li><a href="./docs/v4,v5/5.Entities.md">Entities</a></li>
+      <li><a href="./docs/v4,v5/6.HTMLParsing.md">HTML Document Parsing</a></li>
+      <li><a href="./docs/v4,v5/7.PITags.md">PI Tag processing</a></li>
+      <li><a href="./docs/v4,v5/8.PathExpression.md">Path Expression</a></li>
     </ol></td>
     <td><ol>
       <li></li><a href="./docs/v6/1.GettingStarted.md">Getting Started</a></li>

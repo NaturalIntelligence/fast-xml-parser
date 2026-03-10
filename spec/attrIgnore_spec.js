@@ -84,11 +84,15 @@ describe("XMLParser", function () {
 
         const options = {
             attributeNamePrefix: "$",
-            ignoreAttributes: (aName, jPath) => aName.startsWith('ns:') || jPath === 'tag.tag2',
+            ignoreAttributes: (aName, jPath) => {
+                // console.log(aName, jPath);
+                return aName.startsWith('ns:') || jPath === 'tag.tag2'
+            },
             parseAttributeValue: true
         };
         const parser = new XMLParser(options);
-        expect(parser.parse(xmlData)).toEqual({
+        const result = parser.parse(xmlData);
+        expect(result).toEqual({
             tag: {
                 '$ns2:attr3': 'a3-value',
                 '$ns2:attr4': 'a4-value',
@@ -96,6 +100,7 @@ describe("XMLParser", function () {
             },
         })
 
+        // console.log(JSON.stringify(result, null, 4));
         expect(XMLValidator.validate(xmlData)).toBe(true);
     })
 })

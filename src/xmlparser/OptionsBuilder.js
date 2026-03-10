@@ -40,6 +40,7 @@ export const defaultOptions = {
   captureMetaData: false,
   maxNestedTags: 100,
   strictReservedNames: true,
+  jPath: true, // if true, pass jPath string to callbacks; if false, pass matcher instance
 };
 
 /**
@@ -85,6 +86,18 @@ export const buildOptions = function (options) {
 
   // Always normalize processEntities for backward compatibility and validation
   built.processEntities = normalizeProcessEntities(built.processEntities);
+
+  // Convert old-style stopNodes for backward compatibility
+  if (built.stopNodes && Array.isArray(built.stopNodes)) {
+    built.stopNodes = built.stopNodes.map(node => {
+      if (typeof node === 'string' && node.startsWith('*.')) {
+        // Old syntax: *.tagname meant "tagname anywhere"
+        // Convert to new syntax: ..tagname
+        return '..' + node.substring(2);
+      }
+      return node;
+    });
+  }
   //console.debug(built.processEntities)
   return built;
 };

@@ -1,11 +1,11 @@
 
-import {XMLParser, XMLBuilder} from "../src/fxp.js";
+import { XMLParser, XMLBuilder } from "../src/fxp.js";
 
-describe("XMLParser", function() {
+describe("XMLParser", function () {
 
-    it("should parse HTML with basic entities, <pre>, <script>, <br>", function() {
-      Object.prototype.something = 'strange';
-      const html = `
+  it("should parse HTML with basic entities, <pre>, <script>, <br>", function () {
+    Object.prototype.something = 'strange';
+    const html = `
         <html lang="en">
             <head>
                 <script>
@@ -52,31 +52,31 @@ describe("XMLParser", function() {
             </body>
         </html>`;
 
-const parsingOptions = {
-    ignoreAttributes: false,
-    preserveOrder: true,
-    unpairedTags: ["hr", "br", "link", "meta"],
-    stopNodes : [ "*.pre", "*.script"],
-    processEntities: true,
-    htmlEntities: true,
-    
-  };
-  const parser = new XMLParser(parsingOptions);
-  let result = parser.parse(html);
-//   console.log(JSON.stringify(result, null,4));
+    const parsingOptions = {
+      ignoreAttributes: false,
+      preserveOrder: true,
+      unpairedTags: ["hr", "br", "link", "meta"],
+      stopNodes: ["..pre", "..script"],
+      processEntities: true,
+      htmlEntities: true,
 
-  const builderOptions = {
-    ignoreAttributes: false,
-    format: true,
-    preserveOrder: true,
-    suppressEmptyNode: false,
-    unpairedTags: ["hr", "br", "link", "meta"],
-    stopNodes : [ "*.pre", "*.script"],
-  }
-  const builder = new XMLBuilder(builderOptions);
-  let output = builder.build(result);
-//   console.log(output);
-    output = output.replace('₹','&inr;');
-  expect(output.replace(/\s+/g, "")).toEqual(html.replace(/\s+/g, ""));
-    });
+    };
+    const parser = new XMLParser(parsingOptions);
+    let result = parser.parse(html);
+    //   console.log(JSON.stringify(result, null,4));
+
+    const builderOptions = {
+      ignoreAttributes: false,
+      format: true,
+      preserveOrder: true,
+      suppressEmptyNode: false,
+      unpairedTags: ["hr", "br", "link", "meta"],
+      stopNodes: ["*.pre", "*.script"],
+    }
+    const builder = new XMLBuilder(builderOptions);
+    let output = builder.build(result);
+    //   console.log(output);
+    output = output.replace('₹', '&inr;');
+    expect(output.replace(/\s+/g, "")).toEqual(html.replace(/\s+/g, ""));
+  });
 });

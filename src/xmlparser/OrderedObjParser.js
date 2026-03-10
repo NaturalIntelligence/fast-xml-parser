@@ -6,6 +6,8 @@ import xmlNode from './xmlNode.js';
 import DocTypeReader from './DocTypeReader.js';
 import toNumber from "strnum";
 import getIgnoreAttributesFn from "../ignoreAttributes.js";
+import { Expression, Matcher } from 'path-expression-matcher';
+
 
 // const regx =
 //   '<((!\\[CDATA\\[([\\s\\S]*?)(]]>))|((NAME:)?(NAME))([^>]*)>|((\\/)(NAME)\\s*>))([^<]*)'
@@ -13,6 +15,57 @@ import getIgnoreAttributesFn from "../ignoreAttributes.js";
 
 //const tagsRegx = new RegExp("<(\\/?[\\w:\\-\._]+)([^>]*)>(\\s*"+cdataRegx+")*([^<]+)?","g");
 //const tagsRegx = new RegExp("<(\\/?)((\\w*:)?([\\w:\\-\._]+))([^>]*)>([^<]*)("+cdataRegx+"([^<]*))*([^<]+)?","g");
+
+// Helper functions for attribute and namespace handling
+
+/**
+ * Extract raw attributes (without prefix) from prefixed attribute map
+ * @param {object} prefixedAttrs - Attributes with prefix from buildAttributesMap
+ * @param {object} options - Parser options containing attributeNamePrefix
+ * @returns {object} Raw attributes for matcher
+ */
+function extractRawAttributes(prefixedAttrs, options) {
+  if (!prefixedAttrs) return {};
+
+  // Handle attributesGroupName option
+  const attrs = options.attributesGroupName
+    ? prefixedAttrs[options.attributesGroupName]
+    : prefixedAttrs;
+
+  if (!attrs) return {};
+
+  const rawAttrs = {};
+  for (const key in attrs) {
+    // Remove the attribute prefix to get raw name
+    if (key.startsWith(options.attributeNamePrefix)) {
+      const rawName = key.substring(options.attributeNamePrefix.length);
+      rawAttrs[rawName] = attrs[key];
+    } else {
+      // Attribute without prefix (shouldn't normally happen, but be safe)
+      rawAttrs[key] = attrs[key];
+    }
+  }
+  return rawAttrs;
+}
+
+/**
+ * Extract namespace from raw tag name
+ * @param {string} rawTagName - Tag name possibly with namespace (e.g., "soap:Envelope")
+ * @returns {string|undefined} Namespace or undefined
+ */
+function extractNamespace(rawTagName) {
+  if (!rawTagName || typeof rawTagName !== 'string') return undefined;
+
+  const colonIndex = rawTagName.indexOf(':');
+  if (colonIndex !== -1 && colonIndex > 0) {
+    const ns = rawTagName.substring(0, colonIndex);
+    // Don't treat xmlns as a namespace
+    if (ns !== 'xmlns') {
+      return ns;
+    }
+  }
+  return undefined;
+}
 
 export default class OrderedObjParser {
   constructor(options) {
@@ -58,16 +111,23 @@ export default class OrderedObjParser {
     this.entityExpansionCount = 0;
     this.currentExpandedLength = 0;
 
+    // Initialize path matcher for path-expression-matcher
+    this.matcher = new Matcher();
+
+    // Flag to track if current node is a stop node (optimization)
+    this.isCurrentNodeStopNode = false;
+
+    // Pre-compile stopNodes expressions
     if (this.options.stopNodes && this.options.stopNodes.length > 0) {
-      this.stopNodesExact = new Set();
-      this.stopNodesWildcard = new Set();
+      this.stopNodeExpressions = [];
       for (let i = 0; i < this.options.stopNodes.length; i++) {
         const stopNodeExp = this.options.stopNodes[i];
-        if (typeof stopNodeExp !== 'string') continue;
-        if (stopNodeExp.startsWith("*.")) {
-          this.stopNodesWildcard.add(stopNodeExp.substring(2));
-        } else {
-          this.stopNodesExact.add(stopNodeExp);
+        if (typeof stopNodeExp === 'string') {
+          // Convert string to Expression object
+          this.stopNodeExpressions.push(new Expression(stopNodeExp));
+        } else if (stopNodeExp instanceof Expression) {
+          // Already an Expression object
+          this.stopNodeExpressions.push(stopNodeExp);
         }
       }
     }
@@ -90,7 +150,7 @@ function addExternalEntities(externalEntities) {
 /**
  * @param {string} val
  * @param {string} tagName
- * @param {string} jPath
+ * @param {string|Matcher} jPath - jPath string or Matcher instance based on options.jPath
  * @param {boolean} dontTrim
  * @param {boolean} hasAttributes
  * @param {boolean} isLeafNode
@@ -104,7 +164,9 @@ function parseTextData(val, tagName, jPath, dontTrim, hasAttributes, isLeafNode,
     if (val.length > 0) {
       if (!escapeEntities) val = this.replaceEntitiesValue(val, tagName, jPath);
 
-      const newval = this.options.tagValueProcessor(tagName, val, jPath, hasAttributes, isLeafNode);
+      // Pass jPath string or matcher based on options.jPath setting
+      const jPathOrMatcher = this.options.jPath ? jPath.toString() : jPath;
+      const newval = this.options.tagValueProcessor(tagName, val, jPathOrMatcher, hasAttributes, isLeafNode);
       if (newval === null || newval === undefined) {
         //don't parse
         return val;
@@ -151,13 +213,42 @@ function buildAttributesMap(attrStr, jPath, tagName) {
     const matches = getAllMatches(attrStr, attrsRegx);
     const len = matches.length; //don't make it inline
     const attrs = {};
+
+    // First pass: parse all attributes and update matcher with raw values
+    // This ensures the matcher has all attribute values when processors run
+    const rawAttrsForMatcher = {};
     for (let i = 0; i < len; i++) {
       const attrName = this.resolveNameSpace(matches[i][1]);
-      if (this.ignoreAttributesFn(attrName, jPath)) {
+      const oldVal = matches[i][4];
+
+      if (attrName.length && oldVal !== undefined) {
+        let parsedVal = oldVal;
+        if (this.options.trimValues) {
+          parsedVal = parsedVal.trim();
+        }
+        parsedVal = this.replaceEntitiesValue(parsedVal, tagName, jPath);
+        rawAttrsForMatcher[attrName] = parsedVal;
+      }
+    }
+
+    // Update matcher with raw attribute values BEFORE running processors
+    if (Object.keys(rawAttrsForMatcher).length > 0 && typeof jPath === 'object' && jPath.updateCurrent) {
+      jPath.updateCurrent(rawAttrsForMatcher);
+    }
+
+    // Second pass: now process attributes with matcher having full attribute context
+    for (let i = 0; i < len; i++) {
+      const attrName = this.resolveNameSpace(matches[i][1]);
+
+      // Convert jPath to string if needed for ignoreAttributesFn
+      const jPathStr = this.options.jPath ? jPath.toString() : jPath;
+      if (this.ignoreAttributesFn(attrName, jPathStr)) {
         continue
       }
+
       let oldVal = matches[i][4];
       let aName = this.options.attributeNamePrefix + attrName;
+
       if (attrName.length) {
         if (this.options.transformAttributeName) {
           aName = this.options.transformAttributeName(aName);
@@ -169,7 +260,10 @@ function buildAttributesMap(attrStr, jPath, tagName) {
             oldVal = oldVal.trim();
           }
           oldVal = this.replaceEntitiesValue(oldVal, tagName, jPath);
-          const newVal = this.options.attributeValueProcessor(attrName, oldVal, jPath);
+
+          // Pass jPath string or matcher based on options.jPath setting
+          const jPathOrMatcher = this.options.jPath ? jPath.toString() : jPath;
+          const newVal = this.options.attributeValueProcessor(attrName, oldVal, jPathOrMatcher);
           if (newVal === null || newVal === undefined) {
             //don't parse
             attrs[aName] = oldVal;
@@ -189,6 +283,7 @@ function buildAttributesMap(attrStr, jPath, tagName) {
         }
       }
     }
+
     if (!Object.keys(attrs).length) {
       return;
     }
@@ -206,7 +301,9 @@ const parseXml = function (xmlData) {
   const xmlObj = new xmlNode('!xml');
   let currentNode = xmlObj;
   let textData = "";
-  let jPath = "";
+
+  // Reset matcher for new document
+  this.matcher.reset();
 
   // Reset entity expansion counters for this document
   this.entityExpansionCount = 0;
@@ -234,22 +331,22 @@ const parseXml = function (xmlData) {
         }
 
         if (currentNode) {
-          textData = this.saveTextToParentTag(textData, currentNode, jPath);
+          textData = this.saveTextToParentTag(textData, currentNode, this.matcher);
         }
 
         //check if last tag of nested tag was unpaired tag
-        const lastTagName = jPath.substring(jPath.lastIndexOf(".") + 1);
+        const lastTagName = this.matcher.getCurrentTag();
         if (tagName && this.options.unpairedTags.indexOf(tagName) !== -1) {
           throw new Error(`Unpaired tag can not be used as closing tag: </${tagName}>`);
         }
-        let propIndex = 0
         if (lastTagName && this.options.unpairedTags.indexOf(lastTagName) !== -1) {
-          propIndex = jPath.lastIndexOf('.', jPath.lastIndexOf('.') - 1)
+          // Pop the unpaired tag
+          this.matcher.pop();
           this.tagsNodeStack.pop();
-        } else {
-          propIndex = jPath.lastIndexOf(".");
         }
-        jPath = jPath.substring(0, propIndex);
+        // Pop the closing tag
+        this.matcher.pop();
+        this.isCurrentNodeStopNode = false; // Reset flag when closing tag
 
         currentNode = this.tagsNodeStack.pop();//avoid recursion, set the parent tag scope
         textData = "";
@@ -259,7 +356,7 @@ const parseXml = function (xmlData) {
         let tagData = readTagExp(xmlData, i, false, "?>");
         if (!tagData) throw new Error("Pi Tag is not closed.");
 
-        textData = this.saveTextToParentTag(textData, currentNode, jPath);
+        textData = this.saveTextToParentTag(textData, currentNode, this.matcher);
         if ((this.options.ignoreDeclaration && tagData.tagName === "?xml") || this.options.ignorePiTags) {
           //do nothing
         } else {
@@ -268,9 +365,9 @@ const parseXml = function (xmlData) {
           childNode.add(this.options.textNodeName, "");
 
           if (tagData.tagName !== tagData.tagExp && tagData.attrExpPresent) {
-            childNode[":@"] = this.buildAttributesMap(tagData.tagExp, jPath, tagData.tagName);
+            childNode[":@"] = this.buildAttributesMap(tagData.tagExp, this.matcher, tagData.tagName);
           }
-          this.addChild(currentNode, childNode, jPath, i);
+          this.addChild(currentNode, childNode, this.matcher, i);
         }
 
 
@@ -280,7 +377,7 @@ const parseXml = function (xmlData) {
         if (this.options.commentPropName) {
           const comment = xmlData.substring(i + 4, endIndex - 2);
 
-          textData = this.saveTextToParentTag(textData, currentNode, jPath);
+          textData = this.saveTextToParentTag(textData, currentNode, this.matcher);
 
           currentNode.add(this.options.commentPropName, [{ [this.options.textNodeName]: comment }]);
         }
@@ -293,9 +390,9 @@ const parseXml = function (xmlData) {
         const closeIndex = findClosingIndex(xmlData, "]]>", i, "CDATA is not closed.") - 2;
         const tagExp = xmlData.substring(i + 9, closeIndex);
 
-        textData = this.saveTextToParentTag(textData, currentNode, jPath);
+        textData = this.saveTextToParentTag(textData, currentNode, this.matcher);
 
-        let val = this.parseTextData(tagExp, currentNode.tagname, jPath, true, false, true, true);
+        let val = this.parseTextData(tagExp, currentNode.tagname, this.matcher, true, false, true, true);
         if (val == undefined) val = "";
 
         //cdata should be set even if it is 0 length string
@@ -308,6 +405,14 @@ const parseXml = function (xmlData) {
         i = closeIndex + 2;
       } else {//Opening tag
         let result = readTagExp(xmlData, i, this.options.removeNSPrefix);
+
+        // Safety check: readTagExp can return undefined
+        if (!result) {
+          // Log context for debugging
+          const context = xmlData.substring(Math.max(0, i - 50), Math.min(xmlData.length, i + 50));
+          throw new Error(`readTagExp returned undefined at position ${i}. Context: "${context}"`);
+        }
+
         let tagName = result.tagName;
         const rawTagName = result.rawTagName;
         let tagExp = result.tagExp;
@@ -334,7 +439,7 @@ const parseXml = function (xmlData) {
         if (currentNode && textData) {
           if (currentNode.tagname !== '!xml') {
             //when nested tag is found
-            textData = this.saveTextToParentTag(textData, currentNode, jPath, false);
+            textData = this.saveTextToParentTag(textData, currentNode, this.matcher, false);
           }
         }
 
@@ -342,28 +447,65 @@ const parseXml = function (xmlData) {
         const lastTag = currentNode;
         if (lastTag && this.options.unpairedTags.indexOf(lastTag.tagname) !== -1) {
           currentNode = this.tagsNodeStack.pop();
-          jPath = jPath.substring(0, jPath.lastIndexOf("."));
+          this.matcher.pop();
         }
+
+        // Clean up self-closing syntax BEFORE processing attributes
+        // This is where tagExp gets the trailing / removed
+        let isSelfClosing = false;
+        if (tagExp.length > 0 && tagExp.lastIndexOf("/") === tagExp.length - 1) {
+          isSelfClosing = true;
+          if (tagName[tagName.length - 1] === "/") {
+            tagName = tagName.substr(0, tagName.length - 1);
+            tagExp = tagName;
+          } else {
+            tagExp = tagExp.substr(0, tagExp.length - 1);
+          }
+
+          // Re-check attrExpPresent after cleaning
+          attrExpPresent = (tagName !== tagExp);
+        }
+
+        // Now process attributes with CLEAN tagExp (no trailing /)
+        let prefixedAttrs = null;
+        let rawAttrs = {};
+        let namespace = undefined;
+
+        // Extract namespace from rawTagName
+        namespace = extractNamespace(rawTagName);
+
+        // Push tag to matcher FIRST (with empty attrs for now) so callbacks see correct path
         if (tagName !== xmlObj.tagname) {
-          jPath += jPath ? "." + tagName : tagName;
+          this.matcher.push(tagName, {}, namespace);
         }
+
+        // Now build attributes - callbacks will see correct matcher state
+        if (tagName !== tagExp && attrExpPresent) {
+          // Build attributes (returns prefixed attributes for the tree)
+          // Note: buildAttributesMap now internally updates the matcher with raw attributes
+          prefixedAttrs = this.buildAttributesMap(tagExp, this.matcher, tagName);
+
+          if (prefixedAttrs) {
+            // Extract raw attributes (without prefix) for our use
+            rawAttrs = extractRawAttributes(prefixedAttrs, this.options);
+          }
+        }
+
+        // Now check if this is a stop node (after attributes are set)
+        if (tagName !== xmlObj.tagname) {
+          this.isCurrentNodeStopNode = this.isItStopNode(this.stopNodeExpressions, this.matcher);
+        }
+
         const startIndex = i;
-        if (this.isItStopNode(this.stopNodesExact, this.stopNodesWildcard, jPath, tagName)) {
+        if (this.isCurrentNodeStopNode) {
           let tagContent = "";
-          //self-closing tag
-          if (tagExp.length > 0 && tagExp.lastIndexOf("/") === tagExp.length - 1) {
-            if (tagName[tagName.length - 1] === "/") { //remove trailing '/'
-              tagName = tagName.substr(0, tagName.length - 1);
-              jPath = jPath.substr(0, jPath.length - 1);
-              tagExp = tagName;
-            } else {
-              tagExp = tagExp.substr(0, tagExp.length - 1);
-            }
+
+          // For self-closing tags, content is empty
+          if (isSelfClosing) {
             i = result.closeIndex;
           }
           //unpaired tag
           else if (this.options.unpairedTags.indexOf(tagName) !== -1) {
-
             i = result.closeIndex;
           }
           //normal tag
@@ -377,28 +519,20 @@ const parseXml = function (xmlData) {
 
           const childNode = new xmlNode(tagName);
 
-          if (tagName !== tagExp && attrExpPresent) {
-            childNode[":@"] = this.buildAttributesMap(tagExp, jPath, tagName);
-          }
-          if (tagContent) {
-            tagContent = this.parseTextData(tagContent, tagName, jPath, true, attrExpPresent, true, true);
+          if (prefixedAttrs) {
+            childNode[":@"] = prefixedAttrs;
           }
 
-          jPath = jPath.substr(0, jPath.lastIndexOf("."));
+          // For stop nodes, store raw content as-is without any processing
           childNode.add(this.options.textNodeName, tagContent);
 
-          this.addChild(currentNode, childNode, jPath, startIndex);
+          this.matcher.pop(); // Pop the stop node tag
+          this.isCurrentNodeStopNode = false; // Reset flag
+
+          this.addChild(currentNode, childNode, this.matcher, startIndex);
         } else {
           //selfClosing tag
-          if (tagExp.length > 0 && tagExp.lastIndexOf("/") === tagExp.length - 1) {
-            if (tagName[tagName.length - 1] === "/") { //remove trailing '/'
-              tagName = tagName.substr(0, tagName.length - 1);
-              jPath = jPath.substr(0, jPath.length - 1);
-              tagExp = tagName;
-            } else {
-              tagExp = tagExp.substr(0, tagExp.length - 1);
-            }
-
+          if (isSelfClosing) {
             if (this.options.transformTagName) {
               const newTagName = this.options.transformTagName(tagName);
               if (tagExp === tagName) {
@@ -408,19 +542,21 @@ const parseXml = function (xmlData) {
             }
 
             const childNode = new xmlNode(tagName);
-            if (tagName !== tagExp && attrExpPresent) {
-              childNode[":@"] = this.buildAttributesMap(tagExp, jPath, tagName);
+            if (prefixedAttrs) {
+              childNode[":@"] = prefixedAttrs;
             }
-            this.addChild(currentNode, childNode, jPath, startIndex);
-            jPath = jPath.substr(0, jPath.lastIndexOf("."));
+            this.addChild(currentNode, childNode, this.matcher, startIndex);
+            this.matcher.pop(); // Pop self-closing tag
+            this.isCurrentNodeStopNode = false; // Reset flag
           }
-          else if(this.options.unpairedTags.indexOf(tagName) !== -1){//unpaired tag
+          else if (this.options.unpairedTags.indexOf(tagName) !== -1) {//unpaired tag
             const childNode = new xmlNode(tagName);
-            if(tagName !== tagExp && attrExpPresent){
-              childNode[":@"] = this.buildAttributesMap(tagExp, jPath);
+            if (prefixedAttrs) {
+              childNode[":@"] = prefixedAttrs;
             }
-            this.addChild(currentNode, childNode, jPath, startIndex);
-            jPath = jPath.substr(0, jPath.lastIndexOf("."));
+            this.addChild(currentNode, childNode, this.matcher, startIndex);
+            this.matcher.pop(); // Pop unpaired tag
+            this.isCurrentNodeStopNode = false; // Reset flag
             i = result.closeIndex;
             // Continue to next iteration without changing currentNode
             continue;
@@ -433,10 +569,10 @@ const parseXml = function (xmlData) {
             }
             this.tagsNodeStack.push(currentNode);
 
-            if (tagName !== tagExp && attrExpPresent) {
-              childNode[":@"] = this.buildAttributesMap(tagExp, jPath, tagName);
+            if (prefixedAttrs) {
+              childNode[":@"] = prefixedAttrs;
             }
-            this.addChild(currentNode, childNode, jPath, startIndex);
+            this.addChild(currentNode, childNode, this.matcher, startIndex);
             currentNode = childNode;
           }
           textData = "";
@@ -450,10 +586,13 @@ const parseXml = function (xmlData) {
   return xmlObj.child;
 }
 
-function addChild(currentNode, childNode, jPath, startIndex) {
+function addChild(currentNode, childNode, matcher, startIndex) {
   // unset startIndex if not requested
   if (!this.options.captureMetaData) startIndex = undefined;
-  const result = this.options.updateTag(childNode.tagname, jPath, childNode[":@"])
+
+  // Pass jPath string or matcher based on options.jPath setting
+  const jPathOrMatcher = this.options.jPath ? matcher.toString() : matcher;
+  const result = this.options.updateTag(childNode.tagname, jPathOrMatcher, childNode[":@"])
   if (result === false) {
     //do nothing
   } else if (typeof result === "string") {
@@ -464,27 +603,34 @@ function addChild(currentNode, childNode, jPath, startIndex) {
   }
 }
 
-const replaceEntitiesValue = function (val, tagName, jPath) {
-  // Performance optimization: Early return if no entities to replace
-  if (val.indexOf('&') === -1) {
-    return val;
-  }
-
+/**
+ * @param {object} val - Entity object with regex and val properties
+ * @param {string} tagName - Tag name
+ * @param {string|Matcher} jPath - jPath string or Matcher instance based on options.jPath
+ */
+function replaceEntitiesValue(val, tagName, jPath) {
   const entityConfig = this.options.processEntities;
 
-  if (!entityConfig.enabled) {
+  if (!entityConfig || !entityConfig.enabled) {
     return val;
   }
 
-  // Check tag-specific filtering
+  // Check if tag is allowed to contain entities
   if (entityConfig.allowedTags) {
-    if (!entityConfig.allowedTags.includes(tagName)) {
-      return val; // Skip entity replacement for current tag as not set
+    const jPathOrMatcher = this.options.jPath ? jPath.toString() : jPath;
+    const allowed = Array.isArray(entityConfig.allowedTags)
+      ? entityConfig.allowedTags.includes(tagName)
+      : entityConfig.allowedTags(tagName, jPathOrMatcher);
+
+    if (!allowed) {
+      return val;
     }
   }
 
+  // Apply custom tag filter if provided
   if (entityConfig.tagFilter) {
-    if (!entityConfig.tagFilter(tagName, jPath)) {
+    const jPathOrMatcher = this.options.jPath ? jPath.toString() : jPath;
+    if (!entityConfig.tagFilter(tagName, jPathOrMatcher)) {
       return val; // Skip based on custom filter
     }
   }
@@ -546,13 +692,13 @@ const replaceEntitiesValue = function (val, tagName, jPath) {
 }
 
 
-function saveTextToParentTag(textData, parentNode, jPath, isLeafNode) {
+function saveTextToParentTag(textData, parentNode, matcher, isLeafNode) {
   if (textData) { //store previously collected data as textNode
     if (isLeafNode === undefined) isLeafNode = parentNode.child.length === 0
 
     textData = this.parseTextData(textData,
       parentNode.tagname,
-      jPath,
+      matcher,
       false,
       parentNode[":@"] ? Object.keys(parentNode[":@"]).length !== 0 : false,
       isLeafNode);
@@ -566,14 +712,17 @@ function saveTextToParentTag(textData, parentNode, jPath, isLeafNode) {
 
 //TODO: use jPath to simplify the logic
 /**
- * @param {Set} stopNodesExact
- * @param {Set} stopNodesWildcard
- * @param {string} jPath
- * @param {string} currentTagName
+ * @param {Array<Expression>} stopNodeExpressions - Array of compiled Expression objects
+ * @param {Matcher} matcher - Current path matcher
  */
-function isItStopNode(stopNodesExact, stopNodesWildcard, jPath, currentTagName) {
-  if (stopNodesWildcard && stopNodesWildcard.has(currentTagName)) return true;
-  if (stopNodesExact && stopNodesExact.has(jPath)) return true;
+function isItStopNode(stopNodeExpressions, matcher) {
+  if (!stopNodeExpressions || stopNodeExpressions.length === 0) return false;
+
+  for (let i = 0; i < stopNodeExpressions.length; i++) {
+    if (matcher.matches(stopNodeExpressions[i])) {
+      return true;
+    }
+  }
   return false;
 }
 

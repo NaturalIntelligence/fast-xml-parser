@@ -47,7 +47,7 @@ describe("XMLParser StopNodes", function () {
     const parser = new XMLParser(options);
     let result = parser.parse(xmlData);
 
-    // console.log(JSON.stringify(result,null,4));
+    // console.log(JSON.stringify(result, null, 4));
     expect(result).toEqual(expected);
 
     result = XMLValidator.validate(xmlData);
@@ -234,12 +234,13 @@ describe("XMLParser StopNodes", function () {
     const options = {
       attributeNamePrefix: "",
       ignoreAttributes: false,
-      stopNodes: ["*.fix1", "fix2"]
+      stopNodes: ["..fix1", "fix2"]
     };
     const parser = new XMLParser(options);
     let result = parser.parse(xmlData);
 
-    // console.log(JSON.stringify(result,null,4));
+    //console.log(JSON.stringify(result, null, 4));
+    //console.log(JSON.stringify(expected, null, 4));
     expect(result).toEqual(expected);
 
     result = XMLValidator.validate(xmlData, {
@@ -262,9 +263,7 @@ describe("XMLParser StopNodes", function () {
       <![CDATA[ Toys]]>
       </category>
       <currency>USD</currency>
-      <price>
-        <actualprice>19.20</actualprice>
-      </price>
+      <price><actualprice>19.20</actualprice></price>
     </product>
       `;
 
@@ -277,7 +276,7 @@ describe("XMLParser StopNodes", function () {
           "name": " Big Red Truck ",
           "category": " Toys",
           "currency": "USD",
-          "price": "19.20"
+          "price": `<actualprice>19.20</actualprice>`
         }
       }
     };
@@ -400,9 +399,7 @@ describe("XMLParser StopNodes", function () {
     const expected = {
       "b": "<b />"
     };
-    const stopNodes = [
-      '*.b',
-    ];
+    const stopNodes = ['b'];
 
     const options = {
       stopNodes,
@@ -413,45 +410,43 @@ describe("XMLParser StopNodes", function () {
     // console.log(JSON.stringify(jObj, null, 4));
     expect(jObj).toEqual(expected);
   });
-  it("should parse attributes correctly for self closing stop node", function() {
-        
+  it("should parse attributes correctly for self closing stop node", function () {
+
     const xmlData = `<script/>`;
     const options = {
-        allowBooleanAttributes: true,
-        ignoreAttributes: false,
-        stopNodes: ["*.pre", "*.script"],
+      allowBooleanAttributes: true,
+      ignoreAttributes: false,
+      stopNodes: ["*.pre", "*.script"],
     };
     const expected = {
       "script": ""
     }
     const parser = new XMLParser(options);
     // console.log(JSON.stringify(parser.parse(xml)));
-    
+
     let result = parser.parse(xmlData);
 
     // console.log(JSON.stringify(result,null,4));
     expect(result).toEqual(expected);
 
   });
-  it("should parse attributes correctly for self closing stop node", function() {
-        
+  it("should parse attributes correctly for self closing stop node", function () {
+
     const xmlData = `<script src="some.js" />`;
     const options = {
-        allowBooleanAttributes: true,
-        ignoreAttributes: false,
-        stopNodes: ["*.pre", "*.script"],
+      allowBooleanAttributes: true,
+      ignoreAttributes: false,
+      stopNodes: ["*.pre", "*.script"],
     };
     const expected = {
       "script": {
-          "@_src": "some.js"
+        "@_src": "some.js"
       }
     }
     const parser = new XMLParser(options);
-    // console.log(JSON.stringify(parser.parse(xml)));
-    
     let result = parser.parse(xmlData);
 
-    // console.log(JSON.stringify(result,null,4));
+    // console.log(JSON.stringify(result, null, 4));
     expect(result).toEqual(expected);
 
   });

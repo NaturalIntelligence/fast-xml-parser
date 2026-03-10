@@ -1,35 +1,66 @@
 'use strict';
 
 import XmlNode from './xmlNode.js';
+import { Matcher } from 'path-expression-matcher';
 
 const METADATA_SYMBOL = XmlNode.getMetaDataSymbol();
+
+/**
+ * Helper function to strip attribute prefix from attribute map
+ * @param {object} attrs - Attributes with prefix (e.g., {"@_class": "code"})
+ * @param {string} prefix - Attribute prefix to remove (e.g., "@_")
+ * @returns {object} Attributes without prefix (e.g., {"class": "code"})
+ */
+function stripAttributePrefix(attrs, prefix) {
+  if (!attrs || typeof attrs !== 'object') return {};
+  if (!prefix) return attrs;
+
+  const rawAttrs = {};
+  for (const key in attrs) {
+    if (key.startsWith(prefix)) {
+      const rawName = key.substring(prefix.length);
+      rawAttrs[rawName] = attrs[key];
+    } else {
+      // Attribute without prefix (shouldn't normally happen, but be safe)
+      rawAttrs[key] = attrs[key];
+    }
+  }
+  return rawAttrs;
+}
 
 /**
  * 
  * @param {array} node 
  * @param {any} options 
+ * @param {Matcher} matcher - Path matcher instance
  * @returns 
  */
-export default function prettify(node, options) {
-  return compress(node, options);
+export default function prettify(node, options, matcher) {
+  return compress(node, options, matcher);
 }
 
 /**
  * 
  * @param {array} arr 
  * @param {object} options 
- * @param {string} jPath 
+ * @param {Matcher} matcher - Path matcher instance
  * @returns object
  */
-function compress(arr, options, jPath) {
+function compress(arr, options, matcher) {
   let text;
   const compressedObj = {}; //This is intended to be a plain object
   for (let i = 0; i < arr.length; i++) {
     const tagObj = arr[i];
     const property = propName(tagObj);
-    let newJpath = "";
-    if (jPath === undefined) newJpath = property;
-    else newJpath = jPath + "." + property;
+
+    // Push current property to matcher WITH RAW ATTRIBUTES (no prefix)
+    if (property !== undefined && property !== options.textNodeName) {
+      const rawAttrs = stripAttributePrefix(
+        tagObj[":@"] || {},
+        options.attributeNamePrefix
+      );
+      matcher.push(property, rawAttrs);
+    }
 
     if (property === options.textNodeName) {
       if (text === undefined) text = tagObj[property];
@@ -38,11 +69,11 @@ function compress(arr, options, jPath) {
       continue;
     } else if (tagObj[property]) {
 
-      let val = compress(tagObj[property], options, newJpath);
+      let val = compress(tagObj[property], options, matcher);
       const isLeaf = isLeafTag(val, options);
 
       if (tagObj[":@"]) {
-        assignAttributes(val, tagObj[":@"], newJpath, options);
+        assignAttributes(val, tagObj[":@"], matcher, options);
       } else if (Object.keys(val).length === 1 && val[options.textNodeName] !== undefined && !options.alwaysCreateTextNode) {
         val = val[options.textNodeName];
       } else if (Object.keys(val).length === 0) {
@@ -63,11 +94,19 @@ function compress(arr, options, jPath) {
       } else {
         //TODO: if a node is not an array, then check if it should be an array
         //also determine if it is a leaf node
-        if (options.isArray(property, newJpath, isLeaf)) {
+
+        // Pass jPath string or matcher based on options.jPath setting
+        const jPathOrMatcher = options.jPath ? matcher.toString() : matcher;
+        if (options.isArray(property, jPathOrMatcher, isLeaf)) {
           compressedObj[property] = [val];
         } else {
           compressedObj[property] = val;
         }
+      }
+
+      // Pop property from matcher after processing
+      if (property !== undefined && property !== options.textNodeName) {
+        matcher.pop();
       }
     }
 
@@ -89,13 +128,25 @@ function propName(obj) {
   }
 }
 
-function assignAttributes(obj, attrMap, jpath, options) {
+function assignAttributes(obj, attrMap, matcher, options) {
   if (attrMap) {
     const keys = Object.keys(attrMap);
     const len = keys.length; //don't make it inline
     for (let i = 0; i < len; i++) {
-      const atrrName = keys[i];
-      if (options.isArray(atrrName, jpath + "." + atrrName, true, true)) {
+      const atrrName = keys[i];  // This is the PREFIXED name (e.g., "@_class")
+
+      // Strip prefix for matcher path (for isArray callback)
+      const rawAttrName = atrrName.startsWith(options.attributeNamePrefix)
+        ? atrrName.substring(options.attributeNamePrefix.length)
+        : atrrName;
+
+      // For attributes, we need to create a temporary path
+      // Pass jPath string or matcher based on options.jPath setting
+      const jPathOrMatcher = options.jPath
+        ? matcher.toString() + "." + rawAttrName
+        : matcher;
+
+      if (options.isArray(atrrName, jPathOrMatcher, true, true)) {
         obj[atrrName] = [attrMap[atrrName]];
       } else {
         obj[atrrName] = attrMap[atrrName];

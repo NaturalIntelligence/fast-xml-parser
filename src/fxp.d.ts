@@ -1,3 +1,5 @@
+import { Matcher, Expression } from 'path-expression-matcher';
+
 export type ProcessEntitiesOptions = {
   /**
    * Whether to enable entity processing
@@ -53,12 +55,12 @@ export type ProcessEntitiesOptions = {
    * Custom filter function to determine if entities should be replaced in a tag
    * 
    * @param tagName - The name of the current tag
-   * @param jPath - The jPath of the current tag
+   * @param jPathOrMatcher - The jPath string (if jPath: true) or Matcher instance (if jPath: false)
    * @returns `true` to allow entity replacement, `false` to skip
    * 
    * Defaults to `null`
    */
-  tagFilter?: ((tagName: string, jPath: string) => boolean) | null;
+  tagFilter?: ((tagName: string, jPathOrMatcher: string | Matcher) => boolean) | null;
 };
 
 export type X2jOptions = {
@@ -103,7 +105,7 @@ export type X2jOptions = {
    * 
    * Defaults to `true`
    */
-  ignoreAttributes?: boolean | (string | RegExp)[] | ((attrName: string, jPath: string) => boolean);
+  ignoreAttributes?: boolean | (string | RegExp)[] | ((attrName: string, jPathOrMatcher: string | Matcher) => boolean);
 
   /**
    * Whether to remove namespace string from tag and attribute names
@@ -157,28 +159,33 @@ export type X2jOptions = {
   /**
    * Control how tag value should be parsed. Called only if tag value is not empty
    * 
+   * @param tagName - The name of the tag
+   * @param tagValue - The value of the tag
+   * @param jPathOrMatcher - The jPath string (if jPath: true) or Matcher instance (if jPath: false)
+   * @param hasAttributes - Whether the tag has attributes
+   * @param isLeafNode - Whether the tag is a leaf node
    * @returns {undefined|null} `undefined` or `null` to set original value.
    * @returns {unknown} 
    * 
    * 1. Different value or value with different data type to set new value.
    * 2. Same value to set parsed value if `parseTagValue: true`.
    * 
-   * Defaults to `(tagName, val, jPath, hasAttributes, isLeafNode) => val`
+   * Defaults to `(tagName, val, jPathOrMatcher, hasAttributes, isLeafNode) => val`
    */
-  tagValueProcessor?: (tagName: string, tagValue: string, jPath: string, hasAttributes: boolean, isLeafNode: boolean) => unknown;
+  tagValueProcessor?: (tagName: string, tagValue: string, jPathOrMatcher: string | Matcher, hasAttributes: boolean, isLeafNode: boolean) => unknown;
 
   /**
    * Control how attribute value should be parsed
    * 
-   * @param attrName 
-   * @param attrValue 
-   * @param jPath 
+   * @param attrName - The name of the attribute
+   * @param attrValue - The value of the attribute
+   * @param jPathOrMatcher - The jPath string (if jPath: true) or Matcher instance (if jPath: false)
    * @returns {undefined|null} `undefined` or `null` to set original value
    * @returns {unknown}
    * 
-   * Defaults to `(attrName, val, jPath) => val`
+   * Defaults to `(attrName, val, jPathOrMatcher) => val`
    */
-  attributeValueProcessor?: (attrName: string, attrValue: string, jPath: string) => unknown;
+  attributeValueProcessor?: (attrName: string, attrValue: string, jPathOrMatcher: string | Matcher) => unknown;
 
   /**
    * Options to pass to `strnum` for parsing numbers
@@ -190,9 +197,13 @@ export type X2jOptions = {
   /**
    * Nodes to stop parsing at
    * 
+   * Accepts string patterns or Expression objects from path-expression-matcher
+   * 
+   * String patterns starting with "*." are automatically converted to ".." for backward compatibility
+   * 
    * Defaults to `[]`
    */
-  stopNodes?: string[];
+  stopNodes?: (string | Expression)[];
 
   /**
    * List of tags without closing tags
@@ -211,15 +222,15 @@ export type X2jOptions = {
   /**
    * Determine whether a tag should be parsed as an array
    * 
-   * @param tagName 
-   * @param jPath 
-   * @param isLeafNode 
-   * @param isAttribute 
+   * @param tagName - The name of the tag
+   * @param jPathOrMatcher - The jPath string (if jPath: true) or Matcher instance (if jPath: false)
+   * @param isLeafNode - Whether the tag is a leaf node
+   * @param isAttribute - Whether this is an attribute
    * @returns {boolean}
    * 
    * Defaults to `() => false`
    */
-  isArray?: (tagName: string, jPath: string, isLeafNode: boolean, isAttribute: boolean) => boolean;
+  isArray?: (tagName: string, jPathOrMatcher: string | Matcher, isLeafNode: boolean, isAttribute: boolean) => boolean;
 
   /**
    * Whether to process default and DOCTYPE entities
@@ -273,12 +284,15 @@ export type X2jOptions = {
    * Change the tag name when a different name is returned. Skip the tag from parsed result when false is returned.
    * Modify `attrs` object to control attributes for the given tag.
    * 
+   * @param tagName - The name of the tag
+   * @param jPathOrMatcher - The jPath string (if jPath: true) or Matcher instance (if jPath: false)
+   * @param attrs - The attributes object
    * @returns {string} new tag name.
    * @returns false to skip the tag
    * 
-   * Defaults to `(tagName, jPath, attrs) => tagName`
+   * Defaults to `(tagName, jPathOrMatcher, attrs) => tagName`
    */
-  updateTag?: (tagName: string, jPath: string, attrs: { [k: string]: string }) => string | boolean;
+  updateTag?: (tagName: string, jPathOrMatcher: string | Matcher, attrs: { [k: string]: string }) => string | boolean;
 
   /**
    * If true, adds a Symbol to all object nodes, accessible by {@link XMLParser.getMetaDataSymbol} with
@@ -299,6 +313,17 @@ export type X2jOptions = {
    * Defaults to `true`
    */
   strictReservedNames?: boolean;
+
+  /**
+   * Controls whether callbacks receive jPath as string or Matcher instance
+   * 
+   * When `true` - callbacks receive jPath as string (backward compatible)
+   * 
+   * When `false` - callbacks receive Matcher instance for advanced pattern matching
+   * 
+   * Defaults to `true`
+   */
+  jPath?: boolean;
 };
 
 
@@ -437,9 +462,11 @@ export type XmlBuilderOptions = {
   /**
    * Nodes to stop parsing at
    * 
+   * Accepts string patterns or Expression objects from path-expression-matcher
+   * 
    * Defaults to `[]`
    */
-  stopNodes?: string[];
+  stopNodes?: (string | Expression)[];
 
   /**
    * Control how tag value should be parsed. Called only if tag value is not empty
