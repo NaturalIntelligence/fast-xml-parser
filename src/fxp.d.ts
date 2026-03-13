@@ -327,6 +327,16 @@ export type X2jOptions = {
    * Defaults to `true`
    */
   jPath?: boolean;
+
+  /**
+   * Function to sanitize dangerous property names
+   * 
+   * @param name - The name of the property
+   * @returns {string} The sanitized name
+   * 
+   * Defaults to `(name) => __name`
+   */
+  onDangerousProperty?: (name: string) => string;
 };
 
 

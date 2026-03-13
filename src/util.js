@@ -41,3 +41,21 @@ export function getValue(v) {
     return '';
   }
 }
+
+/**
+ * Dangerous property names that could lead to prototype pollution or security issues
+ */
+export const DANGEROUS_PROPERTY_NAMES = [
+  // '__proto__',
+  // 'constructor',
+  // 'prototype',
+  'hasOwnProperty',
+  'toString',
+  'valueOf',
+  '__defineGetter__',
+  '__defineSetter__',
+  '__lookupGetter__',
+  '__lookupSetter__'
+];
+
+export const criticalProperties = ["__proto__", "constructor", "prototype"];

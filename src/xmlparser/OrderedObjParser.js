@@ -1,13 +1,12 @@
 'use strict';
 ///@ts-check
 
-import { getAllMatches, isExist } from '../util.js';
+import { getAllMatches, isExist, DANGEROUS_PROPERTY_NAMES, criticalProperties } from '../util.js';
 import xmlNode from './xmlNode.js';
 import DocTypeReader from './DocTypeReader.js';
 import toNumber from "strnum";
 import getIgnoreAttributesFn from "../ignoreAttributes.js";
 import { Expression, Matcher } from 'path-expression-matcher';
-
 
 // const regx =
 //   '<((!\\[CDATA\\[([\\s\\S]*?)(]]>))|((NAME:)?(NAME))([^>]*)>|((\\/)(NAME)\\s*>))([^<]*)'
@@ -253,7 +252,8 @@ function buildAttributesMap(attrStr, jPath, tagName) {
         if (this.options.transformAttributeName) {
           aName = this.options.transformAttributeName(aName);
         }
-        if (aName === "__proto__") aName = "#__proto__";
+        //if (aName === "__proto__") aName = "#__proto__";
+        aName = sanitizeName(aName, this.options);
 
         if (oldVal !== undefined) {
           if (this.options.trimValues) {
@@ -326,11 +326,7 @@ const parseXml = function (xmlData) {
           }
         }
 
-        tagName = transformTagName(this.options.transformTagName, tagName, "").tagName;
-
-        // if (this.options.transformTagName) {
-        //   tagName = this.options.transformTagName(tagName);
-        // }
+        tagName = transformTagName(this.options.transformTagName, tagName, "", this.options).tagName;
 
         if (currentNode) {
           textData = this.saveTextToParentTag(textData, currentNode, this.matcher);
@@ -421,7 +417,7 @@ const parseXml = function (xmlData) {
         let attrExpPresent = result.attrExpPresent;
         let closeIndex = result.closeIndex;
 
-        ({ tagName, tagExp } = transformTagName(this.options.transformTagName, tagName, tagExp));
+        ({ tagName, tagExp } = transformTagName(this.options.transformTagName, tagName, tagExp, this.options));
 
         if (this.options.strictReservedNames &&
           (tagName === this.options.commentPropName
@@ -528,7 +524,7 @@ const parseXml = function (xmlData) {
         } else {
           //selfClosing tag
           if (isSelfClosing) {
-            ({ tagName, tagExp } = transformTagName(this.options.transformTagName, tagName, tagExp));
+            ({ tagName, tagExp } = transformTagName(this.options.transformTagName, tagName, tagExp, this.options));
 
             const childNode = new xmlNode(tagName);
             if (prefixedAttrs) {
@@ -866,7 +862,7 @@ function fromCodePoint(str, base, prefix) {
   }
 }
 
-function transformTagName(fn, tagName, tagExp) {
+function transformTagName(fn, tagName, tagExp, options) {
   if (fn) {
     const newTagName = fn(tagName);
     if (tagExp === tagName) {
@@ -874,5 +870,17 @@ function transformTagName(fn, tagName, tagExp) {
     }
     tagName = newTagName;
   }
+  tagName = sanitizeName(tagName, options);
   return { tagName, tagExp };
+}
+
+
+
+function sanitizeName(name, options) {
+  if (criticalProperties.includes(name)) {
+    throw new Error(`[SECURITY] Invalid name: "${name}" is a reserved JavaScript keyword that could cause prototype pollution`);
+  } else if (DANGEROUS_PROPERTY_NAMES.includes(name)) {
+    return options.onDangerousProperty(name);
+  }
+  return name;
 }

@@ -1,3 +1,13 @@
+import { DANGEROUS_PROPERTY_NAMES, criticalProperties } from "../util.js";
+
+const defaultOnDangerousProperty = (name) => {
+  if (DANGEROUS_PROPERTY_NAMES.includes(name)) {
+    return "__" + name;
+  }
+  return name;
+};
+
+
 export const defaultOptions = {
   preserveOrder: false,
   attributeNamePrefix: '@_',
@@ -41,7 +51,34 @@ export const defaultOptions = {
   maxNestedTags: 100,
   strictReservedNames: true,
   jPath: true, // if true, pass jPath string to callbacks; if false, pass matcher instance
+  onDangerousProperty: defaultOnDangerousProperty
 };
+
+
+/**
+ * Validates that a property name is safe to use
+ * @param {string} propertyName - The property name to validate
+ * @param {string} optionName - The option field name (for error message)
+ * @throws {Error} If property name is dangerous
+ */
+function validatePropertyName(propertyName, optionName) {
+  if (typeof propertyName !== 'string') {
+    return; // Only validate string property names
+  }
+
+  const normalized = propertyName.toLowerCase();
+  if (DANGEROUS_PROPERTY_NAMES.some(dangerous => normalized === dangerous.toLowerCase())) {
+    throw new Error(
+      `[SECURITY] Invalid ${optionName}: "${propertyName}" is a reserved JavaScript keyword that could cause prototype pollution`
+    );
+  }
+
+  if (criticalProperties.some(dangerous => normalized === dangerous.toLowerCase())) {
+    throw new Error(
+      `[SECURITY] Invalid ${optionName}: "${propertyName}" is a reserved JavaScript keyword that could cause prototype pollution`
+    );
+  }
+}
 
 /**
  * Normalizes processEntities option for backward compatibility
@@ -83,6 +120,25 @@ function normalizeProcessEntities(value) {
 
 export const buildOptions = function (options) {
   const built = Object.assign({}, defaultOptions, options);
+
+  // Validate property names to prevent prototype pollution
+  const propertyNameOptions = [
+    { value: built.attributeNamePrefix, name: 'attributeNamePrefix' },
+    { value: built.attributesGroupName, name: 'attributesGroupName' },
+    { value: built.textNodeName, name: 'textNodeName' },
+    { value: built.cdataPropName, name: 'cdataPropName' },
+    { value: built.commentPropName, name: 'commentPropName' }
+  ];
+
+  for (const { value, name } of propertyNameOptions) {
+    if (value) {
+      validatePropertyName(value, name);
+    }
+  }
+
+  if (built.onDangerousProperty === null) {
+    built.onDangerousProperty = defaultOnDangerousProperty;
+  }
 
   // Always normalize processEntities for backward compatibility and validation
   built.processEntities = normalizeProcessEntities(built.processEntities);

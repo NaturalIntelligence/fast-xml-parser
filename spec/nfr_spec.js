@@ -1,28 +1,9 @@
 
 import { XMLParser, XMLBuilder, XMLValidator } from "../src/fxp.js";
+import { DANGEROUS_PROPERTY_NAMES, criticalProperties } from "../src/util.js";
+
 
 describe("XMLParser", function () {
-
-  it("should process XML with js properties hasOwnProperty, toString", function () {
-    const xmlData = `
-        <root>
-          <hasOwnProperty>1</hasOwnProperty>
-          <constructor>1</constructor>
-          <toString>2</toString>
-        </root>
-        `;
-    const expected = {
-      "root": {
-        "hasOwnProperty": 1,
-        "constructor": 1,
-        "toString": 2
-      }
-    }
-    const parser = new XMLParser();
-    let result = parser.parse(xmlData);
-    //   console.log(JSON.stringify(result, null,4));
-    expect(result).toEqual(expected);
-  });
 
   it("should throw error for deeply nested XML", function () {
 
@@ -72,6 +53,89 @@ describe("XMLParser", function () {
     let result = parser.parse(xmlData);
     //console.log(JSON.stringify(result, null, 4));
     expect(result).toEqual(expected);
+  });
+
+  it("should throw error for option configured with dangerous name", function () {
+    for (let i = 0; i < DANGEROUS_PROPERTY_NAMES.length; i++) {
+      const propertyName = DANGEROUS_PROPERTY_NAMES[i];
+
+      expect(() =>
+        new XMLParser({ textNodeName: propertyName }).parse("<root>hello</root>")
+      ).toThrowError(`[SECURITY] Invalid textNodeName: "${propertyName}" is a reserved JavaScript keyword that could cause prototype pollution`);
+    }
+    for (let i = 0; i < criticalProperties.length; i++) {
+      const propertyName = criticalProperties[i];
+
+      expect(() =>
+        new XMLParser({ textNodeName: propertyName }).parse("<root>hello</root>")
+      ).toThrowError(`[SECURITY] Invalid textNodeName: "${propertyName}" is a reserved JavaScript keyword that could cause prototype pollution`);
+    }
+  });
+
+
+  it(`should sanitize dangerous tag name`, function () {
+    const options = {
+      onDangerousProperty: (name) => {
+        return "__" + name;
+      }
+    }
+    for (let i = 0; i < DANGEROUS_PROPERTY_NAMES.length; i++) {
+      const propertyName = DANGEROUS_PROPERTY_NAMES[i];
+      const result = new XMLParser(options)
+        .parse(`<root><${propertyName}>hello</${propertyName}></root>`);
+
+      // console.log(JSON.stringify(result, null, 4))
+      expect(typeof result.root["__" + propertyName]).toBe("string");
+      expect(result.root["__" + propertyName]).toBe("hello");
+      result.root["__" + propertyName] = "hello2"; //check if assignment works
+    }
+  });
+
+  it(`should throw error for dangerous tag name`, function () {
+    const options = {
+      onDangerousProperty: (name) => {
+        throw new Error(`Invalid tag name: "${name}"`);
+      }
+    }
+    for (let i = 0; i < DANGEROUS_PROPERTY_NAMES.length; i++) {
+      const propertyName = DANGEROUS_PROPERTY_NAMES[i];
+      expect(() =>
+        new XMLParser(options)
+          .parse(`<root><${propertyName}>hello</${propertyName}></root>`)
+      ).toThrowError(`Invalid tag name: "${propertyName}"`);
+    }
+  });
+
+  it(`should throw error for critical properties`, function () {
+    const options = {
+      onDangerousProperty: (name) => {
+        return "__" + name;
+      }
+    }
+    for (let i = 0; i < criticalProperties.length; i++) {
+      const propertyName = criticalProperties[i];
+      expect(() =>
+        new XMLParser(options)
+          .parse(`<root><${propertyName}>hello</${propertyName}></root>`)
+      ).toThrowError(`[SECURITY] Invalid name: "${propertyName}" is a reserved JavaScript keyword that could cause prototype pollution`);
+    }
+  });
+
+  it(`should throw error for critical attribute names`, function () {
+    const options = {
+      ignoreAttributes: false,
+      attributeNamePrefix: "",
+      onDangerousProperty: (name) => {
+        return "__" + name;
+      }
+    }
+    for (let i = 0; i < criticalProperties.length; i++) {
+      const propertyName = criticalProperties[i];
+      expect(() =>
+        new XMLParser(options)
+          .parse(`<root ${propertyName}="${propertyName}"></root>`)
+      ).toThrowError(`[SECURITY] Invalid name: "${propertyName}" is a reserved JavaScript keyword that could cause prototype pollution`);
+    }
   });
 
 });
