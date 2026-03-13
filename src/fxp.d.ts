@@ -1,4 +1,7 @@
-import { Matcher, Expression } from 'path-expression-matcher';
+//import type { Matcher, Expression } from 'path-expression-matcher';
+
+type Matcher = unknown;
+type Expression = unknown;
 
 export type ProcessEntitiesOptions = {
   /**

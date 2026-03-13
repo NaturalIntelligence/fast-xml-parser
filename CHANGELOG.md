@@ -2,6 +2,10 @@
 
 Note: Due to some last quick changes on v4, detail of v4.5.3 & v4.5.4 are not updated here. v4.5.4x is the last tag of v4 in github repository. I'm extremely sorry for the confusion
 
+**5.5.4 / 2026-03-13**
+- declare Matcher & Expression as unknown so user is not forced to install path-expression-matcher
+
+
 **5.5.3 / 2026-03-11**
 - upgrade builder
 

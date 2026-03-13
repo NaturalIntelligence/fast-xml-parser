@@ -1,4 +1,7 @@
-const { Matcher, Expression } = require('path-expression-matcher');
+// import type { Matcher, Expression } from 'path-expression-matcher';
+
+type Matcher = unknown;
+type Expression = unknown;
 
 type ProcessEntitiesOptions = {
   /**
