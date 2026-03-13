@@ -326,9 +326,11 @@ const parseXml = function (xmlData) {
           }
         }
 
-        if (this.options.transformTagName) {
-          tagName = this.options.transformTagName(tagName);
-        }
+        tagName = transformTagName(this.options.transformTagName, tagName, "").tagName;
+
+        // if (this.options.transformTagName) {
+        //   tagName = this.options.transformTagName(tagName);
+        // }
 
         if (currentNode) {
           textData = this.saveTextToParentTag(textData, currentNode, this.matcher);
@@ -419,14 +421,7 @@ const parseXml = function (xmlData) {
         let attrExpPresent = result.attrExpPresent;
         let closeIndex = result.closeIndex;
 
-        if (this.options.transformTagName) {
-          //console.log(tagExp, tagName)
-          const newTagName = this.options.transformTagName(tagName);
-          if (tagExp === tagName) {
-            tagExp = newTagName
-          }
-          tagName = newTagName;
-        }
+        ({ tagName, tagExp } = transformTagName(this.options.transformTagName, tagName, tagExp));
 
         if (this.options.strictReservedNames &&
           (tagName === this.options.commentPropName
@@ -533,13 +528,7 @@ const parseXml = function (xmlData) {
         } else {
           //selfClosing tag
           if (isSelfClosing) {
-            if (this.options.transformTagName) {
-              const newTagName = this.options.transformTagName(tagName);
-              if (tagExp === tagName) {
-                tagExp = newTagName
-              }
-              tagName = newTagName;
-            }
+            ({ tagName, tagExp } = transformTagName(this.options.transformTagName, tagName, tagExp));
 
             const childNode = new xmlNode(tagName);
             if (prefixedAttrs) {
@@ -875,4 +864,15 @@ function fromCodePoint(str, base, prefix) {
   } else {
     return prefix + str + ";";
   }
+}
+
+function transformTagName(fn, tagName, tagExp) {
+  if (fn) {
+    const newTagName = fn(tagName);
+    if (tagExp === tagName) {
+      tagExp = newTagName
+    }
+    tagName = newTagName;
+  }
+  return { tagName, tagExp };
 }
