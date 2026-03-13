@@ -7,6 +7,10 @@ Pre release
 * [ ] TS and CJS typings are updated
   - fxp.d.cts
   - fxp.d.ts
+
+  check here
+  - https://www.typescriptlang.org/play/
+  - https://github.com/NaturalIntelligence/fxp-type-testing
 * [ ] ReadMe file or docs are updated for any change, user list, performance report, links etc.
 * [ ] Single test is not running `fit`
 * [ ] `npm run checkReadiness` is used to check the files being published
