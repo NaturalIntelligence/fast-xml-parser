@@ -34,7 +34,8 @@ export default class DocTypeReader {
                                     `Entity count (${entityCount + 1}) exceeds maximum allowed (${this.options.maxEntityCount})`
                                 );
                             }
-                            const escaped = entityName.replace(/[.\-+*:]/g, '\\.');
+                            //const escaped = entityName.replace(/[.\-+*:]/g, '\\.');
+                            const escaped = entityName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
                             entities[entityName] = {
                                 regx: RegExp(`&${escaped};`, "g"),
                                 val: val
