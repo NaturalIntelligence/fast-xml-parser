@@ -2,6 +2,11 @@
 
 Note: Due to some last quick changes on v4, detail of v4.5.3 & v4.5.4 are not updated here. v4.5.4x is the last tag of v4 in github repository. I'm extremely sorry for the confusion
 
+**5.5.6 / 2026-03-16**
+- update builder dependency
+- fix incorrect regex to replace \. in entity name
+- fix check for entitiy expansion for lastEntities and html entities too
+
 **5.5.5 / 2026-03-13**
 - sanitize dangerous tag or attribute name
 - error on critical property name
