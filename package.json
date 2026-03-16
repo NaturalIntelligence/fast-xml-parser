@@ -87,7 +87,7 @@
     }
   ],
   "dependencies": {
-    "fast-xml-builder": "^1.1.3",
+    "fast-xml-builder": "^1.1.4",
     "path-expression-matcher": "^1.1.3",
     "strnum": "^2.1.2"
   }

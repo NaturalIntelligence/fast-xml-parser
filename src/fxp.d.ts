@@ -516,6 +516,13 @@ export type XmlBuilderOptions = {
 
 
   oneListGroup?: boolean;
+
+  /**
+ * Maximum number of nested tags
+ * 
+ * Defaults to `100`
+ */
+  maxNestedTags?: number;
 };
 
 type ESchema = string | object | Array<string | object>;
