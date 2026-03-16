@@ -195,10 +195,11 @@ export default class DocTypeReader {
         }
         i++;
 
+        const startIndex = i;
         while (i < xmlData.length && xmlData[i] !== startChar) {
-            identifierVal += xmlData[i];
             i++;
         }
+        identifierVal = xmlData.substring(startIndex, i);
 
         if (xmlData[i] !== startChar) {
             throw new Error(`Unterminated ${type} value`);
