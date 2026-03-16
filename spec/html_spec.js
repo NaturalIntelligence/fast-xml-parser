@@ -79,4 +79,23 @@ describe("XMLParser", function () {
     output = output.replace('₹', '&inr;');
     expect(output.replace(/\s+/g, "")).toEqual(html.replace(/\s+/g, ""));
   });
+
+  it("should throw error for html entities", function () {
+    const entity = '&#65;'.repeat(30);
+    const xmlData = `<root>${entity}</root>`;
+
+    const options = {
+      htmlEntities: true,
+      processEntities: {
+        enabled: true,
+        maxTotalExpansions: 20,
+      }
+    };
+    const parser = new XMLParser(options);
+
+    expect(function () {
+      const result = parser.parse(xmlData);
+      console.log(JSON.stringify(result, null, 4));
+    }).toThrowError(/Entity expansion limit exceeded: 30 > 20/);
+  });
 });
