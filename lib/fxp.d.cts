@@ -1,4 +1,381 @@
-type ProcessEntitiesOptions = {
+//import type { Matcher, Expression } from 'path-expression-matcher';
+
+type Matcher = unknown;
+type Expression = unknown;
+
+/**
+ * Base options shared by both jPath modes
+ */
+export type X2jOptionsBase = {
+  /**
+   * Preserve the order of tags in resulting JS object
+   *
+   * Defaults to `false`
+   */
+  preserveOrder?: boolean;
+
+  /**
+   * Give a prefix to the attribute name in the resulting JS object
+   *
+   * Defaults to '@_'
+   */
+  attributeNamePrefix?: string;
+
+  /**
+   * A name to group all attributes of a tag under, or `false` to disable
+   *
+   * Defaults to `false`
+   */
+  attributesGroupName?: false | string;
+
+  /**
+   * The name of the next node in the resulting JS
+   *
+   * Defaults to `#text`
+   */
+  textNodeName?: string;
+
+  /**
+   * Whether to remove namespace string from tag and attribute names
+   *
+   * Defaults to `false`
+   */
+  removeNSPrefix?: boolean;
+
+  /**
+   * Whether to allow attributes without value
+   *
+   * Defaults to `false`
+   */
+  allowBooleanAttributes?: boolean;
+
+  /**
+   * Whether to parse tag value with `strnum` package
+   *
+   * Defaults to `true`
+   */
+  parseTagValue?: boolean;
+
+  /**
+   * Whether to parse attribute value with `strnum` package
+   *
+   * Defaults to `false`
+   */
+  parseAttributeValue?: boolean;
+
+  /**
+   * Whether to remove surrounding whitespace from tag or attribute value
+   *
+   * Defaults to `true`
+   */
+  trimValues?: boolean;
+
+  /**
+   * Give a property name to set CDATA values to instead of merging to tag's text value
+   *
+   * Defaults to `false`
+   */
+  cdataPropName?: false | string;
+
+  /**
+   * If set, parse comments and set as this property
+   *
+   * Defaults to `false`
+   */
+  commentPropName?: false | string;
+
+  /**
+   * Options to pass to `strnum` for parsing numbers
+   *
+   * Defaults to `{ hex: true, leadingZeros: true, eNotation: true }`
+   */
+  numberParseOptions?: strnumOptions;
+
+  /**
+   * Nodes to stop parsing at
+   *
+   * Accepts string patterns or Expression objects from path-expression-matcher
+   *
+   * String patterns starting with "*." are automatically converted to ".." for backward compatibility
+   *
+   * Defaults to `[]`
+   */
+  stopNodes?: (string | Expression)[];
+
+  /**
+   * List of tags without closing tags
+   *
+   * Defaults to `[]`
+   */
+  unpairedTags?: string[];
+
+  /**
+   * Whether to always create a text node
+   *
+   * Defaults to `false`
+   */
+  alwaysCreateTextNode?: boolean;
+
+  /**
+   * Whether to process default and DOCTYPE entities
+   *
+   * When `true` - enables entity processing with default limits
+   *
+   * When `false` - disables all entity processing
+   *
+   * When `ProcessEntitiesOptions` - enables entity processing with custom configuration
+   *
+   * Defaults to `true`
+   */
+  processEntities?: boolean | ProcessEntitiesOptions;
+
+  /**
+   * Whether to process HTML entities
+   *
+   * Defaults to `false`
+   */
+  htmlEntities?: boolean;
+
+  /**
+   * Whether to ignore the declaration tag from output
+   *
+   * Defaults to `false`
+   */
+  ignoreDeclaration?: boolean;
+
+  /**
+   * Whether to ignore Pi tags
+   *
+   * Defaults to `false`
+   */
+  ignorePiTags?: boolean;
+
+  /**
+   * Transform tag names
+   *
+   * Defaults to `false`
+   */
+  transformTagName?: ((tagName: string) => string) | false;
+
+  /**
+   * Transform attribute names
+   *
+   * Defaults to `false`
+   */
+  transformAttributeName?: ((attributeName: string) => string) | false;
+
+  /**
+   * If true, adds a Symbol to all object nodes, accessible by {@link XMLParser.getMetaDataSymbol} with
+   * metadata about each the node in the XML file.
+   */
+  captureMetaData?: boolean;
+
+  /**
+   * Maximum number of nested tags
+   *
+   * Defaults to `100`
+   */
+  maxNestedTags?: number;
+
+  /**
+   * Whether to strictly validate tag names
+   *
+   * Defaults to `true`
+   */
+  strictReservedNames?: boolean;
+
+  /**
+   * Function to sanitize dangerous property names
+   *
+   * @param name - The name of the property
+   * @returns {string} The sanitized name
+   *
+   * Defaults to `(name) => __name`
+   */
+  onDangerousProperty?: (name: string) => string;
+};
+
+/**
+ * Options when jPath is true (default) - callbacks receive jPath as string
+ */
+export type X2jOptionsWithJPathString = X2jOptionsBase & {
+  /**
+   * Controls whether callbacks receive jPath as string or Matcher instance
+   *
+   * When `true` - callbacks receive jPath as string (backward compatible)
+   *
+   * Defaults to `true`
+   */
+  jPath?: true;
+
+  /**
+   * Whether to ignore attributes when parsing
+   *
+   * When `true` - ignores all the attributes
+   *
+   * When `false` - parses all the attributes
+   *
+   * When `Array<string | RegExp>` - filters out attributes that match provided patterns
+   *
+   * When `Function` - calls the function for each attribute and filters out those for which the function returned `true`
+   *
+   * Defaults to `true`
+   */
+  ignoreAttributes?: boolean | (string | RegExp)[] | ((attrName: string, jPath: string) => boolean);
+
+  /**
+   * Control how tag value should be parsed. Called only if tag value is not empty
+   *
+   * @param tagName - The name of the tag
+   * @param tagValue - The value of the tag
+   * @param jPath - The jPath string representing the tag's location
+   * @param hasAttributes - Whether the tag has attributes
+   * @param isLeafNode - Whether the tag is a leaf node
+   * @returns {undefined|null} `undefined` or `null` to set original value.
+   * @returns {unknown}
+   *
+   * 1. Different value or value with different data type to set new value.
+   * 2. Same value to set parsed value if `parseTagValue: true`.
+   *
+   * Defaults to `(tagName, val, jPath, hasAttributes, isLeafNode) => val`
+   */
+  tagValueProcessor?: (tagName: string, tagValue: string, jPath: string, hasAttributes: boolean, isLeafNode: boolean) => unknown;
+
+  /**
+   * Control how attribute value should be parsed
+   *
+   * @param attrName - The name of the attribute
+   * @param attrValue - The value of the attribute
+   * @param jPath - The jPath string representing the attribute's location
+   * @returns {undefined|null} `undefined` or `null` to set original value
+   * @returns {unknown}
+   *
+   * Defaults to `(attrName, val, jPath) => val`
+   */
+  attributeValueProcessor?: (attrName: string, attrValue: string, jPath: string) => unknown;
+
+  /**
+   * Determine whether a tag should be parsed as an array
+   *
+   * @param tagName - The name of the tag
+   * @param jPath - The jPath string representing the tag's location
+   * @param isLeafNode - Whether the tag is a leaf node
+   * @param isAttribute - Whether this is an attribute
+   * @returns {boolean}
+   *
+   * Defaults to `() => false`
+   */
+  isArray?: (tagName: string, jPath: string, isLeafNode: boolean, isAttribute: boolean) => boolean;
+
+  /**
+   * Change the tag name when a different name is returned. Skip the tag from parsed result when false is returned.
+   * Modify `attrs` object to control attributes for the given tag.
+   *
+   * @param tagName - The name of the tag
+   * @param jPath - The jPath string representing the tag's location
+   * @param attrs - The attributes object
+   * @returns {string} new tag name.
+   * @returns false to skip the tag
+   *
+   * Defaults to `(tagName, jPath, attrs) => tagName`
+   */
+  updateTag?: (tagName: string, jPath: string, attrs: { [k: string]: string }) => string | boolean;
+};
+
+/**
+ * Options when jPath is false - callbacks receive Matcher instance for advanced pattern matching
+ */
+export type X2jOptionsWithMatcher = X2jOptionsBase & {
+  /**
+   * Controls whether callbacks receive jPath as string or Matcher instance
+   *
+   * When `false` - callbacks receive Matcher instance for advanced pattern matching
+   */
+  jPath: false;
+
+  /**
+   * Whether to ignore attributes when parsing
+   *
+   * When `true` - ignores all the attributes
+   *
+   * When `false` - parses all the attributes
+   *
+   * When `Array<string | RegExp>` - filters out attributes that match provided patterns
+   *
+   * When `Function` - calls the function for each attribute and filters out those for which the function returned `true`
+   *
+   * Defaults to `true`
+   */
+  ignoreAttributes?: boolean | (string | RegExp)[] | ((attrName: string, matcher: Matcher) => boolean);
+
+  /**
+   * Control how tag value should be parsed. Called only if tag value is not empty
+   *
+   * @param tagName - The name of the tag
+   * @param tagValue - The value of the tag
+   * @param matcher - The Matcher instance for advanced pattern matching
+   * @param hasAttributes - Whether the tag has attributes
+   * @param isLeafNode - Whether the tag is a leaf node
+   * @returns {undefined|null} `undefined` or `null` to set original value.
+   * @returns {unknown}
+   *
+   * 1. Different value or value with different data type to set new value.
+   * 2. Same value to set parsed value if `parseTagValue: true`.
+   *
+   * Defaults to `(tagName, val, matcher, hasAttributes, isLeafNode) => val`
+   */
+  tagValueProcessor?: (tagName: string, tagValue: string, matcher: Matcher, hasAttributes: boolean, isLeafNode: boolean) => unknown;
+
+  /**
+   * Control how attribute value should be parsed
+   *
+   * @param attrName - The name of the attribute
+   * @param attrValue - The value of the attribute
+   * @param matcher - The Matcher instance for advanced pattern matching
+   * @returns {undefined|null} `undefined` or `null` to set original value
+   * @returns {unknown}
+   *
+   * Defaults to `(attrName, val, matcher) => val`
+   */
+  attributeValueProcessor?: (attrName: string, attrValue: string, matcher: Matcher) => unknown;
+
+  /**
+   * Determine whether a tag should be parsed as an array
+   *
+   * @param tagName - The name of the tag
+   * @param matcher - The Matcher instance for advanced pattern matching
+   * @param isLeafNode - Whether the tag is a leaf node
+   * @param isAttribute - Whether this is an attribute
+   * @returns {boolean}
+   *
+   * Defaults to `() => false`
+   */
+  isArray?: (tagName: string, matcher: Matcher, isLeafNode: boolean, isAttribute: boolean) => boolean;
+
+  /**
+   * Change the tag name when a different name is returned. Skip the tag from parsed result when false is returned.
+   * Modify `attrs` object to control attributes for the given tag.
+   *
+   * @param tagName - The name of the tag
+   * @param matcher - The Matcher instance for advanced pattern matching
+   * @param attrs - The attributes object
+   * @returns {string} new tag name.
+   * @returns false to skip the tag
+   *
+   * Defaults to `(tagName, matcher, attrs) => tagName`
+   */
+  updateTag?: (tagName: string, matcher: Matcher, attrs: { [k: string]: string }) => string | boolean;
+};
+
+/**
+ * XMLParser options - a discriminated union based on the jPath option
+ *
+ * When jPath is true (default) or undefined, callbacks receive jPath as a string.
+ * When jPath is false, callbacks receive a Matcher instance for advanced pattern matching.
+ */
+export type X2jOptions = X2jOptionsWithJPathString | X2jOptionsWithMatcher;
+
+export type ProcessEntitiesOptions = {
   /**
    * Whether to enable entity processing
    * 
@@ -53,262 +430,22 @@ type ProcessEntitiesOptions = {
    * Custom filter function to determine if entities should be replaced in a tag
    * 
    * @param tagName - The name of the current tag
-   * @param jPath - The jPath of the current tag
+   * @param jPathOrMatcher - The jPath string (if jPath: true) or Matcher instance (if jPath: false)
    * @returns `true` to allow entity replacement, `false` to skip
    * 
    * Defaults to `null`
    */
-  tagFilter?: ((tagName: string, jPath: string) => boolean) | null;
+  tagFilter?: ((tagName: string, jPathOrMatcher: string | Matcher) => boolean) | null;
 };
 
-type X2jOptions = {
-  /**
-   * Preserve the order of tags in resulting JS object
-   * 
-   * Defaults to `false`
-   */
-  preserveOrder?: boolean;
-
-  /**
-   * Give a prefix to the attribute name in the resulting JS object
-   * 
-   * Defaults to '@_'
-   */
-  attributeNamePrefix?: string;
-
-  /**
-   * A name to group all attributes of a tag under, or `false` to disable
-   * 
-   * Defaults to `false`
-   */
-  attributesGroupName?: false | string;
-
-  /**
-   * The name of the next node in the resulting JS
-   * 
-   * Defaults to `#text`
-   */
-  textNodeName?: string;
-
-  /**
-   * Whether to ignore attributes when parsing
-   * 
-   * When `true` - ignores all the attributes
-   * 
-   * When `false` - parses all the attributes
-   * 
-   * When `Array<string | RegExp>` - filters out attributes that match provided patterns
-   * 
-   * When `Function` - calls the function for each attribute and filters out those for which the function returned `true`
-   * 
-   * Defaults to `true`
-   */
-  ignoreAttributes?: boolean | (string | RegExp)[] | ((attrName: string, jPath: string) => boolean);
-
-  /**
-   * Whether to remove namespace string from tag and attribute names
-   * 
-   * Defaults to `false`
-   */
-  removeNSPrefix?: boolean;
-
-  /**
-   * Whether to allow attributes without value
-   * 
-   * Defaults to `false`
-   */
-  allowBooleanAttributes?: boolean;
-
-  /**
-   * Whether to parse tag value with `strnum` package
-   * 
-   * Defaults to `true`
-   */
-  parseTagValue?: boolean;
-
-  /**
-   * Whether to parse attribute value with `strnum` package
-   * 
-   * Defaults to `false`
-   */
-  parseAttributeValue?: boolean;
-
-  /**
-   * Whether to remove surrounding whitespace from tag or attribute value
-   * 
-   * Defaults to `true`
-   */
-  trimValues?: boolean;
-
-  /**
-   * Give a property name to set CDATA values to instead of merging to tag's text value
-   * 
-   * Defaults to `false`
-   */
-  cdataPropName?: false | string;
-
-  /**
-   * If set, parse comments and set as this property
-   * 
-   * Defaults to `false`
-   */
-  commentPropName?: false | string;
-
-  /**
-   * Control how tag value should be parsed. Called only if tag value is not empty
-   * 
-   * @returns {undefined|null} `undefined` or `null` to set original value.
-   * @returns {unknown} 
-   * 
-   * 1. Different value or value with different data type to set new value.
-   * 2. Same value to set parsed value if `parseTagValue: true`.
-   * 
-   * Defaults to `(tagName, val, jPath, hasAttributes, isLeafNode) => val`
-   */
-  tagValueProcessor?: (tagName: string, tagValue: string, jPath: string, hasAttributes: boolean, isLeafNode: boolean) => unknown;
-
-  /**
-   * Control how attribute value should be parsed
-   * 
-   * @param attrName 
-   * @param attrValue 
-   * @param jPath 
-   * @returns {undefined|null} `undefined` or `null` to set original value
-   * @returns {unknown}
-   * 
-   * Defaults to `(attrName, val, jPath) => val`
-   */
-  attributeValueProcessor?: (attrName: string, attrValue: string, jPath: string) => unknown;
-
-  /**
-   * Options to pass to `strnum` for parsing numbers
-   * 
-   * Defaults to `{ hex: true, leadingZeros: true, eNotation: true }`
-   */
-  numberParseOptions?: strnumOptions;
-
-  /**
-   * Nodes to stop parsing at
-   * 
-   * Defaults to `[]`
-   */
-  stopNodes?: string[];
-
-  /**
-   * List of tags without closing tags
-   * 
-   * Defaults to `[]`
-   */
-  unpairedTags?: string[];
-
-  /**
-   * Whether to always create a text node
-   * 
-   * Defaults to `false`
-   */
-  alwaysCreateTextNode?: boolean;
-
-  /**
-   * Determine whether a tag should be parsed as an array
-   * 
-   * @param tagName 
-   * @param jPath 
-   * @param isLeafNode 
-   * @param isAttribute 
-   * @returns {boolean}
-   * 
-   * Defaults to `() => false`
-   */
-  isArray?: (tagName: string, jPath: string, isLeafNode: boolean, isAttribute: boolean) => boolean;
-
-  /**
-   * Whether to process default and DOCTYPE entities
-   * 
-   * When `true` - enables entity processing with default limits
-   * 
-   * When `false` - disables all entity processing
-   * 
-   * When `ProcessEntitiesOptions` - enables entity processing with custom configuration
-   * 
-   * Defaults to `true`
-   */
-  processEntities?: boolean | ProcessEntitiesOptions;
-
-  /**
-   * Whether to process HTML entities
-   * 
-   * Defaults to `false`
-   */
-  htmlEntities?: boolean;
-
-  /**
-   * Whether to ignore the declaration tag from output
-   * 
-   * Defaults to `false`
-   */
-  ignoreDeclaration?: boolean;
-
-  /**
-   * Whether to ignore Pi tags
-   * 
-   * Defaults to `false`
-   */
-  ignorePiTags?: boolean;
-
-  /**
-   * Transform tag names
-   * 
-   * Defaults to `false`
-   */
-  transformTagName?: ((tagName: string) => string) | false;
-
-  /**
-   * Transform attribute names
-   * 
-   * Defaults to `false`
-   */
-  transformAttributeName?: ((attributeName: string) => string) | false;
-
-  /**
-   * Change the tag name when a different name is returned. Skip the tag from parsed result when false is returned.
-   * Modify `attrs` object to control attributes for the given tag.
-   * 
-   * @returns {string} new tag name.
-   * @returns false to skip the tag
-   * 
-   * Defaults to `(tagName, jPath, attrs) => tagName`
-   */
-  updateTag?: (tagName: string, jPath: string, attrs: { [k: string]: string }) => string | boolean;
-
-  /**
-   * If true, adds a Symbol to all object nodes, accessible by {@link XMLParser.getMetaDataSymbol} with
-   * metadata about each the node in the XML file.
-   */
-  captureMetaData?: boolean;
-
-  /**
-   * Maximum number of nested tags
-   * 
-   * Defaults to `100`
-   */
-  maxNestedTags?: number;
-
-  /**
-   * Whether to strictly validate tag names
-   * 
-   * Defaults to `true`
-   */
-  strictReservedNames?: boolean;
-};
-
-type strnumOptions = {
+export type strnumOptions = {
   hex: boolean;
   leadingZeros: boolean,
   skipLike?: RegExp,
   eNotation?: boolean
 }
 
-type validationOptions = {
+export type validationOptions = {
   /**
    * Whether to allow attributes without value
    * 
@@ -324,7 +461,7 @@ type validationOptions = {
   unpairedTags?: string[];
 };
 
-type XmlBuilderOptions = {
+export type XmlBuilderOptions = {
   /**
    * Give a prefix to the attribute name in the resulting JS object
    * 
@@ -435,9 +572,11 @@ type XmlBuilderOptions = {
   /**
    * Nodes to stop parsing at
    * 
+   * Accepts string patterns or Expression objects from path-expression-matcher
+   * 
    * Defaults to `[]`
    */
-  stopNodes?: string[];
+  stopNodes?: (string | Expression)[];
 
   /**
    * Control how tag value should be parsed. Called only if tag value is not empty
@@ -474,11 +613,18 @@ type XmlBuilderOptions = {
 
 
   oneListGroup?: boolean;
+
+  /**
+ * Maximum number of nested tags
+ * 
+ * Defaults to `100`
+ */
+  maxNestedTags?: number;
 };
 
 type ESchema = string | object | Array<string | object>;
 
-type ValidationError = {
+export type ValidationError = {
   err: {
     code: string;
     msg: string,
@@ -487,7 +633,7 @@ type ValidationError = {
   };
 };
 
-declare class XMLParser {
+export class XMLParser {
   constructor(options?: X2jOptions);
   parse(xmlData: string | Uint8Array, validationOptions?: validationOptions | boolean): any;
   /**
@@ -510,39 +656,19 @@ declare class XMLParser {
   static getMetaDataSymbol(): Symbol;
 }
 
-declare class XMLValidator {
+export class XMLValidator {
   static validate(xmlData: string, options?: validationOptions): true | ValidationError;
 }
-
-declare class XMLBuilder {
+export class XMLBuilder {
   constructor(options?: XmlBuilderOptions);
   build(jObj: any): string;
 }
-
 
 /**
  * This object is available on nodes via the symbol {@link XMLParser.getMetaDataSymbol} 
  * when {@link X2jOptions.captureMetaData} is true.
  */
-declare interface XMLMetaData {
+export interface XMLMetaData {
   /** The index, if available, of the character where the XML node began in the input stream. */
   startIndex?: number;
 }
-
-declare namespace fxp {
-  export {
-    XMLParser,
-    XMLValidator,
-    XMLBuilder,
-    XMLMetaData,
-    XmlBuilderOptions,
-    X2jOptions,
-    ESchema,
-    ValidationError,
-    strnumOptions,
-    validationOptions,
-    ProcessEntitiesOptions,
-  }
-}
-
-export = fxp;
