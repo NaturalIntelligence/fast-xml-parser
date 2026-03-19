@@ -422,6 +422,8 @@ const parseXml = function (xmlData) {
         if (this.options.strictReservedNames &&
           (tagName === this.options.commentPropName
             || tagName === this.options.cdataPropName
+            || tagName === this.options.textNodeName
+            || tagName === this.options.attributesGroupName
           )) {
           throw new Error(`Invalid tag name: ${tagName}`);
         }
