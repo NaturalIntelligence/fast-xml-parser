@@ -2,6 +2,9 @@
 
 Note: Due to some last quick changes on v4, detail of v4.5.3 & v4.5.4 are not updated here. v4.5.4x is the last tag of v4 in github repository. I'm extremely sorry for the confusion
 
+**5.5.8 / 2026-03-20**
+- pass read only matcher in callback
+
 **5.5.7 / 2026-03-19**
 - fix: entity expansion limits
 - update strnum package to 2.2.0

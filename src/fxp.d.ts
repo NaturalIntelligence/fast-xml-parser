@@ -1,7 +1,9 @@
-//import type { Matcher, Expression } from 'path-expression-matcher';
+import type { Expression, ReadonlyMatcher } from './pem';
 
-type Matcher = unknown;
-type Expression = unknown;
+// jPath: true  → string
+// jPath: false → ReadonlyMatcher
+type JPathOrMatcher = string | ReadonlyMatcher;
+type JPathOrExpression = string | Expression;
 
 export type ProcessEntitiesOptions = {
   /**
@@ -63,7 +65,7 @@ export type ProcessEntitiesOptions = {
    * 
    * Defaults to `null`
    */
-  tagFilter?: ((tagName: string, jPathOrMatcher: string | Matcher) => boolean) | null;
+  tagFilter?: ((tagName: string, jPathOrMatcher: JPathOrMatcher) => boolean) | null;
 };
 
 export type X2jOptions = {
@@ -108,7 +110,7 @@ export type X2jOptions = {
    * 
    * Defaults to `true`
    */
-  ignoreAttributes?: boolean | (string | RegExp)[] | ((attrName: string, jPathOrMatcher: string | Matcher) => boolean);
+  ignoreAttributes?: boolean | (string | RegExp)[] | ((attrName: string, jPathOrMatcher: JPathOrMatcher) => boolean);
 
   /**
    * Whether to remove namespace string from tag and attribute names
@@ -175,7 +177,7 @@ export type X2jOptions = {
    * 
    * Defaults to `(tagName, val, jPathOrMatcher, hasAttributes, isLeafNode) => val`
    */
-  tagValueProcessor?: (tagName: string, tagValue: string, jPathOrMatcher: string | Matcher, hasAttributes: boolean, isLeafNode: boolean) => unknown;
+  tagValueProcessor?: (tagName: string, tagValue: string, jPathOrMatcher: JPathOrMatcher, hasAttributes: boolean, isLeafNode: boolean) => unknown;
 
   /**
    * Control how attribute value should be parsed
@@ -188,7 +190,7 @@ export type X2jOptions = {
    * 
    * Defaults to `(attrName, val, jPathOrMatcher) => val`
    */
-  attributeValueProcessor?: (attrName: string, attrValue: string, jPathOrMatcher: string | Matcher) => unknown;
+  attributeValueProcessor?: (attrName: string, attrValue: string, jPathOrMatcher: JPathOrMatcher) => unknown;
 
   /**
    * Options to pass to `strnum` for parsing numbers
@@ -206,7 +208,7 @@ export type X2jOptions = {
    * 
    * Defaults to `[]`
    */
-  stopNodes?: (string | Expression)[];
+  stopNodes?: JPathOrExpression[];
 
   /**
    * List of tags without closing tags
@@ -233,7 +235,7 @@ export type X2jOptions = {
    * 
    * Defaults to `() => false`
    */
-  isArray?: (tagName: string, jPathOrMatcher: string | Matcher, isLeafNode: boolean, isAttribute: boolean) => boolean;
+  isArray?: (tagName: string, jPathOrMatcher: JPathOrMatcher, isLeafNode: boolean, isAttribute: boolean) => boolean;
 
   /**
    * Whether to process default and DOCTYPE entities
@@ -295,7 +297,7 @@ export type X2jOptions = {
    * 
    * Defaults to `(tagName, jPathOrMatcher, attrs) => tagName`
    */
-  updateTag?: (tagName: string, jPathOrMatcher: string | Matcher, attrs: { [k: string]: string }) => string | boolean;
+  updateTag?: (tagName: string, jPathOrMatcher: JPathOrMatcher, attrs: { [k: string]: string }) => string | boolean;
 
   /**
    * If true, adds a Symbol to all object nodes, accessible by {@link XMLParser.getMetaDataSymbol} with
@@ -479,7 +481,7 @@ export type XmlBuilderOptions = {
    * 
    * Defaults to `[]`
    */
-  stopNodes?: (string | Expression)[];
+  stopNodes?: JPathOrExpression[];
 
   /**
    * Control how tag value should be parsed. Called only if tag value is not empty

@@ -1,5 +1,6 @@
 Pre release
 * [ ] npm audit and yarn audit is done
+* [ ] update pem.d.ts when there is any change path-expression-matcher package
 * [ ] Change log has been updated
 * [ ] Added/updated documentation for new properties/features
 * [ ] `package-lock.json` reflects the right version : `npm install`
