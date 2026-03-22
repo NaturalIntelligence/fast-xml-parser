@@ -28,3 +28,11 @@ Post release
 
 To remove tag
 git tag -d <tag_name>
+
+---
+
+v4 legacy maintenance branch v4-maintenance
+
+- `npm publish --tag legacy`
+- `git push origin v4-maintenance --tags`
+- update relevant CVE if applicable

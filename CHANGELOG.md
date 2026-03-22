@@ -2,6 +2,17 @@
 
 Note: Due to some last quick changes on v4, detail of v4.5.3 & v4.5.4 are not updated here. v4.5.4x is the last tag of v4 in github repository. I'm extremely sorry for the confusion
 
+**4.5.5 / 2026-03-22**
+
+apply fixes from v5 (legacy maintenance branch v4-maintenance)
+
+- support maxEntityCount
+- support onDangerousProperty
+- support maxNestedTags
+- handle prototype pollution
+- fix incorrect entity name replacement
+- fix incorrect condition for entity expansion
+
 **5.5.8 / 2026-03-20**
 - pass read only matcher in callback
 
