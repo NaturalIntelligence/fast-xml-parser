@@ -1,4 +1,12 @@
 
+const { DANGEROUS_PROPERTY_NAMES, criticalProperties } = require("../util");
+
+const defaultOnDangerousProperty = (name) => {
+  if (DANGEROUS_PROPERTY_NAMES.includes(name)) {
+    return "__" + name;
+  }
+  return name;
+};
 const defaultOptions = {
   preserveOrder: false,
   attributeNamePrefix: '@_',
@@ -41,7 +49,32 @@ const defaultOptions = {
   captureMetaData: false,
   maxNestedTags: 100,
   strictReservedNames: true,
+  onDangerousProperty: defaultOnDangerousProperty
 };
+/**
+ * Validates that a property name is safe to use
+ * @param {string} propertyName - The property name to validate
+ * @param {string} optionName - The option field name (for error message)
+ * @throws {Error} If property name is dangerous
+ */
+function validatePropertyName(propertyName, optionName) {
+  if (typeof propertyName !== 'string') {
+    return; // Only validate string property names
+  }
+
+  const normalized = propertyName.toLowerCase();
+  if (DANGEROUS_PROPERTY_NAMES.some(dangerous => normalized === dangerous.toLowerCase())) {
+    throw new Error(
+      `[SECURITY] Invalid ${optionName}: "${propertyName}" is a reserved JavaScript keyword that could cause prototype pollution`
+    );
+  }
+
+  if (criticalProperties.some(dangerous => normalized === dangerous.toLowerCase())) {
+    throw new Error(
+      `[SECURITY] Invalid ${optionName}: "${propertyName}" is a reserved JavaScript keyword that could cause prototype pollution`
+    );
+  }
+}
 
 /**
  * Normalizes processEntities option for backward compatibility
@@ -65,11 +98,12 @@ function normalizeProcessEntities(value) {
   // Object config - merge with defaults
   if (typeof value === 'object' && value !== null) {
     return {
-      enabled: value.enabled !== false, // default true if not specified
-      maxEntitySize: value.maxEntitySize ?? 10000,
-      maxExpansionDepth: value.maxExpansionDepth ?? 10,
-      maxTotalExpansions: value.maxTotalExpansions ?? 1000,
-      maxExpandedLength: value.maxExpandedLength ?? 100000,
+      enabled: value.enabled !== false,
+      maxEntitySize: Math.max(1, value.maxEntitySize ?? 10000),
+      maxExpansionDepth: Math.max(1, value.maxExpansionDepth ?? 10),
+      maxTotalExpansions: Math.max(1, value.maxTotalExpansions ?? 1000),
+      maxExpandedLength: Math.max(1, value.maxExpandedLength ?? 100000),
+      maxEntityCount: Math.max(1, value.maxEntityCount ?? 100),
       allowedTags: value.allowedTags ?? null,
       tagFilter: value.tagFilter ?? null
     };
@@ -81,6 +115,26 @@ function normalizeProcessEntities(value) {
 
 const buildOptions = function (options) {
   const built = Object.assign({}, defaultOptions, options);
+
+
+  // Validate property names to prevent prototype pollution
+  const propertyNameOptions = [
+    { value: built.attributeNamePrefix, name: 'attributeNamePrefix' },
+    { value: built.attributesGroupName, name: 'attributesGroupName' },
+    { value: built.textNodeName, name: 'textNodeName' },
+    { value: built.cdataPropName, name: 'cdataPropName' },
+    { value: built.commentPropName, name: 'commentPropName' }
+  ];
+
+  for (const { value, name } of propertyNameOptions) {
+    if (value) {
+      validatePropertyName(value, name);
+    }
+  }
+
+  if (built.onDangerousProperty === null) {
+    built.onDangerousProperty = defaultOnDangerousProperty;
+  }
 
   // Always normalize processEntities for backward compatibility and validation
   built.processEntities = normalizeProcessEntities(built.processEntities);

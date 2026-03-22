@@ -5,7 +5,7 @@ const nameChar = nameStartChar + '\\-.\\d\\u00B7\\u0300-\\u036F\\u203F-\\u2040';
 const nameRegexp = '[' + nameStartChar + '][' + nameChar + ']*'
 const regexName = new RegExp('^' + nameRegexp + '$');
 
-const getAllMatches = function(string, regex) {
+const getAllMatches = function (string, regex) {
   const matches = [];
   let match = regex.exec(string);
   while (match) {
@@ -21,16 +21,16 @@ const getAllMatches = function(string, regex) {
   return matches;
 };
 
-const isName = function(string) {
+const isName = function (string) {
   const match = regexName.exec(string);
   return !(match === null || typeof match === 'undefined');
 };
 
-exports.isExist = function(v) {
+exports.isExist = function (v) {
   return typeof v !== 'undefined';
 };
 
-exports.isEmptyObject = function(obj) {
+exports.isEmptyObject = function (obj) {
   return Object.keys(obj).length === 0;
 };
 
@@ -39,13 +39,13 @@ exports.isEmptyObject = function(obj) {
  * @param {*} target
  * @param {*} a
  */
-exports.merge = function(target, a, arrayMode) {
+exports.merge = function (target, a, arrayMode) {
   if (a) {
     const keys = Object.keys(a); // will return an array of own properties
     const len = keys.length; //don't make it inline
     for (let i = 0; i < len; i++) {
       if (arrayMode === 'strict') {
-        target[keys[i]] = [ a[keys[i]] ];
+        target[keys[i]] = [a[keys[i]]];
       } else {
         target[keys[i]] = a[keys[i]];
       }
@@ -56,7 +56,7 @@ exports.merge = function(target, a, arrayMode) {
   return Object.assign(b,a);
 } */
 
-exports.getValue = function(v) {
+exports.getValue = function (v) {
   if (exports.isExist(v)) {
     return v;
   } else {
@@ -64,9 +64,26 @@ exports.getValue = function(v) {
   }
 };
 
-// const fakeCall = function(a) {return a;};
-// const fakeCallNoReturn = function() {};
+/**
+ * Dangerous property names that could lead to prototype pollution or security issues
+ */
+const DANGEROUS_PROPERTY_NAMES = [
+  // '__proto__',
+  // 'constructor',
+  // 'prototype',
+  'hasOwnProperty',
+  'toString',
+  'valueOf',
+  '__defineGetter__',
+  '__defineSetter__',
+  '__lookupGetter__',
+  '__lookupSetter__'
+];
+
+const criticalProperties = ["__proto__", "constructor", "prototype"];
 
 exports.isName = isName;
 exports.getAllMatches = getAllMatches;
 exports.nameRegexp = nameRegexp;
+exports.DANGEROUS_PROPERTY_NAMES = DANGEROUS_PROPERTY_NAMES;
+exports.criticalProperties = criticalProperties;

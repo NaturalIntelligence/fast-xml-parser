@@ -35,6 +35,13 @@ export type ProcessEntitiesOptions = {
   maxExpandedLength?: number;
 
   /**
+   * Maximum number of entities allowed in the XML
+   * 
+   * Defaults to `100`
+   */
+  maxEntityCount?: number;
+
+  /**
    * Array of tag names where entity replacement is allowed.
    * If null, entities are replaced in all tags.
    * 
@@ -292,6 +299,16 @@ export type X2jOptions = {
    * Defaults to `true`
    */
   strictReservedNames?: boolean;
+
+  /**
+   * Function to sanitize dangerous property names
+   * 
+   * @param name - The name of the property
+   * @returns {string} The sanitized name
+   * 
+   * Defaults to `(name) => __name`
+   */
+  onDangerousProperty?: (name: string) => string;
 };
 
 
@@ -469,6 +486,13 @@ export type XmlBuilderOptions = {
 
 
   oneListGroup?: boolean;
+
+  /**
+ * Maximum number of nested tags
+ * 
+ * Defaults to `100`
+ */
+  maxNestedTags?: number;
 };
 
 type ESchema = string | object | Array<string | object>;

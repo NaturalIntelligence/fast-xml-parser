@@ -162,7 +162,7 @@ function buildAttributesMap(attrStr, jPath, tagName) {
         if (this.options.transformAttributeName) {
           aName = this.options.transformAttributeName(aName);
         }
-        if (aName === "__proto__") aName = "#__proto__";
+        aName = sanitizeName(aName, this.options);
         if (oldVal !== undefined) {
           if (this.options.trimValues) {
             oldVal = oldVal.trim();
@@ -325,6 +325,8 @@ const parseXml = function (xmlData) {
         if (this.options.strictReservedNames &&
           (tagName === this.options.commentPropName
             || tagName === this.options.cdataPropName
+            || tagName === this.options.textNodeName
+            || tagName === this.options.attributesGroupName
           )) {
           throw new Error(`Invalid tag name: ${tagName}`);
         }
@@ -523,16 +525,37 @@ const replaceEntitiesValue = function (val, tagName, jPath) {
   if (val.indexOf('&') === -1) return val;  // Early exit
 
   // Replace standard entities
-  for (let entityName in this.lastEntities) {
+  for (const entityName of Object.keys(this.lastEntities)) {
     const entity = this.lastEntities[entityName];
+    const matches = val.match(entity.regex);
+    if (matches) {
+      this.entityExpansionCount += matches.length;
+      if (entityConfig.maxTotalExpansions &&
+        this.entityExpansionCount > entityConfig.maxTotalExpansions) {
+        throw new Error(
+          `Entity expansion limit exceeded: ${this.entityExpansionCount} > ${entityConfig.maxTotalExpansions}`
+        );
+      }
+    }
     val = val.replace(entity.regex, entity.val);
   }
   if (val.indexOf('&') === -1) return val;  // Early exit
 
   // Replace HTML entities if enabled
   if (this.options.htmlEntities) {
-    for (let entityName in this.htmlEntities) {
+    for (const entityName of Object.keys(this.htmlEntities)) {
       const entity = this.htmlEntities[entityName];
+      const matches = val.match(entity.regex);
+      if (matches) {
+        //console.log(matches);
+        this.entityExpansionCount += matches.length;
+        if (entityConfig.maxTotalExpansions &&
+          this.entityExpansionCount > entityConfig.maxTotalExpansions) {
+          throw new Error(
+            `Entity expansion limit exceeded: ${this.entityExpansionCount} > ${entityConfig.maxTotalExpansions}`
+          );
+        }
+      }
       val = val.replace(entity.regex, entity.val);
     }
   }
@@ -725,4 +748,14 @@ function fromCodePoint(str, base, prefix) {
   }
 }
 
+function sanitizeName(name, options) {
+  if (util.criticalProperties.includes(name)) {
+    throw new Error(`[SECURITY] Invalid name: "${name}" is a reserved JavaScript keyword that could cause prototype pollution`);
+  } else if (util.DANGEROUS_PROPERTY_NAMES.includes(name)) {
+    return options.onDangerousProperty(name);
+  }
+  return name;
+}
+
 module.exports = OrderedObjParser;
+
