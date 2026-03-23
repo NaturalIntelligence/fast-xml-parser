@@ -1,4 +1,4 @@
-import type { Expression, ReadonlyMatcher } from './pem';
+import type { Expression, ReadonlyMatcher } from './pem.js';
 
 // jPath: true  → string
 // jPath: false → ReadonlyMatcher
