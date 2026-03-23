@@ -27,6 +27,7 @@ jobs:
       run: echo "PUBLISH_PLEASE_DISABLE_PROMPT=true" >> $GITHUB_ENV
     - run: npm install --ignore-scripts
     - run: npm run test
+    - run: npm run test-types-nodenext
     - uses: coverallsapp/github-action@v1.1.1
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}

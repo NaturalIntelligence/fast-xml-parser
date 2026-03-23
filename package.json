@@ -22,6 +22,7 @@
   "scripts": {
     "test": "c8 --reporter=lcov --reporter=text jasmine spec/*spec.js",
     "test-types": "tsc --noEmit spec/typings/typings-test.ts",
+    "test-types-nodenext": "tsc --noEmit -p spec/typings/tsconfig.nodenext.json",
     "unit": "jasmine",
     "coverage": "nyc report --reporter html --reporter text -t .nyc_output --report-dir .nyc_output/summary",
     "perf": "node ./benchmark/perfTest3.js",
