@@ -2,6 +2,11 @@
 
 Note: Due to some last quick changes on v4, detail of v4.5.3 & v4.5.4 are not updated here. v4.5.4x is the last tag of v4 in github repository. I'm extremely sorry for the confusion
 
+
+**5.5.9 / 2026-03-23**
+- combine typing files
+
+
 **4.5.5 / 2026-03-22**
 
 apply fixes from v5 (legacy maintenance branch v4-maintenance)
