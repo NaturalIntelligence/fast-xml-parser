@@ -3,6 +3,14 @@
 Note: Due to some last quick changes on v4, detail of v4.5.3 & v4.5.4 are not updated here. v4.5.4x is the last tag of v4 in github repository. I'm extremely sorry for the confusion
 
 
+
+**5.5.10 / 2026-04-03**
+- increase default entity explansion limit as many projects demand for that
+- performance improvement
+  - reduce calls to toString
+  - early return when entities are not present
+  - prepare rawAttrsForMatcher only if user sets `jPath: false`
+
 **5.5.9 / 2026-03-23**
 - combine typing files
 
