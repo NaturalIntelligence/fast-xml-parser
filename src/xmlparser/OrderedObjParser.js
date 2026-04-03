@@ -217,34 +217,37 @@ function buildAttributesMap(attrStr, jPath, tagName) {
     const len = matches.length; //don't make it inline
     const attrs = {};
 
-    // First pass: parse all attributes and update matcher with raw values
-    // This ensures the matcher has all attribute values when processors run
-    const rawAttrsForMatcher = {};
-    for (let i = 0; i < len; i++) {
-      const attrName = this.resolveNameSpace(matches[i][1]);
-      const oldVal = matches[i][4];
+    if (this.options.jPath === false) {
+      // First pass: parse all attributes and update matcher with raw values
+      // This ensures the matcher has all attribute values when processors run
+      const rawAttrsForMatcher = {};
+      for (let i = 0; i < len; i++) {
+        const attrName = this.resolveNameSpace(matches[i][1]);
+        const oldVal = matches[i][4];
 
-      if (attrName.length && oldVal !== undefined) {
-        let parsedVal = oldVal;
-        if (this.options.trimValues) {
-          parsedVal = parsedVal.trim();
+        if (attrName.length && oldVal !== undefined) {
+          let parsedVal = oldVal;
+          if (this.options.trimValues) {
+            parsedVal = parsedVal.trim();
+          }
+          parsedVal = this.replaceEntitiesValue(parsedVal, tagName, this.readonlyMatcher);
+          rawAttrsForMatcher[attrName] = parsedVal;
         }
-        parsedVal = this.replaceEntitiesValue(parsedVal, tagName, this.readonlyMatcher);
-        rawAttrsForMatcher[attrName] = parsedVal;
+      }
+
+      // Update matcher with raw attribute values BEFORE running processors
+      if (Object.keys(rawAttrsForMatcher).length > 0 && typeof jPath === 'object' && jPath.updateCurrent) {
+        jPath.updateCurrent(rawAttrsForMatcher);
       }
     }
 
-    // Update matcher with raw attribute values BEFORE running processors
-    if (Object.keys(rawAttrsForMatcher).length > 0 && typeof jPath === 'object' && jPath.updateCurrent) {
-      jPath.updateCurrent(rawAttrsForMatcher);
-    }
-
     // Second pass: now process attributes with matcher having full attribute context
+    const jPathStr = this.options.jPath ? jPath.toString() : this.readonlyMatcher;
+
     for (let i = 0; i < len; i++) {
       const attrName = this.resolveNameSpace(matches[i][1]);
 
       // Convert jPath to string if needed for ignoreAttributesFn
-      const jPathStr = this.options.jPath ? jPath.toString() : this.readonlyMatcher;
       if (this.ignoreAttributesFn(attrName, jPathStr)) {
         continue
       }
@@ -659,6 +662,7 @@ function replaceEntitiesValue(val, tagName, jPath) {
       }
     }
   }
+  if (val.indexOf('&') === -1) return val;
   // Replace standard entities
   for (const entityName of Object.keys(this.lastEntities)) {
     const entity = this.lastEntities[entityName];
