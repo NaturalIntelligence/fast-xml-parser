@@ -217,92 +217,80 @@ function buildAttributesMap(attrStr, jPath, tagName) {
     const len = matches.length; //don't make it inline
     const attrs = {};
 
-    if (this.options.jPath === false) {
-      // First pass: parse all attributes and update matcher with raw values
-      // This ensures the matcher has all attribute values when processors run
-      const rawAttrsForMatcher = {};
-      for (let i = 0; i < len; i++) {
-        const attrName = this.resolveNameSpace(matches[i][1]);
-        const oldVal = matches[i][4];
-
-        if (attrName.length && oldVal !== undefined) {
-          let parsedVal = oldVal;
-          if (this.options.trimValues) {
-            parsedVal = parsedVal.trim();
-          }
-          parsedVal = this.replaceEntitiesValue(parsedVal, tagName, this.readonlyMatcher);
-          rawAttrsForMatcher[attrName] = parsedVal;
-        }
-      }
-
-      // Update matcher with raw attribute values BEFORE running processors
-      if (Object.keys(rawAttrsForMatcher).length > 0 && typeof jPath === 'object' && jPath.updateCurrent) {
-        jPath.updateCurrent(rawAttrsForMatcher);
-      }
-    }
-
-    // Second pass: now process attributes with matcher having full attribute context
-    const jPathStr = this.options.jPath ? jPath.toString() : this.readonlyMatcher;
+    // Pre-process values once: trim + entity replacement
+    // Reused in both matcher update and second pass
+    const processedVals = new Array(len);
+    let hasRawAttrs = false;
+    const rawAttrsForMatcher = {};
 
     for (let i = 0; i < len; i++) {
       const attrName = this.resolveNameSpace(matches[i][1]);
+      const oldVal = matches[i][4];
 
-      // Convert jPath to string if needed for ignoreAttributesFn
-      if (this.ignoreAttributesFn(attrName, jPathStr)) {
-        continue
+      if (attrName.length && oldVal !== undefined) {
+        let val = oldVal;
+        if (this.options.trimValues) val = val.trim();
+        val = this.replaceEntitiesValue(val, tagName, this.readonlyMatcher);
+        processedVals[i] = val;
+
+        rawAttrsForMatcher[attrName] = val;
+        hasRawAttrs = true;
       }
+    }
 
-      let oldVal = matches[i][4];
+    // Update matcher ONCE before second pass, if applicable
+    if (hasRawAttrs && typeof jPath === 'object' && jPath.updateCurrent) {
+      jPath.updateCurrent(rawAttrsForMatcher);
+    }
+
+    // Hoist toString() once — path doesn't change during attribute processing
+    const jPathStr = this.options.jPath ? jPath.toString() : this.readonlyMatcher;
+
+    // Second pass: apply processors, build final attrs
+    let hasAttrs = false;
+    for (let i = 0; i < len; i++) {
+      const attrName = this.resolveNameSpace(matches[i][1]);
+
+      if (this.ignoreAttributesFn(attrName, jPathStr)) continue;
+
       let aName = this.options.attributeNamePrefix + attrName;
 
       if (attrName.length) {
         if (this.options.transformAttributeName) {
           aName = this.options.transformAttributeName(aName);
         }
-        //if (aName === "__proto__") aName = "#__proto__";
         aName = sanitizeName(aName, this.options);
 
-        if (oldVal !== undefined) {
-          if (this.options.trimValues) {
-            oldVal = oldVal.trim();
-          }
-          oldVal = this.replaceEntitiesValue(oldVal, tagName, this.readonlyMatcher);
+        if (matches[i][4] !== undefined) {
+          // Reuse already-processed value — no double entity replacement
+          const oldVal = processedVals[i];
 
-          // Pass jPath string or readonlyMatcher based on options.jPath setting
-          const jPathOrMatcher = this.options.jPath ? jPath.toString() : this.readonlyMatcher;
-          const newVal = this.options.attributeValueProcessor(attrName, oldVal, jPathOrMatcher);
+          const newVal = this.options.attributeValueProcessor(attrName, oldVal, jPathStr);
           if (newVal === null || newVal === undefined) {
-            //don't parse
             attrs[aName] = oldVal;
           } else if (typeof newVal !== typeof oldVal || newVal !== oldVal) {
-            //overwrite
             attrs[aName] = newVal;
           } else {
-            //parse
-            attrs[aName] = parseValue(
-              oldVal,
-              this.options.parseAttributeValue,
-              this.options.numberParseOptions
-            );
+            attrs[aName] = parseValue(oldVal, this.options.parseAttributeValue, this.options.numberParseOptions);
           }
+          hasAttrs = true;
         } else if (this.options.allowBooleanAttributes) {
           attrs[aName] = true;
+          hasAttrs = true;
         }
       }
     }
 
-    if (!Object.keys(attrs).length) {
-      return;
-    }
+    if (!hasAttrs) return;
+
     if (this.options.attributesGroupName) {
       const attrCollection = {};
       attrCollection[this.options.attributesGroupName] = attrs;
       return attrCollection;
     }
-    return attrs
+    return attrs;
   }
 }
-
 const parseXml = function (xmlData) {
   xmlData = xmlData.replace(/\r\n?/g, "\n"); //TODO: remove this line
   const xmlObj = new xmlNode('!xml');
