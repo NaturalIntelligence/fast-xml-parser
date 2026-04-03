@@ -16,13 +16,17 @@ It can handle big files (tested up to 100mb). XML Entities, HTML entities, and D
 ---
 # Your Support, Our Motivation
 
-## Try out our New Thoughts
+Please join [Discord community](https://discord.gg/X4Qp9u6Vz) for pre release announcements and discussions. This will prevent us to release breaking changes.
+
+
+
+<!-- ## Try out our New Thoughts
 
 - WishIn - You need it if negative thoughts take over all the time <br>
 <a href="https://play.google.com/store/apps/details?id=com.solothought.wishin"> <img src="https://solothought.com/products/assets/images/wishin/YouTubeThumbnail.png" width="500px"/> </a>
 - **Flowgger**: 90% less logs size and 90% less debugging time<br>
 <a href="https://github.com/solothought/flowgger"> <img src="static/img/flowgger_h.webp" alt="Flowgger Logging Framework" width="300px"/></a>
-- [Text2Chart](https://solothought.com/text2chart/flow): interactive flow chart out of simple text.
+- [Text2Chart](https://solothought.com/text2chart/flow): interactive flow chart out of simple text. -->
 
 ## Financial Support
 
@@ -34,38 +38,14 @@ Sponsor this project
 <a href="https://opencollective.com/fast-xml-parser/donate" target="_blank">
   <img src="https://opencollective.com/fast-xml-parser/donate/button@2x.png?color=blue" width=180 />
 </a>
-<a href="https://paypal.me/naturalintelligence"> <img src="static/img/support_paypal.svg" alt="donate button" width="180"/></a>
 <br>
 <br>
 <br>
-
-<!--
-### Current Sponsors
-
-Check the complete list at [ThankYouBackers](https://github.com/NaturalIntelligence/ThankYouBackers) for our sponsors and supporters.
-
-Through Github
-
-<a href="https://github.com/skunkteam" target="_blank"><img src="https://avatars.githubusercontent.com/u/46373671?s=60" width="60px"></a>
-<a href="https://github.com/getsentry" target="_blank"><img src="https://avatars.githubusercontent.com/u/1396951?s=60" width="60px"></a>
-
-Through OpenCollective
-
-<a href="https://opencollective.com/fast-xml-parser/sponsor/0/website" target="_blank"><img src="https://opencollective.com/fast-xml-parser/sponsor/0/avatar.svg"></a>
-<a href="https://opencollective.com/fast-xml-parser/sponsor/1/website" target="_blank"><img src="https://opencollective.com/fast-xml-parser/sponsor/1/avatar.svg"></a>
-<a href="https://opencollective.com/fast-xml-parser/sponsor/2/website" target="_blank"><img src="https://opencollective.com/fast-xml-parser/sponsor/2/avatar.svg"></a>
-<a href="https://opencollective.com/fast-xml-parser/sponsor/3/website" target="_blank"><img src="https://opencollective.com/fast-xml-parser/sponsor/3/avatar.svg"></a>
-<a href="https://opencollective.com/fast-xml-parser/sponsor/4/website" target="_blank"><img src="https://opencollective.com/fast-xml-parser/sponsor/4/avatar.svg"></a>
-<a href="https://opencollective.com/fast-xml-parser/sponsor/5/website" target="_blank"><img src="https://opencollective.com/fast-xml-parser/sponsor/5/avatar.svg"></a>
-<a href="https://opencollective.com/fast-xml-parser/sponsor/6/website" target="_blank"><img src="https://opencollective.com/fast-xml-parser/sponsor/6/avatar.svg"></a>
-<a href="https://opencollective.com/fast-xml-parser/sponsor/7/website" target="_blank"><img src="https://opencollective.com/fast-xml-parser/sponsor/7/avatar.svg"></a>
-<a href="https://opencollective.com/fast-xml-parser/sponsor/8/website" target="_blank"><img src="https://opencollective.com/fast-xml-parser/sponsor/8/avatar.svg"></a>
-<a href="https://opencollective.com/fast-xml-parser/sponsor/9/website" target="_blank"><img src="https://opencollective.com/fast-xml-parser/sponsor/9/avatar.svg"></a>
--->
-
-![fxp_sponsors](https://raw.githubusercontent.com/NaturalIntelligence/ThankYouBackers/main/assets/NI_sponsors.jpg)
 
 > This is a donation. No goods or services are expected in return. Any requests for refunds for those purposes will be rejected.
+
+![fxp_sponsors](https://raw.githubusercontent.com/NaturalIntelligence/ThankYouBackers/main/assets/NI_sponsors.jpg)
+> This image update once in 6 months mostly
 
 ## Users
 
