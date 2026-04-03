@@ -121,10 +121,11 @@ export default class OrderedObjParser {
     this.isCurrentNodeStopNode = false;
 
     // Pre-compile stopNodes expressions
-    if (this.options.stopNodes && this.options.stopNodes.length > 0) {
+    const stopNodesOpts = this.options.stopNodes;
+    if (stopNodesOpts && stopNodesOpts.length > 0) {
       this.stopNodeExpressions = [];
-      for (let i = 0; i < this.options.stopNodes.length; i++) {
-        const stopNodeExp = this.options.stopNodes[i];
+      for (let i = 0; i < stopNodesOpts.length; i++) {
+        const stopNodeExp = stopNodesOpts[i];
         if (typeof stopNodeExp === 'string') {
           // Convert string to Expression object
           this.stopNodeExpressions.push(new Expression(stopNodeExp));
@@ -303,9 +304,13 @@ const parseXml = function (xmlData) {
   // Reset entity expansion counters for this document
   this.entityExpansionCount = 0;
   this.currentExpandedLength = 0;
+  this.docTypeEntitiesKeys = [];
+  this.lastEntitiesKeys = Object.keys(this.lastEntities);
+  this.htmlEntitiesKeys = Object.keys(this.htmlEntities);
 
   const docTypeReader = new DocTypeReader(this.options.processEntities);
-  for (let i = 0; i < xmlData.length; i++) {//for each char in XML data
+  const xmlLen = xmlData.length;
+  for (let i = 0; i < xmlLen; i++) {//for each char in XML data
     const ch = xmlData[i];
     if (ch === '<') {
       // const nextIndex = i+1;
@@ -382,6 +387,7 @@ const parseXml = function (xmlData) {
         && xmlData.charCodeAt(i + 2) === 68) { //'!D'
         const result = docTypeReader.readDocType(xmlData, i);
         this.docTypeEntities = result.entities;
+        this.docTypeEntitiesKeys = Object.keys(this.docTypeEntities) || []
         i = result.i;
       } else if (c1 === 33
         && xmlData.charCodeAt(i + 2) === 91) { // '!['
@@ -407,7 +413,7 @@ const parseXml = function (xmlData) {
         // Safety check: readTagExp can return undefined
         if (!result) {
           // Log context for debugging
-          const context = xmlData.substring(Math.max(0, i - 50), Math.min(xmlData.length, i + 50));
+          const context = xmlData.substring(Math.max(0, i - 50), Math.min(xmlLen, i + 50));
           throw new Error(`readTagExp returned undefined at position ${i}. Context: "${context}"`);
         }
 
@@ -623,7 +629,7 @@ function replaceEntitiesValue(val, tagName, jPath) {
   }
 
   // Replace DOCTYPE entities
-  for (const entityName of Object.keys(this.docTypeEntities)) {
+  for (const entityName of this.docTypeEntitiesKeys) {
     const entity = this.docTypeEntities[entityName];
     const matches = val.match(entity.regx);
 
@@ -657,7 +663,7 @@ function replaceEntitiesValue(val, tagName, jPath) {
   }
   if (val.indexOf('&') === -1) return val;
   // Replace standard entities
-  for (const entityName of Object.keys(this.lastEntities)) {
+  for (const entityName of this.lastEntitiesKeys) {
     const entity = this.lastEntities[entityName];
     const matches = val.match(entity.regex);
     if (matches) {
@@ -675,7 +681,7 @@ function replaceEntitiesValue(val, tagName, jPath) {
 
   // Replace HTML entities if enabled
   if (this.options.htmlEntities) {
-    for (const entityName of Object.keys(this.htmlEntities)) {
+    for (const entityName of this.htmlEntitiesKeys) {
       const entity = this.htmlEntities[entityName];
       const matches = val.match(entity.regex);
       if (matches) {
@@ -717,7 +723,6 @@ function saveTextToParentTag(textData, parentNode, matcher, isLeafNode) {
   return textData;
 }
 
-//TODO: use jPath to simplify the logic
 /**
  * @param {Array<Expression>} stopNodeExpressions - Array of compiled Expression objects
  * @param {Matcher} matcher - Current path matcher
@@ -826,7 +831,8 @@ function readStopNodeData(xmlData, tagName, i) {
   // Starting at 1 since we already have an open tag
   let openTagCount = 1;
 
-  for (; i < xmlData.length; i++) {
+  const xmllen = xmlData.length;
+  for (; i < xmllen; i++) {
     if (xmlData[i] === "<") {
       const c1 = xmlData.charCodeAt(i + 1);
       if (c1 === 47) {//close tag '/'
