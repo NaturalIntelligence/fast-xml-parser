@@ -779,6 +779,12 @@ function findClosingIndex(xmlData, str, i, errMsg) {
   }
 }
 
+function findClosingChar(xmlData, char, i, errMsg) {
+  const closingIndex = xmlData.indexOf(char, i);
+  if (closingIndex === -1) throw new Error(errMsg);
+  return closingIndex; // no offset needed
+}
+
 function readTagExp(xmlData, i, removeNSPrefix, closingChar = ">") {
   const result = tagExpWithClosingIndex(xmlData, i + 1, closingChar);
   if (!result) return;
@@ -824,7 +830,7 @@ function readStopNodeData(xmlData, tagName, i) {
     if (xmlData[i] === "<") {
       const c1 = xmlData.charCodeAt(i + 1);
       if (c1 === 47) {//close tag '/'
-        const closeIndex = findClosingIndex(xmlData, ">", i, `${tagName} is not closed`);
+        const closeIndex = findClosingChar(xmlData, ">", i, `${tagName} is not closed`);
         let closeTagName = xmlData.substring(i + 2, closeIndex).trim();
         if (closeTagName === tagName) {
           openTagCount--;
