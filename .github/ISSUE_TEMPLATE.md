@@ -15,6 +15,8 @@
 * [ ] Have you checked if you are using correct configuration? Please check README to find documentation.
 * [ ] Did you try online [tool](https://naturalintelligence.github.io/fast-xml-parser/)? It has limited features still helpful.
 
+You may optionally join our [Discord Server](https://discord.gg/M4NjnSdyg) for prerelease announcements before any release.
+
 <!-- Please provide following data to avoid long communication and fast resolution. --> 
 ### Input
 <!-- Please include your sample code or steps to reproduce here -->
