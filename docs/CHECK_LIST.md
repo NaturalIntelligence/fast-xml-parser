@@ -1,5 +1,6 @@
 Pre release
 * [ ] npm audit and yarn audit is done
+* [ ] change in local package installation
 * [ ] update pem.d.ts when there is any change path-expression-matcher package
 * [ ] Change log has been updated
 * [ ] Added/updated documentation for new properties/features
@@ -15,7 +16,7 @@ Pre release
 * [ ] ReadMe file or docs are updated for any change, user list, performance report, links etc.
 * [ ] Single test is not running `fit`
 * [ ] `npm run checkReadiness` is used to check the files being published
-* [ ] tags are assigned to latest commit `git tag -a v3.20.0 -m "summary msg"`
+* [ ] tags are assigned to latest commit `git tag -a v5.5.11 -m "ExpressionSet"`
 
 In general
 * [ ] tests are added/updated
