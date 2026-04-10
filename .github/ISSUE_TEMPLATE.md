@@ -38,3 +38,7 @@ Include the code being used for parsing
 - [ ] No
 
 [Bookmark](https://github.com/NaturalIntelligence/fast-xml-parser/stargazers) this repository for further updates.
+
+---
+
+If you're new to the library, need custom output which is not supported by this library, or want to proces big files but memoery is a concern. Please check this article: [Fast and Flexible XML Parsing in JavaScript](https://medium.com/@amitgupta-gwl/fast-and-flexible-xml-parsing-in-javascript-80b32896797d).
