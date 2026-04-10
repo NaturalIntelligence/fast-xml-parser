@@ -66,20 +66,23 @@ export class Expression {
 }
 
 // ---------------------------------------------------------------------------
-// ReadonlyMatcher
+// MatcherView
 // ---------------------------------------------------------------------------
 
 /**
- * A live read-only view of a Matcher instance, returned by Matcher.readOnly.
+ * A lightweight, live read-only view of a Matcher instance.
  *
- * All query and inspection methods work normally and always reflect the current
- * state of the underlying matcher. State-mutating methods (`push`, `pop`,
- * `reset`, `updateCurrent`, `restore`) are not present — calling them on the
- * underlying Proxy throws a `TypeError` at runtime.
+ * Returned by `Matcher.readOnly()`. The same instance is reused across every
+ * callback invocation — no allocation overhead per call. Reads directly from
+ * the parent Matcher's internal state so it always reflects the current parser
+ * position with no copying or freezing.
+ *
+ * Mutation methods (`push`, `pop`, `reset`, `updateCurrent`, `restore`) are
+ * simply absent — misuse is caught at compile time by TypeScript.
  *
  * This is the type received by all FXP user callbacks when `jPath: false`.
  */
-export interface ReadonlyMatcher {
+export class MatcherView {
   readonly separator: string;
 
   /** Check if current path matches an Expression. */
@@ -111,13 +114,13 @@ export interface ReadonlyMatcher {
 
   /** Current path as an array of tag names. */
   toArray(): string[];
-
-  /**
-   * Create a snapshot of the current state.
-   * The snapshot can be passed to the real Matcher.restore if needed.
-   */
-  snapshot(): MatcherSnapshot;
 }
+
+/**
+ * @deprecated Use {@link MatcherView} instead.
+ * Alias kept for backward compatibility.
+ */
+export type ReadonlyMatcher = MatcherView;
 
 /** Internal node structure — exposed via snapshot only. */
 export interface PathNode {
@@ -141,8 +144,8 @@ export interface MatcherSnapshot {
  **********************************************************************/
 
 // jPath: true  → string
-// jPath: false → ReadonlyMatcher
-type JPathOrMatcher = string | ReadonlyMatcher;
+// jPath: false → MatcherView
+type JPathOrMatcher = string | MatcherView;
 type JPathOrExpression = string | Expression;
 
 export type ProcessEntitiesOptions = {
