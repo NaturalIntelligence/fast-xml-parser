@@ -8,7 +8,7 @@ import toNumber from "strnum";
 import getIgnoreAttributesFn from "../ignoreAttributes.js";
 import { Expression, Matcher } from 'path-expression-matcher';
 import { ExpressionSet } from 'path-expression-matcher';
-import EntityReplacer, { COMMON_HTML, NUMERIC_ENTITIES } from '@nodable/entities';
+import EntityReplacer, { COMMON_HTML, NUMERIC_ENTITIES, CURRENCY_ENTITIES } from '@nodable/entities';
 
 // const regx =
 //   '<((!\\[CDATA\\[([\\s\\S]*?)(]]>))|((NAME:)?(NAME))([^>]*)>|((\\/)(NAME)\\s*>))([^<]*)'
@@ -89,7 +89,7 @@ export default class OrderedObjParser {
     this.entityReplacer = new EntityReplacer({
       default: true,
       // amp:     true,
-      system: this.options.htmlEntities ? { ...COMMON_HTML, ...NUMERIC_ENTITIES } : {},
+      system: this.options.htmlEntities ? { ...COMMON_HTML, ...NUMERIC_ENTITIES, ...CURRENCY_ENTITIES } : {},
       maxTotalExpansions: this.options.processEntities.maxTotalExpansions,
       maxExpandedLength: this.options.processEntities.maxExpandedLength,
       applyLimitsTo: "all",
