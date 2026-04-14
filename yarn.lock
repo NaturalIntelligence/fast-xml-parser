@@ -1068,6 +1068,11 @@
     "@jridgewell/resolve-uri" "^3.1.0"
     "@jridgewell/sourcemap-codec" "^1.4.14"
 
+"@nodable/entities@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.npmjs.org/@nodable/entities/-/entities-1.0.1.tgz"
+  integrity sha512-P+QVl83POYu47navqBcOSbjJzYlGQNXwzZXDAt3im6Kzs8tn3twmDKHuAEjB9zpQCF45Hc1xY4ND0lQAV12NXA==
+
 "@nodelib/fs.scandir@2.1.5":
   version "2.1.5"
   resolved "https://registry.npmjs.org/@nodelib/fs.scandir/-/fs.scandir-2.1.5.tgz"

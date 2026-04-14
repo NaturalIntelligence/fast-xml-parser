@@ -2,6 +2,10 @@
 
 Note: Due to some last quick changes on v4, detail of v4.5.3 & v4.5.4 are not updated here. v4.5.4x is the last tag of v4 in github repository. I'm extremely sorry for the confusion
 
+**5.5.13** (not released yet)
+- fix: entity replacement for numeric entities
+- use @nodable/entities to replace entities
+
 **5.5.12 / 2026-04-13**
 - Performance Improvement: update path-expression-matcher
   - use proxy pattern than Proxy class

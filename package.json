@@ -87,6 +87,7 @@
     }
   ],
   "dependencies": {
+    "@nodable/entities": "^1.0.1",
     "fast-xml-builder": "^1.1.4",
     "path-expression-matcher": "^1.5.0",
     "strnum": "^2.2.3"
