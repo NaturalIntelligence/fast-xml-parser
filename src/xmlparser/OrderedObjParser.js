@@ -8,7 +8,7 @@ import toNumber from "strnum";
 import getIgnoreAttributesFn from "../ignoreAttributes.js";
 import { Expression, Matcher } from 'path-expression-matcher';
 import { ExpressionSet } from 'path-expression-matcher';
-import EntityReplacer, { COMMON_HTML, NUMERIC_ENTITIES, CURRENCY_ENTITIES } from '@nodable/entities';
+import { EntityDecoder, XML, CURRENCY, COMMON_HTML } from '@nodable/entities';
 
 // const regx =
 //   '<((!\\[CDATA\\[([\\s\\S]*?)(]]>))|((NAME:)?(NAME))([^>]*)>|((\\/)(NAME)\\s*>))([^<]*)'
@@ -85,16 +85,23 @@ export default class OrderedObjParser {
     this.ignoreAttributesFn = getIgnoreAttributesFn(this.options.ignoreAttributes)
     this.entityExpansionCount = 0;
     this.currentExpandedLength = 0;
-
-    this.entityReplacer = new EntityReplacer({
-      default: true,
-      // amp:     true,
-      system: this.options.htmlEntities ? { ...COMMON_HTML, ...NUMERIC_ENTITIES, ...CURRENCY_ENTITIES } : {},
-      maxTotalExpansions: this.options.processEntities.maxTotalExpansions,
-      maxExpandedLength: this.options.processEntities.maxExpandedLength,
-      applyLimitsTo: "all",
-      //postCheck: resolved => resolved
-    });
+    let namedEntities = { ...XML };
+    if (this.options.entityDecoder) {
+      this.entityDecoder = this.options.entityDecoder
+    } else {
+      if (typeof this.options.htmlEntities === "object") namedEntities = this.options.htmlEntities;
+      else if (this.options.htmlEntities === true) namedEntities = { ...COMMON_HTML, ...CURRENCY };
+      this.entityDecoder = new EntityDecoder({
+        namedEntities: namedEntities,
+        numericAllowed: this.options.htmlEntities,
+        limit: {
+          maxTotalExpansions: this.options.processEntities.maxTotalExpansions,
+          maxExpandedLength: this.options.processEntities.maxExpandedLength,
+          applyLimitsTo: this.options.processEntities.appliesTo,
+        }
+        //postCheck: resolved => resolved
+      });
+    }
 
     // Initialize path matcher for path-expression-matcher
     this.matcher = new Matcher();
@@ -278,6 +285,7 @@ const parseXml = function (xmlData) {
 
   // Reset matcher for new document
   this.matcher.reset();
+  this.entityDecoder.reset();
 
   // Reset entity expansion counters for this document
   this.entityExpansionCount = 0;
@@ -331,6 +339,10 @@ const parseXml = function (xmlData) {
         if (!tagData) throw new Error("Pi Tag is not closed.");
 
         textData = this.saveTextToParentTag(textData, currentNode, this.readonlyMatcher);
+        const attsMap = this.buildAttributesMap(tagData.tagExp, this.matcher, tagData.tagName);
+        if (attsMap && attsMap["version"]) {
+          this.entityDecoder.setXmlVersion(attsMap["version"]);
+        }
         if ((options.ignoreDeclaration && tagData.tagName === "?xml") || options.ignorePiTags) {
           //do nothing
         } else {
@@ -339,7 +351,7 @@ const parseXml = function (xmlData) {
           childNode.add(options.textNodeName, "");
 
           if (tagData.tagName !== tagData.tagExp && tagData.attrExpPresent) {
-            childNode[":@"] = this.buildAttributesMap(tagData.tagExp, this.matcher, tagData.tagName);
+            childNode[":@"] = attsMap
           }
           this.addChild(currentNode, childNode, this.readonlyMatcher, i);
         }
@@ -361,7 +373,7 @@ const parseXml = function (xmlData) {
       } else if (c1 === 33
         && xmlData.charCodeAt(i + 2) === 68) { //'!D'
         const result = docTypeReader.readDocType(xmlData, i);
-        this.entityReplacer.addInputEntities(result.entities);
+        this.entityDecoder.addInputEntities(result.entities);
         i = result.i;
       } else if (c1 === 33
         && xmlData.charCodeAt(i + 2) === 91) { // '!['
@@ -602,7 +614,7 @@ function replaceEntitiesValue(val, tagName, jPath) {
     }
   }
 
-  return this.entityReplacer.replace(val);
+  return this.entityDecoder.decode(val);
 }
 
 

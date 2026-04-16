@@ -32,7 +32,7 @@ export default class XMLParser {
             }
         }
         const orderedObjParser = new OrderedObjParser(this.options);
-        orderedObjParser.entityReplacer.setExternalEntities(this.externalEntities);
+        orderedObjParser.entityDecoder.setExternalEntities(this.externalEntities);
         const orderedResult = orderedObjParser.parseXml(xmlData);
         if (this.options.preserveOrder || orderedResult === undefined) return orderedResult;
         else return prettify(orderedResult, this.options, orderedObjParser.matcher, orderedObjParser.readonlyMatcher);

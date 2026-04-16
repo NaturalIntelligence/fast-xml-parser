@@ -2,6 +2,21 @@
 
 Note: Due to some last quick changes on v4, detail of v4.5.3 & v4.5.4 are not updated here. v4.5.4x is the last tag of v4 in github repository. I'm extremely sorry for the confusion
 
+**5.7.0**
+- Use `@nodable/entities` v2.1.0
+  - breaking changes
+    - single entity scan. You're not allowed to user entity value to form another entity name.
+    - you cant add numeric external entity
+    - entity error message when expantion limit is crossed might change
+  - typings are updated for new options related to process entity
+  - please follow documentation of `@nodable/entities` for more detail.
+  - performance
+    - if processEntities is false, then there should not be impact on performance.
+    - if processEntities is true, but you dont pass entity decoder separately then performance may degrade by approx 8-10%
+    - if processEntities is true, and you pass entity decoder separately
+      - if no entity then performance should be same as before
+      - if there are entities then performance should be increased
+
 **5.6.0 / 2026-04-15**
 - fix: entity replacement for numeric entities
 - use @nodable/entities to replace entities

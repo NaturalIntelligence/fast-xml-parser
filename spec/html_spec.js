@@ -96,6 +96,6 @@ describe("XMLParser", function () {
     expect(function () {
       const result = parser.parse(xmlData);
       console.log(JSON.stringify(result, null, 4));
-    }).toThrowError("[EntityReplacer] Entity expansion count limit exceeded: 30 > 20");
+    }).toThrowError("[EntityReplacer] Entity expansion count limit exceeded: 21 > 20");
   });
 });

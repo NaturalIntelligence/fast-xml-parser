@@ -72,7 +72,7 @@ describe("XMLParser entity expansion security", function () {
 
       expect(function () {
         parser.parse(xmlData);
-      }).toThrowError("[EntityReplacer] Entity expansion count limit exceeded: 1500 > 1000");
+      }).toThrowError("[EntityReplacer] Entity expansion count limit exceeded: 1001 > 1000");
     });
 
     it("should allow expansions within limit", function () {
@@ -109,7 +109,7 @@ describe("XMLParser entity expansion security", function () {
 
       expect(function () {
         parser.parse(xmlData);
-      }).toThrowError("[EntityReplacer] Entity expansion count limit exceeded: 1200 > 1000");
+      }).toThrowError("[EntityReplacer] Entity expansion count limit exceeded: 1001 > 1000");
     });
   });
 
@@ -132,7 +132,7 @@ describe("XMLParser entity expansion security", function () {
 
       expect(function () {
         parser.parse(xmlData);
-      }).toThrowError("[EntityReplacer] Expanded content length limit exceeded: 149250 > 100000");
+      }).toThrowError("[EntityReplacer] Expanded content length limit exceeded: 100495 > 100000");
     });
 
     it("should allow expansions within maxExpandedLength", function () {
@@ -188,7 +188,7 @@ describe("XMLParser entity expansion security", function () {
 
       expect(function () {
         parser.parse(xmlData);
-      }).toThrowError("[EntityReplacer] Entity expansion count limit exceeded: 5000 > 1000");
+      }).toThrowError("[EntityReplacer] Entity expansion count limit exceeded: 1001 > 1000");
     });
 
     it("should prevent billion laughs with maxExpandedLength", function () {
@@ -205,7 +205,7 @@ describe("XMLParser entity expansion security", function () {
 
       expect(function () {
         parser.parse(xmlData);
-      }).toThrowError("[EntityReplacer] Expanded content length limit exceeded: 199000 > 100000");
+      }).toThrowError("[EntityReplacer] Expanded content length limit exceeded: 100495 > 100000");
     });
   });
 
@@ -407,7 +407,7 @@ describe("XMLParser entity expansion security", function () {
 
       expect(function () {
         parser.parse(xmlData);
-      }).toThrowError("[EntityReplacer] Expanded content length limit exceeded: 19400 > 10000");
+      }).toThrowError("[EntityReplacer] Expanded content length limit exceeded: 10088 > 10000");
     });
   });
 

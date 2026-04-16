@@ -219,6 +219,14 @@ type ProcessEntitiesOptions = {
   tagFilter?: ((tagName: string, jPathOrMatcher: JPathOrMatcher) => boolean) | null;
 };
 
+type EntityDecoderOptions = {
+  setExternalEntities: (entities: Record<string, string>) => void;
+  addInputEntities: (entities: Record<string, string>) => void;
+  reset: () => void;
+  decode: (text: string) => string;
+  setXmlVersion: (version: string) => void;
+}
+
 type X2jOptions = {
   /**
    * Preserve the order of tags in resulting JS object
@@ -398,6 +406,7 @@ type X2jOptions = {
    * When `ProcessEntitiesOptions` - enables entity processing with custom configuration
    * 
    * Defaults to `true`
+   * @deprecated Use `entityDecoder` instead
    */
   processEntities?: boolean | ProcessEntitiesOptions;
 
@@ -405,9 +414,14 @@ type X2jOptions = {
    * Whether to process HTML entities
    * 
    * Defaults to `false`
+   * @deprecated Use `entityDecoder` instead
    */
   htmlEntities?: boolean;
 
+  /**
+   * Custom entity decoder
+   */
+  entityDecoder?: EntityDecoderOptions;
   /**
    * Whether to ignore the declaration tag from output
    * 
@@ -713,8 +727,10 @@ declare class XMLParser {
 declare class XMLValidator {
   static validate(xmlData: string, options?: validationOptions): true | ValidationError;
 }
-
-declare class XMLBuilder {
+/**
+ * @deprecated Use npm package 'fast-xml-builder' instead
+ */
+devlare class XMLBuilder {
   constructor(options?: XmlBuilderOptions);
   build(jObj: any): string;
 }
@@ -747,6 +763,7 @@ declare namespace fxp {
     MatcherView,
     JPathOrMatcher,
     JPathOrExpression,
+    EntityDecoderOptions
   }
 }
 

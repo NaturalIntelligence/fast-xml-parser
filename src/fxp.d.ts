@@ -211,6 +211,14 @@ export type ProcessEntitiesOptions = {
   tagFilter?: ((tagName: string, jPathOrMatcher: JPathOrMatcher) => boolean) | null;
 };
 
+export type EntityDecoderOptions = {
+  setExternalEntities: (entities: Record<string, string>) => void;
+  addInputEntities: (entities: Record<string, string>) => void;
+  reset: () => void;
+  decode: (text: string) => string;
+  setXmlVersion: (version: string) => void;
+}
+
 export type X2jOptions = {
   /**
    * Preserve the order of tags in resulting JS object
@@ -390,6 +398,7 @@ export type X2jOptions = {
    * When `ProcessEntitiesOptions` - enables entity processing with custom configuration
    * 
    * Defaults to `true`
+   * @deprecated Use `entityDecoder` instead
    */
   processEntities?: boolean | ProcessEntitiesOptions;
 
@@ -397,9 +406,14 @@ export type X2jOptions = {
    * Whether to process HTML entities
    * 
    * Defaults to `false`
+   * @deprecated Use `entityDecoder` instead
    */
   htmlEntities?: boolean;
 
+  /**
+   * Custom entity decoder
+   */
+  entityDecoder?: EntityDecoderOptions;
   /**
    * Whether to ignore the declaration tag from output
    * 
@@ -707,6 +721,9 @@ export class XMLParser {
 export class XMLValidator {
   static validate(xmlData: string, options?: validationOptions): true | ValidationError;
 }
+/**
+ * @deprecated Use npm package 'fast-xml-builder' instead
+ */
 export class XMLBuilder {
   constructor(options?: XmlBuilderOptions);
   build(jObj: any): string;
