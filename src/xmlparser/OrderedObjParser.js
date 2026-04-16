@@ -654,6 +654,7 @@ function isItStopNode() {
  */
 function tagExpWithClosingIndex(xmlData, i, closingChar = ">") {
   let attrBoundary = 0;
+  let tagExp = "";
   const len = xmlData.length;
   const closeCode0 = closingChar.charCodeAt(0);
   const closeCode1 = closingChar.length > 1 ? closingChar.charCodeAt(1) : -1;
@@ -668,12 +669,17 @@ function tagExpWithClosingIndex(xmlData, i, closingChar = ">") {
     } else if (code === closeCode0) {
       if (closeCode1 !== -1) {
         if (xmlData.charCodeAt(index + 1) === closeCode1) {
-          return { data: xmlData.substring(i, index).replace(/\t/g, ' '), index };
+          return { data: tagExp, index };
         }
       } else {
-        return { data: xmlData.substring(i, index).replace(/\t/g, ' '), index };
+        return { data: tagExp, index };
       }
+    } else if (code === 9) { // \t outside quoted attrs -> space
+      tagExp += " ";
+      continue;
     }
+
+    tagExp += xmlData[index];
   }
 }
 
