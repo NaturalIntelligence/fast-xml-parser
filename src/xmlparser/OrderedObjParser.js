@@ -656,7 +656,7 @@ function isItStopNode() {
  */
 function tagExpWithClosingIndex(xmlData, i, closingChar = ">") {
   let attrBoundary = 0;
-  // const chars = [];
+  const chars = [];
   const len = xmlData.length;
   const closeCode0 = closingChar.charCodeAt(0);
   const closeCode1 = closingChar.length > 1 ? closingChar.charCodeAt(1) : -1;
@@ -669,11 +669,19 @@ function tagExpWithClosingIndex(xmlData, i, closingChar = ">") {
     } else if (code === 34 || code === 39) { // " or '
       attrBoundary = code;
     } else if (code === closeCode0) {
-      if (closeCode1 === -1 || xmlData.charCodeAt(index + 1) === closeCode1) {
-        const data = xmlData.substring(i, index);
-        return { data: data.replace(/\t/g, " "), index };
+      if (closeCode1 !== -1) {
+        if (xmlData.charCodeAt(index + 1) === closeCode1) {
+          return { data: String.fromCharCode(...chars), index };
+        }
+      } else {
+        return { data: String.fromCharCode(...chars), index };
       }
+    } else if (code === 9) { // \t
+      chars.push(32); // space
+      continue;
     }
+
+    chars.push(code);
   }
 }
 
