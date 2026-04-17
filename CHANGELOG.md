@@ -15,7 +15,8 @@ Note: Due to some last quick changes on v4, detail of v4.5.3 & v4.5.4 are not up
     - if processEntities is true, but you dont pass entity decoder separately then performance may degrade by approx 8-10%
     - if processEntities is true, and you pass entity decoder separately
       - if no entity then performance should be same as before
-      - if there are entities then performance should be increased
+      - if there are entities then performance should be increased from past versions
+  - ignoreAttributes is not required to be set to set xml version for NCR entity value
 
 **5.6.0 / 2026-04-15**
 - fix: entity replacement for numeric entities
