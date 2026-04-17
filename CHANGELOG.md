@@ -2,7 +2,7 @@
 
 Note: Due to some last quick changes on v4, detail of v4.5.3 & v4.5.4 are not updated here. v4.5.4x is the last tag of v4 in github repository. I'm extremely sorry for the confusion
 
-**5.7.0**
+**5.7.0 / 2026-04-17**
 - Use `@nodable/entities` v2.1.0
   - breaking changes
     - single entity scan. You're not allowed to user entity value to form another entity name.
@@ -17,6 +17,7 @@ Note: Due to some last quick changes on v4, detail of v4.5.3 & v4.5.4 are not up
       - if no entity then performance should be same as before
       - if there are entities then performance should be increased from past versions
   - ignoreAttributes is not required to be set to set xml version for NCR entity value
+- update 'fast-xml-builder' to sanitize malicious CDATA and comment's content
 
 **5.6.0 / 2026-04-15**
 - fix: entity replacement for numeric entities

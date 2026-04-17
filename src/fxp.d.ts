@@ -398,7 +398,6 @@ export type X2jOptions = {
    * When `ProcessEntitiesOptions` - enables entity processing with custom configuration
    * 
    * Defaults to `true`
-   * @deprecated Use `entityDecoder` instead
    */
   processEntities?: boolean | ProcessEntitiesOptions;
 
