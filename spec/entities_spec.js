@@ -718,4 +718,38 @@ describe("@nodable/entities", function () {
 
         expect(result).toEqual(expected);
     })
+
+    it("should remove '#x1B' ncr as per XML version 1.0 with default config", function () {
+
+        const xmlData = `<?xml version="1.0" ?><root>&#x1B;&#27;</root>`;
+        const expected = {
+            "root": '&#x1B;&#27;'
+        }
+        const options = {
+            //ignoreAttributes: false, //should work without this
+            processEntities: true,
+            // htmlEntities: true
+        };
+        const parser = new XMLParser(options);
+        let result = parser.parse(xmlData);
+        // console.log(JSON.stringify(result, null, 4));
+
+        expect(result.root.length).toEqual(0);
+    })
+    it("should leave '#x1B' ncr as per XML version 1.1 with default config", function () {
+
+        const xmlData = `<?xml version="1.1" ?><root>&#x1B;&#27;</root>`;
+        const expected = {
+            "root": '&#x1B;&#27;'
+        }
+        const options = {
+            //ignoreAttributes: false, //should work without this
+            processEntities: true
+        };
+        const parser = new XMLParser(options);
+        let result = parser.parse(xmlData);
+        // console.log(JSON.stringify(result, null, 4));
+
+        expect(result.root.length).toEqual(11);
+    })
 })
