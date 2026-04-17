@@ -729,7 +729,7 @@ declare class XMLValidator {
 /**
  * @deprecated Use npm package 'fast-xml-builder' instead
  */
-devlare class XMLBuilder {
+declare class XMLBuilder {
   constructor(options?: XmlBuilderOptions);
   build(jObj: any): string;
 }
