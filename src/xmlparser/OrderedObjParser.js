@@ -269,7 +269,7 @@ function buildAttributesMap(attrStr, jPath, tagName, force = false) {
 
     if (!hasAttrs) return;
 
-    if (options.attributesGroupName) {
+    if (options.attributesGroupName && !options.preserveOrder) {
       const attrCollection = {};
       attrCollection[options.attributesGroupName] = attrs;
       return attrCollection;

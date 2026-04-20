@@ -330,4 +330,27 @@ id="7" data="foo bar" bug="true"/>`;
         //console.log(JSON.stringify(result,null,4));
         expect(result).toEqual(expected);
     });
+
+    it("should preser over with attribute group", function () {
+        const xmlData = "<rootNode  abc='23' />";
+        const expected = [
+            {
+                "rootNode": [],
+                ":@": {
+                    "@_abc": "23"
+                }
+            }
+        ]
+
+        const options = {
+            attributesGroupName: ':@',
+            preserveOrder: true,
+            ignoreAttributes: false,
+        }
+        const parser = new XMLParser(options);
+
+        const result = parser.parse(xmlData);
+        // console.log(JSON.stringify(result, null, 4));
+        expect(result).toEqual(expected);
+    });
 });
