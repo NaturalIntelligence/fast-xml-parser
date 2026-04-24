@@ -331,7 +331,7 @@ id="7" data="foo bar" bug="true"/>`;
         expect(result).toEqual(expected);
     });
 
-    it("should preser over with attribute group", function () {
+    it("should preserve order with attribute group", function () {
         const xmlData = "<rootNode  abc='23' />";
         const expected = [
             {
@@ -345,6 +345,43 @@ id="7" data="foo bar" bug="true"/>`;
         const options = {
             attributesGroupName: ':@',
             preserveOrder: true,
+            ignoreAttributes: false,
+        }
+        const parser = new XMLParser(options);
+
+        const result = parser.parse(xmlData);
+        // console.log(JSON.stringify(result, null, 4));
+        expect(result).toEqual(expected);
+    });
+
+    it("should remove space from tag expression but not from atttibute value", function () {
+        const xmlData = "<rootNode\tabc='\t23' />";
+        const expected = {
+            "rootNode": {
+                "@_abc": "23"
+            }
+        }
+
+        const options = {
+            ignoreAttributes: false,
+        }
+        const parser = new XMLParser(options);
+
+        const result = parser.parse(xmlData);
+        // console.log(JSON.stringify(result, null, 4));
+        expect(result).toEqual(expected);
+    });
+
+    it("should allow very long tag expression", function () {
+        const attributes = `a="b" `.repeat(1000000);
+        const xmlData = `<rootNode ${attributes} />`;
+        const expected = {
+            "rootNode": {
+                "@_a": "b"
+            }
+        }
+
+        const options = {
             ignoreAttributes: false,
         }
         const parser = new XMLParser(options);
