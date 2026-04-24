@@ -2,9 +2,13 @@
 
 Note: Due to some last quick changes on v4, detail of v4.5.3 & v4.5.4 are not updated here. v4.5.4x is the last tag of v4 in github repository. I'm extremely sorry for the confusion
 
-**5.7.1 / 2026-04-20**
+**5.7.2 / 2026-04-25**
+- allow numerical external entity for backward compatibility
 - fix #705: attributesGroupName working with preserveOrder
 - fix #817: stackoverflow when tag expression is very long
+
+**5.7.1 / 2026-04-20**
+- fix typo in CJS typing file
 
 **5.7.0 / 2026-04-17**
 - Use `@nodable/entities` v2.1.0
