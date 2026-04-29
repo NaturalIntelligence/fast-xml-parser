@@ -537,13 +537,39 @@ describe("XMLParser External Entities", function () {
         }).toThrowError("An entity must be set without '&' and ';'. Eg. use '#xD' for '&#xD;'");
     });
 
-    xit("should set and parse for valid entity set externally", function () {
+    it("should set and parse for valid entity set externally", function () {
         const xmlData = `<note>&unknown;&#xD;last</note> `;
 
         const parser = new XMLParser();
         parser.addEntity("#xD", "\r\n");
-        expect(() => parser.parse(xmlData))
-            .toThrowError(`[EntityReplacer] Invalid character '#' in entity name: "#xD"`);
+        let result = parser.parse(xmlData);
+
+        expect(result.note).toEqual(`&unknown;\r\nlast`);
+    });
+
+    it("should support multiple numeric character reference external entities", function () {
+        const xmlData = `<root>&#xD;&#13;&#x20;&#x41;</root>`;
+
+        const parser = new XMLParser();
+        parser.addEntity("#xD", "\r");
+        parser.addEntity("#13", "\r");
+        parser.addEntity("#x20", " ");
+        parser.addEntity("#x41", "A");
+        let result = parser.parse(xmlData);
+
+        expect(result.root).toEqual("\r\r A");
+    });
+
+    it("should handle hex and decimal numeric external entities together", function () {
+        const xmlData = `<root>Hello&#x20;World&#xD;&#13;End</root>`;
+
+        const parser = new XMLParser();
+        parser.addEntity("#x20", " ");
+        parser.addEntity("#xD", "\r");
+        parser.addEntity("#13", "\r");
+        let result = parser.parse(xmlData);
+
+        expect(result.root).toEqual("Hello World\r\rEnd");
     });
 
     it("External Entity can change the behavior of default entities", function () {

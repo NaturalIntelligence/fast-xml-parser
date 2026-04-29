@@ -91,8 +91,24 @@ export default class OrderedObjParser {
     } else {
       if (typeof this.options.htmlEntities === "object") namedEntities = this.options.htmlEntities;
       else if (this.options.htmlEntities === true) namedEntities = { ...COMMON_HTML, ...CURRENCY };
-      this.entityDecoder = new EntityDecoder({
-        namedEntities: { ...namedEntities, ...externalEntities },
+
+      // Separate #-prefixed external entities (numeric character reference overrides)
+      // from regular named entities. The EntityDecoder's NCR path intercepts #-prefixed
+      // tokens before named entity lookup, so we handle them via pre-processing.
+      const numericExternalEntities = Object.create(null);
+      const regularExternalEntities = Object.create(null);
+      if (externalEntities) {
+        for (const key of Object.keys(externalEntities)) {
+          if (key.charCodeAt(0) === 35 /* '#' */) {
+            numericExternalEntities[key] = externalEntities[key];
+          } else {
+            regularExternalEntities[key] = externalEntities[key];
+          }
+        }
+      }
+
+      const decoder = new EntityDecoder({
+        namedEntities: { ...namedEntities, ...regularExternalEntities },
         numericAllowed: this.options.htmlEntities,
         limit: {
           maxTotalExpansions: this.options.processEntities.maxTotalExpansions,
@@ -101,6 +117,26 @@ export default class OrderedObjParser {
         }
         //postCheck: resolved => resolved
       });
+
+      // Wrap the decoder to handle #-prefixed external entities (e.g. addEntity('#xD', '\r'))
+      // These must be resolved before the EntityDecoder sees them, since its NCR path
+      // intercepts #-prefixed tokens and ignores the named entity map for them.
+      if (Object.keys(numericExternalEntities).length > 0) {
+        const originalDecode = decoder.decode.bind(decoder);
+        decoder.decode = function(str) {
+          if (typeof str === 'string' && str.indexOf('&') !== -1) {
+            for (const key of Object.keys(numericExternalEntities)) {
+              const entity = '&' + key + ';';
+              if (str.indexOf(entity) !== -1) {
+                str = str.split(entity).join(numericExternalEntities[key]);
+              }
+            }
+          }
+          return originalDecode(str);
+        };
+      }
+
+      this.entityDecoder = decoder;
     }
 
     // Initialize path matcher for path-expression-matcher
