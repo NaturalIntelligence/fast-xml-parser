@@ -2,6 +2,13 @@
 
 Note: Due to some last quick changes on v4, detail of v4.5.3 & v4.5.4 are not updated here. v4.5.4x is the last tag of v4 in github repository. I'm extremely sorry for the confusion
 
+**5.7.3**
+- fix: alwaysCreateTextNode should create text node when attributes are present for self closing node
+- fix stop node expression when ns prefix is removed (found by [iruizsalinas](https://github.com/iruizsalinas))
+- update XML Builder to 1.1.6
+- mark addEntity deprecated
+
+
 **5.7.2 / 2026-04-25**
 - allow numerical external entity for backward compatibility
 - fix #705: attributesGroupName working with preserveOrder

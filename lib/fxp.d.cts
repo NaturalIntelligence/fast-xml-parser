@@ -707,6 +707,7 @@ declare class XMLParser {
    * Add Entity which is not by default supported by this library
    * @param entityIdentifier {string} Eg: 'ent' for &ent;
    * @param entityValue {string} Eg: '\r'
+   * @deprecated Use `entityDecoder` instead
    */
   addEntity(entityIdentifier: string, entityValue: string): void;
 
