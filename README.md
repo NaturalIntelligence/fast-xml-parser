@@ -44,9 +44,6 @@ Sponsor this project
 
 > This is a donation. No goods or services are expected in return. Any requests for refunds for those purposes will be rejected.
 
-![fxp_sponsors](https://raw.githubusercontent.com/NaturalIntelligence/ThankYouBackers/main/assets/NI_sponsors.jpg)
-> This image update once in 6 months mostly
-
 ## Users
 
 <a href="https://github.com/renovatebot/renovate" title="renovate" ><img src="https://avatars1.githubusercontent.com/u/38656520" width="60px" ></a>
