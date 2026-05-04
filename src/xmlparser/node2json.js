@@ -71,6 +71,10 @@ function compress(arr, options, matcher, readonlyMatcher) {
       let val = compress(tagObj[property], options, matcher, readonlyMatcher);
       const isLeaf = isLeafTag(val, options);
 
+      if (Object.keys(val).length === 0 && options.alwaysCreateTextNode) {
+        val[options.textNodeName] = "";
+      }
+
       if (tagObj[":@"]) {
         assignAttributes(val, tagObj[":@"], readonlyMatcher, options);
       } else if (Object.keys(val).length === 1 && val[options.textNodeName] !== undefined && !options.alwaysCreateTextNode) {

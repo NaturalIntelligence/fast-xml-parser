@@ -211,11 +211,13 @@ describe("XMLParser", function () {
 
     const jsObj = {
       "?xml": {
+        "text": "",
         "attr": {
           "version": "1.0"
         }
       },
       "?elementnames": {
+        "text": "",
         "attr": {
           "<fred>,": true,
           "<bert>,": true,
