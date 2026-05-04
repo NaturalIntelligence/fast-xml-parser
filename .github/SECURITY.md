@@ -1,4 +1,4 @@
-v6 is an experimental release and has no impact on main app. This might be separated soon. Vulenrability on this might not be accepted.
+v6 has been released as flexible-xml-parser. Current code in the repository would be removed soon. It has no interference with current version code. So dont report any vulenrability in v6.
 
 ---
 
