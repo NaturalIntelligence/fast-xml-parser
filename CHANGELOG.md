@@ -5,7 +5,7 @@ Note: Due to some last quick changes on v4, detail of v4.5.3 & v4.5.4 are not up
 **5.7.3**
 - fix: alwaysCreateTextNode should create text node when attributes are present for self closing node
 - fix stop node expression when ns prefix is removed (found by [iruizsalinas](https://github.com/iruizsalinas))
-- update XML Builder to 1.1.6
+- update XML Builder to 1.1.7
 - mark addEntity deprecated
 
 
