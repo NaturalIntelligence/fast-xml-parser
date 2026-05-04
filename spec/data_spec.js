@@ -1,11 +1,10 @@
 "use strict";
 
-import {XMLParser, XMLValidator} from "../src/fxp.js";
-// import he from "he";
+import { XMLParser, XMLValidator } from "../src/fxp.js";
 
-describe("XMLParser", function() {
-    
-    it("should parse attributes having '>' in value", function() {
+describe("XMLParser", function () {
+
+    it("should parse attributes having '>' in value", function () {
         const xmlData = `
         <testStep type="restrequest" name="test step name (bankId -> Error)" id="90e453d3-30cd-4958-a3be-61ecfe7a7cbe">
               <settings/>
@@ -15,8 +14,8 @@ describe("XMLParser", function() {
         const expected = {
             "testStep": {
                 "type": "restrequest",
-                "name":       "test step name (bankId -> Error)",
-                "id":     "90e453d3-30cd-4958-a3be-61ecfe7a7cbe",
+                "name": "test step name (bankId -> Error)",
+                "id": "90e453d3-30cd-4958-a3be-61ecfe7a7cbe",
                 "settings": "",
                 "encoding": "UTF-8"
             }
@@ -24,7 +23,7 @@ describe("XMLParser", function() {
 
         const options = {
             attributeNamePrefix: "",
-            ignoreAttributes:    false,
+            ignoreAttributes: false,
         };
         const parser = new XMLParser(options);
         let result = parser.parse(xmlData);
@@ -36,7 +35,7 @@ describe("XMLParser", function() {
         expect(result).toBe(true);
     });
 
-    it("should parse attributes with valid names", function() {
+    it("should parse attributes with valid names", function () {
         const xmlData = `
         <a>
             <bug atr="sasa" boolean>val
@@ -68,7 +67,7 @@ describe("XMLParser", function() {
 
         const options = {
             allowBooleanAttributes: true,
-            ignoreAttributes:    false,
+            ignoreAttributes: false,
         };
         const parser = new XMLParser(options);
         let result = parser.parse(xmlData);
@@ -76,8 +75,8 @@ describe("XMLParser", function() {
         // console.log(JSON.stringify(result,null,4));
         expect(result).toEqual(expected);
     });
-    
-    it("should parse attributes with valid names", function() {
+
+    it("should parse attributes with valid names", function () {
         const xmlData = `<a:root xmlns:a="urn:none" xmlns:a-b="urn:none">
         <a:a attr="2foo&ampbar&apos;">1</a:a>
         <a:b>2</a:b>
@@ -112,7 +111,7 @@ describe("XMLParser", function() {
 
         const options = {
             allowBooleanAttributes: true,
-            ignoreAttributes:    false,
+            ignoreAttributes: false,
             processEntities: false
         };
         const parser = new XMLParser(options);
@@ -121,8 +120,8 @@ describe("XMLParser", function() {
         //console.log(JSON.stringify(result,null,4));
         expect(result).toEqual(expected);
     });
-    
-    it("should parse tagName without whitespace chars", function() {
+
+    it("should parse tagName without whitespace chars", function () {
         const xmlData = `<a:root
          attr='df'>val
     </a:root>`;
@@ -136,7 +135,7 @@ describe("XMLParser", function() {
 
         const options = {
             allowBooleanAttributes: true,
-            ignoreAttributes:    false,
+            ignoreAttributes: false,
         };
         const parser = new XMLParser(options);
         let result = parser.parse(xmlData, true);
@@ -145,13 +144,13 @@ describe("XMLParser", function() {
         expect(result).toEqual(expected);
     });
 
-    it("should parse XML when namespaced ignored", function() {
+    it("should parse XML when namespaced ignored", function () {
         const xmlData = `<root><a:b>c</a:b><a:d/><a:e atr="sasa" boolean></root>`;
         const expected = {
-            "root":{
-                "b" : "c",
-                "d" : "",
-                "e" : {
+            "root": {
+                "b": "c",
+                "d": "",
+                "e": {
                     "@_atr": "sasa",
                     "@_boolean": true,
                 }
@@ -159,22 +158,22 @@ describe("XMLParser", function() {
         };
 
         const options = {
-            ignoreAttributes:       false,
+            ignoreAttributes: false,
             allowBooleanAttributes: true,
-            removeNSPrefix:        true,
+            removeNSPrefix: true,
         };
 
         const parser = new XMLParser(options);
         let result = parser.parse(xmlData);
-        
+
         // console.log(JSON.stringify(result,null,4));
         expect(result).toEqual(expected);
     });
 
-    it("should parse XML with undefined as text", function() {
+    it("should parse XML with undefined as text", function () {
         const xmlData = `<tag><![CDATA[undefined]]><nested>undefined</nested></tag>`;
         const expected = {
-            "tag" : {
+            "tag": {
                 "#text": "undefined",
                 "nested": "undefined"
             }
@@ -182,7 +181,7 @@ describe("XMLParser", function() {
 
         const options = {
             allowBooleanAttributes: true,
-            ignoreAttributes:    false,
+            ignoreAttributes: false,
         };
         const parser = new XMLParser(options);
         let result = parser.parse(xmlData, true);
@@ -190,15 +189,15 @@ describe("XMLParser", function() {
         expect(result).toEqual(expected);
     });
 
-    it("should trim \t or \n chars", function() {
+    it("should trim \t or \n chars", function () {
         const xmlData = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-        "<MPD\n" +
-        "\tavailabilityStartTime=\"2020-02-16T10:52:03.119Z\"\n" +
-        "\txmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\n" +
-        "\t<Period\n" +
-        "\t\tid=\"1578477220\">\n" +
-        "\t</Period>\n" +
-        "</MPD>";
+            "<MPD\n" +
+            "\tavailabilityStartTime=\"2020-02-16T10:52:03.119Z\"\n" +
+            "\txmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\n" +
+            "\t<Period\n" +
+            "\t\tid=\"1578477220\">\n" +
+            "\t</Period>\n" +
+            "</MPD>";
         const expected = {
             "?xml": {
                 "$": {
@@ -208,8 +207,8 @@ describe("XMLParser", function() {
             },
             "MPD": {
                 "$": {
-                  "availabilityStartTime": "2020-02-16T10:52:03.119Z",
-                  "xmlns:xsi": "http://www.w3.org/2001/XMLSchema-instance"
+                    "availabilityStartTime": "2020-02-16T10:52:03.119Z",
+                    "xmlns:xsi": "http://www.w3.org/2001/XMLSchema-instance"
                 },
                 "Period": {
                     "$": {
@@ -219,11 +218,11 @@ describe("XMLParser", function() {
             }
         }
 
-        const options ={
-            ignoreAttributes:       false,
+        const options = {
+            ignoreAttributes: false,
             allowBooleanAttributes: true,
-            attributesGroupName:"$",
-            attributeNamePrefix : "" //TODO attr node prefix should not set when they're grouped
+            attributesGroupName: "$",
+            attributeNamePrefix: "" //TODO attr node prefix should not set when they're grouped
         };
         const parser = new XMLParser(options);
         let result = parser.parse(xmlData);
@@ -231,41 +230,41 @@ describe("XMLParser", function() {
         expect(result).toEqual(expected);
     });
 
-    it("should error for when any tag is left to close", function(){
+    it("should error for when any tag is left to close", function () {
         const xmlData = `<?xml version="1.0"?><tag></tag`;
-        expect(() =>{
+        expect(() => {
             const parser = new XMLParser();
             parser.parse(xmlData);
-            
+
         }).toThrowError("Closing Tag is not closed.")
     })
-    it("should error for when any tag is left to close", function(){
+    it("should error for when any tag is left to close", function () {
         const xmlData = `<?xml version="1.0"?><!-- bad `;
-        expect(() =>{
+        expect(() => {
             const parser = new XMLParser();
             parser.parse(xmlData);
         }).toThrowError("Comment is not closed.")
     })
-    it("should error for when any tag is left to close", function(){
+    it("should error for when any tag is left to close", function () {
         const xmlData = `<?xml version="1.0"?><![CDATA ]`;
-        expect(() =>{
+        expect(() => {
             const parser = new XMLParser();
             parser.parse(xmlData);
         }).toThrowError("CDATA is not closed.")
     })
 
-    it("should error for when any tag is left to close", function(){
+    it("should error for when any tag is left to close", function () {
         const xmlData = `<?xml version="1.0"?><?pi  `;
-        expect(() =>{
+        expect(() => {
             const parser = new XMLParser();
             parser.parse(xmlData);
         }).toThrowError("Pi Tag is not closed.")
     })
-    
-    it("should parse XML when there is a space after tagname", function() {
+
+    it("should parse XML when there is a space after tagname", function () {
         const xmlData = `<tag ><![CDATA[undefined]]><nested>undefined</nested></tag>`;
         const expected = {
-            "tag" : {
+            "tag": {
                 "#text": "undefined",
                 "nested": "undefined"
             }
@@ -273,7 +272,7 @@ describe("XMLParser", function() {
 
         const options = {
             allowBooleanAttributes: true,
-            ignoreAttributes:    false,
+            ignoreAttributes: false,
             // processEntities: false
         };
         const parser = new XMLParser(options);

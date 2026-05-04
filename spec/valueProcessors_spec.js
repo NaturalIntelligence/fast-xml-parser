@@ -1,43 +1,44 @@
 "use strict";
 
-import {XMLParser, XMLValidator} from "../src/fxp.js";
-import he from "he";
+import { XMLParser, XMLValidator } from "../src/fxp.js";
+import { EntityDecoder } from "@nodable/entities"
 
-describe("XMLParser", function() {
+describe("XMLParser", function () {
+    const decoder = new EntityDecoder();
 
-    it("should decode HTML entities if allowed", function() {
+    it("should decode HTML entities if allowed", function () {
         const xmlData = "<rootNode>       foo&ampbar&apos;        </rootNode>";
         const expected = {
-            "rootNode": "foo&bar'"
+            "rootNode": "foo&ampbar'"
         };
 
         const options = {
             parseTagValue: false,
             decodeHTMLchar: true,
-            tagValueProcessor : (name,a) => he.decode(a)
+            tagValueProcessor: (name, a) => decoder.decode(a)
         };
         const parser = new XMLParser(options);
         let result = parser.parse(xmlData);
-        //console.log(JSON.stringify(result,null,4));
+        // console.log(JSON.stringify(result, null, 4));
         expect(result).toEqual(expected);
     });
 
-    it("should decode HTML entities / char", function() {
+    it("should decode HTML entities / char", function () {
         const xmlData = `<element id="7" data="foo bar" bug="foo&ampbar&apos;"/>`;
         const expected = {
             "element": {
-                "id":   7,
+                "id": 7,
                 "data": "foo bar",
-                "bug":  "foo&ampbar'"
+                "bug": "foo&ampbar'"
             }
         };
 
         const options = {
             attributeNamePrefix: "",
-            ignoreAttributes:    false,
+            ignoreAttributes: false,
             parseAttributeValue: true,
-            decodeHTMLchar:      true,
-            attributeValueProcessor: (name, a) => he.decode(a, {isAttributeValue: true})
+            decodeHTMLchar: true,
+            attributeValueProcessor: (name, a) => decoder.decode(a)
         };
         const parser = new XMLParser(options);
         let result = parser.parse(xmlData);
@@ -48,7 +49,7 @@ describe("XMLParser", function() {
         expect(result).toBe(true);
     });
 
-    it("tag value processor should be called with value and tag name", function() {
+    it("tag value processor should be called with value and tag name", function () {
         const xmlData = `<?xml version='1.0'?>
         <any_name>
             <person>
@@ -74,9 +75,9 @@ describe("XMLParser", function() {
         const resultMap = {}
         const options = {
             tagValueProcessor: (tagName, val) => {
-                if(resultMap[tagName]){
+                if (resultMap[tagName]) {
                     resultMap[tagName].push(val)
-                }else{
+                } else {
                     resultMap[tagName] = [val];
                 }
                 return val;
@@ -102,7 +103,7 @@ describe("XMLParser", function() {
         });
     });
 
-    it("result should not change/parse values if tag processor returns nothing", function() {
+    it("result should not change/parse values if tag processor returns nothing", function () {
         const xmlData = `<?xml version='1.0'?>
         <any_name>
             <person>
@@ -124,9 +125,9 @@ describe("XMLParser", function() {
                 }
             }
         }
-        
+
         const options = {
-            tagValueProcessor: (tagName, val) => {}          
+            tagValueProcessor: (tagName, val) => { }
         };
         const parser = new XMLParser(options);
         let result = parser.parse(xmlData);
@@ -134,7 +135,7 @@ describe("XMLParser", function() {
         expect(result).toEqual(expected);
     });
 
-    it("result should have constant value returned by tag processor", function() {
+    it("result should have constant value returned by tag processor", function () {
         const xmlData = `<?xml version='1.0'?>
         <any_name>
             <person>
@@ -164,13 +165,13 @@ describe("XMLParser", function() {
         expect(result).toEqual(expected);
     });
 
-    it("attribute parser should be called with  atrribute name and value", function() {
+    it("attribute parser should be called with  atrribute name and value", function () {
         const xmlData = `<element id="7" data="foo bar" bug="foo n bar"/>`;
         const expected = {
             "element": {
-                "id":   7,
+                "id": 7,
                 "data": "foo bar",
-                "bug":  "foo n bar"
+                "bug": "foo n bar"
             }
         };
 
@@ -178,13 +179,13 @@ describe("XMLParser", function() {
 
         const options = {
             attributeNamePrefix: "",
-            ignoreAttributes:    false,
+            ignoreAttributes: false,
             parseAttributeValue: true,
-            decodeHTMLchar:      true,
+            decodeHTMLchar: true,
             attributeValueProcessor: (name, val) => {
-                if(resultMap[name]){
+                if (resultMap[name]) {
                     resultMap[name].push(val)
-                }else{
+                } else {
                     resultMap[name] = [val];
                 }
                 return val;
@@ -208,7 +209,7 @@ describe("XMLParser", function() {
         });
     });
 
-    it("should call tagValue processor without CDATA with correct parameters", function() {
+    it("should call tagValue processor without CDATA with correct parameters", function () {
 
         const expectedValues = [
             "a wow root.a true true",
@@ -229,30 +230,30 @@ describe("XMLParser", function() {
           </a>
           <b a="2" >wow phir se</b>
       </root>`;
-  
-      const tagValueProcessorCalls = [];
-      const options = {
-        ignoreAttributes: false,
-        preserveOrder: true,
-        tagValueProcessor: (tagName, tagValue, jPath, hasAttributes, isLeafNode) => {
-        //   console.log(tagName, tagValue, jPath, hasAttributes, isLeafNode);
-        tagValueProcessorCalls.push(`${tagName} ${tagValue} ${jPath} ${hasAttributes} ${isLeafNode}`);
-          // if(isLeafNode) return tagValue;
-          // else return "";
-          return tagValue;
+
+        const tagValueProcessorCalls = [];
+        const options = {
+            ignoreAttributes: false,
+            preserveOrder: true,
+            tagValueProcessor: (tagName, tagValue, jPath, hasAttributes, isLeafNode) => {
+                //   console.log(tagName, tagValue, jPath, hasAttributes, isLeafNode);
+                tagValueProcessorCalls.push(`${tagName} ${tagValue} ${jPath} ${hasAttributes} ${isLeafNode}`);
+                // if(isLeafNode) return tagValue;
+                // else return "";
+                return tagValue;
+            }
         }
-      }
-      const parser = new XMLParser(options);
-      let result = parser.parse(XMLdata);
-    //   console.log(JSON.stringify(result, null,4));
-    
-    expect(tagValueProcessorCalls).toEqual(expectedValues);
+        const parser = new XMLParser(options);
+        let result = parser.parse(XMLdata);
+        //   console.log(JSON.stringify(result, null,4));
+
+        expect(tagValueProcessorCalls).toEqual(expectedValues);
     });
-    
+
     // it("should call tagValue processor with CDATA with correct parameters", function() {
 
     //     const expectedValues = [
-            
+
     //         "a wow root.a true true",
     //         "#CDATA text root.a.#CDATA false true",
     //         "a after root.a true false",
@@ -271,7 +272,7 @@ describe("XMLParser", function() {
     //       </a>
     //       <b a="2" >wow phir se</b>
     //   </root>`;
-  
+
     //   const tagValueProcessorCalls = [];
     //   const options = {
     //     ignoreAttributes: false,
@@ -288,36 +289,36 @@ describe("XMLParser", function() {
     //   const parser = new XMLParser(options);
     //   let result = parser.parse(XMLdata);
     // //   console.log(JSON.stringify(result, null,4));
-  
+
     //   expect(tagValueProcessorCalls).toEqual(expectedValues);
     // });
 
-    it("should call tagValue processor for whitespace only values but not empty when trimValues:false", function() {
+    it("should call tagValue processor for whitespace only values but not empty when trimValues:false", function () {
 
         const expectedValues = [
             "root    root true false"
         ];
 
         const XMLdata = `<root a="nice" checked>  <a a="2" ></a></root>`;
-  
-      const tagValueProcessorCalls = [];
-      const options = {
-        ignoreAttributes: false,
-        preserveOrder: true,
-        cdataPropName: "#CDATA",
-        tagValueProcessor: (tagName, tagValue, jPath, hasAttributes, isLeafNode) => {
-        //   console.log(tagName, tagValue, jPath, hasAttributes, isLeafNode);
-        tagValueProcessorCalls.push(`${tagName} ${tagValue} ${jPath} ${hasAttributes} ${isLeafNode}`);
-          // if(isLeafNode) return tagValue;
-          // else return "";
-          return tagValue;
-        },
-        trimValues: false
-      }
-      const parser = new XMLParser(options);
-      let result = parser.parse(XMLdata);
-    //   console.log(JSON.stringify(result, null,4));
-  
-      expect(tagValueProcessorCalls).toEqual(expectedValues);
+
+        const tagValueProcessorCalls = [];
+        const options = {
+            ignoreAttributes: false,
+            preserveOrder: true,
+            cdataPropName: "#CDATA",
+            tagValueProcessor: (tagName, tagValue, jPath, hasAttributes, isLeafNode) => {
+                //   console.log(tagName, tagValue, jPath, hasAttributes, isLeafNode);
+                tagValueProcessorCalls.push(`${tagName} ${tagValue} ${jPath} ${hasAttributes} ${isLeafNode}`);
+                // if(isLeafNode) return tagValue;
+                // else return "";
+                return tagValue;
+            },
+            trimValues: false
+        }
+        const parser = new XMLParser(options);
+        let result = parser.parse(XMLdata);
+        //   console.log(JSON.stringify(result, null,4));
+
+        expect(tagValueProcessorCalls).toEqual(expectedValues);
     });
 });

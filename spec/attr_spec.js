@@ -1,7 +1,6 @@
 "use strict";
 
 import { XMLParser, XMLValidator } from "../src/fxp.js";
-// import he from "he";
 
 describe("XMLParser", function () {
     it("should parse attributes with valid names", function () {
