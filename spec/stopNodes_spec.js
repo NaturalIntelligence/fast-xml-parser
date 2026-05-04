@@ -450,4 +450,27 @@ describe("XMLParser StopNodes", function () {
     expect(result).toEqual(expected);
 
   });
+
+  it("(PR #818) should parse stop node when namespace is set to be removed", function () {
+
+    const xmlData = `<root><ns:code>safe <ns:code>nested</ns:code> still raw</ns:code></root>`;
+    const options = {
+      stopNodes: ["root.ns::code"],
+      removeNSPrefix: true
+    };
+
+    const expected = {
+      "root": {
+        "code": "safe <ns:code>nested</ns:code> still raw"
+      }
+    }
+
+    // const result = XMLValidator.validate(xmlData)
+    const parser = new XMLParser(options);
+    const result = parser.parse(xmlData);
+
+    // console.log(JSON.stringify(result, null, 4));
+    expect(result).toEqual(expected);
+
+  });
 });
