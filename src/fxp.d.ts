@@ -696,6 +696,12 @@ export type ValidationError = {
 
 export class XMLParser {
   constructor(options?: X2jOptions);
+
+  /**
+   * @deprecated The `validationOptions` parameter is deprecated.
+   * Use the `fast-xml-validator` package instead for XML validation.
+   * @see https://www.npmjs.com/package/fast-xml-validator
+   */
   parse(xmlData: string | Uint8Array, validationOptions?: validationOptions | boolean): any;
   /**
    * Add Entity which is not by default supported by this library
@@ -718,6 +724,10 @@ export class XMLParser {
   static getMetaDataSymbol(): Symbol;
 }
 
+/** 
+ * @deprecated Use fast-xml-validator instead
+ * @see https://www.npmjs.com/package/fast-xml-validator
+ */
 export class XMLValidator {
   static validate(xmlData: string, options?: validationOptions): true | ValidationError;
 }

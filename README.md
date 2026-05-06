@@ -140,10 +140,6 @@ Bundle size
     </ol></td>
     <td><ol>
       <li></li><a href="./docs/v6/1.GettingStarted.md">Getting Started</a></li>
-      <li><a href="./docs/v6/2.Features.md">Features</a></li>
-      <li><a href="./docs/v6/3.Options.md">Options</a></li>
-      <li><a href="./docs/v6/4.OutputBuilders.md">Output Builders</a></li>
-      <li><a href="./docs/v6/5.ValueParsers.md">Value Parsers</a></li>
     </ol></td>
   </tr>
 </table>
