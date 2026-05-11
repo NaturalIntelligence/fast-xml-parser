@@ -86,9 +86,9 @@
   ],
   "dependencies": {
     "@nodable/entities": "^2.1.0",
-    "fast-xml-builder": "^1.1.7",
+    "fast-xml-builder": "^1.2.0",
     "path-expression-matcher": "^1.5.0",
-    "strnum": "^2.2.3",
+    "strnum": "^2.3.0",
     "xml-naming": "^0.1.0"
   }
 }
