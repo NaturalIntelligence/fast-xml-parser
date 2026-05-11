@@ -88,6 +88,7 @@
     "@nodable/entities": "^2.1.0",
     "fast-xml-builder": "^1.1.7",
     "path-expression-matcher": "^1.5.0",
-    "strnum": "^2.2.3"
+    "strnum": "^2.2.3",
+    "xml-naming": "^0.1.0"
   }
 }
