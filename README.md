@@ -13,6 +13,8 @@ Validate XML, Parse XML to JS Object, or Build XML from JS Object without C/C++ 
 
 It can handle big files (tested up to 100mb). XML Entities, HTML entities, and DOCTYPE entites are supported. Unpaired tags (Eg `<br>` in HTML), stop nodes (Eg `<script>` in HTML) are supported. It can also preserve Order of tags in JS object
 
+> [Flexible-XML-Parser](https://github.com/nodable/flexible-xml-parser) is 2 times faster than this library and allows to deal with incomplete XML/HTML. Output is highly customizable. Build whatever you want. So if you're fine with some extra configuration then try it out.
+
 ---
 # Your Support, Our Motivation
 
