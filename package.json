@@ -67,6 +67,7 @@
     "@babel/plugin-transform-runtime": "^7.13.10",
     "@babel/preset-env": "^7.13.10",
     "@babel/register": "^7.13.8",
+    "@byspec/xml": "^0.1.0",
     "@types/node": "20",
     "babel-loader": "^8.2.2",
     "c8": "^10.1.3",
