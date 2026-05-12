@@ -2,7 +2,7 @@
 
 Note: Due to some last quick changes on v4, detail of v4.5.3 & v4.5.4 are not updated here. v4.5.4x is the last tag of v4 in github repository. I'm extremely sorry for the confusion
 
-**5.8.0*
+**5.8.0 / 2026-05-12*
 - integrate xml-naming to validate DOCTYPE entity name and notation name (using qname becaue of backward compatibility)
   - This will consider xml-version as well. '1.0' is default
 - update strnum to 2.3.0
