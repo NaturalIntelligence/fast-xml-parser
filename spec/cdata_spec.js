@@ -368,19 +368,30 @@ patronymic</person></root>`;
         expect(result).toEqual(expected);
     });
 
-    it("should not process entities in CDATA", function () {
-        const xmlData = `<xml><![CDATA[&lt;text&gt;]]></xml>`;
+    it("should preserve carriage return characters in CDATA and text nodes", function () {
+        const xmlData = `<properties>
+            <property><![CDATA[This is a carriage return \r...]]></property>
+            <property><![CDATA[\r]]></property>
+            <text>line1\rline2</text>
+        </properties>`;
 
-        const expected = { xml: '&lt;text&gt;' };
-
-        const options = {
-            ignoreAttributes: false,
+        const expected = {
+            "properties": {
+                "property": [
+                    "This is a carriage return \r...",
+                    "\r"
+                ],
+                "text": "line1\rline2"
+            }
         };
 
+        const options = {
+            parseTagValue: false,
+            trimValues: false
+        };
         const parser = new XMLParser(options);
         let result = parser.parse(xmlData);
-
-        // console.log(JSON.stringify(result,null,4));
+        // console.log(JSON.stringify(result, null, 4));
         expect(result).toEqual(expected);
     });
 });
