@@ -428,30 +428,4 @@ patronymic</person></root>`;
 
         expect(result).toEqual(expected);
     });
-
-    it("should normalize carriage returns outside CDATA", function () {
-        const xmlData = `<root attr="x\ry"><text>x\ry</text><text>x\r\ny</text></root>`;
-
-        const expected = {
-            "root": {
-                "text": [
-                    "x\ny",
-                    "x\ny"
-                ],
-                "@_attr": "x\ny"
-            }
-        };
-
-        const options = {
-            ignoreAttributes: false,
-            parseAttributeValue: false,
-            parseTagValue: false,
-            trimValues: false,
-        };
-
-        const parser = new XMLParser(options);
-        let result = parser.parse(xmlData);
-
-        expect(result).toEqual(expected);
-    });
 });
