@@ -69,6 +69,7 @@
                             <input type="checkbox" id="ignoreAttributes" checked="true"> Ignore attributes <br>
                             <input type="checkbox" id="attributesGroupName"> Group all the attributes  <br>
                             <input type ="checkbox" id="allowBooleanAttributes"> Allow Boolean Attributes <br>
+                            <input type="checkbox" id="ignoreDeclaration" checked="true"> Ignore XML declaration <br>
                             <input type="checkbox" id="parseAttributeValue"> Parse attribute's value to float / integer / boolean.<br>
                             <input type="checkbox" id="parseNodeValue" checked="true"> Parse text-node's value to float / integer / boolean.<br>
                             <input type="checkbox" id="removeNSPrefix" checked="true"> Remove namespace string from tag and attribute names. <br>
@@ -203,6 +204,7 @@
                     attributesGroupName: $("#attributesGroupName").prop("checked") ? "@" : false,
                     textNodeName : "#text",
                     ignoreAttributes : $("#ignoreAttributes").prop("checked"),
+                    ignoreDeclaration: $("#ignoreDeclaration").prop("checked"),
                     removeNSPrefix : $("#removeNSPrefix").prop("checked"),
                     parseNodeValue : $("#parseNodeValue").prop("checked"),
                     parseAttributeValue : $("#parseAttributeValue").prop("checked"),
