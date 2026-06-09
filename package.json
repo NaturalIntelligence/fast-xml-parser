@@ -20,7 +20,7 @@
     }
   },
   "scripts": {
-    "test": "c8 --reporter=lcov --reporter=text jasmine spec/*spec.js",
+    "test": "node ci-helper.cjs && c8 --reporter=lcov --reporter=text jasmine spec/*spec.js",
     "test-types": "tsc --noEmit spec/typings/typings-test.ts",
     "unit": "jasmine",
     "perf": "node ./benchmark/perfTest3.js",
