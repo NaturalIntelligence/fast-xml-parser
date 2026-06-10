@@ -275,7 +275,7 @@ function buildAttributesMap(attrStr, jPath, tagName, force = false) {
   }
 }
 const parseXml = function (xmlData) {
-  xmlData = xmlData.replace(/\r\n?/g, "\n"); //TODO: remove this line
+  // xmlData = xmlData.replace(/\r\n?/g, "\n"); // Removed: incorrectly replaces \r in CDATA and text nodes
   const xmlObj = new xmlNode('!xml');
   let currentNode = xmlObj;
   let textData = "";
