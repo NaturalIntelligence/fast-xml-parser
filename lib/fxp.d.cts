@@ -509,7 +509,9 @@ type strnumOptions = {
   hex: boolean;
   leadingZeros: boolean,
   skipLike?: RegExp,
-  eNotation?: boolean
+  eNotation?: boolean,
+  infinity?: string,
+  unicode?: boolean
 }
 
 type validationOptions = {

@@ -86,10 +86,11 @@
     }
   ],
   "dependencies": {
-    "@nodable/entities": "^2.1.0",
+    "@nodable/entities": "^2.2.0",
     "fast-xml-builder": "^1.2.0",
+    "is-unsafe": "^1.0.1",
     "path-expression-matcher": "^1.5.0",
-    "strnum": "^2.3.0",
+    "strnum": "^2.4.0",
     "xml-naming": "^0.1.0"
   }
 }

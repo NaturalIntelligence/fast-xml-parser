@@ -25,7 +25,8 @@ export const defaultOptions = {
   numberParseOptions: {
     hex: true,
     leadingZeros: true,
-    eNotation: true
+    eNotation: true,
+    unicode: false
   },
   tagValueProcessor: function (tagName, val) {
     return val;

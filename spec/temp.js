@@ -24,17 +24,14 @@ describe("unpaired and empty tags", function () {
   });
   fit("bug test", function () {
 
-    const xmlData = `<root><ns:code>safe <ns:code>nested</ns:code> still raw</ns:code></root>`;
-    const options = {
-      stopNodes: ["root.ns::code"],
-      removeNSPrefix: true
-    };
+    const xml = `<?xml version="1.0"?>
+<!DOCTYPE foo [
+  <!ENTITY lt "<script>alert(document.domain)</script>">
+]>
+<root>test &lt; value</root>`;
 
-    // const result = XMLValidator.validate(xmlData)
-    const parser = new XMLParser(options);
-    const result = parser.parse(xmlData);
-
-    console.log(result);
+    const result = new XMLParser().parse(xml);
+    console.log(result.root);
     // console.log(JSON.stringify(result, null, 4));
     // expect(result).toEqual(expected);
 

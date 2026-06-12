@@ -8,7 +8,9 @@ import toNumber from "strnum";
 import getIgnoreAttributesFn from "../ignoreAttributes.js";
 import { Expression, Matcher } from 'path-expression-matcher';
 import { ExpressionSet } from 'path-expression-matcher';
-import { EntityDecoder, XML, CURRENCY, COMMON_HTML } from '@nodable/entities';
+import { EntityDecoder, XML, CURRENCY, COMMON_HTML, ENTITY_ACTION } from '@nodable/entities';
+import { isUnsafe, VALID_CONTEXTS } from "is-unsafe"
+
 
 // const regx =
 //   '<((!\\[CDATA\\[([\\s\\S]*?)(]]>))|((NAME:)?(NAME))([^>]*)>|((\\/)(NAME)\\s*>))([^<]*)'
@@ -98,7 +100,12 @@ export default class OrderedObjParser {
           maxTotalExpansions: this.options.processEntities.maxTotalExpansions,
           maxExpandedLength: this.options.processEntities.maxExpandedLength,
           applyLimitsTo: this.options.processEntities.appliesTo,
-        }
+        },
+        // onExternalEntity: (name, value) => isUnsafe(value) ? 'block' : 'allow',
+        onInputEntity: (name, value) =>
+          isUnsafe(value, [VALID_CONTEXTS.HTML, VALID_CONTEXTS.XML])
+            ? ENTITY_ACTION.BLOCK : ENTITY_ACTION.ALLOW,
+
         //postCheck: resolved => resolved
       });
     }
