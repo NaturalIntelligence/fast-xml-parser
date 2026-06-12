@@ -383,4 +383,49 @@ patronymic</person></root>`;
         // console.log(JSON.stringify(result,null,4));
         expect(result).toEqual(expected);
     });
+
+    it("should preserve carriage returns in CDATA", function () {
+        const xmlData = `<properties object="" engine="">
+    <property type="string" name="x" state="changed">
+        <![CDATA[This is a carriage return \r...]]>
+    </property>
+    <property type="string" name="y" state="changed">
+        <![CDATA[\r]]>
+    </property>
+</properties>`;
+
+        const expected = {
+            "properties": {
+                "property": [
+                    {
+                        "#value": "This is a carriage return \r...",
+                        "@type": "string",
+                        "@name": "x",
+                        "@state": "changed"
+                    },
+                    {
+                        "#value": "\r",
+                        "@type": "string",
+                        "@name": "y",
+                        "@state": "changed"
+                    }
+                ],
+                "@object": "",
+                "@engine": ""
+            }
+        };
+
+        const options = {
+            attributeNamePrefix: "@",
+            ignoreAttributes: false,
+            parseAttributeValue: false,
+            parseTagValue: false,
+            textNodeName: "#value",
+        };
+
+        const parser = new XMLParser(options);
+        let result = parser.parse(xmlData);
+
+        expect(result).toEqual(expected);
+    });
 });

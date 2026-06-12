@@ -281,8 +281,55 @@ function buildAttributesMap(attrStr, jPath, tagName, force = false) {
     return attrs;
   }
 }
+function normalizeLineEndingsOutsideCDATA(xmlData) {
+  if (xmlData.indexOf("\r") === -1) return xmlData;
+
+  let normalizedXml = "";
+  let segmentStart = 0;
+  let insideTag = false;
+  let quoteChar = "";
+
+  for (let i = 0; i < xmlData.length; i++) {
+    const ch = xmlData[i];
+
+    if (insideTag) {
+      if (quoteChar) {
+        if (ch === quoteChar) quoteChar = "";
+      } else if (ch === '"' || ch === "'") {
+        quoteChar = ch;
+      } else if (ch === ">") {
+        insideTag = false;
+      }
+    } else if (ch === "<") {
+      if (xmlData.startsWith("<![CDATA[", i)) {
+        normalizedXml += xmlData.substring(segmentStart, i).replace(/\r\n?/g, "\n");
+
+        const cdataEnd = xmlData.indexOf("]]>", i + 9);
+        if (cdataEnd === -1) {
+          normalizedXml += xmlData.substring(i);
+          return normalizedXml;
+        }
+
+        const cdataCloseIndex = cdataEnd + 3;
+        normalizedXml += xmlData.substring(i, cdataCloseIndex);
+        i = cdataCloseIndex - 1;
+        segmentStart = cdataCloseIndex;
+      } else if (xmlData.startsWith("<!--", i)) {
+        const commentEnd = xmlData.indexOf("-->", i + 4);
+        if (commentEnd === -1) break;
+        i = commentEnd + 2;
+      } else {
+        insideTag = true;
+      }
+    }
+  }
+
+  normalizedXml += xmlData.substring(segmentStart).replace(/\r\n?/g, "\n");
+  return normalizedXml;
+}
+
 const parseXml = function (xmlData) {
-  xmlData = xmlData.replace(/\r\n?/g, "\n"); //TODO: remove this line
+  xmlData = normalizeLineEndingsOutsideCDATA(xmlData);
   const xmlObj = new xmlNode('!xml');
   let currentNode = xmlObj;
   let textData = "";
