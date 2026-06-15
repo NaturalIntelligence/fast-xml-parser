@@ -103,6 +103,7 @@ export default class OrderedObjParser {
         },
         // onExternalEntity: (name, value) => isUnsafe(value) ? 'block' : 'allow',
         onInputEntity: (name, value) =>
+          //TODO: VALID_CONTEXTS.HTML should be set only if this.options.htmlEntities
           isUnsafe(value, [VALID_CONTEXTS.HTML, VALID_CONTEXTS.XML])
             ? ENTITY_ACTION.BLOCK : ENTITY_ACTION.ALLOW,
 
