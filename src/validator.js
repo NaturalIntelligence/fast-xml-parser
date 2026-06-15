@@ -358,11 +358,16 @@ function validateNumberAmpersand(xmlData, i) {
     i++;
     re = /[\da-fA-F]/;
   }
+  // Per the XML 1.0 CharRef production a numeric reference must contain at
+  // least one digit; "&#;" and "&#x;" are invalid. Without this guard the
+  // loop returns success on a ';' that immediately follows "&#"/"&#x".
+  let hasDigit = false;
   for (; i < xmlData.length; i++) {
     if (xmlData[i] === ';')
-      return i;
+      return hasDigit ? i : -1;
     if (!xmlData[i].match(re))
       break;
+    hasDigit = true;
   }
   return -1;
 }
