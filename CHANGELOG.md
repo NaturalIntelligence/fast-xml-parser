@@ -2,7 +2,7 @@
 
 Note: Due to some last quick changes on v4, detail of v4.5.3 & v4.5.4 are not updated here. v4.5.4x is the last tag of v4 in github repository. I'm extremely sorry for the confusion
 
-**5.9.0 / 2026-06-15* (not released yet)
+**5.9.0 / 2026-06-15*
 - update strnum to 2.3.0
   - you can set hex, binary, enotation, infinity, unicode
 - validate unsafe HTML or XML data in doctype entities unsing 'is-unsafe' library.
