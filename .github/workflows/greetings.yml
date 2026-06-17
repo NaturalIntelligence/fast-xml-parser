@@ -2,11 +2,23 @@ name: Greetings
 
 on: [issues]
 
+permissions: {}
+
 jobs:
   greeting:
+    name: greeting
     runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.event.issue.number || github.ref }}
+      cancel-in-progress: false
+
+    permissions:
+      issues: write # Needed to comment on issues
+
     steps:
-    - uses: actions/first-interaction@v1
+    - uses: actions/first-interaction@3c71ce730280171fd1cfb57c00c774f8998586f7 # v1
       with:
         repo-token: ${{ secrets.GITHUB_TOKEN }}
         issue-message: 'We''re glad you find this project helpful. We''ll try to address this issue ASAP. You can join Discord channel(https://discord.gg/X4Qp9u6Vz) for anonucements and pre release discussions. Don''t forget to star this repo.'

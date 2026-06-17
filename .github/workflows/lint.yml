@@ -1,0 +1,47 @@
+name: lint
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  lint:
+    name: Lint workflows
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+      cancel-in-progress: false
+
+    env:
+      FORCE_COLOR: 1
+      TERM: xterm
+
+    permissions:
+      actions: read # Scan GitHub Actions workflows
+      contents: read # Checkout the repository
+      security-events: write # Store results in the Security tab
+
+    steps:
+
+    - name: Checkout code
+      uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+      with:
+        persist-credentials: false
+        show-progress: false
+
+    - name: Add actionlint problem matcher
+      run: echo "::add-matcher::.github/actionlint-matcher.json"
+
+    - name: Lint workflows with actionlint
+      uses: docker://rhysd/actionlint:1.7.12@sha256:b1934ee5f1c509618f2508e6eb47ee0d3520686341fec936f3b79331f9315667
+      with:
+        args: -color
+
+    - name: Lint workflows with zizmor
+      uses: zizmorcore/zizmor-action@5f14fd08f7cf1cb1609c1e344975f152c7ee938d # v0.5.6

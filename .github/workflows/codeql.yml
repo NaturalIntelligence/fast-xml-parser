@@ -1,0 +1,74 @@
+name: codeql
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+  schedule:
+    - cron: '0 6 * * MON'
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  analysis:
+    name: analysis
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.sha }}
+      cancel-in-progress: false
+
+    permissions:
+      actions: read          # Scan GitHub Actions workflows
+      contents: read         # Checkout the repository
+      security-events: write # Store results in the Security tab
+
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [ 'actions', 'javascript' ]
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+      with:
+        persist-credentials: false
+        show-progress: false
+
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@8aad20d150bbac5944a9f9d289da16a4b0d87c1e # v4.36.2
+      with:
+        languages: ${{ matrix.language }}
+        queries: security
+
+    - name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@8aad20d150bbac5944a9f9d289da16a4b0d87c1e # v4.36.2
+      with:
+        category: '/language:${{ matrix.language }}'
+
+  codeql:
+    if: ${{ !cancelled() }}
+    name: codeql
+    needs: [ analysis ]
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.sha }}
+      cancel-in-progress: false
+
+    steps:
+    - name: Report status
+      shell: bash
+      env:
+        SCAN_SUCCESS: ${{ !contains(needs.*.result, 'failure') && !contains(needs.*.result, 'cancelled') }}
+      run: |
+        if [ "${SCAN_SUCCESS}" == "true" ]
+        then
+          echo 'CodeQL analysis successful ✅'
+        else
+          echo 'CodeQL analysis failed ❌'
+          exit 1
+        fi
