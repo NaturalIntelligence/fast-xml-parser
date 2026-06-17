@@ -1,4 +1,5 @@
 Pre release
+- [ ] pull and rebase changes from remote `git pull --rebase origin master`
 - [ ] npm audit and yarn audit is done
 - [ ] change in local package installation
 - [ ] update pem.d.ts when there is any change path-expression-matcher package
@@ -23,7 +24,7 @@ Release: ensure not uncommited changes
   - update version in package.json and lock file. Commits the changed files. Default commit message is just the version string itself (e.g. 4.5.2)
   - Creates an annotated git tag on that commit, named v4.5.2
   - Then will run postversion script. that does nothing
-- run `npm push origin master --tags`
+- run `git push origin master --tags`
     This'll trigger github publish action when new tag is found.
     github action will release to npm and github
 
