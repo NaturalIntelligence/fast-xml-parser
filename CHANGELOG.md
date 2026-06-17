@@ -2,6 +2,9 @@
 
 Note: Due to some last quick changes on v4, detail of v4.5.3 & v4.5.4 are not updated here. v4.5.4x is the last tag of v4 in github repository. I'm extremely sorry for the confusion
 
+**5.9.2 / 2026-06-17*
+- dummy release to test changes in github action
+
 **5.9.1 / 2026-06-17*
 - dummy release to test release from github action
 
