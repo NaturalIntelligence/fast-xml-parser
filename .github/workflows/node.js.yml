@@ -22,6 +22,7 @@ jobs:
       contents: read
 
     strategy:
+      fail-fast: false
       matrix:
         node-version: [14.x, 16.x, 18.x, 20.x, 22.x]
 
@@ -38,7 +39,7 @@ jobs:
         package-manager-cache: false
 
     - name: Set PUBLISH_PLEASE_DISABLE_PROMPT
-      run: echo "PUBLISH_PLEASE_DISABLE_PROMPT=true" >> $GITHUB_ENV
+      run: echo "PUBLISH_PLEASE_DISABLE_PROMPT=true" >> "${GITHUB_ENV}"
 
     - name: Install dependencies
       run: npm install --ignore-scripts
