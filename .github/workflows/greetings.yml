@@ -18,7 +18,7 @@ jobs:
       issues: write # Needed to comment on issues
 
     steps:
-    - uses: actions/first-interaction@3c71ce730280171fd1cfb57c00c774f8998586f7 # v1
+    - uses: actions/first-interaction@1c4688942c71f71d4f5502a26ea67c331730fa4d # v3.1.0
       with:
         repo-token: ${{ secrets.GITHUB_TOKEN }}
         issue-message: 'We''re glad you find this project helpful. We''ll try to address this issue ASAP. You can join Discord channel(https://discord.gg/X4Qp9u6Vz) for anonucements and pre release discussions. Don''t forget to star this repo.'
