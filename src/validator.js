@@ -91,6 +91,14 @@ export function validate(xmlData, options) {
           const isValid = validateAttributeString(attrStr, options);
           if (isValid === true) {
             tagFound = true;
+            //a self closing tag at the root level is a complete root element
+            if (tags.length === 0) {
+              //if the root level has already been reached, this is a second root
+              if (reachedRoot === true) {
+                return getErrorObject('InvalidXml', 'Multiple possible root nodes found.', getLineNumberForPosition(xmlData, tagStartPos));
+              }
+              reachedRoot = true;
+            }
             //continue; //text may presents after self closing tag
           } else {
             //the result from the nested function returns the position of the error within the attribute

@@ -403,6 +403,30 @@ describe("should not validate XML documents with multiple root nodes", () => {
             InvalidXml: 'Multiple possible root nodes found.'
         }, 5);
     });
+
+    it('when a self closing root node is followed by another self closing node', () => {
+        validate(`<xml/><xml2/>`, {
+            InvalidXml: 'Multiple possible root nodes found.'
+        });
+    });
+
+    it('when a self closing root node is followed by a paired node', () => {
+        validate(`<xml/><xml2></xml2>`, {
+            InvalidXml: 'Multiple possible root nodes found.'
+        });
+    });
+
+    it('when a paired root node is followed by a self closing node', () => {
+        validate(`<xml></xml><xml2/>`, {
+            InvalidXml: 'Multiple possible root nodes found.'
+        });
+    });
+
+    it('when a self closing root node is followed by trailing text', () => {
+        validate(`<xml/>extra`, {
+            InvalidXml: 'Extra text at the end'
+        });
+    });
 });
 
 describe("should report correct line numbers for unclosed tags", () => {
