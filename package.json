@@ -87,7 +87,7 @@
     "fast-xml-builder": "^1.2.0",
     "is-unsafe": "^1.0.1",
     "path-expression-matcher": "^1.5.0",
-    "strnum": "^2.4.0",
+    "strnum": "^2.4.1",
     "xml-naming": "^0.1.0"
   }
 }
