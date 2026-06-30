@@ -462,4 +462,22 @@ patronymic</person></root>`;
         // console.log(JSON.stringify(result,null,4));
         expect(result).toEqual(expected);
     });
+
+    it("should neutralize CDATA delimiters when building so a value cannot break out (GHSA-gh4j-gqv2-49f6)", function() {
+        const payload = "a]]><script>alert(1)</script><![CDATA[b";
+        const stripCData = (s) => s.replace(/<!\[CDATA\[[\s\S]*?\]\]>/g, "");
+
+        const out1 = new XMLBuilder({ cdataPropName: "#cdata", format: false })
+            .build({ data: { "#cdata": payload } });
+        expect(XMLValidator.validate("<r>" + out1 + "</r>")).toBe(true);
+        expect(stripCData(out1)).not.toContain("<script>");
+        // the split-CDATA escaping is lossless: the (possibly split) CDATA text concatenates back to the original
+        const roundTrip = new XMLParser({ cdataPropName: "#cdata" }).parse(out1).data["#cdata"];
+        expect([].concat(roundTrip).join("")).toEqual(payload);
+
+        const out2 = new XMLBuilder({ preserveOrder: true, cdataPropName: "#cdata", format: false })
+            .build([{ "#cdata": [{ "#text": payload }] }]);
+        expect(XMLValidator.validate("<r>" + out2 + "</r>")).toBe(true);
+        expect(stripCData(out2)).not.toContain("<script>");
+    });
 });
