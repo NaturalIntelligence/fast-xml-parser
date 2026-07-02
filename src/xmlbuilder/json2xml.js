@@ -206,7 +206,10 @@ Builder.prototype.buildObjectNode = function(val, key, attrStr, level) {
     if ((attrStr || attrStr === '') && val.indexOf('<') === -1) {
       return ( this.indentate(level) + '<' +  key + attrStr + piClosingChar + '>' + val + tagEndExp );
     } else if (this.options.commentPropName !== false && key === this.options.commentPropName && piClosingChar.length === 0) {
-      return this.indentate(level) + `<!--${val}-->` + this.newLine;
+      const safeVal = String(val)
+        .replace(/--/g, '- -')   // -- is illegal anywhere in comment content
+        .replace(/-$/, '- ');    // trailing - would form --> with the closing delimiter
+      return this.indentate(level) + `<!--${safeVal}-->` + this.newLine;
     }else {
       return (
         this.indentate(level) + '<' + key + attrStr + piClosingChar + this.tagEndChar +
@@ -242,9 +245,13 @@ function buildEmptyObjNode(val, key, attrStr, level) {
 
 Builder.prototype.buildTextValNode = function(val, key, attrStr, level) {
   if (this.options.cdataPropName !== false && key === this.options.cdataPropName) {
-    return this.indentate(level) + `<![CDATA[${val}]]>` +  this.newLine;
+    const safeVal = String(val).replace(/\]\]>/g, ']]]]><![CDATA[>');
+    return this.indentate(level) + `<![CDATA[${safeVal}]]>` +  this.newLine;
   }else if (this.options.commentPropName !== false && key === this.options.commentPropName) {
-    return this.indentate(level) + `<!--${val}-->` +  this.newLine;
+    const safeVal = String(val)
+      .replace(/--/g, '- -')   // -- is illegal anywhere in comment content
+      .replace(/-$/, '- ');    // trailing - would form --> with the closing delimiter
+    return this.indentate(level) + `<!--${safeVal}-->` +  this.newLine;
   }else if(key[0] === "?") {//PI tag
     return  this.indentate(level) + '<' + key + attrStr+ '?' + this.tagEndChar; 
   }else{

@@ -54,11 +54,15 @@ function arrToStr(arr, options, jPath, indentation) {
             if (isPreviousElementTag) {
                 xmlStr += indentation;
             }
-            xmlStr += `<![CDATA[${tagObj[tagName][0][options.textNodeName]}]]>`;
+            const cdataVal = String(tagObj[tagName][0][options.textNodeName]).replace(/\]\]>/g, ']]]]><![CDATA[>');
+            xmlStr += `<![CDATA[${cdataVal}]]>`;
             isPreviousElementTag = false;
             continue;
         } else if (tagName === options.commentPropName) {
-            xmlStr += indentation + `<!--${tagObj[tagName][0][options.textNodeName]}-->`;
+            const commentVal = String(tagObj[tagName][0][options.textNodeName])
+                .replace(/--/g, '- -')   // -- is illegal anywhere in comment content
+                .replace(/-$/, '- ');    // trailing - would form --> with the closing delimiter
+            xmlStr += indentation + `<!--${commentVal}-->`;
             isPreviousElementTag = true;
             continue;
         } else if (tagName[0] === "?") {

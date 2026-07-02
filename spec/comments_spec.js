@@ -81,5 +81,20 @@ it("should build XML with Comments without parseOrder", function() {
   expect(xmlOutput.replace(/\s+/g, "")).toEqual(expected.replace(/\s+/g, ""));
 });
 
+it("should neutralize comment delimiters when building so a value cannot break out (GHSA-gh4j-gqv2-49f6)", function() {
+  const payload = "a--><script>alert(1)</script><!--b";
+  const stripComments = (s) => s.replace(/<!--[\s\S]*?-->/g, "");
+
+  const out1 = new XMLBuilder({ commentPropName: "#comment", format: false })
+    .build({ note: { "#comment": payload } });
+  expect(XMLValidator.validate("<r>" + out1 + "</r>")).toBe(true);
+  expect(stripComments(out1)).not.toContain("<script>");
+
+  const out2 = new XMLBuilder({ preserveOrder: true, commentPropName: "#comment", format: false })
+    .build([{ "#comment": [{ "#text": payload }] }]);
+  expect(XMLValidator.validate("<r>" + out2 + "</r>")).toBe(true);
+  expect(stripComments(out2)).not.toContain("<script>");
+});
+
 });
 
