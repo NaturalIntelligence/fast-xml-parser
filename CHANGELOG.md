@@ -1,5 +1,8 @@
 <small>Note: If you find missing information about particular minor version, that version must have been changed without any functional change in this library.</small>
 
+**4.5.5 / 2026-07-02**
+- fix: escape comment and CDATA delimiters when building XML (By [greymoth](https://github.com/greymoth-jp))
+
 **4.5.4 / 2026-02-26**
 - support strictReservedNames
 - support captureMetaData
