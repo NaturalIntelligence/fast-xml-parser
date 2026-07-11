@@ -13,21 +13,20 @@ Validate XML, Parse XML to JS Object, or Build XML from JS Object without C/C++ 
 
 It can handle big files (tested up to 100mb). XML Entities, HTML entities, and DOCTYPE entites are supported. Unpaired tags (Eg `<br>` in HTML), stop nodes (Eg `<script>` in HTML) are supported. It can also preserve Order of tags in JS object
 
-> [Flexible-XML-Parser](https://github.com/nodable/flexible-xml-parser) is 2 times faster than this library and allows to deal with incomplete XML/HTML. Output is highly customizable. Build whatever you want. So if you're fine with some extra configuration then try it out.
+# Before using this library
+
+- [Flexible-XML-Parser](https://github.com/nodable/flexible-xml-parser) is 1.25 times faster than this library when not preserving order of tags. Takes less memory when processing big files. Supports incomplete XML/HTML. And output is highly customizable. Build whatever you want. So if you're fine with some extra configuration then try it out.
+- [@nodable/sax](https://github.com/nodable/sax) is a SAX parser based on [Flexible-XML-Parser](https://github.com/nodable/flexible-xml-parser). 3-4 times faster than `sax`  and support all features of base package like incomplete input, streams, skipping certain tags from processing etc.
 
 ---
 # Your Support, Our Motivation
 
-Please join [Discord community](https://discord.gg/X4Qp9u6Vz) for pre release announcements and discussions. This will prevent us to release breaking changes.
-
-
+Please join [Discord community](https://discord.gg/X4Qp9u6Vz) for pre release announcements and discussions.
 
 <!-- ## Try out our New Thoughts
 
 - WishIn - You need it if negative thoughts take over all the time <br>
 <a href="https://play.google.com/store/apps/details?id=com.solothought.wishin"> <img src="https://solothought.com/products/assets/images/wishin/YouTubeThumbnail.png" width="500px"/> </a>
-- **Flowgger**: 90% less logs size and 90% less debugging time<br>
-<a href="https://github.com/solothought/flowgger"> <img src="static/img/flowgger_h.webp" alt="Flowgger Logging Framework" width="300px"/></a>
 - [Text2Chart](https://solothought.com/text2chart/flow): interactive flow chart out of simple text. -->
 
 ## Financial Support
