@@ -9,7 +9,7 @@ import getIgnoreAttributesFn from "../ignoreAttributes.js";
 import { Expression, Matcher } from 'path-expression-matcher';
 import { ExpressionSet } from 'path-expression-matcher';
 import { EntityDecoder, XML, CURRENCY, COMMON_HTML, ENTITY_ACTION } from '@nodable/entities';
-import { isUnsafe, VALID_CONTEXTS } from "is-unsafe"
+import { isUnsafe, HTML as HTML_CONTEXT, XML as XML_CONTEXT } from "is-unsafe"
 
 
 // const regx =
@@ -104,8 +104,7 @@ export default class OrderedObjParser {
         // onExternalEntity: (name, value) => isUnsafe(value) ? 'block' : 'allow',
         onInputEntity: (name, value) =>
           //TODO: VALID_CONTEXTS.HTML should be set only if this.options.htmlEntities
-          isUnsafe(value, [VALID_CONTEXTS.HTML, VALID_CONTEXTS.XML])
-            ? ENTITY_ACTION.BLOCK : ENTITY_ACTION.ALLOW,
+          isUnsafe(value, [HTML_CONTEXT, XML_CONTEXT]) ? ENTITY_ACTION.BLOCK : ENTITY_ACTION.ALLOW,
 
         //postCheck: resolved => resolved
       });
