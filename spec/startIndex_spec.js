@@ -9,22 +9,22 @@ describe("XMLParser", function () {
     it("should support captureMetadata && !preserveOrder", function () {
         const expected = {
             root: {
-                [XML_METADATA]: { startIndex: 0 },
+                [XML_METADATA]: { startIndex: 0, endIndex: 79 },
                 foo: '',
                 bar: [
                     {
-                        [XML_METADATA]: { startIndex: 12 },
+                        [XML_METADATA]: { startIndex: 12, endIndex: 30 },
                         "@_type": 'quux'
                     },
                     {
-                        [XML_METADATA]: { startIndex: 30 },
+                        [XML_METADATA]: { startIndex: 30, endIndex: 47 },
                         "@_type": 'bat'
                     },
                 ],
                 baz: {
                     '@_type': 'foo',
                     '#text': 'FOO',
-                    [XML_METADATA]: {startIndex: 47},
+                    [XML_METADATA]: { startIndex: 47, endIndex: 72 },
                 }
             }
         };
@@ -38,24 +38,24 @@ describe("XMLParser", function () {
         const expected = [
             {
                 root: [
-                    { foo: [], [XML_METADATA]: { startIndex: 6 } },
+                    { foo: [], [XML_METADATA]: { startIndex: 6, endIndex: 12 } },
                     {
                         bar: [],
                         ':@': { "@_type": 'quux' },
-                        [XML_METADATA]: { startIndex: 12 },
+                        [XML_METADATA]: { startIndex: 12, endIndex: 30 },
                     },
                     {
                         bar: [],
                         ':@': { "@_type": 'bat' },
-                        [XML_METADATA]: { startIndex: 30 },
+                        [XML_METADATA]: { startIndex: 30, endIndex: 47 },
                     },
                     {
                         baz: [{ '#text': 'FOO' }],
                         ':@': { '@_type': 'foo' },
-                        [XML_METADATA]: {startIndex: 47},
+                        [XML_METADATA]: { startIndex: 47, endIndex: 72 },
                     },
                 ],
-                [XML_METADATA]: { startIndex: 0 },
+                [XML_METADATA]: { startIndex: 0, endIndex: 79 },
             }
         ];
 
@@ -69,28 +69,28 @@ describe("XMLParser", function () {
     it("should support captureMetadata && isArray && stopNodes && unpairedTags && updateTag", function () {
         const expected = {
             ROOT: {
-                [XML_METADATA]: { startIndex: 0 },
+                [XML_METADATA]: { startIndex: 0, endIndex: 138 },
                 foo: [''],
                 bar: [
                     {
-                        [XML_METADATA]: { startIndex: 12 },
+                        [XML_METADATA]: { startIndex: 12, endIndex: 30 },
                         "@_type": 'quux'
                     },
                     {
-                        [XML_METADATA]: { startIndex: 30 },
+                        [XML_METADATA]: { startIndex: 30, endIndex: 47 },
                         "@_type": 'bat'
                     },
                 ],
                 baz: {
                     '#text': 'FOO',
                     '@_type': 'foo',
-                    [XML_METADATA]: { startIndex: 47 },
+                    [XML_METADATA]: { startIndex: 47, endIndex: 72 },
                 },
                 // no metadata on stop nodes.
                 stop: 'This is a <b>stop</b> node.',
                 unpaired: {
                     '@_attr': '1',
-                    [XML_METADATA]: { startIndex: 112 },
+                    [XML_METADATA]: { startIndex: 112, endIndex: 131 },
                 }
             }
         };
@@ -100,7 +100,7 @@ describe("XMLParser", function () {
             isArray(tagName) {
                 return (tagName == 'foo');
             },
-            stopNodes: [ 'root.stop' ], unpairedTags: ['unpaired'], 
+            stopNodes: [ 'root.stop' ], unpairedTags: ['unpaired'],
             updateTag(tagName) {
                 if (tagName === 'root') {
                     tagName = 'ROOT';
