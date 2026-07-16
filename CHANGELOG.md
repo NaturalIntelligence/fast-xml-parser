@@ -4,6 +4,10 @@ Note: Due to some last quick changes on v4, detail of v4.5.3 & v4.5.4 are not up
 
 
 
+**5.10.1 / 2026-07-17**
+- fix: multiple DOCTYPE declarations.
+- deps: `@nodable/entities` for treeshaking
+
 **5.10.0 / 2026-07-11**
 - upgrade:
   - xml-naming v0.3.0: cache support
