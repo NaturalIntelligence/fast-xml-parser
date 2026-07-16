@@ -536,6 +536,17 @@ describe("XMLParser entity expansion security", function () {
 
       expect(result.root).toEqual('A'.repeat(500));
     });
+
+    it("should throw error when DOCTYPE is repeated", function () {
+      const xmlData = `<!DOCTYPE root [<!ENTITY e "a">]><!DOCTYPE root2 [<!ENTITY e2 "b">]><root>a</root>`;
+
+      const options = {
+      };
+      const parser = new XMLParser(options);
+      expect(() => {
+        parser.parse(xmlData);
+      }).toThrowError("Multiple DOCTYPE declarations found.");
+    });
   });
 
   // =================================================================
