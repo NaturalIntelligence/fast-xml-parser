@@ -863,6 +863,15 @@ describe("XMLParser", function() {
         expect(result).toEqual(expected);
     });
 
+    it("should not crash when a closing tag has no matching opening tag", function() {
+        const parser = new XMLParser();
+
+        expect(parser.parse("</a><b>text</b>")).toEqual({ b: "text" });
+        expect(parser.parse("<a/></a><b/>")).toEqual({ a: "", b: "" });
+        expect(parser.parse("</a><![CDATA[x]]><b/>")).toEqual({ "#text": "x", b: "" });
+        expect(parser.parse("</a>text</b>")).toEqual({ "#text": "text" });
+    });
+
     it("should validate before parsing", function() {
         const xmlData ="<tag>"
         + "    <subtag2>subtag text</subtag2>"
