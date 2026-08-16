@@ -12,3 +12,4 @@ temp*
 docs*
 .nyc_output
 USERs.md
+.code*
