@@ -4,6 +4,12 @@ Note: Due to some last quick changes on v4, detail of v4.5.3 & v4.5.4 are not up
 
 
 
+**5.11.0 / 2026-08-16**
+- feat: support for endIndex in node metadata (#850) [By [Pavel Dranichnikov](https://github.com/Wain-PC)]
+- fix: don't crash on a closing tag with no matching opening tag (#861) [By [Haïm Dimer](https://github.com/hdimer)]
+- fix: DOCTYPE to read SYSTEM/PUBLIC
+- deps: strnum v2.4.2
+
 **5.10.1 / 2026-07-17**
 - fix: multiple DOCTYPE declarations.
 - deps: `@nodable/entities` for treeshaking
