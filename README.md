@@ -19,7 +19,7 @@ It can handle big files (tested up to 100mb). XML Entities, HTML entities, and D
 
 - [Flexible-XML-Parser](https://github.com/nodable/flexible-xml-parser) is 1.25 times faster than this library when not preserving order of tags. Takes less memory when processing big files. Supports incomplete XML/HTML. And output is highly customizable. Build whatever you want. So if you're fine with some extra configuration then try it out.
 - [@nodable/sax](https://github.com/nodable/sax) is a SAX parser based on [Flexible-XML-Parser](https://github.com/nodable/flexible-xml-parser). 3-4 times faster than `sax`  and support all features of base package like incomplete input, streams, skipping certain tags from processing etc.
-- [fast-xml-validator](https://github.com/NaturalIntelligence/fast-xml-validator) is a XML validator used in this package in past. Now, it supports more features, and faster. So recommend to use it directly.
+- [fast-xml-validator](https://github.com/NaturalIntelligence/fast-xml-validator) is separated from this package. Has many features. Faster. You can exvlude particular tag from validation. And much more.
 - [fast-xml-builder](https://github.com/NaturalIntelligence/fast-xml-builder) is a XML to JS Object builder used in this package in past. Now, it supports more features, and faster. So, recommend to use it directly.
 
 
