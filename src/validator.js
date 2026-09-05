@@ -229,13 +229,7 @@ function readCommentAndCDATA(xmlData, i) {
     }
   } else if (
     xmlData.length > i + 8 &&
-    xmlData[i + 1] === 'D' &&
-    xmlData[i + 2] === 'O' &&
-    xmlData[i + 3] === 'C' &&
-    xmlData[i + 4] === 'T' &&
-    xmlData[i + 5] === 'Y' &&
-    xmlData[i + 6] === 'P' &&
-    xmlData[i + 7] === 'E'
+    xmlData.substring(i + 1, i + 8).toUpperCase() === 'DOCTYPE'
   ) {
     let angleBracketsCount = 1;
     for (i += 8; i < xmlData.length; i++) {
