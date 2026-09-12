@@ -27,6 +27,17 @@ describe("XMLParser", function () {
         expect(parser.parse(bytes.subarray(4, bytes.length - 4))).toEqual({ root: "value" });
     });
 
+    it("should preserve UTF-8 BOM offsets in captured metadata", function () {
+        const xmlData = "\uFEFF<root>value</root>";
+        const parser = new XMLParser({ preserveOrder: true, captureMetaData: true });
+        const result = parser.parse(new TextEncoder().encode(xmlData));
+        expect(result).toEqual(parser.parse(xmlData));
+        expect(result[0][XMLParser.getMetaDataSymbol()]).toEqual({
+            startIndex: 1,
+            endIndex: xmlData.length
+        });
+    });
+
     it("should validate decoded Uint8Array input", function () {
         const xmlData = new TextEncoder().encode("<root>value</root>");
         const parser = new XMLParser();
