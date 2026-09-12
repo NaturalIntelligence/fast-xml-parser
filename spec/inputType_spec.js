@@ -15,6 +15,42 @@ import { XMLParser } from "../src/fxp.js";
 
 describe("XMLParser", function () {
 
+    it("should decode UTF-8 Uint8Array input", function () {
+        const xmlData = new TextEncoder().encode("<root>caf\u00e9 \ud83e\uddea</root>");
+        const parser = new XMLParser();
+        expect(parser.parse(xmlData)).toEqual({ root: "caf\u00e9 \ud83e\uddea" });
+    });
+
+    it("should decode only the selected Uint8Array view", function () {
+        const bytes = new TextEncoder().encode("junk<root>value</root>junk");
+        const parser = new XMLParser();
+        expect(parser.parse(bytes.subarray(4, bytes.length - 4))).toEqual({ root: "value" });
+    });
+
+    it("should validate decoded Uint8Array input", function () {
+        const xmlData = new TextEncoder().encode("<root>value</root>");
+        const parser = new XMLParser();
+        expect(parser.parse(xmlData, true)).toEqual({ root: "value" });
+    });
+
+    it("should reject invalid XML in Uint8Array input during validation", function () {
+        const xmlData = new TextEncoder().encode("<root>value</other>");
+        const parser = new XMLParser();
+        expect(() => parser.parse(xmlData, true)).toThrowError(/Expected closing tag/);
+    });
+
+    it("should preserve node order for Uint8Array input", function () {
+        const xmlData = "<root><a>1</a><b>2</b><a>3</a></root>";
+        const parser = new XMLParser({ preserveOrder: true });
+        expect(parser.parse(new TextEncoder().encode(xmlData))).toEqual(parser.parse(xmlData));
+    });
+
+    it("should parse UTF-8 Buffer input", function () {
+        const xmlData = Buffer.from("<root>caf\u00e9 \ud83e\uddea</root>");
+        const parser = new XMLParser();
+        expect(parser.parse(xmlData)).toEqual({ root: "caf\u00e9 \ud83e\uddea" });
+    });
+
     it("should parse when Buffer is given as input", function () {
 
         const fileNamePath = path.join(__dirname, "assets/mini-sample.xml");
