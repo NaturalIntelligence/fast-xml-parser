@@ -389,7 +389,7 @@ const parseXml = function (xmlData) {
         }
         i = endIndex;
       } else if (c1 === 33
-        && xmlData.charCodeAt(i + 2) === 68) { //'!D'
+        && (xmlData.charCodeAt(i + 2) === 68 || xmlData.charCodeAt(i + 2) === 100)) { //'!D' or '!d' (HTML allows lowercase)
         if (this.doctypefound) throw new Error("Multiple DOCTYPE declarations found.");
         this.doctypefound = true;
         const result = docTypeReader.readDocType(xmlData, i);

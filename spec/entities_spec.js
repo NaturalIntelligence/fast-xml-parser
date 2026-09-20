@@ -49,6 +49,16 @@ describe("XMLParser Entities", function () {
         expect(result).toEqual(expected);
     });
 
+    it("should treat lowercase HTML <!doctype> as a DOCTYPE (issue #870)", function () {
+        const html = `<!doctype html><html></html>`;
+        const result = new XMLParser().parse(html);
+        expect(result).toEqual({ html: "" });
+        // uppercase still works
+        expect(new XMLParser().parse(`<!DOCTYPE html><html></html>`)).toEqual({ html: "" });
+        // mixed case
+        expect(new XMLParser().parse(`<!DocType html><html></html>`)).toEqual({ html: "" });
+    });
+
     it("should parse XML with DOCTYPE without internal DTD", function () {
         const xmlData = `<?xml version='1.0' standalone='no'?>
             <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" >
