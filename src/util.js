@@ -21,6 +21,12 @@ export function getAllMatches(string, regex) {
   return matches;
 }
 
+const regexNameStart = new RegExp('^[' + nameStartChar + ']$');
+
+export const isNameStartChar = function (ch) {
+  return typeof ch === 'string' && ch.length > 0 && regexNameStart.test(ch);
+}
+
 export const isName = function (string) {
   const match = regexName.exec(string);
   return !(match === null || typeof match === 'undefined');

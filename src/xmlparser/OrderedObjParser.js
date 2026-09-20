@@ -1,7 +1,7 @@
 'use strict';
 ///@ts-check
 
-import { getAllMatches, isExist, DANGEROUS_PROPERTY_NAMES, criticalProperties } from '../util.js';
+import { getAllMatches, isExist, isNameStartChar, DANGEROUS_PROPERTY_NAMES, criticalProperties } from '../util.js';
 import xmlNode from './xmlNode.js';
 import DocTypeReader from './DocTypeReader.js';
 import toNumber from "strnum";
@@ -414,6 +414,13 @@ const parseXml = function (xmlData) {
 
         i = closeIndex + 2;
       } else {//Opening tag
+        // If '<' is not followed by a valid XML NameStartChar, keep it as text
+        // (e.g. "1 < 3" or placeholder "<...>"). Fixes #779.
+        const startCh = xmlData[i + 1];
+        if (!isNameStartChar(startCh)) {
+          textData += '<';
+          continue;
+        }
         let result = readTagExp(xmlData, i, options.removeNSPrefix);
 
         // Safety check: readTagExp can return undefined
