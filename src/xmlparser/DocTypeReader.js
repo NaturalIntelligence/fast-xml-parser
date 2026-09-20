@@ -14,12 +14,8 @@ export default class DocTypeReader {
         const entities = Object.create(null);
         let entityCount = 0;
 
-        if (xmlData[i + 3] === 'O' &&
-            xmlData[i + 4] === 'C' &&
-            xmlData[i + 5] === 'T' &&
-            xmlData[i + 6] === 'Y' &&
-            xmlData[i + 7] === 'P' &&
-            xmlData[i + 8] === 'E') {
+        // HTML allows a case-insensitive <!doctype ...> keyword.
+        if (xmlData.substring(i + 3, i + 9).toUpperCase() === 'OCTYPE') {
             i = i + 9;
             let angleBracketsCount = 1;
             let hasBody = false, comment = false;
