@@ -216,7 +216,7 @@ export type EntityDecoderOptions = {
   addInputEntities: (entities: Record<string, string>) => void;
   reset: () => void;
   decode: (text: string) => string;
-  setXmlVersion: (version: string) => void;
+  setXmlVersion: (version: number) => void;
 }
 
 export type X2jOptions = {
