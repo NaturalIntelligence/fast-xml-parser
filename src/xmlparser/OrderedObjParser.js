@@ -532,10 +532,11 @@ const parseXml = function (xmlData) {
           // For stop nodes, store raw content as-is without any processing
           childNode.add(options.textNodeName, tagContent);
 
+          // Keep the stop node in the matcher until updateTag has been called.
+          this.addChild(currentNode, childNode, this.readonlyMatcher, startIndex);
+
           this.matcher.pop(); // Pop the stop node tag
           this.isCurrentNodeStopNode = false; // Reset flag
-
-          this.addChild(currentNode, childNode, this.readonlyMatcher, startIndex);
 
           if (options.captureMetaData) {
             currentNode.addEndIndex(i + 1);

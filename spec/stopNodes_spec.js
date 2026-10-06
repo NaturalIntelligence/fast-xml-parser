@@ -1,6 +1,7 @@
 "use strict";
 
 import { XMLParser, XMLValidator } from "../src/fxp.js";
+import { Expression } from "path-expression-matcher";
 
 describe("XMLParser StopNodes", function () {
   it("should support single stopNode with namespace and removeNSPrefix set", function () {
@@ -473,4 +474,58 @@ describe("XMLParser StopNodes", function () {
     expect(result).toEqual(expected);
 
   });
+  for (const preserveOrder of [false, true]) {
+    it(`should use stop-node paths in updateTag with preserveOrder=${preserveOrder}`, function () {
+      const paths = [];
+      const parser = new XMLParser({
+        preserveOrder,
+        stopNodes: ["root.skip", "root.keep"],
+        updateTag(tagName, jPath) {
+          paths.push([tagName, jPath]);
+          if (jPath === "root.skip") return false;
+          if (jPath === "root.keep") return "renamed";
+          return tagName;
+        }
+      });
+
+      const result = parser.parse("<root><skip><nested/></skip><keep><nested/></keep><after/></root>");
+      const expected = preserveOrder
+        ? [{ root: [{ renamed: [{ "#text": "<nested/>" }] }, { after: [] }] }]
+        : { root: { renamed: "<nested/>", after: "" } };
+
+      expect(result).toEqual(expected);
+      expect(paths).toEqual([
+        ["root", "root"],
+        ["skip", "root.skip"],
+        ["keep", "root.keep"],
+        ["after", "root.after"]
+      ]);
+    });
+  }
+
+  for (const item of ['<item id="2"/>', '<item id="2">']) {
+    it(`should pass the current matcher for an empty stop node: ${item}`, function () {
+      const expression = new Expression("root.item[id=2]");
+      const paths = [];
+      const parser = new XMLParser({
+        ignoreAttributes: false,
+        jPath: false,
+        unpairedTags: ["item"],
+        stopNodes: ["root.item"],
+        updateTag(tagName, matcher, attrs) {
+          paths.push(matcher.toString());
+          if (matcher.matches(expression)) {
+            expect(attrs).toEqual({ "@_id": "2" });
+            return "matched";
+          }
+          return tagName;
+        }
+      });
+
+      expect(parser.parse(`<root>${item}<after/></root>`))
+        .toEqual({ root: { matched: { "@_id": "2" }, after: "" } });
+      expect(paths).toEqual(["root", "root.item", "root.after"]);
+    });
+  }
+
 });
