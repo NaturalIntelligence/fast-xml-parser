@@ -378,6 +378,20 @@ attribute2="attribute2"
         validate('<rootNode>jekyll &abcdefghij1234567890;</rootNode>');
         validate('<rootNode>jekyll &abcdefghij1234567890a;</rootNode>', error); // limit to 20 chars
     });
+
+    it('should validate entity names with "-", "." and other XML name characters', function () {
+        const error = {
+            InvalidChar: "char '&' is not expected."
+        };
+        validate('<rootNode>jekyll &foo-bar; hyde</rootNode>');
+        validate('<rootNode>jekyll &foo.bar; hyde</rootNode>');
+        validate('<rootNode>jekyll &foo:bar; hyde</rootNode>');
+        validate('<rootNode>jekyll &caf\u00e9; hyde</rootNode>');
+        validate('<!DOCTYPE doc [<!ENTITY foo-bar "hello">]><a>&foo-bar;</a>');
+        validate('<rootNode>jekyll &foo bar; hyde</rootNode>', error);
+        validate('<rootNode>jekyll &foo+bar; hyde</rootNode>', error);
+        validate('<rootNode>jekyll &foo-bar hyde</rootNode>', error);
+    });
 });
 
 describe("should not validate XML documents with multiple root nodes", () => {
