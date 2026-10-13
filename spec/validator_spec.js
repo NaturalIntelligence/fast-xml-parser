@@ -267,6 +267,15 @@ describe("XML Validator", function () {
         });
     });
 
+    it("should not validate XML declaration inside an element", function () {
+        validate("<foo><?xml version=\"1.0\"?></foo>", {
+            InvalidXml: "XML declaration allowed only at the start of the document."
+        });
+        validate("<foo>bar<?xml?></foo>", {
+            InvalidXml: "XML declaration allowed only at the start of the document."
+        });
+    });
+
     it("should not validate XML with prolog only", function () {
         validate("<?xml version=\"1.0\" standalone=\"yes\" ?><!--some comment -  end in this line-->", {
             InvalidXml: "Start tag expected."
