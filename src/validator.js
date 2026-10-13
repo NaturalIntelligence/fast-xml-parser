@@ -149,7 +149,7 @@ export function validate(xmlData, options) {
               i = readCommentAndCDATA(xmlData, i);
               continue;
             } else if (xmlData[i + 1] === '?') {
-              i = readPI(xmlData, ++i);
+              i = readPI(xmlData, i + 2);
               if (i.err) return i;
             } else {
               break;
