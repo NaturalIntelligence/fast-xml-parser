@@ -745,6 +745,8 @@ declare class XMLBuilder {
 declare interface XMLMetaData {
   /** The index, if available, of the character where the XML node began in the input stream. */
   startIndex?: number;
+  /** The index, if available, of the character where the XML node ended in the input stream. */
+  endIndex?: number;
 }
 
 declare namespace fxp {
