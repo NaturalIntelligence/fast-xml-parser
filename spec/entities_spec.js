@@ -3,6 +3,23 @@ import { EntityDecoder, COMMON_HTML } from "@nodable/entities";
 
 describe("XMLParser Entities", function () {
 
+    it("should decode XML numeric references without enabling HTML entities", function () {
+        const xml = '<r a="&#65;&#x42;&#x1F60A;">&#65;&#x42;&#x1F60A;&copy;&amp;#65;</r>';
+        for (const htmlEntities of [false, true]) {
+            const parser = new XMLParser({ ignoreAttributes: false, htmlEntities });
+            const result = parser.parse(xml);
+            expect(result.r["@_a"]).toBe("AB😊");
+            expect(result.r["#text"]).toBe(htmlEntities ? "AB😊©&#65;" : "AB😊&copy;&#65;");
+        }
+    });
+
+    it("should leave numeric references untouched when entity processing is disabled", function () {
+        const parser = new XMLParser({ ignoreAttributes: false, processEntities: false });
+        expect(parser.parse('<r a="&#65;">&#x42;</r>')).toEqual({
+            r: { "#text": "&#x42;", "@_a": "&#65;" }
+        });
+    });
+
     it("should parse attributes with valid names, default entities", function () {
         const xmlData = `<a:root xmlns:a="urn:none" xmlns:a-b="urn:none">
         <a:a attr="2foo&ampbar&apos;">1</a:a>
@@ -30,7 +47,7 @@ describe("XMLParser Entities", function () {
                 "a:c": "test&\nтест<\ntest",
                 "a:el": "<a>&lt;<a/>&lt;b&gt;2</b>]]]]>&amp;a",
                 "c:string": {
-                    "#text": "&#x441;&#x442;&#x440;&#x430;&#x445;&#x43e;&#x432;&#x430;&#x43d;&#x438;&#x44f;    » &#x43e;&#x442; &#x441;&#x443;&#x43c;&#x43c;&#x44b;     &#x435;&#x433;&#x43e; &#x430;&#x43a;&#x442;&#x438;&#x432;&#x43e;&#x432;",
+                    "#text": "страхования    » от суммы     его активов",
                     "@_lang": "ru"
                 }
             }
@@ -722,9 +739,6 @@ describe("@nodable/entities", function () {
     it("should remove '#x1B' ncr as per XML version 1.0 with default config", function () {
 
         const xmlData = `<?xml version="1.0" ?><root>&#x1B;&#27;</root>`;
-        const expected = {
-            "root": '&#x1B;&#27;'
-        }
         const options = {
             //ignoreAttributes: false, //should work without this
             processEntities: true,
@@ -736,12 +750,9 @@ describe("@nodable/entities", function () {
 
         expect(result.root.length).toEqual(0);
     })
-    it("should leave '#x1B' ncr as per XML version 1.1 with default config", function () {
+    it("should decode '#x1B' ncr as per XML version 1.1 with default config", function () {
 
         const xmlData = `<?xml version="1.1" ?><root>&#x1B;&#27;</root>`;
-        const expected = {
-            "root": '&#x1B;&#27;'
-        }
         const options = {
             //ignoreAttributes: false, //should work without this
             processEntities: true
@@ -750,6 +761,6 @@ describe("@nodable/entities", function () {
         let result = parser.parse(xmlData);
         // console.log(JSON.stringify(result, null, 4));
 
-        expect(result.root.length).toEqual(11);
+        expect(result.root).toEqual("\x1b\x1b");
     })
 })
