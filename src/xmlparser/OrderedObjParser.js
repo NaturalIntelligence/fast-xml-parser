@@ -96,7 +96,7 @@ export default class OrderedObjParser {
       else if (this.options.htmlEntities === true) namedEntities = { ...COMMON_HTML, ...CURRENCY };
       this.entityDecoder = new EntityDecoder({
         namedEntities: { ...namedEntities, ...externalEntities },
-        numericAllowed: this.options.htmlEntities,
+        numericAllowed: true,
         limit: {
           maxTotalExpansions: this.options.processEntities.maxTotalExpansions,
           maxExpandedLength: this.options.processEntities.maxExpandedLength,
