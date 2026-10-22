@@ -70,27 +70,37 @@ if (process.argv[2] === '--help' || process.argv[2] === '-h') {
     if (!fileName) {
       ReadToEnd.readToEnd(process.stdin, function(err, data) {
         if (err) {
-          throw err;
+          onError(err);
+          return;
         }
         callback(data.toString());
       });
     } else {
       fs.readFile(fileName, function(err, data) {
         if (err) {
-          throw err;
+          onError(err);
+          return;
         }
         callback(data.toString());
       });
     }
   } catch (e) {
-    console.log('Seems an invalid file or stream.' + e);
+    onError(e);
   }
+}
+
+// errors raised inside async callbacks are not caught by the try/catch above,
+// so they are reported here instead of being thrown
+function onError(err) {
+  console.log('Seems an invalid file or stream.' + err);
+  process.exitCode = 1;
 }
 
 function writeToFile(fileName, data) {
   fs.writeFile(fileName, data, function(err) {
     if (err) {
-      throw err;
+      onError(err);
+      return;
     }
     console.log('JSON output has been written to ' + fileName);
   });
