@@ -90,6 +90,15 @@ export function validate(xmlData, options) {
           attrStr = attrStr.substring(0, attrStr.length - 1);
           const isValid = validateAttributeString(attrStr, options);
           if (isValid === true) {
+            //a self closing tag at the top level is a root node: it must be
+            //the only one, and it ends the root level just like the closing
+            //tag of a paired root does
+            if (tags.length === 0) {
+              if (reachedRoot === true) {
+                return getErrorObject('InvalidXml', 'Multiple possible root nodes found.', getLineNumberForPosition(xmlData, i));
+              }
+              reachedRoot = true;
+            }
             tagFound = true;
             //continue; //text may presents after self closing tag
           } else {
