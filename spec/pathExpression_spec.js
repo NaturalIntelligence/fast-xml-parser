@@ -326,7 +326,6 @@ describe("Path-Expression-Matcher Integration", function () {
       const userExpr = new Expression("root.user");
 
       const parser = new XMLParser({
-        ignoreAttributes: false,
         jPath: false,
         ignoreAttributes: (attrName, matcher) => {
           // console.log(attrName, matcher.getCurrentTag())
