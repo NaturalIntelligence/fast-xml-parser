@@ -71,6 +71,12 @@ export default class DocTypeReader {
                         i += 9;//Not supported
                         const { index } = this.readNotationExp(xmlData, i + 1, this.suppressValidationErr);
                         i = index;
+                    } else if (hasBody && xmlData[i + 1] === '?') {
+                        // Processing instruction: skip it, it ends at the first '?>'
+                        const end = xmlData.indexOf('?>', i + 2);
+                        if (end === -1) throw new Error('Unclosed processing instruction in DOCTYPE');
+                        i = end + 1;
+                        continue;
                     } else if (hasSeq(xmlData, "!--", i)) comment = true;
                     else throw new Error(`Invalid DOCTYPE`);
 

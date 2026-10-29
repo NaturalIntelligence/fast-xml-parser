@@ -141,6 +141,14 @@ describe("XMLParser Entities", function () {
         parser.parse(xmlData);
     });
 
+    it("should allow processing instructions in DOCTYPE internal subset", function () {
+        const parser = new XMLParser();
+        expect(parser.parse(`<!DOCTYPE r [<?pi x?>]><r/>`)).toEqual({ r: "" });
+        expect(parser.parse(`<!DOCTYPE r [<!ELEMENT r EMPTY><?pi x?>]><r/>`)).toEqual({ r: "" });
+        expect(parser.parse(`<!DOCTYPE r [<?pi a > b?><!ENTITY e "v">]><r>&e;</r>`)).toEqual({ r: "v" });
+        expect(() => parser.parse(`<!DOCTYPE r [<?pi x]><r/>`)).toThrowError("Unclosed processing instruction in DOCTYPE");
+    });
+
     it("should read entity value between correct matching quote char", function () {
         const xmlData = `<!DOCTYPE x [ <!ENTITY x 'x">]><!--'> ]>
                 <X>
