@@ -80,5 +80,24 @@ describe("XMLParser", function() {
         expect(result).toEqual(expected);
 
     });
+    it("should transform self-closing tag names only once", function() {
+        const xmlData = `<root><item>a</item><item/><item id="1"/></root>`;
+        const seen = [];
+        const parser = new XMLParser({
+                ignoreAttributes: false,
+                transformTagName: (tagName) => {
+                    seen.push(tagName);
+                    return "x-" + tagName;
+                },
+        });
+        const result = parser.parse(xmlData);
+
+        expect(result).toEqual({
+            "x-root": {
+                "x-item": ["a", "", { "@_id": "1" }]
+            }
+        });
+        expect(seen).toEqual(["root", "item", "item", "item", "item", "root"]);
+    });
         
 });

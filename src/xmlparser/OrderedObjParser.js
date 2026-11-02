@@ -429,6 +429,22 @@ const parseXml = function (xmlData) {
         let attrExpPresent = result.attrExpPresent;
         let closeIndex = result.closeIndex;
 
+        // Clean up self-closing syntax BEFORE processing attributes
+        // This is where tagExp gets the trailing / removed
+        let isSelfClosing = false;
+        if (tagExp.length > 0 && tagExp.lastIndexOf("/") === tagExp.length - 1) {
+          isSelfClosing = true;
+          if (tagName[tagName.length - 1] === "/") {
+            tagName = tagName.substr(0, tagName.length - 1);
+            tagExp = tagName;
+          } else {
+            tagExp = tagExp.substr(0, tagExp.length - 1);
+          }
+
+          // Re-check attrExpPresent after cleaning
+          attrExpPresent = (tagName !== tagExp);
+        }
+
         ({ tagName, tagExp } = transformTagName(options.transformTagName, tagName, tagExp, options));
 
         if (options.strictReservedNames &&
@@ -453,22 +469,6 @@ const parseXml = function (xmlData) {
         if (lastTag && options.unpairedTagsSet.has(lastTag.tagname)) {
           currentNode = this.tagsNodeStack.pop();
           this.matcher.pop();
-        }
-
-        // Clean up self-closing syntax BEFORE processing attributes
-        // This is where tagExp gets the trailing / removed
-        let isSelfClosing = false;
-        if (tagExp.length > 0 && tagExp.lastIndexOf("/") === tagExp.length - 1) {
-          isSelfClosing = true;
-          if (tagName[tagName.length - 1] === "/") {
-            tagName = tagName.substr(0, tagName.length - 1);
-            tagExp = tagName;
-          } else {
-            tagExp = tagExp.substr(0, tagExp.length - 1);
-          }
-
-          // Re-check attrExpPresent after cleaning
-          attrExpPresent = (tagName !== tagExp);
         }
 
         // Now process attributes with CLEAN tagExp (no trailing /)
@@ -543,8 +543,6 @@ const parseXml = function (xmlData) {
         } else {
           //selfClosing tag
           if (isSelfClosing) {
-            ({ tagName, tagExp } = transformTagName(options.transformTagName, tagName, tagExp, options));
-
             const childNode = new xmlNode(tagName);
             if (prefixedAttrs) {
               childNode[":@"] = prefixedAttrs;
