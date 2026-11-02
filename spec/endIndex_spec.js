@@ -19,8 +19,8 @@ function collectMeta(node, out = []) {
 }
 
 /** Parse xml with metadata capture on and return a Map of rawTagName -> raw text span. */
-function parseSpans(xml) {
-  const parser = new XMLParser({ preserveOrder: true, ignoreAttributes: false, captureMetaData: true });
+function parseSpans(xml, options = {}) {
+  const parser = new XMLParser(Object.assign({ preserveOrder: true, ignoreAttributes: false, captureMetaData: true }, options));
   const result = parser.parse(xml);
   return new Map(collectMeta(result).map(([tag, m]) => [tag, xml.slice(m.startIndex, m.endIndex)]));
 }
@@ -94,4 +94,56 @@ describe("XMLParser captureMetaData endIndex", function () {
         expect(byTag.get("b")).toBe(`<b>x</b>`);
         expect(byTag.get("a")).toBe(xml);
     });
+
+    for (const newline of ["\n", "\r", "\r\n", "\r\n\n\r"]) {
+        it("uses original input offsets with " + JSON.stringify(newline) + " line endings", function () {
+            const declaration = `<?xml${newline}version="1.0"?>`;
+            const child = `<child${newline}id="1">first${newline}second</child>`;
+            const empty = `<empty${newline}/>`;
+            const pi = `<?pi${newline}value="x"?>`;
+            const root = `<root><!--first${newline}second--><![CDATA[first${newline}second]]>${child}${empty}${pi}</root>`;
+            const spans = parseSpans(declaration + newline + root);
+
+            expect(spans.get("?xml")).toBe(declaration);
+            expect(spans.get("root")).toBe(root);
+            expect(spans.get("child")).toBe(child);
+            expect(spans.get("empty")).toBe(empty);
+            expect(spans.get("?pi")).toBe(pi);
+        });
+    }
+
+    it("uses original offsets for stop nodes, unpaired tags and retained siblings", function () {
+        const stop = "<stop>first\r\n<b>raw</b>\r\nlast</stop>";
+        const br = '<br\r\nclass="x">';
+        const xml = `<root>\r\n${stop}\r\n${br}\r\n<skip/>\r\n</root>`;
+        const spans = parseSpans(xml, {
+            stopNodes: ["root.stop"],
+            unpairedTags: ["br"],
+            updateTag: (tagName) => tagName === "skip" ? false : tagName,
+        });
+
+        expect(spans.get("root")).toBe(xml);
+        expect(spans.get("stop")).toBe(stop);
+        expect(spans.get("br")).toBe(br);
+        expect(spans.has("skip")).toBeFalse();
+    });
+
+    for (const inputType of ["string", "Buffer", "Uint8Array"]) {
+        it("keeps original offsets and normalizes values for " + inputType + " input", function () {
+            const xml = '<root>\r\n<child attr="a\r\nb">first\r\nsecond</child>\r\n</root>';
+            const input = inputType === "string" ? xml
+                : inputType === "Buffer" ? Buffer.from(xml) : new TextEncoder().encode(xml);
+            const result = new XMLParser({
+                ignoreAttributes: false,
+                captureMetaData: true,
+                alwaysCreateTextNode: true,
+            }).parse(input);
+            const metadata = result.root.child[XML_METADATA];
+
+            expect(xml.slice(metadata.startIndex, metadata.endIndex))
+                .toBe('<child attr="a\r\nb">first\r\nsecond</child>');
+            expect(result.root.child["@_attr"]).toBe("a\nb");
+            expect(result.root.child["#text"]).toBe("first\nsecond");
+        });
+    }
 });
