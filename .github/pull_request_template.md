@@ -3,6 +3,9 @@
 
 <!-- If it is a bug fix, please mention the issue number. If there is no issue has been raised but the PR directly then it should follow the template given to raise the issue. Like input, expected output, actual output etc. -->
 
+If this PR updates validator, please check [fast-xml-validator](https://github.com/NaturalIntelligence/fast-xml-validator) instead.
+If this PR updates builder, please check [fast-xml-builder](https://github.com/NaturalIntelligence/fast-xml-builder) instead.
+If this PR updates CLI, please check [fxp-cli](https://github.com/NaturalIntelligence/fxp-cli) instead.
 
 # Type
 Please mention the type of PR
