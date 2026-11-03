@@ -2,6 +2,17 @@
 
 Note: Due to some last quick changes on v4, detail of v4.5.3 & v4.5.4 are not updated here. v4.5.4x is the last tag of v4 in github repository. I'm extremely sorry for the confusion
 
+**5.12.0 / 2026-11-03**
+- perf improvement for stop node: After the first failure in a given stop node, the function stops using readTagExp and switches to a cheap fallback.
+- devdep:jasmine 7.0
+- deps:
+  - @nodable/entities v3.1.0
+  - fast-xml-builder v1.3.1
+  - is-unsafe v2.0.3
+  - strnum v2.5.1
+- fix cjs typing
+- fix: preserve original metadata offsets for CRLF input (#911) (By [sskift](https://github.com/sskift))
+
 **5.11.2 / 2026-09-29**
 - fix (#875): decode Uint8Array XML input as UTF-8 (By emme1t)
 - fix (#880) :type EntityDecoderOptions.setXmlVersion's version as a number (By Yevhenii Kotyrlo)
