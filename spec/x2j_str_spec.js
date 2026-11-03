@@ -2,7 +2,7 @@
 
 import {XMLParser, XMLValidator} from "../src/fxp.js";
 
-describe("XMLParser", function() {
+describe("XMLParser x2j_str", function() {
 
     xit("should parse a XML to JSON string", function() {
         const xmlData = `<rootNode><tag>value</tag><boolean>true</boolean><intTag>045</intTag><floatTag>65.34</floatTag></rootNode>`;

@@ -410,7 +410,7 @@ describe("XMLParser StopNodes", function () {
     // console.log(JSON.stringify(jObj, null, 4));
     expect(jObj).toEqual(expected);
   });
-  it("should parse attributes correctly for self closing stop node", function () {
+  it("should parse self closing stop node without attributes", function () {
 
     const xmlData = `<script/>`;
     const options = {

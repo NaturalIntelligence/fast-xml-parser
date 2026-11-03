@@ -1,7 +1,7 @@
 
 import { XMLParser } from "../src/fxp.js";
 
-describe("XMLParser", function () {
+describe("XMLParser captureMetaData startIndex", function () {
 
     const xmlData = `<root><foo/><bar type="quux"/><bar type="bat"/><baz type="foo">FOO</baz></root>`;
     const XML_METADATA = XMLParser.getMetaDataSymbol();

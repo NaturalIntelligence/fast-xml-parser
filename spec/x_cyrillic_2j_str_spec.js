@@ -2,7 +2,7 @@
 
 import {XMLParser, XMLValidator} from "../src/fxp.js";
 
-describe("XMLParser", function() {
+describe("XMLParser Cyrillic", function() {
 
     it("should parse XML with cyrillic characters to JSON string", function() {
         const xmlData = `<КорневаяЗапись><Тэг>ЗначениеValue53456</Тэг></КорневаяЗапись>`;

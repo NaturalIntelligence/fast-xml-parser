@@ -147,7 +147,7 @@ describe("XML Validator", function () {
         validate("<rootNode><!-- <tag> - - --><tag>1</tag><tag>val</tag></rootNode>");
     });
 
-    it("should validate xml with comment", function () {
+    it("should validate xml with multiline comment", function () {
         validate("<rootNode><!-- <tag> - - \n--><tag>1</tag><tag>val</tag></rootNode>");
     });
 
@@ -157,7 +157,7 @@ describe("XML Validator", function () {
         });
     });
 
-    it("should not validate xml with comment in a open tag", function () {
+    it("should not validate xml with comment in an open tag with space", function () {
         validate("<rootNode <!-- <tag> -- --> ><tag>1</tag><tag>val</tag></rootNode>", {
             InvalidAttr: "boolean attribute '<!--' is not allowed."
         });
@@ -214,7 +214,7 @@ describe("XML Validator", function () {
         });
     });
 
-    it("should return false for invalid tag", function () {
+    it("should return false for invalid self-closing tag", function () {
         validate("<2start_tag />", {
             InvalidTag: "Tag '2start_tag' is an invalid name."
         });
@@ -292,11 +292,11 @@ describe("XML Validator", function () {
             '<?mso-contentType something="val"?>');
     });
     
-    it("should validate XML PIs", function () {
+    it("should validate XML PIs inside tag with text", function () {
         validate('<h1><?mso?> abc</h1>');
     });
 
-    it("should validate XML PIs", function () {
+    it("should validate XML PIs with multiline content", function () {
         const xml = `<?xml version="1.0"?>
         <content><?tibcochar ?> something</content>`;
         validate(xml);
@@ -447,7 +447,7 @@ describe("should report correct line numbers for unclosed tags", () => {
                   </parent>extra`,
                  {InvalidXml: "Extra text at the end"}, 2, 28));
     
-    it('- Extra text', () =>
+    it('- Attribute without value', () =>
         validate(`<parent><child attri= bute="true" /></parent>`,
             {InvalidAttr: "Attribute 'attri' is without value."}, 1, 16));
 });

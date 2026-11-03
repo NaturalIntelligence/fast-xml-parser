@@ -26,7 +26,7 @@ const jsonData = {
     }
 }
 
-describe("XMLParser", function () {
+describe("XMLParser ignoreAttributes", function () {
 
     it('must ignore parsing attributes by array of strings', () => {
 

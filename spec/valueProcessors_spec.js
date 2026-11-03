@@ -3,7 +3,7 @@
 import { XMLParser, XMLValidator } from "../src/fxp.js";
 import { EntityDecoder } from "@nodable/entities"
 
-describe("XMLParser", function () {
+describe("XMLParser valueProcessors", function () {
     const decoder = new EntityDecoder();
 
     it("should decode HTML entities if allowed", function () {

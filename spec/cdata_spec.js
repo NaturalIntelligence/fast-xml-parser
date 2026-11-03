@@ -12,7 +12,7 @@ const __filename = fileURLToPath(import.meta.url);
 // Derive the directory name
 const __dirname = dirname(__filename);
 
-describe("XMLParser", function () {
+describe("XMLParser CDATA", function () {
     it("should parse multiline tag value when tags without spaces", function () {
         const xmlData = `<root><person>lastname
 firstname

@@ -2,7 +2,7 @@
 
 import {XMLParser} from "../src/fxp.js";
 
-describe("XMLParsers", function() {
+describe("XMLParser transformAttributeName", function() {
     it("should transform attribute names", function() {
         const xmlData = `<?xml version='1.0'?>
           <root>

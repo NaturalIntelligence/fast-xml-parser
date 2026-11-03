@@ -12,7 +12,7 @@ const __filename = fileURLToPath(import.meta.url);
 // Derive the directory name
 const __dirname = dirname(__filename);
 
-describe("XMLParser", function() {
+describe("XMLParser Large XML", function() {
     it("should validate big XML file", function() {
         const fileNamePath = path.join(__dirname, "assets/large.xml");
         const svgData = fs.readFileSync(fileNamePath).toString();

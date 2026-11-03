@@ -2,7 +2,7 @@
 
 import { XMLParser, XMLValidator } from "../src/fxp.js";
 
-describe("XMLParser", function () {
+describe("XMLParser Attributes", function () {
     it("should parse attributes with valid names", function () {
         const xmlData = `<issue _ent-ity.23="Mjg2MzY2OTkyNA==" state="partial" version="1"></issue>`;
         const expected = {

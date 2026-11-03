@@ -2,7 +2,7 @@
 
 import { XMLParser, XMLValidator } from "../src/fxp.js";
 
-describe("XMLParser", function () {
+describe("XMLParser Data", function () {
 
     it("should parse attributes having '>' in value", function () {
         const xmlData = `
@@ -35,7 +35,7 @@ describe("XMLParser", function () {
         expect(result).toBe(true);
     });
 
-    it("should parse attributes with valid names", function () {
+    it("should parse attributes with boolean values and comments", function () {
         const xmlData = `
         <a>
             <bug atr="sasa" boolean>val
@@ -230,7 +230,7 @@ describe("XMLParser", function () {
         expect(result).toEqual(expected);
     });
 
-    it("should error for when any tag is left to close", function () {
+    it("should error for when closing tag is left to close", function () {
         const xmlData = `<?xml version="1.0"?><tag></tag`;
         expect(() => {
             const parser = new XMLParser();
@@ -238,14 +238,14 @@ describe("XMLParser", function () {
 
         }).toThrowError("Closing Tag is not closed.")
     })
-    it("should error for when any tag is left to close", function () {
+    it("should error for when comment is left to close", function () {
         const xmlData = `<?xml version="1.0"?><!-- bad `;
         expect(() => {
             const parser = new XMLParser();
             parser.parse(xmlData);
         }).toThrowError("Comment is not closed.")
     })
-    it("should error for when any tag is left to close", function () {
+    it("should error for when CDATA is left to close", function () {
         const xmlData = `<?xml version="1.0"?><![CDATA ]`;
         expect(() => {
             const parser = new XMLParser();
@@ -253,7 +253,7 @@ describe("XMLParser", function () {
         }).toThrowError("CDATA is not closed.")
     })
 
-    it("should error for when any tag is left to close", function () {
+    it("should error for when pi tag is left to close", function () {
         const xmlData = `<?xml version="1.0"?><?pi  `;
         expect(() => {
             const parser = new XMLParser();

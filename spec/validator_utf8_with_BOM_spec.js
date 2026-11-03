@@ -1,7 +1,7 @@
 "use strict";
 import {XMLParser, XMLValidator} from "../src/fxp.js";
 
-describe("XMLParser", function() {
+describe("XMLParser validator utf8 with BOM", function() {
     it("should validate xml string with cyrillic characters", function() {
         const BOM = "\ufeff";
         let xmlData = BOM + "<?xml version=\"1.0\" encoding=\"utf-8\" ?><КорневаяЗапись><Тэг>ЗначениеValue53456</Тэг></КорневаяЗапись>";

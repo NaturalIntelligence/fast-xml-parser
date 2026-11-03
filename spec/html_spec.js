@@ -1,7 +1,7 @@
 
 import { XMLParser, XMLBuilder } from "../src/fxp.js";
 
-describe("XMLParser", function () {
+describe("XMLParser HTML", function () {
 
   it("should parse HTML with basic entities, <pre>, <script>, <br>", function () {
     Object.prototype.something = 'strange';

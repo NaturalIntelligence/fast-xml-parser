@@ -3,7 +3,7 @@ import { XMLParser, XMLBuilder, XMLValidator } from "../src/fxp.js";
 import { DANGEROUS_PROPERTY_NAMES, criticalProperties } from "../src/util.js";
 
 
-describe("XMLParser", function () {
+describe("XMLParser NFR", function () {
 
   it("should throw error for deeply nested XML", function () {
 

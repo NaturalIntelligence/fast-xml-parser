@@ -2,7 +2,7 @@
 
 import {XMLParser} from "../src/fxp.js";
 
-describe("XMLParser", function() {
+describe("XMLParser transformTagName", function() {
     it("should parse lowercase tag names", function() {
         const xmlData = `<?xml version='1.0'?>
           <root>

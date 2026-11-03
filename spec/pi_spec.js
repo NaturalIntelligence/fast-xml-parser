@@ -1,7 +1,7 @@
 
 import { XMLParser, XMLBuilder, XMLValidator } from "../src/fxp.js";
 
-describe("XMLParser", function () {
+describe("XMLParser PI", function () {
 
   it("should error for when any tag is left to close", function () {
     const xmlData = `<?xml version="1.0"?><?pi  `;

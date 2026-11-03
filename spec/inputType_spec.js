@@ -13,7 +13,7 @@ const __dirname = dirname(__filename);
 
 import { XMLParser } from "../src/fxp.js";
 
-describe("XMLParser", function () {
+describe("XMLParser inputType", function () {
 
     it("should decode UTF-8 Uint8Array input", function () {
         const xmlData = new TextEncoder().encode("<root>caf\u00e9 \ud83e\uddea</root>");
