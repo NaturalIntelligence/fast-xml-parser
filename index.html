@@ -206,11 +206,11 @@
                     ignoreAttributes : $("#ignoreAttributes").prop("checked"),
                     ignoreDeclaration: $("#ignoreDeclaration").prop("checked"),
                     removeNSPrefix : $("#removeNSPrefix").prop("checked"),
-                    parseNodeValue : $("#parseNodeValue").prop("checked"),
+                    parseTagValue : $("#parseNodeValue").prop("checked"),
                     parseAttributeValue : $("#parseAttributeValue").prop("checked"),
                     allowBooleanAttributes: $("#allowBooleanAttributes").prop("checked"),
                     trimValues: $('#trimValues').prop("checked"), //Trim string values of tag and attributes
-                    cdataTagName: $("#parseCDATA").prop("checked") ? "#cdata" : false,
+                    cdataPropName: $("#parseCDATA").prop("checked") ? "#cdata" : false,
                     preserveOrder: $("#preserveOrder").prop("checked"),
                     numberParseOptions:  {
                         hex: false,
@@ -227,7 +227,7 @@
                     attributesGroupName: $("#attributesGroupName").prop("checked") ? "@" : false,
                     textNodeName : "#text",
                     ignoreAttributes : $("#ignoreAttributes").prop("checked"),
-                    cdataTagName: $("#parseCDATA").prop("checked") ? "#cdata" : false,
+                    cdataPropName: $("#parseCDATA").prop("checked") ? "#cdata" : false,
                     format: true,
                     indentBy: "  ",
                     suppressEmptyNode: false,
