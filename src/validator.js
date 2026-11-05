@@ -1,6 +1,6 @@
 'use strict';
 
-import { isName } from './util.js';
+import { isName, isNameChar } from './util.js';
 
 const defaultOptions = {
   allowBooleanAttributes: false, //A tag can have attributes without any value
@@ -471,7 +471,7 @@ function validateAmpersand(xmlData, i) {
   }
   let count = 0;
   for (; i < xmlData.length; i++, count++) {
-    if (xmlData[i].match(/\w/) && count < 20)
+    if (isNameChar(xmlData[i]) && count < 20)
       continue;
     if (xmlData[i] === ';')
       break;
