@@ -378,6 +378,17 @@ attribute2="attribute2"
         validate('<rootNode>jekyll &abcdefghij1234567890;</rootNode>');
         validate('<rootNode>jekyll &abcdefghij1234567890a;</rootNode>', error); // limit to 20 chars
     });
+
+    it("should not validate XML with raw ']]>' in element text", function () {
+        const error = {
+            InvalidChar: "char ']]>' is not expected."
+        };
+        validate("<a>]]></a>", error, 1, 4);
+        validate("<root>hello ]]> world</root>", error, 1, 13);
+        validate("<a><![CDATA[inside]]>after]]></a>", error, 1, 27);
+        validate("<a>]]&gt;</a>");
+        validate("<a attr=']]>'>ok</a>");
+    });
 });
 
 describe("should not validate XML documents with multiple root nodes", () => {
