@@ -85,12 +85,18 @@ export function validate(xmlData, options) {
         i = result.index;
 
         if (attrStr[attrStr.length - 1] === '/') {
+          if (reachedRoot === true) {
+            return getErrorObject('InvalidXml', 'Multiple possible root nodes found.', getLineNumberForPosition(xmlData, i));
+          }
           //self closing tag
           const attrStrStart = i - attrStr.length;
           attrStr = attrStr.substring(0, attrStr.length - 1);
           const isValid = validateAttributeString(attrStr, options);
           if (isValid === true) {
             tagFound = true;
+            if (tags.length === 0) {
+              reachedRoot = true;
+            }
             //continue; //text may presents after self closing tag
           } else {
             //the result from the nested function returns the position of the error within the attribute
@@ -144,6 +150,9 @@ export function validate(xmlData, options) {
         for (i++; i < xmlData.length; i++) {
           if (xmlData[i] === '<') {
             if (xmlData[i + 1] === '!') {
+              if (reachedRoot === true && !xmlData.startsWith('<!--', i)) {
+                return getErrorObject('InvalidXml', "Extra text at the end", getLineNumberForPosition(xmlData, i));
+              }
               //comment or CADATA
               i++;
               i = readCommentAndCDATA(xmlData, i);
@@ -155,6 +164,9 @@ export function validate(xmlData, options) {
               break;
             }
           } else if (xmlData[i] === '&') {
+            if (reachedRoot === true) {
+              return getErrorObject('InvalidXml', "Extra text at the end", getLineNumberForPosition(xmlData, i));
+            }
             const afterAmp = validateAmpersand(xmlData, i);
             if (afterAmp == -1)
               return getErrorObject('InvalidChar', "char '&' is not expected.", getLineNumberForPosition(xmlData, i));
