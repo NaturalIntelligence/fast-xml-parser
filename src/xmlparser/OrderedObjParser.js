@@ -672,6 +672,9 @@ function replaceEntitiesValue(val, tagName, jPath) {
 
 function saveTextToParentTag(textData, parentNode, matcher, isLeafNode) {
   if (textData) { //store previously collected data as textNode
+    //whitespace outside the root element (around the declaration, DOCTYPE,
+    //comments and PIs) is not part of the document
+    if (parentNode.tagname === '!xml' && textData.trim() === '') return "";
     if (isLeafNode === undefined) isLeafNode = parentNode.child.length === 0
 
     textData = this.parseTextData(textData,
