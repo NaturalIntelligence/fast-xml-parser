@@ -50,7 +50,7 @@ export function buildOptions(options) {
 
   //add config missed in cloning
   finalOptions.tags.valueParsers.push(...withJoin)
-  if (!this.preserveOrder)
+  if (!options || !options.preserveOrder)
     finalOptions.tags.valueParsers.push(...withoutJoin);
 
   //add config missed in cloning

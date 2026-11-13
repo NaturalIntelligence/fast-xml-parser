@@ -13,8 +13,8 @@ const htmlEntities = {
   "copyright": { regex: /&(copy|#169);/g, val: "©" },
   "reg": { regex: /&(reg|#174);/g, val: "®" },
   "inr": { regex: /&(inr|#8377);/g, val: "₹" },
-  "num_dec": { regex: /&#([0-9]{1,7});/g, val: (_, str) => String.fromCodePoint(Number.parseInt(str, 10)) },
-  "num_hex": { regex: /&#x([0-9a-fA-F]{1,6});/g, val: (_, str) => String.fromCodePoint(Number.parseInt(str, 16)) },
+  "num_dec": { regex: /&#([0-9]{1,7});/g, val: (match, str) => fromCodePoint(match, str, 10) },
+  "num_hex": { regex: /&#x([0-9a-fA-F]{1,6});/g, val: (match, str) => fromCodePoint(match, str, 16) },
 };
 export default class EntitiesParser {
   constructor(replaceHtmlEntities) {
@@ -39,7 +39,7 @@ export default class EntitiesParser {
     validateEntityName(key);
     const escaped = key.replace(/[.\-+*:]/g, '\\.');
     if (val.indexOf("&") !== -1) {
-      reportWarning(`Entity ${key} is not added as '&' is found in value;`)
+      console.warn(`Entity ${key} is not added as '&' is found in value;`)
       return;
     } else {
       this.lastEntities[key] = {
@@ -75,7 +75,7 @@ export default class EntitiesParser {
     if (typeof val === "string" && val.length > 0) {
       for (let entityName in this.docTypeEntities) {
         const entity = this.docTypeEntities[entityName];
-        val = val.replace(entity.regx, entity.val);
+        val = val.replace(entity.regex, entity.val);
       }
       for (let entityName in this.lastEntities) {
         const entity = this.lastEntities[entityName];
@@ -96,6 +96,17 @@ export default class EntitiesParser {
 //an entity name should not contains special characters that may be used in regex
 //Eg !?\\\/[]$%{}^&*()<>
 const specialChar = "!?\\/[]$%{}^&*()<>|+";
+
+//String.fromCodePoint() throws a RangeError for code points above 0x10FFFF,
+//so leave the entity reference untouched when the value is out of range
+function fromCodePoint(match, str, base) {
+  const codePoint = Number.parseInt(str, base);
+  if (codePoint >= 0 && codePoint <= 0x10FFFF) {
+    return String.fromCodePoint(codePoint);
+  } else {
+    return match;
+  }
+}
 
 function validateEntityName(name) {
   for (let i = 0; i < specialChar.length; i++) {
