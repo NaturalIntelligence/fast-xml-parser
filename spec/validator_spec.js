@@ -475,4 +475,26 @@ describe("XML Validator with options", function () {
         expect(result).toBeTrue();
     });
 
+    it('- literal & not starting a reference in attribute value', () =>
+        validate(`<parent attr="a & b"></parent>`,
+            {InvalidAttr: "Attribute 'attr' has an invalid value: value contains '&' that doesn't start a reference."}, 1, 9));
+
+    it('- literal < in attribute value', () =>
+        validate(`<parent attr="a < b"></parent>`,
+            {InvalidAttr: "Attribute 'attr' has an invalid value: value can't contain '<'."}, 1, 9));
+
+    it('- & without a name after it in attribute value', () =>
+        validate(`<parent attr="a &; b"></parent>`,
+            {InvalidAttr: "Attribute 'attr' has an invalid value: value contains '&' that doesn't start a reference."}, 1, 9));
+
+    it('- escaped references like &lt; and &amp; in attribute value stay valid', () => {
+        expect(XMLValidator.validate(`<parent attr="a &amp; b"></parent>`)).toBeTrue();
+        expect(XMLValidator.validate(`<parent attr="a &#65; b"></parent>`)).toBeTrue();
+        expect(XMLValidator.validate(`<parent attr="a &#x41; b"></parent>`)).toBeTrue();
+        expect(XMLValidator.validate(`<parent attr="a &lt; b"></parent>`)).toBeTrue();
+        expect(XMLValidator.validate(`<parent attr="url?a=1&amp;b=2"></parent>`)).toBeTrue();
+    });
+
+    it('- HTML-style legacy reference in attribute value stays valid', () =>
+        expect(XMLValidator.validate(`<parent attr="2foo&ampbar&apos;"></parent>`)).toBeTrue());
 });

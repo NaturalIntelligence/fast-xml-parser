@@ -409,6 +409,29 @@ function scanAttributeTokens(attrStr) {
 
 //attr, ="sd", a="amit's", a="sd"b="saf", ab  cd=""
 
+
+/**
+ * Check an attribute value for characters that can never appear literally:
+ * a '<', or a '&' that is not followed by a character which can begin a
+ * character or entity reference ('#' or a name start character). The
+ * reference itself is not validated: the parser intentionally accepts
+ * HTML-style legacy references such as "&ampbar", so name-like runs after
+ * '&' stay accepted here as well.
+ */
+function validateAttributeValue(value) {
+  for (let i = 0; i < value.length; i++) {
+    const ch = value[i];
+    if (ch === '<') {
+      return "value can't contain '<'";
+    } else if (ch === '&') {
+      const next = value[i + 1];
+      if (next === undefined || !(next === '#' || /[A-Za-z_:]/.test(next))) {
+        return "value contains '&' that doesn't start a reference";
+      }
+    }
+  }
+}
+
 function validateAttributeString(attrStr, options) {
   //console.log("start:"+attrStr+":end");
 
@@ -439,6 +462,13 @@ function validateAttributeString(attrStr, options) {
       attrNames[attrName] = 1;
     } else {
       return getErrorObject('InvalidAttr', "Attribute '" + attrName + "' is repeated.", getPositionFromMatch(matches[i]));
+    }
+    const attrValue = matches[i][6];
+    if (attrValue !== undefined) {
+      const valueError = validateAttributeValue(attrValue);
+      if (valueError) {
+        return getErrorObject('InvalidAttr', "Attribute '" + attrName + "' has an invalid value: " + valueError + ".", getPositionFromMatch(matches[i]));
+      }
     }
   }
 
