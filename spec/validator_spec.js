@@ -476,3 +476,22 @@ describe("XML Validator with options", function () {
     });
 
 });
+
+describe("XMLValidator attribute scan performance", function () {
+    it("should not be quadratic for a long whitespace run followed by '='", function () {
+        const xml = "<a" + " ".repeat(200000) + "=>";
+        const start = Date.now();
+        const result = XMLValidator.validate(xml);
+        const duration = Date.now() - start;
+        // took ~30+ seconds before the fix; generous bound to avoid flakiness
+        expect(duration).toBeLessThan(1000);
+        expect(result).not.toBe(true); // still reported as invalid
+    });
+
+    it("should still report errors after a stray '=' with leading whitespace", function () {
+        // stray '=' is skipped, then the boolean attribute 'b' is rejected
+        const result = XMLValidator.validate(`<a   =  b></a>`);
+        expect(result.err.code).toBe("InvalidAttr");
+        expect(result.err.msg).toBe("boolean attribute 'b' is not allowed.");
+    });
+});
