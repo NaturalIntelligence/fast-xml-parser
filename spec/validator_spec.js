@@ -2,7 +2,7 @@
 
 import fs from "fs";
 import path from "path";
-import {XMLValidator} from "../src/fxp.js";
+import {XMLParser, XMLValidator} from "../src/fxp.js";
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 
@@ -173,7 +173,7 @@ describe("XML Validator", function () {
     });
 
     it("should not validate xml with non closing comment", function () {
-        validate("<rootNode ><!-- <tag> -- <tag>1</tag><tag>val</tag></rootNode>", {
+        validate("<rootNode ><!-- <tag> - <tag>1</tag><tag>val</tag></rootNode>", {
             InvalidTag: "Unclosed tag 'rootNode'."}, 1);
     });
 
@@ -475,4 +475,43 @@ describe("XML Validator with options", function () {
         expect(result).toBeTrue();
     });
 
+});
+
+describe("XML comment validation", function () {
+    const invalidComment = "<!--foo--bar-->";
+    const invalidDocuments = [
+        invalidComment + "<root/>",
+        "<root>" + invalidComment + "</root>",
+        "<root/>" + invalidComment,
+        "<root></root>" + invalidComment,
+        "<root><child/>" + invalidComment + "</root>",
+        "<root><!--foo---></root>",
+        "<root><!------></root>",
+    ];
+
+    for (const xml of invalidDocuments) {
+        it("should reject double hyphens in " + xml, function () {
+            expect(XMLValidator.validate(xml).err).toEqual(jasmine.objectContaining({
+                code: "InvalidComment",
+                msg: "Comment must not contain '--'.",
+            }));
+            expect(() => new XMLParser().parse(xml, true)).toThrowError(/Comment must not contain '--'/);
+        });
+    }
+
+    it("should report the location of double hyphens within a comment", function () {
+        validate("<root>\n<!--first line\nfoo--bar-->\n</root>", {
+            InvalidComment: "Comment must not contain '--'.",
+        }, 3, 4);
+    });
+
+    for (const comment of ["<!---->", "<!---leading-->", "<!--foo- bar-->", "<!--foo- -->", "<!--<tag> &amp;-->"]) {
+        it("should accept valid " + comment, function () {
+            validate(comment + "<root>" + comment + "</root>" + comment);
+        });
+    }
+
+    it("should not interpret double hyphens outside comments", function () {
+        validate("<root attr='--'>--<![CDATA[<!--foo--bar-->]]></root>");
+    });
 });

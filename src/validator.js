@@ -39,6 +39,7 @@ export function validate(xmlData, options) {
 
       if (xmlData[i] === '!') {
         i = readCommentAndCDATA(xmlData, i);
+        if (i.err) return i;
         continue;
       } else {
         let closingTag = false;
@@ -147,6 +148,7 @@ export function validate(xmlData, options) {
               //comment or CADATA
               i++;
               i = readCommentAndCDATA(xmlData, i);
+              if (i.err) return i;
               continue;
             } else if (xmlData[i + 1] === '?') {
               i = readPI(xmlData, ++i);
@@ -222,7 +224,10 @@ function readCommentAndCDATA(xmlData, i) {
   if (xmlData.length > i + 5 && xmlData[i + 1] === '-' && xmlData[i + 2] === '-') {
     //comment
     for (i += 3; i < xmlData.length; i++) {
-      if (xmlData[i] === '-' && xmlData[i + 1] === '-' && xmlData[i + 2] === '>') {
+      if (xmlData[i] === '-' && xmlData[i + 1] === '-') {
+        if (xmlData[i + 2] !== '>') {
+          return getErrorObject('InvalidComment', "Comment must not contain '--'.", getLineNumberForPosition(xmlData, i));
+        }
         i += 2;
         break;
       }
