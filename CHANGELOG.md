@@ -2,6 +2,12 @@
 
 Note: Due to some last quick changes on v4, detail of v4.5.3 & v4.5.4 are not updated here. v4.5.4x is the last tag of v4 in github repository. I'm extremely sorry for the confusion
 
+**5.12.1 / 2026-11-13**
+- deps: fast-xml-builder v1.3.2
+- perf: skip quoted attribute values in one step (long SVG path data 4-5x faster) (#919) (By Afonso Ribeiro)
+- perf: validator; attr scan
+
+
 **5.12.0 / 2026-11-03**
 - perf improvement for stop node: After the first failure in a given stop node, the function stops using readTagExp and switches to a cheap fallback.
 - devdep:jasmine 7.0
