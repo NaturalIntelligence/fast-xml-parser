@@ -292,13 +292,15 @@ function buildAttributesMap(attrStr, jPath, tagName, force = false) {
 const parseXml = function (xmlData) {
   const options = this.options;
   const crlfPositions = options.captureMetaData ? [] : undefined;
-  xmlData = xmlData.replace(/\r\n?/g, options.captureMetaData ? (newline, index) => {
-    if (newline.length === 2) {
-      // Store the position after earlier CRLF pairs have been normalized.
-      crlfPositions.push(index - crlfPositions.length);
-    }
-    return "\n";
-  } : "\n");
+  if (xmlData.indexOf("\r") !== -1) { // most input has no CR to normalize
+    xmlData = xmlData.replace(/\r\n?/g, options.captureMetaData ? (newline, index) => {
+      if (newline.length === 2) {
+        // Store the position after earlier CRLF pairs have been normalized.
+        crlfPositions.push(index - crlfPositions.length);
+      }
+      return "\n";
+    } : "\n");
+  }
   const xmlObj = new xmlNode('!xml');
   let currentNode = xmlObj;
   let textData = "";
@@ -607,7 +609,11 @@ const parseXml = function (xmlData) {
         }
       }
     } else {
-      textData += xmlData[i];
+      // Copy the whole run of text up to the next '<' at once
+      let textEnd = xmlData.indexOf('<', i);
+      if (textEnd === -1) textEnd = xmlLen;
+      textData += xmlData.substring(i, textEnd);
+      i = textEnd - 1;
     }
   }
   return xmlObj.child;
