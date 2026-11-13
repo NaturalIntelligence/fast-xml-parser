@@ -317,6 +317,49 @@ describe("Path-Expression-Matcher Integration", function () {
       expect(result.root.items.item[0]).toBe('first');
     });
 
+    it("should let isArray match attributes when attributesGroupName is set", function () {
+      const xmlData = `<root><item type="list">value</item><item2 type="list">x</item2><other>y</other></root>`;
+      const listExpr = new Expression("root.*[type=list]");
+
+      const parse = (attributesGroupName) => new XMLParser({
+        ignoreAttributes: false,
+        attributesGroupName,
+        jPath: false,
+        isArray: (tagName, matcher, isLeafNode, isAttribute) =>
+          !isAttribute && matcher.matches(listExpr)
+      }).parse(xmlData);
+
+      expect(parse(undefined)).toEqual({
+        root: { item: [{ "#text": "value", "@_type": "list" }], item2: [{ "#text": "x", "@_type": "list" }], other: "y" }
+      });
+      expect(parse("attributes")).toEqual({
+        root: {
+          item: [{ "#text": "value", attributes: { "@_type": "list" } }],
+          item2: [{ "#text": "x", attributes: { "@_type": "list" } }],
+          other: "y"
+        }
+      });
+    });
+
+    it("should give the matcher grouped attribute values with a custom prefix", function () {
+      const xmlData = `<root><item id="1" kind="a">v</item></root>`;
+      let seen;
+      new XMLParser({
+        ignoreAttributes: false,
+        attributeNamePrefix: "$",
+        attributesGroupName: "attrs",
+        jPath: false,
+        isArray: (tagName, matcher, isLeafNode, isAttribute) => {
+          if (tagName === "item" && !isAttribute) {
+            seen = [matcher.getAttrValue("id"), matcher.getAttrValue("kind"), matcher.hasAttr("attrs")];
+          }
+          return false;
+        }
+      }).parse(xmlData);
+
+      expect(seen).toEqual(["1", "a", false]);
+    });
+
     it("should pass Matcher to ignoreAttributes function when jPath: false", function () {
       const xmlData = `
         <root>
