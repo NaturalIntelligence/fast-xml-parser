@@ -389,4 +389,38 @@ id="7" data="foo bar" bug="true"/>`;
         // console.log(JSON.stringify(result, null, 4));
         expect(result).toEqual(expected);
     });
+
+    it("should parse long quoted values containing the other quote, '>' and '/>'", function () {
+        const path = "M0 0 L10 20 ".repeat(5000);
+        const xmlData = `<svg>
+    <path d="${path}" title='say "hi" /> ok' data-x="it's > 1	and	2"	empty="" />
+    <g id='a' class="b"><use href="#a"/></g>
+</svg>`;
+        const expected = {
+            "svg": {
+                "path": {
+                    "@_d": path.trim(),
+                    "@_title": `say "hi" /> ok`,
+                    "@_data-x": "it's > 1\tand\t2",
+                    "@_empty": ""
+                },
+                "g": {
+                    "use": {
+                        "@_href": "#a"
+                    },
+                    "@_id": "a",
+                    "@_class": "b"
+                }
+            }
+        };
+
+        const options = {
+            ignoreAttributes: false,
+        }
+        const parser = new XMLParser(options);
+
+        const result = parser.parse(xmlData);
+        // console.log(JSON.stringify(result, null, 4));
+        expect(result).toEqual(expected);
+    });
 });
