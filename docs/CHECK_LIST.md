@@ -45,3 +45,16 @@ v4 legacy maintenance branch v4-maintenance
 - `npm publish --tag legacy`
 - `git push origin v4-maintenance --tags`
 - update relevant CVE if applicable
+
+---
+
+when tag is pushed to remote without rebase and fails
+
+last version tag=v1.4.3
+git push origin --delete v1.4.3
+git tag -d v1.4.3
+git reset --hard HEAD~1
+
+git pull --rebase origin main
+npm version patch
+git push origin main --tags

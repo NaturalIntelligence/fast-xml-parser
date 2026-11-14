@@ -151,8 +151,10 @@ Bundle size
 </table>
 
 **note**: 
-- Version 6 is released with version 4 for experimental use. Based on its demand, it'll be developed and the features can be different in final release.
+- Version 6 is was experimental. And released separately as flexible-xml-parser.
 - Version 5 has the same functionalities as version 4.
+
+![XML packages](./static/img/xml-pkg.jpg)
 
 ## Performance
 <small>negative means error</small>
@@ -174,13 +176,6 @@ Bundle size
 
 ---
 
-## Usage Trend
-
-[Usage Trend of fast-xml-parser](https://npm-compare.com/fast-xml-parser#timeRange=THREE_YEARS)
-  
-<a href="https://npm-compare.com/fast-xml-parser#timeRange=THREE_YEARS" target="_blank">
-  <img src="https://npm-compare.com/img/npm-trend/THREE_YEARS/fast-xml-parser.png" width="50%" alt="NPM Usage Trend of fast-xml-parser" />
-</a>
 
 # Supporters
 #### Contributors
