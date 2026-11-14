@@ -723,7 +723,7 @@ declare class XMLParser {
    * The XMLMetaData property is only present when {@link X2jOptions.captureMetaData}
    * is true in the options.
    */
-  static getMetaDataSymbol(): Symbol;
+  static getMetaDataSymbol(): symbol | string;
 }
 
 declare class XMLValidator {
