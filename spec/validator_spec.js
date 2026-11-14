@@ -2,7 +2,7 @@
 
 import fs from "fs";
 import path from "path";
-import {XMLValidator} from "../src/fxp.js";
+import {XMLParser, XMLValidator} from "../src/fxp.js";
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 
@@ -402,6 +402,31 @@ describe("should not validate XML documents with multiple root nodes", () => {
         </xml2>`, {
             InvalidXml: 'Multiple possible root nodes found.'
         }, 5);
+    });
+});
+
+describe("should validate only allowed content after the root element", () => {
+    const invalidContent = ['&amp;', '&#65;', '<![CDATA[x]]>', '<!DOCTYPE x>'];
+    const roots = ['<xml></xml>', '<xml/>'];
+
+    it('rejects references, CDATA and DOCTYPE in the epilog', () => {
+        for (const root of roots) for (const content of invalidContent) {
+            expect(XMLValidator.validate(`${root}${content}`)).not.toBe(true);
+        }
+        expect(XMLValidator.validate('<xml/><xml/>')).not.toBe(true);
+    });
+
+    it('rejects the same content when parsing with validation enabled', () => {
+        const parser = new XMLParser();
+        for (const root of roots) for (const content of invalidContent) {
+            expect(() => parser.parse(`${root}${content}`, true)).toThrow();
+        }
+    });
+
+    it('allows whitespace, comments and processing instructions in the epilog', () => {
+        for (const root of roots) {
+            validate(`${root} \n<!--comment--><?pi?>`);
+        }
     });
 });
 
