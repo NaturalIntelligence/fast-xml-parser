@@ -64,4 +64,8 @@ const isValid = XMLValidator.validate(built, validateOpts);
 
 console.log(!!isValid);
 
+const metaKey: PropertyKey = XMLParser.getMetaDataSymbol();
+console.log(metaKey);
+
+
 
