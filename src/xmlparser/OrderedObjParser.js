@@ -711,7 +711,7 @@ function isItStopNode() {
  * @param {number} i starting index
  * @returns 
  */
-function tagExpWithClosingIndex(xmlData, i, closingChar = ">") {
+function tagExpWithClosingIndex(xmlData, i, closingChar = ">", skipQuotes = true) {
   //TODO: ignore boolean attributes in tag expression
   //TODO: if ignore attributes, dont read full attribute expression but the end. But read for xml declaration
   const len = xmlData.length;
@@ -724,7 +724,7 @@ function tagExpWithClosingIndex(xmlData, i, closingChar = ">") {
   for (let index = i; index < len; index++) {
     const code = xmlData.charCodeAt(index);
 
-    if (code === 34 || code === 39) { // " or '
+    if (skipQuotes && (code === 34 || code === 39)) { // " or '
       // Skip the quoted value in one step: nothing inside it can close the tag
       index = xmlData.indexOf(xmlData[index], index + 1);
       if (index === -1) return;
@@ -738,7 +738,7 @@ function tagExpWithClosingIndex(xmlData, i, closingChar = ">") {
         result += xmlData.substring(segmentStart, index);
         return { data: result, index };
       }
-    } else if (code === 9) { // \t - only replace with space outside attribute values
+    } else if (skipQuotes && code === 9) { // \t - only replace with space outside attribute values
       // Flush accumulated segment, add space, start new segment
       result += xmlData.substring(segmentStart, index) + ' ';
       segmentStart = index + 1;
@@ -762,7 +762,7 @@ function findClosingChar(xmlData, char, i, errMsg) {
 }
 
 function readTagExp(xmlData, i, removeNSPrefix, closingChar = ">") {
-  const result = tagExpWithClosingIndex(xmlData, i + 1, closingChar);
+  const result = tagExpWithClosingIndex(xmlData, i + 1, closingChar, closingChar !== "?>");
   if (!result) return;
   let tagExp = result.data;
   const closeIndex = result.index;

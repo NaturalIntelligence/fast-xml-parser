@@ -342,4 +342,51 @@ describe("XMLParser PI", function () {
     // console.log(JSON.stringify(result, null, 4));
     expect(result).toEqual(jsObj);
   });
+
+  it("should not treat an apostrophe in PI content as a quote", function () {
+    const xmlData = `<r><?note don't forget?><a>1</a><b>it's</b><?end?><c>3</c></r>`;
+    const parser = new XMLParser();
+    const result = parser.parse(xmlData);
+    expect(result).toEqual({
+      r: { "?note": "", a: 1, b: "it's", "?end": "", c: 3 }
+    });
+  });
+
+  it("should not throw for an unmatched quote in PI content", function () {
+    const xmlData = `<r><?note don't forget?><a>1</a></r>`;
+    const parser = new XMLParser();
+    const result = parser.parse(xmlData);
+    expect(result).toEqual({ r: { "?note": "", a: 1 } });
+  });
+
+  it("should not treat a double quote in PI content as a quote", function () {
+    const xmlData = `<r><?note say "hi?><a>1</a><b>"</b></r>`;
+    const parser = new XMLParser({ preserveOrder: true });
+    const result = parser.parse(xmlData);
+    expect(result).toEqual([
+      {
+        r: [
+          { "?note": [{ "#text": "" }] },
+          { a: [{ "#text": 1 }] },
+          { b: [{ "#text": "\"" }] }
+        ]
+      }
+    ]);
+  });
+
+  it("should end a PI at the first ?> even inside a quoted value", function () {
+    const xmlData = `<r><?pi a="x?><b>1</b><c>"</c></r>`;
+    const parser = new XMLParser();
+    const result = parser.parse(xmlData);
+    expect(result.r.b).toBe(1);
+    expect(result.r.c).toBe('"');
+  });
+
+  it("should keep tabs inside quoted PI attribute values", function () {
+    const xmlData = `<?xml\tversion="1.0"?><?pi\thref="a\tb"?><r/>`;
+    const parser = new XMLParser({ ignoreAttributes: false });
+    const result = parser.parse(xmlData);
+    expect(result["?xml"]).toEqual({ "@_version": "1.0" });
+    expect(result["?pi"]).toEqual({ "@_href": "a	b" });
+  });
 });
