@@ -54,8 +54,10 @@ function compress(arr, options, matcher, readonlyMatcher) {
 
     // Push current property to matcher WITH RAW ATTRIBUTES (no prefix)
     if (property !== undefined && property !== options.textNodeName) {
+      // With attributesGroupName, ":@" holds { [groupName]: { ...attributes } }
+      const attrMap = tagObj[":@"] || {};
       const rawAttrs = stripAttributePrefix(
-        tagObj[":@"] || {},
+        options.attributesGroupName ? attrMap[options.attributesGroupName] : attrMap,
         options.attributeNamePrefix
       );
       matcher.push(property, rawAttrs);
