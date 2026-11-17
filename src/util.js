@@ -4,6 +4,7 @@ const nameStartChar = ':A-Za-z_\\u00C0-\\u00D6\\u00D8-\\u00F6\\u00F8-\\u02FF\\u0
 const nameChar = nameStartChar + '\\-.\\d\\u00B7\\u0300-\\u036F\\u203F-\\u2040';
 export const nameRegexp = '[' + nameStartChar + '][' + nameChar + ']*';
 const regexName = new RegExp('^' + nameRegexp + '$');
+const regexNameChar = new RegExp('^[' + nameChar + ']$');
 
 export function getAllMatches(string, regex) {
   const matches = [];
@@ -24,6 +25,10 @@ export function getAllMatches(string, regex) {
 export const isName = function (string) {
   const match = regexName.exec(string);
   return !(match === null || typeof match === 'undefined');
+}
+
+export const isNameChar = function (char) {
+  return regexNameChar.test(char);
 }
 
 export function isExist(v) {
