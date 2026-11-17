@@ -311,6 +311,67 @@ describe("XML Validator", function () {
             });
     });
 
+    it("should validate XML PIs with whitespace other than space after the target", function () {
+        validate('<?pi\tdata?><a><?pi\ndata?><?pi\r\ndata?></a>');
+        validate('<a><?a:b data?></a>');
+    });
+
+    it("should not validate a PI without a target", function () {
+        const msg = "Processing instruction target '>x' is not a valid name.";
+        validate('<?>x?><r/>', { InvalidXml: msg });
+        validate('<r><?>x?></r>', { InvalidXml: msg });
+        validate('<r/><?>x?>', { InvalidXml: msg });
+        validate('<?><r/>', {
+            InvalidXml: "Processing instruction target '><r/>' is not a valid name."
+        });
+        validate('<??><r/>', {
+            InvalidXml: "Processing instruction target '' is not a valid name."
+        });
+        validate('<? ?><r/>', {
+            InvalidXml: "Processing instruction target '' is not a valid name."
+        });
+        validate('<r><? ?></r>', {
+            InvalidXml: "Processing instruction target '' is not a valid name."
+        });
+    });
+
+    it("should not validate a PI whose target is not a valid name", function () {
+        validate('<?1pi x?><r/>', {
+            InvalidXml: "Processing instruction target '1pi' is not a valid name."
+        });
+        validate('<r><?-pi?></r>', {
+            InvalidXml: "Processing instruction target '-pi' is not a valid name."
+        });
+        validate('<?pi>x?><r/>', {
+            InvalidXml: "Processing instruction target 'pi>x' is not a valid name."
+        });
+        validate('<r>\n<?p&i?></r>', {
+            InvalidXml: "Processing instruction target 'p&i' is not a valid name."
+        }, 2, 1);
+    });
+
+    it("should not validate an XML declaration inside or after the root element", function () {
+        const msg = "XML declaration allowed only at the start of the document.";
+        validate('<r><?xml version="1.0"?></r>', { InvalidXml: msg });
+        validate('<r/><?xml version="1.0"?>', { InvalidXml: msg });
+    });
+
+    it("should not validate a PI with a reserved target", function () {
+        validate('<?XmL x?><r/>', {
+            InvalidXml: "Processing instruction target 'XmL' is reserved."
+        });
+        validate('<r><?XML?></r>', {
+            InvalidXml: "Processing instruction target 'XML' is reserved."
+        });
+    });
+
+    it("should not validate a PI that is not closed", function () {
+        const msg = "Processing instruction is not closed.";
+        validate('<r/><?pi', { InvalidXml: msg });
+        validate('<r/><?pi x?', { InvalidXml: msg });
+        validate('<r><?pi x</r>', { InvalidXml: msg });
+    });
+
     it('should validate xml with a "length" attribute', function () {
         validate('<name length="1"></name>');
     });
