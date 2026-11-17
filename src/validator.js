@@ -149,7 +149,7 @@ export function validate(xmlData, options) {
               i = readCommentAndCDATA(xmlData, i);
               continue;
             } else if (xmlData[i + 1] === '?') {
-              i = readPI(xmlData, ++i);
+              i = readPI(xmlData, i + 2);
               if (i.err) return i;
             } else {
               break;
@@ -200,22 +200,27 @@ function isWhiteSpace(char) {
  */
 function readPI(xmlData, i) {
   const start = i;
-  for (; i < xmlData.length; i++) {
-    if (xmlData[i] == '?' || xmlData[i] == ' ') {
-      //tagname
-      const tagname = xmlData.substr(start, i - start);
-      if (i > 5 && tagname === 'xml') {
-        return getErrorObject('InvalidXml', 'XML declaration allowed only at the start of the document.', getLineNumberForPosition(xmlData, i));
-      } else if (xmlData[i] == '?' && xmlData[i + 1] == '>') {
-        //check if valid attribut string
-        i++;
-        break;
-      } else {
-        continue;
-      }
+  // PI ::= '<?' PITarget (S Char*)? '?>'
+  // The target ends at the first whitespace or at '?>'.
+  for (; i < xmlData.length && !isWhiteSpace(xmlData[i]) && !(xmlData[i] === '?' && xmlData[i + 1] === '>'); i++);
+  const target = xmlData.substring(start, i);
+  const position = () => getLineNumberForPosition(xmlData, start - 2);
+
+  if (target === 'xml') {
+    if (start > 2) {
+      return getErrorObject('InvalidXml', 'XML declaration allowed only at the start of the document.', position());
     }
+  } else if (target.toLowerCase() === 'xml') {
+    return getErrorObject('InvalidXml', "Processing instruction target '" + target + "' is reserved.", position());
+  } else if (!isName(target)) {
+    return getErrorObject('InvalidXml', "Processing instruction target '" + target + "' is not a valid name.", position());
   }
-  return i;
+
+  const end = xmlData.indexOf('?>', i);
+  if (end === -1) {
+    return getErrorObject('InvalidXml', 'Processing instruction is not closed.', position());
+  }
+  return end + 1;
 }
 
 function readCommentAndCDATA(xmlData, i) {
