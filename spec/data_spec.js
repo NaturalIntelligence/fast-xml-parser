@@ -280,4 +280,31 @@ describe("XMLParser Data", function () {
         // console.log(JSON.stringify(result,null,4));
         expect(result).toEqual(expected);
     });
+
+    it("should read text runs between tags as a whole", function () {
+        const longText = "Lorem ipsum dolor sit amet, 😀 é ü. ".repeat(2000);
+        const xmlData = `<root>
+            <p>${longText}</p>
+            <mixed>start <b>bold</b> middle<!-- note --> end &amp; more<![CDATA[ cdata ]]>tail</mixed>
+            <num>  42  </num>
+        </root>`;
+
+        const expected = {
+            "root": {
+                "p": longText.trim(),
+                "mixed": {
+                    "#text": "startmiddle end & more cdata tail",
+                    "b": "bold"
+                },
+                "num": 42
+            }
+        };
+
+        const parser = new XMLParser();
+        const result = parser.parse(xmlData);
+        expect(result).toEqual(expected);
+
+        const ordered = new XMLParser({ preserveOrder: true }).parse(xmlData);
+        expect(ordered[0].root[0].p[0]["#text"]).toEqual(longText.trim());
+    });
 });
