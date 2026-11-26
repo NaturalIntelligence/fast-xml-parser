@@ -495,3 +495,58 @@ describe("XMLValidator attribute scan performance", function () {
         expect(result.err.msg).toBe("boolean attribute 'b' is not allowed.");
     });
 });
+
+describe("XMLValidator XML 1.0 character range", function () {
+    const errorFor = (hex) => ({
+        InvalidChar: `Invalid character U+${hex} outside the XML 1.0 character range.`
+    });
+
+    it("should not validate forbidden control characters in text content", function () {
+        validate("<rootNode>a\0b</rootNode>", errorFor("0000"), 1, 12);
+        validate("<rootNode>a\x01b</rootNode>", errorFor("0001"), 1, 12);
+        validate("<rootNode>a\x08b</rootNode>", errorFor("0008"), 1, 12);
+        validate("<rootNode>a\x0Bb</rootNode>", errorFor("000B"), 1, 12);
+        validate("<rootNode>a\x0Cb</rootNode>", errorFor("000C"), 1, 12);
+        validate("<rootNode>a\x0Eb</rootNode>", errorFor("000E"), 1, 12);
+        validate("<rootNode>a\x1Fb</rootNode>", errorFor("001F"), 1, 12);
+    });
+
+    it("should not validate forbidden control characters in attribute values", function () {
+        validate(`<rootNode attr="a\0b"/>`, errorFor("0000"), 1, 18);
+        validate(`<rootNode attr="a\x1Fb"/>`, errorFor("001F"), 1, 18);
+    });
+
+    it("should not validate forbidden control characters in comments and CDATA", function () {
+        validate("<rootNode><!-- a\0b --></rootNode>", errorFor("0000"), 1, 17);
+        validate("<rootNode><![CDATA[a\0b]]></rootNode>", errorFor("0000"), 1, 21);
+    });
+
+    it("should not validate forbidden control characters before the root tag", function () {
+        validate("\0<rootNode></rootNode>", errorFor("0000"), 1, 1);
+    });
+
+    it("should not validate noncharacters U+FFFE and U+FFFF", function () {
+        validate("<rootNode>a\uFFFEb</rootNode>", errorFor("FFFE"), 1, 12);
+        validate("<rootNode>a\uFFFFb</rootNode>", errorFor("FFFF"), 1, 12);
+    });
+
+    it("should not validate lone surrogates", function () {
+        validate("<rootNode>a\uD800b</rootNode>", errorFor("D800"), 1, 12);
+        validate("<rootNode>a\uDC00b</rootNode>", errorFor("DC00"), 1, 12);
+        validate("<rootNode>a\uD800</rootNode>", errorFor("D800"), 1, 12);
+    });
+
+    it("should validate characters the XML 1.0 character range allows", function () {
+        validate("<rootNode>a\tb\nc\rd</rootNode>"); // tab, line feed, carriage return
+        validate("<rootNode>a\x7Fb</rootNode>"); // delete is allowed
+        validate("<rootNode>a\uD7FFb</rootNode>"); // BMP edge below surrogates
+        validate("<rootNode>a\uE000b</rootNode>"); // BMP edge above surrogates
+        validate("<rootNode>a\uFFFDb</rootNode>"); // highest allowed BMP code point
+        validate("<rootNode>a\uD83D\uDE00b</rootNode>"); // paired surrogates (U+1F600)
+        validate("<rootNode attr=\"a\tb\nc\"/>");
+    });
+
+    it("should report the correct line for a forbidden character on a later line", function () {
+        validate("<rootNode>\n  a\0b</rootNode>", errorFor("0000"), 2, 4);
+    });
+});

@@ -25,6 +25,15 @@ export function validate(xmlData, options) {
     xmlData = xmlData.substr(1);
   }
 
+  xmlCharScan.lastIndex = 0;
+  let charMatch;
+  while ((charMatch = xmlCharScan.exec(xmlData)) !== null) {
+    if (charMatch[0].length === 1) {
+      const hex = xmlData.codePointAt(charMatch.index).toString(16).toUpperCase().padStart(4, '0');
+      return getErrorObject('InvalidChar', 'Invalid character U+' + hex + ' outside the XML 1.0 character range.', getLineNumberForPosition(xmlData, charMatch.index));
+    }
+  }
+
   for (let i = 0; i < xmlData.length; i++) {
 
     if (xmlData[i] === '<' && xmlData[i + 1] === '?') {
@@ -189,6 +198,20 @@ export function validate(xmlData, options) {
 
   return true;
 };
+
+/**
+ * XML 1.0 restricts the characters a document may contain (spec section 2.2):
+ *   Char ::= #x9 | #xA | #xD | [#x20-#xD7FF] | [#xE000-#xFFFD] | [#x10000-#x10FFFF]
+ * This excludes most C0 control characters and the noncharacters U+FFFE and
+ * U+FFFF. Supplementary code points reach a string only as a surrogate pair,
+ * so the alternation pairs a lead with a trail surrogate first: any surrogate
+ * half the scan still matches on its own (a single code unit) can never form
+ * an allowed character. Matches of length 2 are well-formed pairs and are
+ * skipped; the first single-unit match is invalid XML. One native scan when
+ * the document holds no forbidden characters, which is the common case.
+ */
+// eslint-disable-next-line no-control-regex
+const xmlCharScan = /[\uD800-\uDBFF][\uDC00-\uDFFF]|[\x00-\x08\x0B\x0C\x0E-\x1F\uFFFE\uFFFF]|[\uD800-\uDFFF]/g;
 
 function isWhiteSpace(char) {
   return char === ' ' || char === '\t' || char === '\n' || char === '\r';
