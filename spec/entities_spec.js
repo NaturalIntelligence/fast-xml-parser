@@ -304,6 +304,27 @@ describe("XMLParser Entities", function () {
         expect(result).toEqual(expected);
     });
 
+    it("should not end DOCTYPE at '>' inside a quoted !ATTLIST default value", function () {
+        const xmlData = `<!DOCTYPE note [
+          <!ATTLIST note a CDATA "x>y">
+          <!ATTLIST note b CDATA 'p>q'>
+          <!ENTITY who "World">
+        ]>
+        <note>Hello &who;</note>`;
+
+        const parser = new XMLParser({ processEntities: true });
+        expect(parser.parse(xmlData)).toEqual({ note: "Hello World" });
+    });
+
+    it("should throw for an !ATTLIST whose only '>' is inside quotes", function () {
+        const parser = new XMLParser({ processEntities: true });
+
+        expect(() => parser.parse(`<!DOCTYPE note [<!ATTLIST note a CDATA "x>y" ]><note>hi</note>`))
+            .toThrow();
+        expect(() => parser.parse(`<!DOCTYPE note [<!ATTLIST note a CDATA "x>y`))
+            .toThrowError("Unclosed DOCTYPE");
+    });
+
     it("should build by decoding default entities in preserve mode", function () {
         const jsObj = [
             {

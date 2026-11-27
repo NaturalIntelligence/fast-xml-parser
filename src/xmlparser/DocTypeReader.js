@@ -67,6 +67,9 @@ export default class DocTypeReader {
                         i += 8;//Not supported
                         // const {index} = this.readAttlistExp(xmlData,i+1);
                         // i = index;
+                        // Default values may contain '>', so skip quoted literals
+                        // and stop right before the closing '>'.
+                        i = skipToDeclarationEnd(xmlData, i + 1) - 1;
                     } else if (hasBody && hasSeq(xmlData, "!NOTATION", i)) {
                         i += 9;//Not supported
                         const { index } = this.readNotationExp(xmlData, i + 1, this.suppressValidationErr);
@@ -410,6 +413,25 @@ const skipWhitespace = (data, index) => {
 };
 
 
+
+/**
+ * Returns the index of the '>' that closes a markup declaration, ignoring
+ * any '>' inside quoted literals. Returns data.length if there is none.
+ */
+function skipToDeclarationEnd(data, i) {
+    let quoteChar = null;
+    for (; i < data.length; i++) {
+        const ch = data[i];
+        if (quoteChar !== null) {
+            if (ch === quoteChar) quoteChar = null;
+        } else if (ch === '"' || ch === "'") {
+            quoteChar = ch;
+        } else if (ch === '>') {
+            return i;
+        }
+    }
+    return i;
+}
 
 function hasSeq(data, seq, i) {
     for (let j = 0; j < seq.length; j++) {
