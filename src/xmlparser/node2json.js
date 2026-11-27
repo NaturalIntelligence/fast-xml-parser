@@ -2,6 +2,9 @@
 
 import XmlNode from './xmlNode.js';
 import { Matcher } from 'path-expression-matcher';
+import { defaultOptions } from './OptionsBuilder.js';
+
+const defaultIsArray = defaultOptions.isArray;
 
 const METADATA_SYMBOL = XmlNode.getMetaDataSymbol();
 
@@ -36,7 +39,9 @@ function stripAttributePrefix(attrs, prefix) {
  * @returns 
  */
 export default function prettify(node, options, matcher, readonlyMatcher) {
-  return compress(node, options, matcher, readonlyMatcher);
+  // the default isArray always returns false, so it is not called and no jPath is built for it
+  const customIsArray = options.isArray !== defaultIsArray;
+  return compress(node, options, matcher, readonlyMatcher, customIsArray);
 }
 
 /**
@@ -45,7 +50,7 @@ export default function prettify(node, options, matcher, readonlyMatcher) {
  * @param {Matcher} matcher - Path matcher instance
  * @returns object
  */
-function compress(arr, options, matcher, readonlyMatcher) {
+function compress(arr, options, matcher, readonlyMatcher, customIsArray) {
   let text;
   const compressedObj = {}; //This is intended to be a plain object
   for (let i = 0; i < arr.length; i++) {
@@ -68,7 +73,7 @@ function compress(arr, options, matcher, readonlyMatcher) {
       continue;
     } else if (tagObj[property]) {
 
-      let val = compress(tagObj[property], options, matcher, readonlyMatcher);
+      let val = compress(tagObj[property], options, matcher, readonlyMatcher, customIsArray);
       const isLeaf = isLeafTag(val, options);
 
       if (Object.keys(val).length === 0 && options.alwaysCreateTextNode) {
@@ -76,7 +81,8 @@ function compress(arr, options, matcher, readonlyMatcher) {
       }
 
       if (tagObj[":@"]) {
-        assignAttributes(val, tagObj[":@"], readonlyMatcher, options);
+        if (customIsArray) assignAttributes(val, tagObj[":@"], readonlyMatcher, options);
+        else copyAttributes(val, tagObj[":@"]);
       } else if (Object.keys(val).length === 1 && val[options.textNodeName] !== undefined && !options.alwaysCreateTextNode) {
         val = val[options.textNodeName];
       } else if (Object.keys(val).length === 0) {
@@ -99,8 +105,7 @@ function compress(arr, options, matcher, readonlyMatcher) {
         //also determine if it is a leaf node
 
         // Pass jPath string or readonlyMatcher based on options.jPath setting
-        const jPathOrMatcher = options.jPath ? readonlyMatcher.toString() : readonlyMatcher;
-        if (options.isArray(property, jPathOrMatcher, isLeaf)) {
+        if (customIsArray && options.isArray(property, options.jPath ? readonlyMatcher.toString() : readonlyMatcher, isLeaf)) {
           compressedObj[property] = [val];
         } else {
           compressedObj[property] = val;
@@ -128,6 +133,13 @@ function propName(obj) {
   for (let i = 0; i < keys.length; i++) {
     const key = keys[i];
     if (key !== ":@") return key;
+  }
+}
+
+function copyAttributes(obj, attrMap) {
+  const keys = Object.keys(attrMap);
+  for (let i = 0; i < keys.length; i++) {
+    obj[keys[i]] = attrMap[keys[i]];
   }
 }
 
